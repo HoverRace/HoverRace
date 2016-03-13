@@ -51,6 +51,16 @@ public:
 	virtual void Save() = 0;
 };
 
+/**
+ * Interface for profiles than can be renamed.
+ * @author Michael Imamura
+ */
+class MR_DllDeclare RenamableProfile
+{
+public:
+	virtual void Rename(const std::string &name) = 0;
+};
+
 }  // namespace Player
 }  // namespace HoverRace
 
