@@ -222,7 +222,18 @@ void ClientApp::LoadInitialProfile()
 		// If there's no default profile or the profile couldn't be loaded, we
 		// use a demo profile.
 		//TODO: Instead of demo profile, trigger profile selection scene for later.
-		profile = gallery.FindUid(cfg->player.defaultProfile);
+
+		if (cfg->player.defaultProfile.empty()) {
+			// No default profile set; use the first local profile we can find.
+			// (We currently assume that all gallery profiles are local,
+			// and since we already checked if the gallery is empty, we can
+			// just use the first one).
+			profile = *(gallery.begin());
+		}
+		else {
+			profile = gallery.FindUid(cfg->player.defaultProfile);
+		}
+
 		if (!profile) {
 			HR_LOG(info) << "Default profile does not exist, using demo: " <<
 				cfg->player.defaultProfile;
