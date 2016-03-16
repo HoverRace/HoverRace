@@ -374,6 +374,8 @@ OS::path_t Config::GetDefaultBasePath()
 {
 #ifdef _WIN32
 	wchar_t dpath[MAX_PATH] = {0};
+	//TODO: Use SHGetKnownFolderPath and differentiate between local and
+	//      roaming.
 	HRESULT hr =
 		SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
