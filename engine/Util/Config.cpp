@@ -23,7 +23,6 @@
 #include <stdlib.h>
 
 #include <iomanip>
-#include <regex>
 #include <string>
 #include <sstream>
 #include <exception>
@@ -42,6 +41,8 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/string_generator.hpp>
 
 #include <SDL2/SDL_keycode.h>
 
@@ -543,19 +544,17 @@ const OS::path_t &Config::GetProfilePath() const
  */
 OS::path_t Config::GetProfilePath(const std::string &uid) const
 {
-	//FIXME: std::regex is unimplemented in 4.8; use Boost.Regex.
-#ifdef _WIN32
-	static const std::regex UID_RX{
-		"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-		std::regex::extended | std::regex::optimize };
-
 	if (uid.empty()) {
 		throw Player::ProfileExn("Missing UID");
 	}
-	if (!std::regex_match(uid, UID_RX)) {
+
+	// Check if the UID is a valid UUID.
+	try {
+		boost::uuids::string_generator()(uid);
+	}
+	catch (...) {
 		throw Player::ProfileExn("Invalid profile UID: " + uid);
 	}
-#endif
 
 	return profilePath / Str::UP(uid.c_str());
 }
