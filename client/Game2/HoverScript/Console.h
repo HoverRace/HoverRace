@@ -51,7 +51,7 @@ public:
 	virtual ~Console();
 
 protected:
-	virtual void InitEnv();
+	void InitEnv() override;
 
 public:
 	virtual void Advance(Util::OS::timestamp_t tick) = 0;
