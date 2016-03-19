@@ -118,6 +118,8 @@ public:
 	NewProfile() : SUPER()
 	{
 		SetName(OS::GetUsername());
+		SetPrimaryColor(0xffd8063b);
+		SetSecondaryColor(0xffffffff);
 	}
 };
 
