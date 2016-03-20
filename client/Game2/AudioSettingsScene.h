@@ -1,7 +1,7 @@
 
 // AudioSettingsScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ private:
 	Util::Config::audio_t &audioCfg;
 	Util::Config::audio_t origAudioCfg;
 
+	bool skipSoundTest;
 	VideoServices::ShortSound *testSound;
 
 	std::shared_ptr<Display::Slider> sfxVolumeSlider;

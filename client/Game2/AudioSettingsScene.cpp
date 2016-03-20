@@ -1,7 +1,7 @@
 
 // AudioSettingsScene.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
 	SUPER(display, director, parentTitle, _("Audio"), "Audio Settings"),
 	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg),
+	skipSoundTest(true),
 	testSound(LoadSound(MR_SND_START))
 {
 	using namespace Display;
@@ -48,7 +49,12 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	sfxVolumeSlider->SetSize(SLIDER_SIZE);
 	sfxVolumeConn = sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
-		SoundServer::Play(testSound);
+		if (skipSoundTest) {
+			skipSoundTest = false;
+		}
+		else {
+			SoundServer::Play(testSound);
+		}
 	});
 
 	GetSettingsGrid()->RequestFocus();
@@ -56,6 +62,9 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 
 void AudioSettingsScene::LoadFromConfig()
 {
+	// Don't play the sound test when first loading.
+	skipSoundTest = true;
+
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 }
 
