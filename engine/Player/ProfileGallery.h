@@ -43,8 +43,6 @@ namespace Player {
  */
 class MR_DllDeclare ProfileGallery
 {
-	using SUPER = Profile;
-
 public:
 	ProfileGallery(const Util::OS::path_t &path = {});
 
