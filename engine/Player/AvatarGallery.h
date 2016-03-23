@@ -58,8 +58,9 @@ public:
 	bool IsEmpty() const { return avatars.empty(); }
 
 private:
-	using avatars_t =
-		std::vector<std::shared_ptr<Display::Res<Display::Texture>>>;
+	using avatars_t = std::unordered_map<
+		std::string,
+		std::shared_ptr<Display::Res<Display::Texture>>>;
 public:
 	// STL-like iteration, so we can use range-for.
 	using iterator = avatars_t::iterator;

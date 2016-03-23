@@ -70,12 +70,14 @@ void AvatarGallery::Reload()
 
 	OS::dirIter_t dend;
 	for (OS::dirIter_t iter{ path }; iter != dend; ++iter) {
-		std::string avatarName = iter->path().filename().string();
+		auto filename = iter->path().filename();
+		auto avatarName = filename.stem().string();
 
-		HR_LOG(debug) << "Found avatar: " << avatarName;
-		avatars.emplace_back(
+		HR_LOG(debug) << "Found avatar: " << avatarName << ": " << filename;
+		avatars.emplace(
+			avatarName,
 			std::make_shared<Display::MediaRes<Display::Texture>>(
-				Str::UP("avatars") / avatarName));
+				Str::UP("avatars") / filename));
 	}
 }
 
