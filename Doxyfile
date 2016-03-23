@@ -791,9 +791,11 @@ INPUT                  = client/Game2 \
                          engine/MainCharacter \
                          engine/MazeCompiler \
                          engine/Model \
-                         engine/Parcel \
+                         engine/Net \
                          engine/ObjFac1 \
                          engine/ObjFacTools \
+                         engine/Parcel \
+                         engine/Player \
                          engine/Script \
                          engine/Script/Help \
                          engine/Util \
