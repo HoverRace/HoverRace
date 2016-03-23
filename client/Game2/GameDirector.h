@@ -39,6 +39,7 @@ namespace HoverRace {
 		class Display;
 	}
 	namespace Player {
+		class AvatarGallery;
 		class Player;
 	}
 	namespace VideoServices {
@@ -140,6 +141,12 @@ public:
 	 * @return The new control settings.
 	 */
 	virtual Control::InputEventController *ReloadController() = 0;
+
+	/**
+	 * Retrieve the global avatar gallery.
+	 * @return The gallery (never @c nullptr).
+	 */
+	virtual std::shared_ptr<Player::AvatarGallery> ShareAvatarGallery() const = 0;
 
 	/**
 	 * Retrieve the list of players connected to this game instance.

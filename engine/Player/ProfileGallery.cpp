@@ -39,11 +39,13 @@ namespace Player {
 
 /**
  * Constructor.
+ * @param avatarGallery The avatar gallery.
  * @param path The base profile directory (may be empty to use default).
  * @throw ProfileExn The full list of profiles could not be loaded.
  */
-ProfileGallery::ProfileGallery(const OS::path_t &path) :
-	path(path)
+ProfileGallery::ProfileGallery(std::shared_ptr<AvatarGallery> avatarGallery,
+	const OS::path_t &path) :
+	avatarGallery(std::move(avatarGallery)), path(path)
 {
 	if (path.empty()) {
 		this->path = Config::GetInstance()->GetProfilePath();

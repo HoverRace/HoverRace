@@ -168,7 +168,8 @@ void GamePeer::LAddLocalPlayer_N(const std::string &name)
 		return;
 	}
 
-	auto profile = Player::ProfileGallery().FindName(name);
+	auto profile =
+		Player::ProfileGallery(director.ShareAvatarGallery()).FindName(name);
 	if (!profile) {
 		luaL_error(GetScripting().GetState(),
 			"Profile not found: %s", name.c_str());

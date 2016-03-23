@@ -55,6 +55,9 @@ namespace HoverRace {
 		class ActiveText;
 		class Display;
 	}
+	namespace Player {
+		class AvatarGallery;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -131,6 +134,7 @@ public:
 	VideoServices::VideoBuffer *GetVideoBuffer() const override;
 	Control::InputEventController *GetController() const override { return controller.get(); }
 	Control::InputEventController *ReloadController() override;
+	std::shared_ptr<Player::AvatarGallery> ShareAvatarGallery() const override { return avatarGallery; }
 	Roster *GetParty() const override { return party.get(); }
 	std::shared_ptr<Player::Player> ShareUiPilot() const override;
 	sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
@@ -141,6 +145,7 @@ private:
 	MR_UInt32 userEventId;
 
 	std::unique_ptr<Control::InputEventController> controller;
+	std::shared_ptr<Player::AvatarGallery> avatarGallery;
 	std::unique_ptr<Roster> party;
 
 	std::unique_ptr<Script::Core> scripting;

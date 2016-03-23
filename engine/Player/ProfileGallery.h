@@ -35,6 +35,12 @@
 #endif
 
 namespace HoverRace {
+	namespace Player {
+		class AvatarGallery;
+	}
+}
+
+namespace HoverRace {
 namespace Player {
 
 /**
@@ -44,7 +50,8 @@ namespace Player {
 class MR_DllDeclare ProfileGallery
 {
 public:
-	ProfileGallery(const Util::OS::path_t &path = {});
+	ProfileGallery(std::shared_ptr<AvatarGallery> avatarGallery,
+		const Util::OS::path_t &path = {});
 
 public:
 	void Reload();
@@ -70,6 +77,7 @@ public:
 	iterator end() { return profiles.end(); }
 
 private:
+	std::shared_ptr<AvatarGallery> avatarGallery;
 	Util::OS::path_t path;
 	profiles_t profiles;
 };

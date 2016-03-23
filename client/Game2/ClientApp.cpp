@@ -29,6 +29,7 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
+#include "../../engine/Player/AvatarGallery.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/Player/LocalProfile.h"
@@ -130,6 +131,7 @@ ClientApp::ClientApp() :
 	needsDevWarning(false), needsLocaleCheck(true),
 	userEventId(SDL_RegisterEvents(1)),
 	controller(new InputEventController()),
+	avatarGallery(std::make_shared<Player::AvatarGallery>()),
 	party(new Roster()),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
 	showFps(Config::GetInstance()->runtime.showFramerate),
@@ -204,7 +206,7 @@ ClientApp::~ClientApp()
 /// Attempt to load the default profile to the roster.
 void ClientApp::LoadInitialProfile()
 {
-	Player::ProfileGallery gallery;
+	Player::ProfileGallery gallery(avatarGallery);
 	auto cfg = Config::GetInstance();
 	std::shared_ptr<Player::Profile> profile;
 
