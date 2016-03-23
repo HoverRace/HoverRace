@@ -101,7 +101,7 @@ public:
 
 	/**
 	 * Attach the main character (when joining a game session).
-	 * @param mainCharacter The main character (may be @nullptr to detach).
+	 * @param mainCharacter The main character (may be @c nullptr to detach).
 	 */
 	void AttachMainCharacter(MainCharacter::MainCharacter *mainCharacter)
 	{

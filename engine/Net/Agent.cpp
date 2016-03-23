@@ -33,7 +33,7 @@ using HoverRace::Util::Config;
 
 /**
  * Constructor.
- * @param The URL to retrieve.
+ * @param url The URL to retrieve.
  */
 Agent::Agent(const std::string &url) :
 	url(url)
