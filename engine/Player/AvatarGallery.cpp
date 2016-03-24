@@ -81,5 +81,22 @@ void AvatarGallery::Reload()
 	}
 }
 
+/**
+ * Find the avatar for a given name.
+ * @param s The avatar name.
+ * @return The avatar, or @c nullptr if not found.
+ */
+std::shared_ptr<Display::Res<Display::Texture>> AvatarGallery::FindName(
+	const std::string &s) const
+{
+	auto iter = avatars.find(s);
+	if (iter == avatars.end()) {
+		return {};
+	}
+	else {
+		return iter->second;
+	}
+}
+
 }  // namespace Player
 }  // namespace HoverRace

@@ -57,6 +57,10 @@ public:
 public:
 	bool IsEmpty() const { return avatars.empty(); }
 
+public:
+	std::shared_ptr<Display::Res<Display::Texture>> FindName(
+		const std::string &s) const;
+
 private:
 	using avatars_t = std::unordered_map<
 		std::string,
