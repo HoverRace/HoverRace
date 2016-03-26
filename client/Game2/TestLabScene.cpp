@@ -1,7 +1,7 @@
 
 // TestLabScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/Display/TypeCase.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
@@ -216,7 +217,7 @@ public:
 	virtual ~HudModule();
 
 private:
-	static std::unique_ptr<Player::Player> InitPlayer();
+	std::unique_ptr<Player::Player> InitPlayer(GameDirector &director);
 
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
@@ -655,7 +656,7 @@ void FlexGridModule::Layout()
 
 HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "HUD"),
-	player(InitPlayer()),
+	player(InitPlayer(director)),
 	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
 		Display::UiLayoutFlags::FLOATING))
 {
@@ -674,10 +675,11 @@ HudModule::~HudModule()
 	player->DetachMainCharacter();
 }
 
-std::unique_ptr<Player::Player> HudModule::InitPlayer()
+std::unique_ptr<Player::Player> HudModule::InitPlayer(GameDirector &director)
 {
 	auto player = new Player::LocalPlayer(
-		std::make_shared<Player::DemoProfile>(), false, true);
+		std::make_shared<Player::DemoProfile>(director.ShareAvatarGallery()),
+			false, true);
 	player->AttachMainCharacter(MainCharacter::MainCharacter::New(0, 0x7f));
 
 	return std::unique_ptr<Player::Player>(player);

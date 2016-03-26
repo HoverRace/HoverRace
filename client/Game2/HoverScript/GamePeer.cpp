@@ -157,7 +157,8 @@ void GamePeer::LAddLocalPlayer()
 
 	party->AddPlayer(
 		std::make_shared<Player::LocalPlayer>(
-			std::make_shared<Player::DemoProfile>(), true, true));
+			std::make_shared<Player::DemoProfile>(
+				director.ShareAvatarGallery()), true, true));
 }
 
 void GamePeer::LAddLocalPlayer_N(const std::string &name)

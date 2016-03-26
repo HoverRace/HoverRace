@@ -116,7 +116,8 @@ class NewProfile : public Player::LocalProfile
 	using SUPER = Player::LocalProfile;
 
 public:
-	NewProfile() : SUPER()
+	NewProfile(std::shared_ptr<Player::AvatarGallery> avatarGallery) :
+		SUPER(avatarGallery)
 	{
 		SetName(OS::GetUsername());
 		SetPrimaryColor(0xffd8063b);
@@ -214,7 +215,7 @@ void ClientApp::LoadInitialProfile()
 	// that as the default.
 	if (gallery.IsEmpty()) {
 		HR_LOG(info) << "No known profiles; creating new default profile.";
-		profile = std::make_shared<NewProfile>();
+		profile = std::make_shared<NewProfile>(avatarGallery);
 		profile->Edit()->Save();
 
 		cfg->player.defaultProfile = profile->GetUidStr();
@@ -241,7 +242,7 @@ void ClientApp::LoadInitialProfile()
 		if (!profile) {
 			HR_LOG(info) << "Default profile does not exist, using demo: " <<
 				cfg->player.defaultProfile;
-			profile = std::make_shared<Player::DemoProfile>();
+			profile = std::make_shared<Player::DemoProfile>(avatarGallery);
 		}
 	}
 

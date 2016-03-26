@@ -72,18 +72,22 @@ boost::optional<Display::Color> ReadColor(yaml::Node *node)
  * Constructor for a new local profile.
  *
  * The new profile will be assigned a new unique UID.
+ *
+ * @param avatarGallery The source for built-in avatars (may be @c nullptr).
  */
-LocalProfile::LocalProfile() :
-	SUPER(boost::uuids::random_generator{}())
+LocalProfile::LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery) :
+	SUPER(avatarGallery, boost::uuids::random_generator{}())
 {
 }
 
 /**
  * Load a profile from the local filesystem.
+ * @param avatarGallery The source for built-in avatars (may be @c nullptr).
  * @throw ProfileExn The profile could not be loaded.
  */
-LocalProfile::LocalProfile(const boost::uuids::uuid &uid) :
-	SUPER(uid), loaded(false)
+LocalProfile::LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery,
+	const boost::uuids::uuid &uid) :
+	SUPER(avatarGallery, uid), loaded(false)
 {
 	const auto *cfg = Config::GetInstance();
 	auto path = cfg->GetProfilePath(uuid::to_string(uid));

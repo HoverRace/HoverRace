@@ -23,6 +23,7 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include "../Display/MediaRes.h"
+#include "AvatarGallery.h"
 
 #include "Profile.h"
 
@@ -31,8 +32,8 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Player {
 
-Profile::Profile() :
-	Profile(boost::uuids::nil_uuid())
+Profile::Profile(std::shared_ptr<AvatarGallery> avatarGallery) :
+	Profile(avatarGallery, boost::uuids::nil_uuid())
 {
 }
 
@@ -74,11 +75,12 @@ void Profile::SetSecondaryColor(Display::Color color)
  */
 std::shared_ptr<Display::Res<Display::Texture>> Profile::GetAvatar() const
 {
-	// Use the built-in avatar if specified.
-	return avatarName.empty() ?
-		std::shared_ptr<Display::Res<Display::Texture>>{} :
-		std::make_shared<Display::MediaRes<Display::Texture>>(
-			"avatars/" + avatarName);
+	if (!avatarGallery || avatarName.empty()) {
+		return {};
+	}
+	else {
+		return avatarGallery->FindName(avatarName);
+	}
 }
 
 }  // namespace Player

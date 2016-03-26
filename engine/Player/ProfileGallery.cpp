@@ -92,7 +92,8 @@ void ProfileGallery::Reload()
 
 			HR_LOG(debug) << "Found profile: " << uidStr;
 			try {
-				profiles.emplace_back(std::make_shared<LocalProfile>(uid));
+				profiles.emplace_back(
+					std::make_shared<LocalProfile>(avatarGallery, uid));
 			}
 			catch (const ProfileExn &ex) {
 				HR_LOG(error) << "Failed to load profile: " << uidStr << ": " <<

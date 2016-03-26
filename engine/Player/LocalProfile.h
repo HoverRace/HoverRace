@@ -53,8 +53,10 @@ class MR_DllDeclare LocalProfile : public Profile
 	using SUPER = Profile;
 
 public:
-	LocalProfile();
-	LocalProfile(const boost::uuids::uuid &uid);
+	LocalProfile() = delete;
+	LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery);
+	LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery,
+		const boost::uuids::uuid &uid);
 	virtual ~LocalProfile() { }
 
 public:

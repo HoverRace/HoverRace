@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Display/MediaRes.h"
+#include "AvatarGallery.h"
 
 #include "DemoProfile.h"
 
@@ -39,20 +40,23 @@ const boost::uuids::uuid DEMO_UUID = {{
 	0x3b, 0x77, 0xf2, 0x48, 0x15, 0xf0
 }};
 
-const OS::path_t DEFAULT_AVATAR_PATH("avatars/icon1.png");
-
 }  // namespace
 
-DemoProfile::DemoProfile() :
-	SUPER(DEMO_UUID, "Player", {}, 0xffd8063b, Display::COLOR_BLACK)
+DemoProfile::DemoProfile(std::shared_ptr<AvatarGallery> avatarGallery) :
+	SUPER(avatarGallery, DEMO_UUID, "Player", {},
+		0xffd8063b, Display::COLOR_BLACK)
 {
 }
 
 std::shared_ptr<Display::Res<Display::Texture>> DemoProfile::GetAvatar() const
 {
-	//TODO: Rotate through the available built-in avatars.
-	return std::make_shared<Display::MediaRes<Display::Texture>>(
-		DEFAULT_AVATAR_PATH);
+	if (const auto avatarGallery = GetAvatarGallery()) {
+		//TODO: Rotate through the available built-in avatars.
+		return avatarGallery->FindName("icon1");
+	}
+	else {
+		return {};
+	}
 }
 
 }  // namespace Player

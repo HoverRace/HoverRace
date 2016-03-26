@@ -41,6 +41,9 @@ namespace HoverRace {
 	namespace Display {
 		class Texture;
 	}
+	namespace Player {
+		class AvatarGallery;
+	}
 }
 
 namespace HoverRace {
@@ -53,16 +56,23 @@ namespace Player {
 class MR_DllDeclare Profile : protected EditableProfile
 {
 public:
-	Profile();
-	Profile(const boost::uuids::uuid &uid) :
-		Profile(uid, "Player", {}, Display::COLOR_WHITE, Display::COLOR_BLACK)
+	Profile(std::shared_ptr<AvatarGallery> avatarGallery = {});
+	Profile(std::shared_ptr<AvatarGallery> avatarGallery,
+		const boost::uuids::uuid &uid) :
+		Profile(avatarGallery, uid, "Player", {},
+		Display::COLOR_WHITE, Display::COLOR_BLACK)
 		{ }
-	Profile(const boost::uuids::uuid &uid, const std::string &name,
+	Profile(std::shared_ptr<AvatarGallery> avatarGallery,
+		const boost::uuids::uuid &uid, const std::string &name,
 		const std::string &avatarName,
 		Display::Color primaryColor, Display::Color secondaryColor) :
+		avatarGallery(std::move(avatarGallery)),
 		uid(uid), name(name), avatarName(avatarName),
 		primaryColor(primaryColor), secondaryColor(secondaryColor) { }
 	virtual ~Profile() { }
+
+protected:
+	AvatarGallery *GetAvatarGallery() const { return avatarGallery.get(); }
 
 public:
 	/**
@@ -111,6 +121,7 @@ protected:
 	virtual void Save() = 0;
 
 private:
+	std::shared_ptr<AvatarGallery> avatarGallery;
 	boost::uuids::uuid uid;
 	std::string name;
 	std::string avatarName;
