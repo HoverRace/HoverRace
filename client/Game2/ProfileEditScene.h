@@ -23,7 +23,7 @@
 
 #include "../../engine/Player/EditableProfile.h"
 
-#include "SettingsScene.h"
+#include "DialogScene.h"
 
 namespace HoverRace {
 	namespace Player {
@@ -38,19 +38,15 @@ namespace Client {
  * Profile view and edit scene.
  * @author Michael Imamura
  */
-class ProfileEditScene : public SettingsScene
+class ProfileEditScene : public DialogScene
 {
-	using SUPER = SettingsScene;
+	using SUPER = DialogScene;
 
 public:
 	ProfileEditScene(Display::Display &display, GameDirector &director,
 		const std::string &parentTitle,
 		std::shared_ptr<Player::Profile> origProfile);
 	virtual ~ProfileEditScene() { }
-
-protected:
-	void LoadFromConfig() override;
-	void ResetToDefaults() override;
 
 protected:
 	void OnOk() override;

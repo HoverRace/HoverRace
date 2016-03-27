@@ -19,8 +19,10 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/Picture.h"
 #include "../../engine/Player/Profile.h"
 #include "../../engine/Player/ProfileExn.h"
 #include "../../engine/Util/Config.h"
@@ -75,7 +77,7 @@ private:
 ProfileEditScene::ProfileEditScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::Profile> origProfile) :
-	SUPER(display, director, parentTitle, _("Profile"), "Edit Profile"),
+	SUPER(display, director, JoinTitles(parentTitle, _("Profile")), "Profile"),
 	profile((new FormProfile(*origProfile))->Edit()),
 	origProfile(std::move(origProfile))
 {
@@ -83,6 +85,19 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 
 	auto &s = display.styles;
 
+	SupportCancelAction();
+
+	auto root = GetContentRoot();
+
+	auto avatar = root->NewChild<Picture>(
+		this->origProfile->GetAvatar(), 280, 280);
+	avatar->SetPos(240, 60);
+
+	auto nameLbl = root->NewChild<Label>(
+		this->origProfile->GetName(), s.bodyHeadFont, s.bodyHeadFg);
+	nameLbl->SetPos(520, 60);
+
+	/*
 	AddSetting(_("Name")).
 		NewChild<Label>(this->origProfile->GetName(), s.bodyFont, s.bodyFg);
 
@@ -92,16 +107,7 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 		NewChild<FillBox>(20, 20, this->origProfile->GetSecondaryColor());
 
 	GetSettingsGrid()->RequestFocus();
-}
-
-void ProfileEditScene::LoadFromConfig()
-{
-	//TODO: Update widgets.
-}
-
-void ProfileEditScene::ResetToDefaults()
-{
-	//TODO: Remove button.
+	*/
 }
 
 void ProfileEditScene::OnOk()
