@@ -91,6 +91,7 @@ std::shared_ptr<Display::Res<Display::Texture>> AvatarGallery::FindName(
 {
 	auto iter = avatars.find(s);
 	if (iter == avatars.end()) {
+		HR_LOG(debug) << "Unknown avatar: " << s;
 		return {};
 	}
 	else {
