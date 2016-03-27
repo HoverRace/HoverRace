@@ -49,13 +49,15 @@ namespace Player {
 class MR_DllDeclare AvatarGallery
 {
 public:
-	AvatarGallery(const Util::OS::path_t &path = {});
+	AvatarGallery(const Util::OS::path_t &path = { });
 
 public:
 	void Reload();
 
 public:
 	bool IsEmpty() const { return avatars.empty(); }
+
+	static const std::string &GetDefaultAvatarName();
 
 public:
 	std::shared_ptr<Display::Res<Display::Texture>> FindName(

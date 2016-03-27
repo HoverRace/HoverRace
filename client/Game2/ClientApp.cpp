@@ -120,6 +120,7 @@ public:
 		SUPER(avatarGallery)
 	{
 		SetName(OS::GetUsername());
+		SetAvatarName(Player::AvatarGallery::GetDefaultAvatarName());
 		SetPrimaryColor(0xffd8063b);
 		SetSecondaryColor(0xffffffff);
 	}

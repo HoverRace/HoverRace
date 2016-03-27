@@ -82,6 +82,16 @@ void AvatarGallery::Reload()
 }
 
 /**
+ * Retrieve the name of the default avatar.
+ * @return The avatar name (never empty).
+ */
+const std::string &AvatarGallery::GetDefaultAvatarName()
+{
+	static const std::string DEFAULT_NAME("_default");
+	return DEFAULT_NAME;
+}
+
+/**
  * Find the avatar for a given name.
  * @param s The avatar name.
  * @return The avatar, or @c nullptr if not found.
