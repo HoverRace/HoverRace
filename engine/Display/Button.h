@@ -1,7 +1,7 @@
 
 // Button.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ namespace HoverRace {
 		class Display;
 		class FillBox;
 		class Label;
+		class Picture;
 	}
 }
 
@@ -59,6 +60,7 @@ public:
 		{
 			TEXT = SUPER::Props::NEXT_,
 			ICON,
+			IMAGE,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -94,6 +96,10 @@ public:
 	Label *GetLabelChild() const { return label.get(); }
 	FillBox *GetIconChild() const { return icon.get(); }
 
+	Picture *GetImage() const { return image.get(); }
+	std::shared_ptr<Picture> ShareImage() const { return image; }
+	void SetImage(std::shared_ptr<Picture> image);
+
 	void SetFixedWidth(double width);
 
 protected:
@@ -107,6 +113,7 @@ private:
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<Label> label;
 	std::shared_ptr<FillBox> icon;
+	std::shared_ptr<Picture> image;
 	boost::optional<double> fixedWidth;
 	double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;
 };

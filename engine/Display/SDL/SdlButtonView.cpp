@@ -1,7 +1,7 @@
 
 // SdlButtonView.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include "../Button.h"
 #include "../FillBox.h"
 #include "../Label.h"
+#include "../Picture.h"
 
 #include "SdlButtonView.h"
 
@@ -52,6 +53,9 @@ Vec3 SdlButtonView::Measure()
 
 void SdlButtonView::PrepareRender()
 {
+	auto image = model.GetImage();
+	if (image) image->PrepareRender();
+
 	model.GetBackgroundChild()->PrepareRender();
 	model.GetLabelChild()->PrepareRender();
 
@@ -63,6 +67,9 @@ void SdlButtonView::Render()
 {
 	const Vec2 &size = model.GetSize();
 	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
+
+	auto image = model.GetImage();
+	if (image) image->Render();
 
 	model.GetBackgroundChild()->Render();
 	model.GetLabelChild()->Render();

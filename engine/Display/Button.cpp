@@ -1,7 +1,7 @@
 
 // Button.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include "UiFont.h"
 #include "FillBox.h"
 #include "Label.h"
+#include "Picture.h"
 
 #include "Button.h"
 
@@ -162,21 +163,31 @@ void Button::Layout()
 		boundsSize.x, boundsSize.y,
 		label->GetAlignment());
 
+	Color bgColor;
 	if (!IsEnabled()) {
-		background->SetColor(s.buttonDisabledBg);
+		bgColor = s.buttonDisabledBg;
 		background->SetBorder(0);
 		label->SetColor(s.formDisabledFg);
 		label->SetPos(labelPos);
 	}
 	else if (IsPressed()) {
-		background->SetColor(s.buttonPressedBg);
+		bgColor = s.buttonPressedBg;
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos.x, labelPos.y + DEFAULT_PRESS_DEPTH);
 	}
 	else {
-		background->SetColor(s.buttonBg);
+		bgColor = s.buttonBg;
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos);
+	}
+
+	if (image) {
+		image->SetPos(0, 0);
+		image->SetSize(size);
+		background->SetColor(0x00000000);  // Image replaces background.
+	}
+	else {
+		background->SetColor(bgColor);
 	}
 
 	if (IsFocused()) {
@@ -231,6 +242,19 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 		this->icon = std::move(icon);
 		FireModelUpdate(Props::ICON);
 		RequestSizing();
+		RequestLayout();
+	}
+}
+
+/**
+ * Set the background image.
+ * @param image The image, or @c nullptr to unset the background image.
+ */
+void Button::SetImage(std::shared_ptr<Picture> image)
+{
+	if (this->image != image) {
+		this->image = std::move(image);
+		FireModelUpdate(Props::IMAGE);
 		RequestLayout();
 	}
 }
