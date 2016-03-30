@@ -79,7 +79,8 @@ public:
 	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 public:
-	std::shared_ptr<Res<Texture>> GetTexture() const { return texture; }
+
+	std::shared_ptr<Res<Texture>> ShareTexture() const { return texture; }
 	void SetTexture(std::shared_ptr<Res<Texture>> texture);
 
 	const Color GetColor() const { return color; }
