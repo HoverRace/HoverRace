@@ -1,7 +1,7 @@
 
 // SdlFillBoxView.cpp
 //
-// Copyright (c) 2013, 2015 Michael Imamura.
+// Copyright (c) 2013, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,11 +38,6 @@ void SdlFillBoxView::Render()
 	const bool hasFill = color.bits.a > 0;
 	const bool hasBorder = border > 0.0 && borderColor.bits.a > 0;
 
-	if (!hasFill && !hasBorder) return;  // Nothing to draw.
-
-	SDL_Renderer *renderer = display.GetRenderer();
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
 	// Calculate the screen-space size and position.
 
 	Vec2 pos = display.LayoutUiPosition(
@@ -61,6 +56,11 @@ void SdlFillBoxView::Render()
 	screenPos = pos;
 	screenSize.x = w;
 	screenSize.y = h;
+
+	if (!hasFill && !hasBorder) return;  // Nothing to draw.
+
+	SDL_Renderer *renderer = display.GetRenderer();
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	SDL_Rect rect = {
 		static_cast<int>(pos.x), static_cast<int>(pos.y),
