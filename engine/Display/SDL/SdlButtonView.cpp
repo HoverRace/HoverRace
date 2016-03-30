@@ -53,8 +53,8 @@ Vec3 SdlButtonView::Measure()
 
 void SdlButtonView::PrepareRender()
 {
-	auto image = model.GetImage();
-	if (image) image->PrepareRender();
+	auto picture = model.GetPictureChild();
+	if (picture) picture->PrepareRender();
 
 	model.GetBackgroundChild()->PrepareRender();
 	model.GetLabelChild()->PrepareRender();
@@ -68,8 +68,8 @@ void SdlButtonView::Render()
 	const Vec2 &size = model.GetSize();
 	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
 
-	auto image = model.GetImage();
-	if (image) image->Render();
+	auto picture = model.GetPictureChild();
+	if (picture) picture->Render();
 
 	model.GetBackgroundChild()->Render();
 	model.GetLabelChild()->Render();

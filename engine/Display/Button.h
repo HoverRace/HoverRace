@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "Res.h"
+
 #include "ClickRegion.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -39,6 +41,7 @@ namespace HoverRace {
 		class FillBox;
 		class Label;
 		class Picture;
+		class Texture;
 	}
 }
 
@@ -92,13 +95,13 @@ public:
 	std::shared_ptr<FillBox> ShareIcon() const { return icon; }
 	void SetIcon(std::shared_ptr<FillBox> icon);
 
+	std::shared_ptr<Res<Texture>> ShareTexture() const;
+	void SetTexture(std::shared_ptr<Res<Texture>> image);
+
 	FillBox *GetBackgroundChild() const { return background.get(); }
 	Label *GetLabelChild() const { return label.get(); }
 	FillBox *GetIconChild() const { return icon.get(); }
-
-	Picture *GetImage() const { return image.get(); }
-	std::shared_ptr<Picture> ShareImage() const { return image; }
-	void SetImage(std::shared_ptr<Picture> image);
+	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
 
 	void SetFixedWidth(double width);
 
@@ -113,7 +116,7 @@ private:
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<Label> label;
 	std::shared_ptr<FillBox> icon;
-	std::shared_ptr<Picture> image;
+	std::unique_ptr<Picture> picture;
 	boost::optional<double> fixedWidth;
 	double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;
 };

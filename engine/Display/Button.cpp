@@ -181,9 +181,9 @@ void Button::Layout()
 		label->SetPos(labelPos);
 	}
 
-	if (image) {
-		image->SetPos(0, 0);
-		image->SetSize(size);
+	if (picture) {
+		picture->SetPos(0, 0);
+		picture->SetSize(size);
 		background->SetColor(0x00000000);  // Image replaces background.
 	}
 	else {
@@ -246,14 +246,35 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 	}
 }
 
+std::shared_ptr<Res<Texture>> Button::ShareTexture() const
+{
+	if (picture) {
+		return picture->ShareTexture();
+	}
+	else {
+		return {};
+	}
+}
+
 /**
  * Set the background image.
  * @param image The image, or @c nullptr to unset the background image.
  */
-void Button::SetImage(std::shared_ptr<Picture> image)
+void Button::SetTexture(std::shared_ptr<Res<Texture>> image)
 {
-	if (this->image != image) {
-		this->image = std::move(image);
+	Res<Texture> *curTexture = nullptr;
+	if (picture) {
+		curTexture = picture->ShareTexture().get();
+	}
+
+	if (curTexture != image.get()) {
+		if (!image) {
+			picture.reset();
+		}
+		else {
+			picture.reset(new Picture(image, 1, 1));
+			picture->AttachView(display);
+		}
 		FireModelUpdate(Props::IMAGE);
 		RequestLayout();
 	}

@@ -500,12 +500,10 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 	icon->AttachView(display);
 
 	auto tex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
-	auto image = std::make_shared<Picture>(tex, 1, 1);
-	image->AttachView(display);
 
 	btn = grid->At(row++, 0).NewChild<Button>(display, "Image Button")->
 		GetContents();
-	btn->SetImage(image);
+	btn->SetTexture(tex);
 
 	btn = grid->At(row++, 0).NewChild<Button>(display, "Button With Icon")->
 		GetContents();
