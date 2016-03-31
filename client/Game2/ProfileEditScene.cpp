@@ -94,8 +94,8 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	avatar->SetPos(240, 60);
 
 	auto nameLbl = root->NewChild<Label>(
-		this->origProfile->GetName(), s.bodyHeadFont, s.bodyHeadFg);
-	nameLbl->SetPos(520, 60);
+		this->origProfile->GetName(), s.headingFont, s.headingFg);
+	nameLbl->SetPos(580, 60);
 
 	/*
 	AddSetting(_("Name")).
