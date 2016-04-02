@@ -81,6 +81,8 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 			row++;
 		}
 	}
+
+	selGrid->RequestFocus();
 }
 
 void AvatarSelectScene::OnAvatarSelected(const std::string &name)
