@@ -48,6 +48,9 @@ public:
 		std::shared_ptr<Player::Profile> origProfile);
 	virtual ~ProfileEditScene() { }
 
+private:
+	void OnAvatarSelect();
+
 protected:
 	void OnOk() override;
 	void OnCancel() override;
@@ -55,6 +58,11 @@ protected:
 private:
 	std::unique_ptr<Player::EditableProfile> profile;
 	std::shared_ptr<Player::Profile> origProfile;
+
+	std::shared_ptr<Display::Button> avatarBtn;
+
+	boost::signals2::scoped_connection avatarClickedConn;
+	boost::signals2::scoped_connection avatarSelConn;
 };
 
 }  // namespace Client

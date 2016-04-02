@@ -22,11 +22,13 @@
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
-#include "../../engine/Display/Picture.h"
+#include "../../engine/Display/Button.h"
+#include "../../engine/Player/AvatarGallery.h"
 #include "../../engine/Player/Profile.h"
 #include "../../engine/Player/ProfileExn.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
+#include "AvatarSelectScene.h"
 
 #include "ProfileEditScene.h"
 
@@ -89,9 +91,11 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	auto avatar = root->NewChild<Picture>(
-		this->origProfile->GetAvatar(), 280, 280);
-	avatar->SetPos(240, 60);
+	avatarBtn = root->NewChild<Button>(display, Vec2{280, 280}, "");
+	avatarBtn->SetTexture(this->origProfile->GetAvatar());
+	avatarBtn->SetPos(240, 60);
+	avatarClickedConn = avatarBtn->GetClickedSignal().connect(
+		std::bind(&ProfileEditScene::OnAvatarSelect, this));
 
 	auto nameLbl = root->NewChild<Label>(
 		this->origProfile->GetName(), s.headingFont, s.headingFg);
@@ -108,6 +112,19 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 
 	GetSettingsGrid()->RequestFocus();
 	*/
+}
+
+void ProfileEditScene::OnAvatarSelect()
+{
+	auto avatarScene = std::make_shared<AvatarSelectScene>(display, director,
+		director.ShareAvatarGallery());
+	avatarSelConn = avatarScene->GetConfirmSignal().connect([=](const std::string &name) {
+		auto tex = director.ShareAvatarGallery()->FindName(name);
+
+		avatarBtn->SetTexture(tex);
+		profile->SetAvatarName(name);
+	});
+	director.RequestPushScene(avatarScene);
 }
 
 void ProfileEditScene::OnOk()
