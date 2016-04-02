@@ -73,6 +73,11 @@ void AvatarGallery::Reload()
 		auto filename = iter->path().filename();
 		auto avatarName = filename.stem().string();
 
+		if (filename.extension() != ".png") {
+			HR_LOG(debug) << "Ignoring non-avatar: " << filename;
+			continue;
+		}
+
 		HR_LOG(debug) << "Found avatar: " << avatarName << ": " << filename;
 		avatars.emplace(
 			avatarName,
