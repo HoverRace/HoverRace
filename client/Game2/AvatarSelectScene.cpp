@@ -86,7 +86,7 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 void AvatarSelectScene::OnAvatarSelected(const std::string &name)
 {
 	avatarName = name;
-	previewPic->SetTexture(gallery->FindName(avatarName));
+	previewPic->SetTexture(gallery->FindName(name));
 
 	/*
 	confirmSignal();

@@ -60,7 +60,7 @@ public:
 	void OnAvatarSelected(const std::string &name);
 
 public:
-	using confirmSignal_t = boost::signals2::signal<void()>;
+	using confirmSignal_t = boost::signals2::signal<void(const std::string&)>;
 	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
 
 private:
