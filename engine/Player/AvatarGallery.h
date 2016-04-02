@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../Display/Res.h"
+#include "../Util/OS.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
