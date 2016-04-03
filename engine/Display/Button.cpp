@@ -34,11 +34,13 @@ namespace HoverRace {
 namespace Display {
 
 namespace {
-	const double DEFAULT_PADDING_HEIGHT = 10;
-	const double DEFAULT_PADDING_WIDTH = 30;
-	const double DEFAULT_ICON_GAP = 10;
-	const double DEFAULT_PRESS_DEPTH = 4;
-}
+
+const double DEFAULT_PADDING_HEIGHT = 10;
+const double DEFAULT_PADDING_WIDTH = 30;
+const double DEFAULT_ICON_GAP = 10;
+const double DEFAULT_PRESS_DEPTH = 4;
+
+}  // namespace
 
 namespace {
 
@@ -58,22 +60,22 @@ Vec2 AlignToBounds(
 	using Alignment = UiViewModel::Alignment;
 
 	switch (alignment) {
-		case Alignment::NW: return Vec2(x, y);
-		case Alignment::N: return Vec2(x + (w / 2.0), y);
-		case Alignment::NE: return Vec2(x + w, y);
-		case Alignment::E: return Vec2(x + w, y + (h / 2.0));
-		case Alignment::SE: return Vec2(x + w, y + h);
-		case Alignment::S: return Vec2(x + (w / 2.0), y + h);
-		case Alignment::SW: return Vec2(x, y + h);
-		case Alignment::W: return Vec2(x, y + (h / 2.0));
-		case Alignment::CENTER: return Vec2(x + (w / 2.0), y + (h / 2.0));
+		case Alignment::NW: return { x, y };
+		case Alignment::N: return { x + (w / 2.0), y };
+		case Alignment::NE: return { x + w, y };
+		case Alignment::E: return { x + w, y + (h / 2.0) };
+		case Alignment::SE: return { x + w, y + h };
+		case Alignment::S: return { x + (w / 2.0), y + h };
+		case Alignment::SW: return { x, y + h };
+		case Alignment::W: return { x, y + (h / 2.0) };
+		case Alignment::CENTER: return { x + (w / 2.0), y + (h / 2.0) };
 		default:
 			throw Exception("Unknown alignment: " +
 				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
 	}
 }
 
-}
+}  // namespace
 
 /**
  * Constructor for automatically-sized button.
@@ -82,7 +84,7 @@ Vec2 AlignToBounds(
  * @param layoutFlags Optional layout flags.
  */
 Button::Button(Display &display, const std::string &text,
-               uiLayoutFlags_t layoutFlags) :
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	paddingTop(DEFAULT_PADDING_HEIGHT), paddingRight(DEFAULT_PADDING_WIDTH),
 	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH),
@@ -99,7 +101,7 @@ Button::Button(Display &display, const std::string &text,
  * @param layoutFlags Optional layout flags.
  */
 Button::Button(Display &display, const Vec2 &size, const std::string &text,
-               uiLayoutFlags_t layoutFlags) :
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, layoutFlags),
 	paddingTop(DEFAULT_PADDING_HEIGHT), paddingRight(DEFAULT_PADDING_WIDTH),
 	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH)
@@ -136,7 +138,7 @@ bool Button::OnNavigate(const Control::Nav &nav)
 
 void Button::Layout()
 {
-	const Vec2 size = GetSize();
+	const auto &size = GetSize();
 	const auto &s = display.styles;
 
 	background->SetSize(size);
