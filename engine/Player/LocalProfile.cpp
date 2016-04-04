@@ -83,6 +83,7 @@ LocalProfile::LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery) :
 /**
  * Load a profile from the local filesystem.
  * @param avatarGallery The source for built-in avatars (may be @c nullptr).
+ * @param uid The player UID.
  * @throw ProfileExn The profile could not be loaded.
  */
 LocalProfile::LocalProfile(std::shared_ptr<AvatarGallery> avatarGallery,
