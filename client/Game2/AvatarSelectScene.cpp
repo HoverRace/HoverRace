@@ -34,6 +34,39 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+
+class AvatarButton : public Display::Button
+{
+	using SUPER = Display::Button;
+
+public:
+	AvatarButton(Display::Display &display,
+		std::shared_ptr<Display::Res<Display::Texture>> tex,
+		std::shared_ptr<Display::Picture> previewPic) :
+		SUPER(display, Vec2{ 80, 80 }, ""),
+		previewPic(std::move(previewPic))
+	{
+		SetTexture(tex);
+	}
+
+protected:
+	void FireModelUpdate(int prop) override
+	{
+		if (prop == UiViewModel::Props::FOCUSED && IsFocused()) {
+			previewPic->SetTexture(ShareTexture());
+		}
+
+		SUPER::FireModelUpdate(prop);
+	}
+
+private:
+	std::shared_ptr<Display::Picture> previewPic;
+};
+
+}  // namespace
+
+
 /**
  * Constructor.
  * @param display The target display.
@@ -68,9 +101,8 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 		const auto name = ent.first;
 		const auto &tex = ent.second;
 
-		auto selBtn = selGrid->At(row, col).NewChild<Button>(display,
-			Vec2{80, 80}, "")->GetContents();
-		selBtn->SetTexture(tex);
+		auto selBtn = selGrid->At(row, col).NewChild<AvatarButton>(
+			display, tex, previewPic)->GetContents();
 		conns.emplace_back(selBtn->GetClickedSignal().connect([=](ClickRegion&) {
 			OnAvatarSelected(name);
 		}));
