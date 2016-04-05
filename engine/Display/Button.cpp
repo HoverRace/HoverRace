@@ -165,26 +165,32 @@ void Button::Layout()
 		boundsSize.x, boundsSize.y,
 		label->GetAlignment());
 
+	double pressOffset = 0;
+
 	Color bgColor;
 	if (!IsEnabled()) {
 		bgColor = s.buttonDisabledBg;
+		background->SetPos(0, 0);
 		background->SetBorder(0);
 		label->SetColor(s.formDisabledFg);
 		label->SetPos(labelPos);
 	}
 	else if (IsPressed()) {
+		pressOffset = DEFAULT_PRESS_DEPTH;
 		bgColor = s.buttonPressedBg;
+		background->SetPos(0, pressOffset);
 		label->SetColor(s.formFg);
-		label->SetPos(labelPos.x, labelPos.y + DEFAULT_PRESS_DEPTH);
+		label->SetPos(labelPos.x, labelPos.y + pressOffset);
 	}
 	else {
 		bgColor = s.buttonBg;
+		background->SetPos(0, 0);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos);
 	}
 
 	if (picture) {
-		picture->SetPos(0, 0);
+		picture->SetPos(0, pressOffset);
 		picture->SetSize(size);
 		background->SetColor(0x00000000);  // Image replaces background.
 	}
