@@ -49,6 +49,7 @@ class AvatarSelectScene : public DialogScene
 
 public:
 	AvatarSelectScene(Display::Display &display, GameDirector &director,
+		const std::string &parentTitle,
 		std::shared_ptr<Player::AvatarGallery> gallery,
 		const std::string &avatarName = {});
 	virtual ~AvatarSelectScene() { }

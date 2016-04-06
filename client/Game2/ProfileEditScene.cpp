@@ -117,7 +117,7 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 void ProfileEditScene::OnAvatarSelect()
 {
 	auto avatarScene = std::make_shared<AvatarSelectScene>(display, director,
-		director.ShareAvatarGallery());
+		GetTitle(), director.ShareAvatarGallery());
 	avatarSelConn = avatarScene->GetConfirmSignal().connect([=](const std::string &name) {
 		auto tex = director.ShareAvatarGallery()->FindName(name);
 

@@ -71,13 +71,16 @@ private:
  * Constructor.
  * @param display The target display.
  * @param director The current director.
+ * @param parentTitle The title of the parent dialog (may be blank).
  * @param gallery The avatar gallery from which to pick an avatar.
  * @param avatarName The initially-selected avatar.
  */
 AvatarSelectScene::AvatarSelectScene(Display::Display &display,
-	GameDirector &director, std::shared_ptr<Player::AvatarGallery> gallery,
+	GameDirector &director, const std::string &parentTitle,
+	std::shared_ptr<Player::AvatarGallery> gallery,
 	const std::string &avatarName) :
-	SUPER(display, director, _("Select Avatar"), "Avatar Select"),
+	SUPER(display, director, JoinTitles(parentTitle, _("Select Avatar")),
+		"Avatar Select"),
 	gallery(std::move(gallery)), avatarName(avatarName)
 {
 	using namespace Display;
