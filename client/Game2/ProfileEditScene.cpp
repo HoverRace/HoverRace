@@ -23,6 +23,7 @@
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/Button.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Player/AvatarGallery.h"
 #include "../../engine/Player/Profile.h"
 #include "../../engine/Player/ProfileExn.h"
@@ -63,6 +64,7 @@ protected:
 			editor->SetAvatarName(GetAvatarName());
 			editor->SetPrimaryColor(GetPrimaryColor());
 			editor->SetSecondaryColor(GetSecondaryColor());
+			editor->Save();
 		}
 		else {
 			//TODO: Use a different exception for error messaging.
@@ -84,6 +86,7 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	origProfile(std::move(origProfile))
 {
 	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
 	auto &s = display.styles;
 
@@ -97,14 +100,20 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	avatarClickedConn = avatarBtn->GetClickedSignal().connect(
 		std::bind(&ProfileEditScene::OnAvatarSelect, this));
 
-	auto nameLbl = root->NewChild<Label>(
-		this->origProfile->GetName(), s.headingFont, s.headingFg);
-	nameLbl->SetPos(580, 60);
+	auto mainGrid = root->NewChild<FlexGrid>(display);
+	mainGrid->SetPos(580, 60);
+
+	size_t row = 0;
+	mainGrid->At(row++, 0).NewChild<Label>(this->origProfile->GetName(),
+		s.headingFont, s.headingFg);
+
+	auto saveCell = mainGrid->At(row++, 0).
+		NewChild<Button>(display, _("Save Settings"));
+	saveCell->SetAlignment(Alignment::N);
+	saveConn = saveCell->GetContents()->GetClickedSignal().connect(
+		std::bind(&ProfileEditScene::OnOk, this));
 
 	/*
-	AddSetting(_("Name")).
-		NewChild<Label>(this->origProfile->GetName(), s.bodyFont, s.bodyFg);
-
 	AddSetting(_("Primary Color")).
 		NewChild<FillBox>(20, 20, this->origProfile->GetPrimaryColor());
 	AddSetting(_("Secondary Color")).

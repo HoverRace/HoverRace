@@ -63,6 +63,7 @@ private:
 
 	boost::signals2::scoped_connection avatarClickedConn;
 	boost::signals2::scoped_connection avatarSelConn;
+	boost::signals2::scoped_connection saveConn;
 };
 
 }  // namespace Client
