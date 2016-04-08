@@ -23,6 +23,7 @@
 #include "../../engine/Util/Log.h"
 
 #include "GameDirector.h"
+#include "PlayerStatusAnnouncement.h"
 #include "Roster.h"
 
 #include "PlayerBar.h"
@@ -50,14 +51,22 @@ PlayerBar::~PlayerBar()
  */
 void PlayerBar::PresentPlayers()
 {
-	director.GetParty()->ForEach([](std::shared_ptr<Player::Player> &player) {
+	director.GetParty()->ForEach([=](std::shared_ptr<Player::Player> &player) {
 		HR_LOG(info) << "Active player: " << *player;
+
+		director.RequestAnnouncement(
+			std::make_shared<PlayerStatusAnnouncement>(
+				PlayerStatusAnnouncement::Status::PRESENT, player));
 	});
 }
 
 void PlayerBar::OnPlayerAdded(std::shared_ptr<Player::Player> player)
 {
 	HR_LOG(info) << "Player added: " << *player;
+
+	director.RequestAnnouncement(
+		std::make_shared<PlayerStatusAnnouncement>(
+			PlayerStatusAnnouncement::Status::JOINED, player));
 }
 
 }  // namespace Client
