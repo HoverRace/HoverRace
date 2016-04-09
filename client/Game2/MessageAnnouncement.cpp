@@ -1,7 +1,7 @@
 
 // MessageAnnouncement.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -33,9 +33,10 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-MessageAnnouncement::MessageAnnouncement(const std::string &label,
-	const std::string &text, std::shared_ptr<Player::Player> player) :
-	SUPER("message", label, player),
+MessageAnnouncement::MessageAnnouncement(const std::string &postType,
+	const std::string &label, const std::string &text,
+	std::shared_ptr<Player::Player> player) :
+	SUPER(postType, label, player),
 	text(text)
 {
 }

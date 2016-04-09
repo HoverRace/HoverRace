@@ -39,7 +39,14 @@ public:
 		std::shared_ptr<Player::Player> player = {}) :
 		MessageAnnouncement(label, "", std::move(player)) { }
 	MessageAnnouncement(const std::string &label, const std::string &text,
-		std::shared_ptr<Player::Player> player = {});
+		std::shared_ptr<Player::Player> player = {}) :
+		MessageAnnouncement("message", label, text, player) { }
+protected:
+	MessageAnnouncement(const std::string &postType,
+		const std::string &label, const std::string &text,
+		std::shared_ptr<Player::Player> player = { });
+
+public:
 	virtual ~MessageAnnouncement() { }
 
 public:
