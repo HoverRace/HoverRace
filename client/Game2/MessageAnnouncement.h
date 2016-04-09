@@ -1,7 +1,7 @@
 
 // MessageAnnouncement.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,12 +36,10 @@ class MessageAnnouncement : public Announcement
 
 public:
 	MessageAnnouncement(const std::string &label,
-		std::shared_ptr<Player::Player> player =
-			std::shared_ptr<Player::Player>()) :
+		std::shared_ptr<Player::Player> player = {}) :
 		MessageAnnouncement(label, "", std::move(player)) { }
 	MessageAnnouncement(const std::string &label, const std::string &text,
-		std::shared_ptr<Player::Player> player =
-			std::shared_ptr<Player::Player>());
+		std::shared_ptr<Player::Player> player = {});
 	virtual ~MessageAnnouncement() { }
 
 public:
