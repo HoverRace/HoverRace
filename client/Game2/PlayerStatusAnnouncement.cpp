@@ -34,23 +34,26 @@ namespace Client {
 /**
  * Constructor.
  * @param status The player status.
- * @param player The target player (may not be @c nullptr).
+ * @param target The target player (may not be @c nullptr).
+ * @param target The subject player (may not be @c nullptr).
  */
 PlayerStatusAnnouncement::PlayerStatusAnnouncement(Status::status_t status,
-	std::shared_ptr<Player::Player> player) :
-	SUPER(player->GetName(), RenderStatusText(status, *player), player)
+	std::shared_ptr<Player::Player> target,
+	std::shared_ptr<Player::Player> subject) :
+	SUPER(subject->GetName(), RenderStatusText(status, *subject), target),
+	subject(subject)
 {
 }
 
 /**
  * Generate the announcement text for the status.
  * @param status The player status.
- * @param player The target player.
+ * @param subject The subject player.
  */
 std::string PlayerStatusAnnouncement::RenderStatusText(Status::status_t status,
-	const Player::Player &player)
+	const Player::Player &subject)
 {
-	auto profileName = player.GetProfile()->GetName();
+	auto profileName = subject.GetProfile()->GetName();
 
 	switch (status) {
 		case Status::PRESENT:

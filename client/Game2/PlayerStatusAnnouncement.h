@@ -46,7 +46,8 @@ public:
 
 public:
 	PlayerStatusAnnouncement(Status::status_t status,
-		std::shared_ptr<Player::Player> player);
+		std::shared_ptr<Player::Player> target,
+		std::shared_ptr<Player::Player> subject);
 	virtual ~PlayerStatusAnnouncement() { }
 
 protected:
@@ -59,6 +60,7 @@ public:
 
 private:
 	Status::status_t status;
+	std::shared_ptr<Player::Player> subject;
 };
 
 }  // namespace Client

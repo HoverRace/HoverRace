@@ -56,7 +56,7 @@ void PlayerBar::PresentPlayers()
 
 		director.RequestAnnouncement(
 			std::make_shared<PlayerStatusAnnouncement>(
-				PlayerStatusAnnouncement::Status::PRESENT, player));
+				PlayerStatusAnnouncement::Status::PRESENT, player, player));
 	});
 }
 
@@ -66,7 +66,7 @@ void PlayerBar::OnPlayerAdded(std::shared_ptr<Player::Player> player)
 
 	director.RequestAnnouncement(
 		std::make_shared<PlayerStatusAnnouncement>(
-			PlayerStatusAnnouncement::Status::JOINED, player));
+			PlayerStatusAnnouncement::Status::JOINED, player, player));
 }
 
 }  // namespace Client
