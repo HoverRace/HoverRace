@@ -92,11 +92,11 @@ void SdlFillBoxView::Render()
 		}
 		else {
 			// Draw four quads for the border.
-			const int sideH = rect.h - (thick * 2) - 1;
+			const int sideH = rect.h - (thick * 2);
 			SDL_Rect rects[4] = {
 				{ rect.x, rect.y, rect.w, thick },
 				{ rect.x, rect.y + thick, thick, sideH },
-				{ rect.x, rect.y + rect.h - thick - 1, rect.w, thick },
+				{ rect.x, rect.y + rect.h - thick, rect.w, thick },
 				{ rect.x + rect.w - thick, rect.y + thick, thick, sideH },
 			};
 			SDL_RenderFillRects(renderer, rects, 4);
