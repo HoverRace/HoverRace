@@ -766,6 +766,10 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	fillBox = root->NewChild<FillBox>(100, 100, 0x7f0000ff, 1, 0x3f00ff00);
 	fillBox->SetPos(450, 70);
 
+	auto tex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
+	auto pic = root->NewChild<Picture>(tex, 150, 150);
+	pic->SetPos(700, 20);
+
 	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
 	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
 	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
