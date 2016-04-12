@@ -898,10 +898,10 @@ void Config::Save() const
 		}
 	}
 
-	fs::ofstream out{ cfgPath };
+	fs::ofstream out{ cfgfile };
 	if (!out.is_open()) {
 		throw ConfigExn("Unable to create config file: " +
-			(const std::string&)Str::PU(cfgPath));
+			(const std::string&)Str::PU(cfgfile));
 	}
 
 	try {
