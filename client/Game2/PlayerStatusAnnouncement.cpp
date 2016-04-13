@@ -35,7 +35,7 @@ namespace Client {
  * Constructor.
  * @param status The player status.
  * @param target The target player (may not be @c nullptr).
- * @param target The subject player (may not be @c nullptr).
+ * @param subject The subject player (may not be @c nullptr).
  */
 PlayerStatusAnnouncement::PlayerStatusAnnouncement(Status::status_t status,
 	std::shared_ptr<Player::Player> target,
