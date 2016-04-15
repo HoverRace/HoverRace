@@ -21,10 +21,9 @@
 
 #pragma once
 
-#include "Color.h"
 #include "Res.h"
 
-#include "UiViewModel.h"
+#include "FillBox.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -50,9 +49,9 @@ namespace Display {
  * Draws a single texture.
  * @author Michael Imamura
  */
-class MR_DllDeclare Picture : public UiViewModel
+class MR_DllDeclare Picture : public FillBox
 {
-	using SUPER = UiViewModel;
+	using SUPER = FillBox;
 
 public:
 	struct Props
@@ -60,8 +59,6 @@ public:
 		enum
 		{
 			TEXTURE = SUPER::Props::NEXT_,
-			SIZE,
-			COLOR,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -83,25 +80,8 @@ public:
 	std::shared_ptr<Res<Texture>> ShareTexture() const { return texture; }
 	void SetTexture(std::shared_ptr<Res<Texture>> texture);
 
-	const Color GetColor() const { return color; }
-	void SetColor(const Color color);
-
-	/**
-	 * Retrieve the size of the box.
-	 * @return The size, where @c x is the width and @c y is the height.
-	 */
-	const Vec2 &GetSize() const { return size; }
-	void SetSize(const Vec2 &size);
-	/// Convenience function for SetSize(const Vec2&).
-	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
-
-public:
-	virtual Vec3 Measure() { return size.Promote(); }
-
 private:
 	std::shared_ptr<Res<Texture>> texture;
-	Vec2 size;
-	Color color;
 };
 
 }  // namespace Display

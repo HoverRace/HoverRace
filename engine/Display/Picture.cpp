@@ -36,8 +36,8 @@ namespace Display {
  */
 Picture::Picture(std::shared_ptr<Res<Texture>> texture, const Vec2 &size,
 	Color color, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags),
-	texture(std::move(texture)), size(size), color(color)
+	SUPER(size, color, layoutFlags),
+	texture(std::move(texture))
 {
 }
 
@@ -64,31 +64,6 @@ void Picture::SetTexture(std::shared_ptr<Res<Texture>> texture)
 	if (this->texture != texture) {
 		this->texture = std::move(texture);
 		FireModelUpdate(Props::TEXTURE);
-	}
-}
-
-/**
- * Set the color of the box.
- * @param color The color (including alpha).
- */
-void Picture::SetColor(const Color color)
-{
-	if (this->color != color) {
-		this->color = color;
-		FireModelUpdate(Props::COLOR);
-	}
-}
-
-/**
- * Set the size of the box.
- * @param size The size of the box, where @c x is the width
- *             and @c y is the height.
- */
-void Picture::SetSize(const Vec2 &size)
-{
-	if (this->size != size) {
-		this->size = size;
-		FireModelUpdate(Props::SIZE);
 	}
 }
 
