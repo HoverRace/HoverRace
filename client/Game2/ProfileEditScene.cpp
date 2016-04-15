@@ -82,7 +82,7 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::Profile> origProfile) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Profile")), "Profile"),
-	profile((new FormProfile(*origProfile))->Edit()),
+	profile(new FormProfile(*origProfile)), editProfile(profile->Edit()),
 	origProfile(std::move(origProfile))
 {
 	using namespace Display;
@@ -126,12 +126,12 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 void ProfileEditScene::OnAvatarSelect()
 {
 	auto avatarScene = std::make_shared<AvatarSelectScene>(display, director,
-		GetTitle(), director.ShareAvatarGallery());
+		GetTitle(), director.ShareAvatarGallery(), profile->GetAvatarName());
 	avatarSelConn = avatarScene->GetConfirmSignal().connect([=](const std::string &name) {
 		auto tex = director.ShareAvatarGallery()->FindName(name);
 
 		avatarBtn->SetTexture(tex);
-		profile->SetAvatarName(name);
+		editProfile->SetAvatarName(name);
 	});
 	director.RequestPushScene(avatarScene);
 }
@@ -140,7 +140,7 @@ void ProfileEditScene::OnOk()
 {
 	//TODO: Save in background w/ loading scene.
 	try {
-		profile->Save();
+		editProfile->Save();
 		SUPER::OnOk();
 	}
 	catch (Player::ProfileExn &ex) {

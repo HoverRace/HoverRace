@@ -98,6 +98,7 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 	selGrid->SetPos(580, 60);
 	selGrid->SetMargin(20, 20);
 
+	bool found = false;
 	size_t col = 0;
 	size_t row = 0;
 	for (auto &ent : *(this->gallery)) {
@@ -110,6 +111,11 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 			OnAvatarSelected(name);
 		}));
 
+		if (name == avatarName) {
+			selBtn->RequestFocus();
+			found = true;
+		}
+
 		col++;
 		if (col >= 5) {
 			col = 0;
@@ -117,7 +123,9 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 		}
 	}
 
-	selGrid->RequestFocus();
+	if (!found) {
+		selGrid->RequestFocus();
+	}
 }
 
 void AvatarSelectScene::OnAvatarSelected(const std::string &name)

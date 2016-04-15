@@ -56,7 +56,8 @@ protected:
 	void OnCancel() override;
 
 private:
-	std::unique_ptr<Player::EditableProfile> profile;
+	std::unique_ptr<Player::Profile> profile;
+	Player::EditableProfile *editProfile;
 	std::shared_ptr<Player::Profile> origProfile;
 
 	std::shared_ptr<Display::Button> avatarBtn;
