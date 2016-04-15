@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../../engine/Display/Container.h"
+#include "../../engine/Display/Picture.h"
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/Player/Player.h"
 #include "../../engine/Util/Symbol.h"
@@ -72,15 +73,11 @@ std::string PlayerStatusAnnouncement::RenderStatusText(Status::status_t status,
 }
 
 std::shared_ptr<Display::FillBox> PlayerStatusAnnouncement::CreateIcon(
-	Display::Display &display, Display::Container &parent) const
+	Display::Display&, Display::Container &parent) const
 {
-	const auto &s = display.styles;
-
-	//TODO: Use Picture when Picture extends FillBox.
-
-	// Info icon (will be resized by the container).
-	return parent.NewChild<Display::SymbolIcon>(
-		1, 1, Symbol::INFO_CIRCLE, s.announcementSymbolFg);
+	// Avatar (will be resized by the container).
+	return parent.NewChild<Display::Picture>(
+		subject->GetProfile()->GetAvatar(), 1, 1);
 }
 
 }  // namespace Client
