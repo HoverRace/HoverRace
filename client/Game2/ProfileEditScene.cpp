@@ -118,9 +118,9 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 		NewChild<FillBox>(20, 20, this->origProfile->GetPrimaryColor());
 	AddSetting(_("Secondary Color")).
 		NewChild<FillBox>(20, 20, this->origProfile->GetSecondaryColor());
-
-	GetSettingsGrid()->RequestFocus();
 	*/
+
+	avatarBtn->RequestFocus();
 }
 
 void ProfileEditScene::OnAvatarSelect()
