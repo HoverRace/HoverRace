@@ -41,6 +41,14 @@ fi
 # minimize the number of changed lines.
 "$DOXYGEN" && "$DOXYGEN" || exit 1
 
+# Re-install dynsections.js if it was removed.
+# Some distributions of Doxygen (Debain's included) does not generate the
+# dynsections.js file in the output.
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809525
+if [[ ! -f srcdoc/html/dynsections.js ]]; then
+	cp -v srcdoc/dynsections.js srcdoc/html || exit 1
+fi
+
 # If the documentation is linked to a Git repository, then prepare the
 # files for commit, including removing deleted files.
 if [[ -d srcdoc/html/.git ]]; then
