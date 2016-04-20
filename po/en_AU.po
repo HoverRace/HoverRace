@@ -43,6 +43,11 @@ msgstr "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr "%d.%02d.%02d  Lap:%d/%d"
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, fuzzy, c-format, boost-format
+msgid "%s has joined"
+msgstr "%s has left"
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -769,6 +774,7 @@ msgstr "&Split Screen"
 msgid "Prior"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -838,6 +844,7 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
@@ -854,6 +861,10 @@ msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Select"
+msgstr ""
+
+#: client/Game2/AvatarSelectScene.cpp
+msgid "Select Avatar"
 msgstr ""
 
 #: client/Game2/LocaleSelectScene.cpp
@@ -1150,6 +1161,11 @@ msgstr ""
 msgid "Warning: unable to find description"
 msgstr ""
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, c-format, boost-format
+msgid "Welcome, %s!"
+msgstr ""
+
 #: compilers/MazeCompiler/main.cpp
 msgid "Wrong argument count"
 msgstr ""
@@ -1265,9 +1281,6 @@ msgstr "Unable to open file for writing:"
 
 #~ msgid " at IP "
 #~ msgstr " at IP "
-
-#~ msgid "%s has left"
-#~ msgstr "%s has left"
 
 #~ msgctxt "Menu|File|Split Screen"
 #~ msgid "&2 Player"

@@ -43,6 +43,11 @@ msgstr "%d %-0.10s #%d%*s Vuelta:%-2d   %2d.%02d.%03d%c"
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr "%d.%02d.%02d  Vuelta:%d/%d"
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, fuzzy, c-format, boost-format
+msgid "%s has joined"
+msgstr "se ha marchado"
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -786,6 +791,7 @@ msgstr "&Multijugador"
 msgid "Prior"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -855,6 +861,7 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
@@ -872,6 +879,11 @@ msgstr ""
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
 msgid "Select"
+msgstr "Seleccionar arma:"
+
+#: client/Game2/AvatarSelectScene.cpp
+#, fuzzy
+msgid "Select Avatar"
 msgstr "Seleccionar arma:"
 
 #: client/Game2/LocaleSelectScene.cpp
@@ -1173,6 +1185,11 @@ msgstr ""
 msgid "Warning: unable to find description"
 msgstr ""
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, c-format, boost-format
+msgid "Welcome, %s!"
+msgstr ""
+
 #: compilers/MazeCompiler/main.cpp
 msgid "Wrong argument count"
 msgstr ""
@@ -1288,10 +1305,6 @@ msgstr "Imposible de enviar la información actualizada"
 
 #~ msgid " at IP "
 #~ msgstr " en la IP "
-
-#, fuzzy
-#~ msgid "%s has left"
-#~ msgstr "se ha marchado"
 
 # Aquí volvemos con la misma situación, nosotros podríamos poner lo mismo que en inglés, pero nosotros debemos ser más específicos que solo dando la idea, en este caso el "De a" y "Jugadores" es una forma de completar la coherencia.
 #~ msgctxt "Menu|File|Split Screen"

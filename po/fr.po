@@ -42,6 +42,11 @@ msgstr ""
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr ""
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, c-format, boost-format
+msgid "%s has joined"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -769,6 +774,7 @@ msgstr "Écra&n partagé"
 msgid "Prior"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -837,6 +843,7 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
@@ -853,6 +860,10 @@ msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Select"
+msgstr ""
+
+#: client/Game2/AvatarSelectScene.cpp
+msgid "Select Avatar"
 msgstr ""
 
 #: client/Game2/LocaleSelectScene.cpp
@@ -1141,6 +1152,11 @@ msgstr ""
 
 #: engine/MazeCompiler/TrackCompiler.cpp
 msgid "Warning: unable to find description"
+msgstr ""
+
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, c-format, boost-format
+msgid "Welcome, %s!"
 msgstr ""
 
 #: compilers/MazeCompiler/main.cpp

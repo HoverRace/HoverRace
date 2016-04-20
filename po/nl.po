@@ -43,6 +43,11 @@ msgstr ""
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr ""
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, fuzzy, c-format, boost-format
+msgid "%s has joined"
+msgstr "is weggegaan"
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -780,6 +785,7 @@ msgstr "Ge&splitst scherm"
 msgid "Prior"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -849,6 +855,7 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
@@ -866,6 +873,11 @@ msgstr ""
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
 msgid "Select"
+msgstr "Selecteer wapen:"
+
+#: client/Game2/AvatarSelectScene.cpp
+#, fuzzy
+msgid "Select Avatar"
 msgstr "Selecteer wapen:"
 
 #: client/Game2/LocaleSelectScene.cpp
@@ -1164,6 +1176,11 @@ msgstr ""
 msgid "Warning: unable to find description"
 msgstr ""
 
+#: client/Game2/PlayerStatusAnnouncement.cpp
+#, c-format, boost-format
+msgid "Welcome, %s!"
+msgstr ""
+
 #: compilers/MazeCompiler/main.cpp
 msgid "Wrong argument count"
 msgstr ""
@@ -1279,10 +1296,6 @@ msgstr "Kan vernieuw-informatie niet verzenden"
 
 #~ msgid " at IP "
 #~ msgstr "op het IP"
-
-#, fuzzy
-#~ msgid "%s has left"
-#~ msgstr "is weggegaan"
 
 #~ msgctxt "Menu|File|Split Screen"
 #~ msgid "&2 Player"

@@ -1,4 +1,5 @@
 client/Game2/AudioSettingsScene.cpp
+client/Game2/AvatarSelectScene.cpp
 client/Game2/BulletinBoard.cpp
 client/Game2/ClientApp.cpp
 client/Game2/ClientSession.cpp
@@ -39,7 +40,9 @@ client/Game2/PaletteScene.cpp
 client/Game2/PauseMenuScene.cpp
 client/Game2/PlayGameScene.cpp
 client/Game2/PlayerBar.cpp
+client/Game2/PlayerStatusAnnouncement.cpp
 client/Game2/PracticeSetupScene.cpp
+client/Game2/ProfileEditScene.cpp
 client/Game2/RoomList.cpp
 client/Game2/Roster.cpp
 client/Game2/Rulebook.cpp
@@ -78,6 +81,7 @@ engine/Display/Button.cpp
 engine/Display/Checkbox.cpp
 engine/Display/Chronometer.cpp
 engine/Display/ClickRegion.cpp
+engine/Display/Color.cpp
 engine/Display/Container.cpp
 engine/Display/Counter.cpp
 engine/Display/Display.cpp
@@ -121,6 +125,7 @@ engine/Display/Styles.cpp
 engine/Display/SymbolIcon.cpp
 engine/Display/UiViewModel.cpp
 engine/Display/Wallpaper.cpp
+engine/Engine.cpp
 engine/MainCharacter/MainCharacter.cpp
 engine/MainCharacter/MainCharacterRenderer.cpp
 engine/MazeCompiler/LevelBuilder.cpp
@@ -171,10 +176,13 @@ engine/Parcel/ClassicRecordFile.cpp
 engine/Parcel/ObjStream.cpp
 engine/Parcel/ResBundle.cpp
 engine/Parcel/TrackBundle.cpp
+engine/Player/AvatarGallery.cpp
 engine/Player/DemoProfile.cpp
 engine/Player/LocalPlayer.cpp
+engine/Player/LocalProfile.cpp
 engine/Player/Player.cpp
 engine/Player/Profile.cpp
+engine/Player/ProfileGallery.cpp
 engine/Script/Core.cpp
 engine/Script/Env.cpp
 engine/Script/Handlers.cpp
