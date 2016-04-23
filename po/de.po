@@ -153,6 +153,10 @@ msgstr "Abbrechen"
 msgid "Caps Lock"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "Change Name"
+msgstr ""
+
 #: engine/Control/ControllerStrings.cpp
 msgid "Clear"
 msgstr ""

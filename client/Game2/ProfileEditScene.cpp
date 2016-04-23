@@ -107,6 +107,12 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	mainGrid->At(row++, 0).NewChild<Label>(this->origProfile->GetName(),
 		s.headingFont, s.headingFg);
 
+	auto renameBtn = mainGrid->At(row++, 0).
+		NewChild<Button>(display, _("Change Name"))->GetContents();
+	renameConn = renameBtn->GetClickedSignal().connect(
+		std::bind(&ProfileEditScene::OnRename, this));
+	renameBtn->SetEnabled(false);
+
 	auto saveCell = mainGrid->At(row++, 0).
 		NewChild<Button>(display, _("Save Settings"));
 	saveCell->SetAlignment(Alignment::N);
@@ -121,6 +127,11 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	*/
 
 	avatarBtn->RequestFocus();
+}
+
+void ProfileEditScene::OnRename()
+{
+	//TODO: Display text dialog.
 }
 
 void ProfileEditScene::OnAvatarSelect()
