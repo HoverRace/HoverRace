@@ -60,11 +60,15 @@ public:
 	void OnModelUpdate(int prop) override;
 
 public:
+	Vec2 GetScreenPos() const override { return screenPos; }
+	Vec2 GetScreenSize() const override { return screenSize; }
 	Vec3 Measure() override;
 	void PrepareRender() override;
 	void Render() override;
 
 private:
+	Vec2 screenPos;
+	Vec2 screenSize;
 	bool textureChanged;
 	std::shared_ptr<SdlTexture> texture;
 };

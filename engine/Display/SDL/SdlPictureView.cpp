@@ -32,6 +32,7 @@ namespace SDL {
 
 SdlPictureView::SdlPictureView(SdlDisplay &disp, Picture &model) :
 	SUPER(disp, model),
+	screenPos(0, 0), screenSize(0, 0),
 	textureChanged(true)
 {
 }
@@ -69,6 +70,26 @@ void SdlPictureView::PrepareRender()
 void SdlPictureView::Render()
 {
 	const Color color = model.GetColor();
+
+	// Calculate the screen-space size and position.
+
+	Vec2 pos = display.LayoutUiPosition(
+		model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
+
+	const Vec2 &size = model.GetSize();
+	double w = size.x;
+	double h = size.y;
+	if (!model.IsLayoutUnscaled()) {
+		double uiScale = display.GetUiScale();
+		w *= uiScale;
+		h *= uiScale;
+	}
+
+	// Stash the calculated coordinates for UI hit-testing.
+	screenPos = pos;
+	screenSize.x = w;
+	screenSize.y = h;
+
 	if (texture && color.bits.a > 0) {
 		SDL_Renderer *renderer = display.GetRenderer();
 
@@ -76,18 +97,6 @@ void SdlPictureView::Render()
 		SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
 		SDL_SetTextureAlphaMod(tex, color.bits.a);
 		SDL_SetTextureColorMod(tex, color.bits.r, color.bits.g, color.bits.b);
-
-		Vec2 pos = display.LayoutUiPosition(
-			model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
-
-		const Vec2 &size = model.GetSize();
-		double w = size.x;
-		double h = size.y;
-		if (!model.IsLayoutUnscaled()) {
-			double uiScale = display.GetUiScale();
-			w *= uiScale;
-			h *= uiScale;
-		}
 
 		SDL_Rect rect = {
 			static_cast<int>(pos.x), static_cast<int>(pos.y),
