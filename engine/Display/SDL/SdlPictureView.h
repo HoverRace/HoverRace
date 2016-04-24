@@ -1,7 +1,7 @@
 
 // SdlPictureView.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,22 +50,23 @@ namespace SDL {
  */
 class MR_DllDeclare SdlPictureView : public SdlView<Picture>
 {
-	typedef SdlView<Picture> SUPER;
-	public:
-		SdlPictureView(SdlDisplay &disp, Picture &model);
-		virtual ~SdlPictureView() { }
+	using SUPER = SdlView<Picture>;
 
-	public:
-		void OnModelUpdate(int prop) override;
+public:
+	SdlPictureView(SdlDisplay &disp, Picture &model);
+	virtual ~SdlPictureView() { }
 
-	public:
-		Vec3 Measure() override;
-		void PrepareRender() override;
-		void Render() override;
+public:
+	void OnModelUpdate(int prop) override;
 
-	private:
-		bool textureChanged;
-		std::shared_ptr<SdlTexture> texture;
+public:
+	Vec3 Measure() override;
+	void PrepareRender() override;
+	void Render() override;
+
+private:
+	bool textureChanged;
+	std::shared_ptr<SdlTexture> texture;
 };
 
 }  // namespace SDL
