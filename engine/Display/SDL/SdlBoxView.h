@@ -69,14 +69,15 @@ protected:
 	 */
 	void CalcScreenBounds()
 	{
-		const Vec2 &size = model.GetSize();
+		const Vec2 &size = this->model.GetSize();
 		double w = size.x;
 		double h = size.y;
 
-		screenPos = display.LayoutUiPosition(model.GetAlignedPos(w, h));
+		screenPos = this->display.LayoutUiPosition(
+			this->model.GetAlignedPos(w, h));
 
-		if (!model.IsLayoutUnscaled()) {
-			double uiScale = display.GetUiScale();
+		if (!this->model.IsLayoutUnscaled()) {
+			double uiScale = this->display.GetUiScale();
 			w *= uiScale;
 			h *= uiScale;
 		}
