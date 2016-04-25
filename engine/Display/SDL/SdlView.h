@@ -1,7 +1,7 @@
 
 // SdlView.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,7 +35,9 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Display;
+		namespace SDL {
+			class SdlDisplay;
+		}
 	}
 }
 
