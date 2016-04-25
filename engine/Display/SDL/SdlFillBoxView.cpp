@@ -22,6 +22,7 @@
 #include <SDL2/SDL.h>
 
 #include "../FillBox.h"
+#include "SdlDisplay.h"
 
 #include "SdlFillBoxView.h"
 
@@ -38,24 +39,7 @@ void SdlFillBoxView::Render()
 	const bool hasFill = color.bits.a > 0;
 	const bool hasBorder = border > 0.0 && borderColor.bits.a > 0;
 
-	// Calculate the screen-space size and position.
-
-	Vec2 pos = display.LayoutUiPosition(
-		model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
-
-	const Vec2 &size = model.GetSize();
-	double w = size.x;
-	double h = size.y;
-	if (!model.IsLayoutUnscaled()) {
-		double uiScale = display.GetUiScale();
-		w *= uiScale;
-		h *= uiScale;
-	}
-
-	// Stash the calculated coordinates for UI hit-testing.
-	screenPos = pos;
-	screenSize.x = w;
-	screenSize.y = h;
+	CalcScreenBounds();
 
 	if (!hasFill && !hasBorder) return;  // Nothing to draw.
 
@@ -63,8 +47,8 @@ void SdlFillBoxView::Render()
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	SDL_Rect rect = {
-		static_cast<int>(pos.x), static_cast<int>(pos.y),
-		static_cast<int>(w), static_cast<int>(h) };
+		static_cast<int>(screenPos.x), static_cast<int>(screenPos.y),
+		static_cast<int>(screenSize.x), static_cast<int>(screenSize.y) };
 
 	if (hasFill) {
 		SDL_SetRenderDrawColor(renderer,

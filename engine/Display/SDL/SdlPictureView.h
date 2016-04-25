@@ -21,8 +21,7 @@
 
 #pragma once
 
-#include "SdlDisplay.h"
-#include "SdlView.h"
+#include "SdlBoxView.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -48,9 +47,9 @@ namespace SDL {
  * SDL view for Picture.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlPictureView : public SdlView<Picture>
+class MR_DllDeclare SdlPictureView : public SdlBoxView<Picture>
 {
-	using SUPER = SdlView<Picture>;
+	using SUPER = SdlBoxView<Picture>;
 
 public:
 	SdlPictureView(SdlDisplay &disp, Picture &model);
@@ -60,15 +59,11 @@ public:
 	void OnModelUpdate(int prop) override;
 
 public:
-	Vec2 GetScreenPos() const override { return screenPos; }
-	Vec2 GetScreenSize() const override { return screenSize; }
 	Vec3 Measure() override;
 	void PrepareRender() override;
 	void Render() override;
 
 private:
-	Vec2 screenPos;
-	Vec2 screenSize;
 	bool textureChanged;
 	std::shared_ptr<SdlTexture> texture;
 };

@@ -1,7 +1,7 @@
 
-// SdlFillBoxView.h
+// SdlBoxView.h
 //
-// Copyright (c) 2013-2016 Michael Imamura.
+// Copyright (c) 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "SdlBoxView.h"
+#include "SdlView.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -35,7 +35,9 @@
 
 namespace HoverRace {
 	namespace Display {
-		class FillBox;
+		namespace SDL {
+			class SdlDisplay;
+		}
 	}
 }
 
@@ -44,25 +46,47 @@ namespace Display {
 namespace SDL {
 
 /**
- * SDL view for FillBox.
+ * Base class for FillBox views.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlFillBoxView : public SdlBoxView<FillBox>
+template<class T>
+class MR_DllDeclare SdlBoxView : public SdlView<T>
 {
-	using SUPER = SdlBoxView<FillBox>;
+	using SUPER = SdlView<T>;
 
 public:
-	SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
-		SUPER(disp, model) { }
-	virtual ~SdlFillBoxView() { }
+	SdlBoxView(SdlDisplay &disp, T &model) :
+		SUPER(disp, model), screenPos(0, 0), screenSize(0, 0) { }
+	virtual ~SdlBoxView() { }
 
 public:
-	void OnModelUpdate(int) override { }
+	Vec2 GetScreenPos() const override { return screenPos; }
+	Vec2 GetScreenSize() const override { return screenSize; }
 
-public:
-	Vec3 Measure() override;
-	void PrepareRender() override { }
-	void Render() override;
+protected:
+	/**
+	 * Update the screen-space bounds from the UI-space bounds.
+	 */
+	void CalcScreenBounds()
+	{
+		const Vec2 &size = model.GetSize();
+		double w = size.x;
+		double h = size.y;
+
+		screenPos = display.LayoutUiPosition(model.GetAlignedPos(w, h));
+
+		if (!model.IsLayoutUnscaled()) {
+			double uiScale = display.GetUiScale();
+			w *= uiScale;
+			h *= uiScale;
+		}
+		screenSize.x = w;
+		screenSize.y = h;
+	}
+
+protected:
+	Vec2 screenPos;
+	Vec2 screenSize;
 };
 
 }  // namespace SDL

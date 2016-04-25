@@ -22,6 +22,7 @@
 #include <SDL2/SDL.h>
 
 #include "../Picture.h"
+#include "SdlDisplay.h"
 #include "SdlTexture.h"
 
 #include "SdlPictureView.h"
@@ -32,7 +33,6 @@ namespace SDL {
 
 SdlPictureView::SdlPictureView(SdlDisplay &disp, Picture &model) :
 	SUPER(disp, model),
-	screenPos(0, 0), screenSize(0, 0),
 	textureChanged(true)
 {
 }
@@ -71,24 +71,7 @@ void SdlPictureView::Render()
 {
 	const Color color = model.GetColor();
 
-	// Calculate the screen-space size and position.
-
-	Vec2 pos = display.LayoutUiPosition(
-		model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
-
-	const Vec2 &size = model.GetSize();
-	double w = size.x;
-	double h = size.y;
-	if (!model.IsLayoutUnscaled()) {
-		double uiScale = display.GetUiScale();
-		w *= uiScale;
-		h *= uiScale;
-	}
-
-	// Stash the calculated coordinates for UI hit-testing.
-	screenPos = pos;
-	screenSize.x = w;
-	screenSize.y = h;
+	CalcScreenBounds();
 
 	if (texture && color.bits.a > 0) {
 		SDL_Renderer *renderer = display.GetRenderer();
@@ -99,8 +82,8 @@ void SdlPictureView::Render()
 		SDL_SetTextureColorMod(tex, color.bits.r, color.bits.g, color.bits.b);
 
 		SDL_Rect rect = {
-			static_cast<int>(pos.x), static_cast<int>(pos.y),
-			static_cast<int>(w), static_cast<int>(h) };
+			static_cast<int>(screenPos.x), static_cast<int>(screenPos.y),
+			static_cast<int>(screenSize.x), static_cast<int>(screenSize.y) };
 		SDL_RenderCopy(renderer, tex, nullptr, &rect);
 	}
 }
