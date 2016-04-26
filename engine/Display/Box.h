@@ -1,7 +1,7 @@
 
-// FillBox.h
+// Box.h
 //
-// Copyright (c) 2013-2016 Michael Imamura.
+// Copyright (c) 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 #include "Color.h"
 
-#include "Box.h"
+#include "UiViewModel.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -45,52 +45,47 @@ namespace HoverRace {
 namespace Display {
 
 /**
- * A colored rectangle, that's all.
+ * Base class for low-level bounded widgets.
  * @author Michael Imamura
  */
-class MR_DllDeclare FillBox : public Box
+class MR_DllDeclare Box : public UiViewModel
 {
-	using SUPER = Box;
+	using SUPER = UiViewModel;
 
 public:
 	struct Props
 	{
-		enum {
-			COLOR = SUPER::Props::NEXT_,
-			BORDER,
-			BORDER_COLOR,
+		enum
+		{
+			SIZE = SUPER::Props::NEXT_,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
 
 public:
-	FillBox(const Vec2 &size, const Color color,
-		uiLayoutFlags_t layoutFlags = 0);
-	FillBox(double w, double h, const Color color,
-		uiLayoutFlags_t layoutFlags = 0);
-	FillBox(const Vec2 &size, const Color color, double border,
-		const Color borderColor, uiLayoutFlags_t layoutFlags = 0);
-	FillBox(double w, double h, const Color color, double border,
-		const Color borderColor, uiLayoutFlags_t layoutFlags = 0);
-	virtual ~FillBox() { }
+	Box(const Vec2 &size, uiLayoutFlags_t layoutFlags = 0) :
+		SUPER(layoutFlags), size(size) { }
+	virtual ~Box() { }
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	/**
+	 * Retrieve the size of the box.
+	 * @return The size, where @c x is the width and @c y is the height.
+	 */
+	const Vec2 &GetSize() const { return size; }
+	void SetSize(const Vec2 &size);
+	/// Convenience function for SetSize(const Vec2&).
+	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
 public:
-	const Color GetColor() const { return color; }
-	void SetColor(const Color color);
+	virtual void AdjustHeight(double h);
+	virtual void AdjustWidth(double w);
 
-	double GetBorder() const { return border; }
-	void SetBorder(double border);
-
-	const Color GetBorderColor() const { return borderColor; }
-	void SetBorderColor(const Color color);
+public:
+	virtual Vec3 Measure() { return size.Promote(); }
 
 private:
-	Color color;
-	double border;
-	Color borderColor;
+	Vec2 size;
 };
 
 }  // namespace Display

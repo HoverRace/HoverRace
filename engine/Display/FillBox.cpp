@@ -1,7 +1,7 @@
 
 // FillBox.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -63,8 +63,8 @@ FillBox::FillBox(double w, double h, const Color color,
  */
 FillBox::FillBox(const Vec2 &size, const Color color,
 	double border, const Color borderColor, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags),
-	size(size), color(color), border(border), borderColor(borderColor)
+	SUPER(size, layoutFlags),
+	color(color), border(border), borderColor(borderColor)
 {
 }
 
@@ -96,19 +96,6 @@ void FillBox::SetColor(const Color color)
 }
 
 /**
- * Set the size of the box.
- * @param size The size of the box, where @c x is the width
- *             and @c y is the height.
- */
-void FillBox::SetSize(const Vec2 &size)
-{
-	if (this->size != size) {
-		this->size = size;
-		FireModelUpdate(Props::SIZE);
-	}
-}
-
-/**
  * Set the border thickness.
  * @param border The border.  May be zero for no border.
  */
@@ -130,25 +117,6 @@ void FillBox::SetBorderColor(const Color color)
 		borderColor = color;
 		FireModelUpdate(Props::BORDER_COLOR);
 	}
-}
-
-
-/**
- * Adjust the height, preserving the preferred aspect ratio.
- * @param h The new height.
- */
-void FillBox::AdjustHeight(double h)
-{
-	SetSize(size.x * (h / size.y), h);
-}
-
-/**
- * Adjust the width, preserving the preferred aspect ratio.
- * @param w The new width.
- */
-void FillBox::AdjustWidth(double w)
-{
-	SetSize(w, size.y * (w / size.x));
 }
 
 }  // namespace Display

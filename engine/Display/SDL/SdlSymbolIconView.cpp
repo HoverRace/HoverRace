@@ -1,7 +1,7 @@
 
 // SdlSymbolIconView.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ SdlSymbolIconView::~SdlSymbolIconView()
 void SdlSymbolIconView::OnModelUpdate(int prop)
 {
 	switch (prop) {
-		case FillBox::Props::SIZE:
+		case Box::Props::SIZE:
 		case SymbolIcon::Props::SYMBOL:
 			typeLine.reset();
 			break;

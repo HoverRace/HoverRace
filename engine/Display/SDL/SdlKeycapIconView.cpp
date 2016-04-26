@@ -1,7 +1,7 @@
 
 // SdlKeycapIconView.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ void SdlKeycapIconView::OnModelUpdate(int prop)
 			colorChanged = true;
 			break;
 
-		case FillBox::Props::SIZE:
+		case Box::Props::SIZE:
 		case KeycapIcon::Props::KEY_HASH:
 			texture.release();
 			break;
