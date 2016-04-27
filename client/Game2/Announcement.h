@@ -1,7 +1,7 @@
 
 // Announcement.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace HoverRace {
 	namespace Display {
 		class Container;
 		class Display;
-		class FillBox;
+		class Box;
 		class FlexGrid;
 	}
 	namespace Player {
@@ -76,7 +76,7 @@ public:
 	 * @param parent The container the icon will be added to.
 	 * @return The created icon (may be @c nullptr).
 	 */
-	virtual std::shared_ptr<Display::FillBox> CreateIcon(
+	virtual std::shared_ptr<Display::Box> CreateIcon(
 		Display::Display &display, Display::Container &parent) const = 0;
 
 	/**

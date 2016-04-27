@@ -1,7 +1,7 @@
 
 // BulletinBoard.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ private:
 	std::shared_ptr<Announcement> ann;
 	bool expired;
 	OS::timestamp_t expiration;
-	std::shared_ptr<Display::FillBox> bg;
+	std::shared_ptr<Display::Box> bg;
 	std::shared_ptr<Display::ClickRegion> clickBox;
 	std::shared_ptr<Display::Label> labelLbl;
 	std::shared_ptr<Display::FlexGrid> contentGrid;

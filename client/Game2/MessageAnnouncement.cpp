@@ -41,7 +41,7 @@ MessageAnnouncement::MessageAnnouncement(const std::string &postType,
 {
 }
 
-std::shared_ptr<Display::FillBox> MessageAnnouncement::CreateIcon(
+std::shared_ptr<Display::Box> MessageAnnouncement::CreateIcon(
 	Display::Display &display, Display::Container &parent) const
 {
 	const auto &s = display.styles;

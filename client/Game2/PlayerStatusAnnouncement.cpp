@@ -72,7 +72,7 @@ std::string PlayerStatusAnnouncement::RenderStatusText(Status::status_t status,
 	}
 }
 
-std::shared_ptr<Display::FillBox> PlayerStatusAnnouncement::CreateIcon(
+std::shared_ptr<Display::Box> PlayerStatusAnnouncement::CreateIcon(
 	Display::Display&, Display::Container &parent) const
 {
 	// Avatar (will be resized by the container).

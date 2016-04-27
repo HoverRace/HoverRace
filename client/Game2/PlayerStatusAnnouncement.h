@@ -55,7 +55,7 @@ protected:
 		const Player::Player &player);
 
 public:
-	std::shared_ptr<Display::FillBox> CreateIcon(Display::Display &display,
+	std::shared_ptr<Display::Box> CreateIcon(Display::Display &display,
 		Display::Container &parent) const override;
 
 private:
