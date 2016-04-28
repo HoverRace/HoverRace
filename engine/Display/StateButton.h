@@ -1,7 +1,7 @@
 
 // StateButton.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -96,9 +96,9 @@ public:
 private:
 	bool checked;
 
-	typedef std::pair<bool, bool> iconsKey_t;  ///< enabled, checked
-	typedef std::shared_ptr<FillBox> iconsVal_t;
-	typedef std::map<iconsKey_t, iconsVal_t> icons_t;
+	using iconsKey_t = std::pair<bool, bool>;  ///< enabled, checked
+	using iconsVal_t = std::shared_ptr<FillBox>;
+	using icons_t = std::map<iconsKey_t, iconsVal_t>;
 	icons_t icons;
 };
 
