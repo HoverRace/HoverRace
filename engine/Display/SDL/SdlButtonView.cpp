@@ -23,6 +23,7 @@
 
 #include "../Button.h"
 #include "../Box.h"
+#include "../FillBox.h"
 #include "../Label.h"
 #include "../Picture.h"
 
