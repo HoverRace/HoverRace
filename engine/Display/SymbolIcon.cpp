@@ -1,7 +1,7 @@
 
 // SymbolIcon.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ namespace Display {
  */
 SymbolIcon::SymbolIcon(const Vec2 &size, int symbol, Color color,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(size, color, layoutFlags),
-	symbol(symbol)
+	SUPER(size, layoutFlags),
+	symbol(symbol), color(color)
 {
 }
 
@@ -53,8 +53,7 @@ SymbolIcon::SymbolIcon(const Vec2 &size, int symbol, Color color,
  */
 SymbolIcon::SymbolIcon(double w, double h, int symbol, Color color,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(w, h, color, layoutFlags),
-	symbol(symbol)
+	SymbolIcon(Vec2{w, h}, symbol, color, layoutFlags)
 {
 }
 
@@ -71,6 +70,18 @@ void SymbolIcon::SetSymbol(int symbol)
 
 		this->symbol = symbol;
 		FireModelUpdate(Props::SYMBOL);
+	}
+}
+
+/**
+ * Set the color of the icon.
+ * @param color The color (including alpha).
+ */
+void SymbolIcon::SetColor(const Color color)
+{
+	if (this->color != color) {
+		this->color = color;
+		FireModelUpdate(Props::COLOR);
 	}
 }
 

@@ -1,7 +1,7 @@
 
 // SymbolIcon.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "FillBox.h"
+#include "Box.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -46,9 +46,9 @@ namespace Display {
  * One of the predefined icons from the symbol font.
  * @author Michael Imamura
  */
-class MR_DllDeclare SymbolIcon : public FillBox
+class MR_DllDeclare SymbolIcon : public Box
 {
-	using SUPER = FillBox;
+	using SUPER = Box;
 
 public:
 	struct Props
@@ -56,6 +56,7 @@ public:
 		enum
 		{
 			SYMBOL = SUPER::Props::NEXT_,
+			COLOR,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -74,8 +75,12 @@ public:
 	int GetSymbol() const { return symbol; }
 	void SetSymbol(int symbol);
 
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
+
 private:
 	int symbol;
+	Color color;
 };
 
 }  // namespace Display

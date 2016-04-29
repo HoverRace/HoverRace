@@ -720,8 +720,8 @@ IconModule::IconModule(Display::Display &display, GameDirector &director) :
 
 	auto root = GetRoot();
 
-	std::shared_ptr<FillBox> box;
-	std::shared_ptr<FillBox> icon;
+	std::shared_ptr<Box> box;
+	std::shared_ptr<Box> icon;
 
 	box = root->NewChild<FillBox>(60, 60, 0xff007f7f);
 	box->SetPos(0, 40);
