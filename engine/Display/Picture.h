@@ -23,7 +23,7 @@
 
 #include "Res.h"
 
-#include "FillBox.h"
+#include "Box.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -49,9 +49,9 @@ namespace Display {
  * Draws a single texture.
  * @author Michael Imamura
  */
-class MR_DllDeclare Picture : public FillBox
+class MR_DllDeclare Picture : public Box
 {
-	using SUPER = FillBox;
+	using SUPER = Box;
 
 public:
 	struct Props
@@ -59,6 +59,7 @@ public:
 		enum
 		{
 			TEXTURE = SUPER::Props::NEXT_,
+			COLOR,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -80,8 +81,12 @@ public:
 	std::shared_ptr<Res<Texture>> ShareTexture() const { return texture; }
 	void SetTexture(std::shared_ptr<Res<Texture>> texture);
 
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
+
 private:
 	std::shared_ptr<Res<Texture>> texture;
+	Color color;
 };
 
 }  // namespace Display

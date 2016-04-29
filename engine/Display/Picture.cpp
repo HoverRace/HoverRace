@@ -36,8 +36,8 @@ namespace Display {
  */
 Picture::Picture(std::shared_ptr<Res<Texture>> texture, const Vec2 &size,
 	Color color, uiLayoutFlags_t layoutFlags) :
-	SUPER(size, color, layoutFlags),
-	texture(std::move(texture))
+	SUPER(size, layoutFlags),
+	texture(std::move(texture)), color(color)
 {
 }
 
@@ -64,6 +64,18 @@ void Picture::SetTexture(std::shared_ptr<Res<Texture>> texture)
 	if (this->texture != texture) {
 		this->texture = std::move(texture);
 		FireModelUpdate(Props::TEXTURE);
+	}
+}
+
+/**
+ * Set the color of the icon.
+ * @param color The color (including alpha).
+ */
+void Picture::SetColor(const Color color)
+{
+	if (this->color != color) {
+		this->color = color;
+		FireModelUpdate(Props::COLOR);
 	}
 }
 
