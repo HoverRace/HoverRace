@@ -22,7 +22,7 @@
 #include <SDL2/SDL.h>
 
 #include "../Button.h"
-#include "../FillBox.h"
+#include "../Box.h"
 #include "../Label.h"
 #include "../Picture.h"
 
@@ -59,7 +59,7 @@ void SdlButtonView::PrepareRender()
 	model.GetBackgroundChild()->PrepareRender();
 	model.GetLabelChild()->PrepareRender();
 
-	FillBox *icon = model.GetIconChild();
+	Box *icon = model.GetIconChild();
 	if (icon) icon->PrepareRender();
 }
 
@@ -74,7 +74,7 @@ void SdlButtonView::Render()
 	model.GetBackgroundChild()->Render();
 	model.GetLabelChild()->Render();
 
-	FillBox *icon = model.GetIconChild();
+	Box *icon = model.GetIconChild();
 	if (icon) icon->Render();
 
 	display.SetUiOrigin(oldOrigin);

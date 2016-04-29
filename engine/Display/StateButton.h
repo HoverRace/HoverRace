@@ -36,7 +36,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
-		class FillBox;
+		class Box;
 	}
 }
 
@@ -79,7 +79,7 @@ protected:
 	 * @param icon The icon (may be @c nullptr).
 	 */
 	void SetStateIcon(bool enabled, bool checked,
-		std::shared_ptr<FillBox> icon)
+		std::shared_ptr<Box> icon)
 	{
 		icons[{enabled, checked}] = std::move(icon);
 		if (enabled == IsEnabled() && checked == IsChecked()) {
@@ -97,7 +97,7 @@ private:
 	bool checked;
 
 	using iconsKey_t = std::pair<bool, bool>;  ///< enabled, checked
-	using iconsVal_t = std::shared_ptr<FillBox>;
+	using iconsVal_t = std::shared_ptr<Box>;
 	using icons_t = std::map<iconsKey_t, iconsVal_t>;
 	icons_t icons;
 };

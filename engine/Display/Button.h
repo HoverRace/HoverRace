@@ -37,6 +37,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Box;
 		class Display;
 		class FillBox;
 		class Label;
@@ -91,16 +92,16 @@ public:
 	Alignment getTextAlignment() const;
 	void SetTextAlignment(Alignment textAlignment);
 
-	FillBox *GetIcon() const { return icon.get(); }
-	std::shared_ptr<FillBox> ShareIcon() const { return icon; }
-	void SetIcon(std::shared_ptr<FillBox> icon);
+	Box *GetIcon() const { return icon.get(); }
+	std::shared_ptr<Box> ShareIcon() const { return icon; }
+	void SetIcon(std::shared_ptr<Box> icon);
 
 	std::shared_ptr<Res<Texture>> ShareTexture() const;
 	void SetTexture(std::shared_ptr<Res<Texture>> image);
 
 	FillBox *GetBackgroundChild() const { return background.get(); }
 	Label *GetLabelChild() const { return label.get(); }
-	FillBox *GetIconChild() const { return icon.get(); }
+	Box *GetIconChild() const { return icon.get(); }
 	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
 
 	void SetFixedWidth(double width);
@@ -115,7 +116,7 @@ public:
 private:
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<Label> label;
-	std::shared_ptr<FillBox> icon;
+	std::shared_ptr<Box> icon;
 	std::unique_ptr<Picture> picture;
 	boost::optional<double> fixedWidth;
 	double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;

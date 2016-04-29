@@ -244,7 +244,7 @@ void Button::SetTextAlignment(Alignment textAlignment)
  * @param icon A subclass of FillBox to use as an icon, or @c nullptr to
  *             unset the icon.
  */
-void Button::SetIcon(std::shared_ptr<FillBox> icon)
+void Button::SetIcon(std::shared_ptr<Box> icon)
 {
 	if (this->icon != icon) {
 		this->icon = std::move(icon);
