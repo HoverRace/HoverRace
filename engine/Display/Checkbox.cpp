@@ -71,8 +71,6 @@ void Checkbox::Init()
  */
 void Checkbox::InitIcon(bool enabled, bool checked)
 {
-	//TODO: Share this set of icons with all checkbox instances.
-
 	auto icon = std::make_shared<SymbolIcon>(
 		1, 1,  // Size will be set the superclass in Layout().
 		checked ? Symbol::CHECK_SQUARE_O : Symbol::SQUARE_O,
