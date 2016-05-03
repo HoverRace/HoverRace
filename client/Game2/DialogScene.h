@@ -1,7 +1,7 @@
 
 // DialogScene.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,11 +46,21 @@ class DialogScene : public FormScene
 
 public:
 	DialogScene(Display::Display &display, GameDirector &director,
-		const std::string &title = "", const std::string &name = "");
+		const std::string &parentTitle,
+		const std::string &title, const std::string &name);
+	DialogScene(Display::Display &display, GameDirector &director,
+		const std::string &title = "", const std::string &name = "") :
+		DialogScene(display, director, "", title, name) { }
 	virtual ~DialogScene();
 
 protected:
 	const std::string &GetTitle() const { return title; }
+
+	/**
+	 * Retrieve the full combined title (including parent title).
+	 * @return The full title.
+	 */
+	const std::string &GetFullTitle() const { return fullTitle; }
 
 	void SetStoppingTransitionEnabled(bool enabled);
 
@@ -88,7 +98,9 @@ protected:
 	GameDirector &director;
 
 private:
+	std::string parentTitle;
 	std::string title;
+	std::string fullTitle;
 	bool stoppingTransitionEnabled;
 	size_t actionGridCol;
 

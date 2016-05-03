@@ -1,7 +1,7 @@
 
 // DialogScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,13 +38,16 @@ namespace Client {
  * Constructor.
  * @param display The display.
  * @param director The current game director.
+ * @param parentTitle The title of the parent dialog (blank if none).
  * @param title The title to display.
  * @param name The name of the scene.  See Scene::GetName.
  */
 DialogScene::DialogScene(Display::Display &display, GameDirector &director,
-	const std::string &title, const std::string &name) :
+	const std::string &parentTitle, const std::string &title,
+	const std::string &name) :
 	SUPER(display, name),
-	director(director), title(title),
+	director(director), parentTitle(parentTitle), title(title),
+	fullTitle(JoinTitles(parentTitle, title)),
 	stoppingTransitionEnabled(false), actionGridCol(0)
 {
 	using namespace Display;
@@ -67,7 +70,8 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 	statusRoot->SetVisible(false);
 
-	auto titleLbl = root->NewChild<Label>(title, s.headingFont, s.headingFg);
+	auto titleLbl = root->NewChild<Label>(fullTitle,
+		s.headingFont, s.headingFg);
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 	titleLbl->SetFixedScale(true);
