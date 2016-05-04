@@ -34,6 +34,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+
+const std::string TITLE_SEPARATOR{" // "};
+
+}  // namespace
+
 /**
  * Constructor.
  * @param display The display.
@@ -70,11 +76,19 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 	statusRoot->SetVisible(false);
 
-	auto titleLbl = root->NewChild<Label>(fullTitle,
-		s.headingFont, s.headingFg);
-	titleLbl->SetPos(MARGIN_WIDTH, 80);
-	titleLbl->SetAlignment(Alignment::SW);
-	titleLbl->SetFixedScale(true);
+	size_t col = 0;
+	titleGrid = root->NewChild<FlexGrid>(display);
+	titleGrid->SetMargin(0, 0);
+	titleGrid->SetPos(MARGIN_WIDTH, 80);
+	titleGrid->SetAlignment(Alignment::SW);
+	if (!parentTitle.empty()) {
+		titleGrid->At(0, col++).NewChild<Label>(parentTitle,
+			s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+		titleGrid->At(0, col++).NewChild<Label>(TITLE_SEPARATOR,
+			s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+	}
+	titleGrid->At(0, col++).NewChild<Label>(title,
+		s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
 
 	// The default action buttons (OK, Cancel).
 
@@ -196,7 +210,7 @@ void DialogScene::OnExtra()
 std::string DialogScene::JoinTitles(const std::string &parent,
 	const std::string &title)
 {
-	return parent.empty() ? title : (parent + " // " + title);
+	return parent.empty() ? title : (parent + TITLE_SEPARATOR + title);
 }
 
 

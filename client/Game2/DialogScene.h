@@ -105,6 +105,7 @@ private:
 	size_t actionGridCol;
 
 	std::unique_ptr<Display::Background> fader;
+	std::shared_ptr<Display::FlexGrid> titleGrid;
 	std::shared_ptr<Display::Container> contentRoot;
 	std::shared_ptr<Display::Container> statusRoot;
 	std::shared_ptr<Display::FlexGrid> actionGrid;
