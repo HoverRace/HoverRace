@@ -79,7 +79,7 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::AvatarGallery> gallery,
 	const std::string &avatarName) :
-	SUPER(display, director, JoinTitles(parentTitle, _("Select Avatar")),
+	SUPER(display, director, parentTitle, _("Select Avatar"),
 		"Avatar Select"),
 	gallery(std::move(gallery)), avatarName(avatarName)
 {

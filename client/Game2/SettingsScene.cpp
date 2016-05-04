@@ -1,7 +1,7 @@
 
 // SettingsScene.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ Vec2 SettingsScene::SLIDER_SIZE = Vec2(300, 20);
 SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	const std::string &parentTitle, const std::string &title,
 	const std::string &name) :
-	SUPER(display, director, JoinTitles(parentTitle, title), name),
+	SUPER(display, director, parentTitle, title, name),
 	curRow(0), needsLoadFromConfig(true)
 {
 	using namespace Display;

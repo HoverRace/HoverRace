@@ -81,7 +81,7 @@ private:
 ProfileEditScene::ProfileEditScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::Profile> origProfile) :
-	SUPER(display, director, JoinTitles(parentTitle, _("Profile")), "Profile"),
+	SUPER(display, director, parentTitle, _("Profile"), "Profile"),
 	profile(new FormProfile(*origProfile)), editProfile(profile->Edit()),
 	origProfile(std::move(origProfile))
 {
@@ -137,7 +137,8 @@ void ProfileEditScene::OnRename()
 void ProfileEditScene::OnAvatarSelect()
 {
 	auto avatarScene = std::make_shared<AvatarSelectScene>(display, director,
-		GetTitle(), director.ShareAvatarGallery(), profile->GetAvatarName());
+		GetFullTitle(), director.ShareAvatarGallery(),
+		profile->GetAvatarName());
 	avatarSelConn = avatarScene->GetConfirmSignal().connect([=](const std::string &name) {
 		auto tex = director.ShareAvatarGallery()->FindName(name);
 

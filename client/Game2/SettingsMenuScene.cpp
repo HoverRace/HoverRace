@@ -72,7 +72,7 @@ public:
 		SetEnabled(enabled);
 
 		clickedConn = GetClickedSignal().connect([&](Display::ClickRegion&) {
-			LaunchScene<T>(scene.display, scene.director, scene.GetTitle());
+			LaunchScene<T>(scene.display, scene.director, scene.GetFullTitle());
 		});
 	}
 	virtual ~MenuItemButton() { }
