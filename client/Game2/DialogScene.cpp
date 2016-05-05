@@ -79,7 +79,8 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	statusRoot->SetVisible(false);
 
 	size_t col = 0;
-	titleGrid = root->NewChild<FlexGrid>(display);
+	titleGrid = std::make_shared<FlexGrid>(display);
+	titleGrid->AttachView(display);
 	titleGrid->SetMargin(0, 0);
 	titleGrid->SetPos(MARGIN_WIDTH, 80);
 	titleGrid->SetAlignment(Alignment::SW);
@@ -289,6 +290,8 @@ void DialogScene::PrepareRender()
 		fader->PrepareRender();
 	}
 
+	titleGrid->PrepareRender();
+
 	SUPER::PrepareRender();
 }
 
@@ -297,6 +300,8 @@ void DialogScene::Render()
 	if (fader) {
 		fader->Render();
 	}
+
+	titleGrid->Render();
 
 	if (stoppingTransitionEnabled || GetPhase() != Phase::STOPPING) {
 		SUPER::Render();
