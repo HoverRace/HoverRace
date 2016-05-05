@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/algorithm/string.hpp>
+
 #include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/FlexGrid.h"
@@ -82,10 +84,23 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	titleGrid->SetPos(MARGIN_WIDTH, 80);
 	titleGrid->SetAlignment(Alignment::SW);
 	if (!parentTitle.empty()) {
-		titleGrid->At(0, col++).NewChild<Label>(parentTitle,
-			s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
-		titleGrid->At(0, col++).NewChild<Label>(TITLE_SEPARATOR,
-			s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+		using namespace boost::algorithm;
+
+		//HACK: Place each parent title as separate label to preserve spacing.
+		//TODO: Trace parent dialogs instead of just passing parent title.
+
+		split_iterator<std::string::const_iterator> endIter;
+		for (split_iterator<std::string::const_iterator> iter =
+				make_split_iterator(parentTitle,
+					first_finder(TITLE_SEPARATOR, is_equal()));
+			iter != endIter; ++iter)
+		{
+			titleGrid->At(0, col++).NewChild<Label>(
+				boost::lexical_cast<std::string>(*iter),
+				s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+			titleGrid->At(0, col++).NewChild<Label>(TITLE_SEPARATOR,
+				s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+		}
 	}
 	titleGrid->At(0, col++).NewChild<Label>(title,
 		s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
