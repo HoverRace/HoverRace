@@ -84,7 +84,6 @@ AvatarSelectScene::AvatarSelectScene(Display::Display &display,
 	gallery(std::move(gallery)), avatarName(avatarName)
 {
 	using namespace Display;
-	using Alignment = UiViewModel::Alignment;
 
 	SupportCancelAction();
 
