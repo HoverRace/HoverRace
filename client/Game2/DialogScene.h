@@ -106,6 +106,8 @@ private:
 
 	std::unique_ptr<Display::Background> fader;
 	std::shared_ptr<Display::FlexGrid> titleGrid;
+	std::shared_ptr<Display::Label> titleSepLbl;
+	std::shared_ptr<Display::Label> titleLbl;
 	std::shared_ptr<Display::Container> contentRoot;
 	std::shared_ptr<Display::Container> statusRoot;
 	std::shared_ptr<Display::FlexGrid> actionGrid;

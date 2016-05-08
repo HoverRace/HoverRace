@@ -99,12 +99,14 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 			titleGrid->At(0, col++).NewChild<Label>(
 				boost::lexical_cast<std::string>(*iter),
 				s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
-			titleGrid->At(0, col++).NewChild<Label>(TITLE_SEPARATOR,
-				s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+			titleSepLbl = titleGrid->At(0, col++).NewChild<Label>(
+				TITLE_SEPARATOR, s.headingFont, s.headingFg)->GetContents();
+			titleSepLbl->SetFixedScale(true);
 		}
 	}
-	titleGrid->At(0, col++).NewChild<Label>(title,
-		s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+	titleLbl = titleGrid->At(0, col++).NewChild<Label>(title,
+		s.headingFont, s.headingFg)->GetContents();
+	titleLbl->SetFixedScale(true);
 
 	// The default action buttons (OK, Cancel).
 
@@ -280,6 +282,12 @@ void DialogScene::OnPhaseTransition(double progress)
 	if (fader) {
 		fader->SetOpacity(progress);
 	}
+
+	double x = 1280.0 - (progress * 1280.0);
+	if (titleSepLbl) {
+		titleSepLbl->SetTranslation(x, 0);
+	}
+	titleLbl->SetTranslation(x, 0);
 
 	SUPER::OnPhaseTransition(progress);
 }
