@@ -1,7 +1,7 @@
 
 // Scene.cpp
 //
-// Copyright (c) 2013, 2015 Michael Imamura.
+// Copyright (c) 2013, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -156,7 +156,8 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 				SetPhase(Phase::RUNNING);
 			}
 			else {
-				OnPhaseTransition(static_cast<double>(duration) / phaseTransitionDuration);
+				OnPhaseTransition(std::max(0.0,
+					static_cast<double>(duration) / phaseTransitionDuration));
 			}
 			break;
 		}
@@ -169,7 +170,9 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 				SetPhase(Phase::STOPPED);
 			}
 			else {
-				OnPhaseTransition(static_cast<double>(startingDuration - duration) / phaseTransitionDuration);
+				OnPhaseTransition(std::min(1.0,
+					static_cast<double>(startingDuration - duration) /
+						phaseTransitionDuration));
 			}
 			break;
 		}
