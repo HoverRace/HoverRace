@@ -50,6 +50,8 @@ public:
 		std::shared_ptr<Player::Player> subject);
 	virtual ~PlayerStatusAnnouncement() { }
 
+	Status::status_t GetStatus() const { return status; }
+
 protected:
 	static std::string RenderStatusText(Status::status_t status,
 		const Player::Player &player);
