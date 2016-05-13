@@ -1,7 +1,7 @@
 
 // ConsoleScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -193,7 +193,8 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 			break;
 
 		default:
-			Log::Warn("ConsoleScene: Unhandled text control key: %d", key);
+			HR_LOG(warning) <<
+				"ConsoleScene: Unhandled text control key: " << key;
 	}
 }
 
@@ -235,7 +236,8 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 		case SysConsole::LogLevel::INFO: color = 0xffbfbfbf; break;
 		case SysConsole::LogLevel::ERROR: color = 0xffff0000; break;
 		default:
-			Log::Warn("ConsoleScene: Unhandled log level: %d", line.level);
+			HR_LOG(warning) << "ConsoleScene: Unhandled log level: " <<
+				static_cast<int>(line.level);
 	}
 
 	// Split into into multiple lines based on the current font measurement.
