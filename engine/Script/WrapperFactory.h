@@ -1,7 +1,7 @@
 
 // WrapperFactory.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,85 +43,85 @@ namespace Script {
 template<class Inside, class Outside>
 class WrapperFactory
 {
-	public:
-		WrapperFactory(Script::Core *scripting) :
-			scripting(scripting), ref(scripting) { }
-		WrapperFactory(const WrapperFactory&) = default;
-		WrapperFactory(WrapperFactory&&) = default;
+public:
+	WrapperFactory(Script::Core *scripting) :
+		scripting(scripting), ref(scripting) { }
+	WrapperFactory(const WrapperFactory&) = default;
+	WrapperFactory(WrapperFactory&&) = default;
 
-		WrapperFactory &operator=(const WrapperFactory&) = default;
-		WrapperFactory &operator=(WrapperFactory&&) = default;
+	WrapperFactory &operator=(const WrapperFactory&) = default;
+	WrapperFactory &operator=(WrapperFactory&&) = default;
 
-		WrapperFactory &operator=(const luabind::object &obj)
-		{
-			Set(obj);
-			return *this;
+	WrapperFactory &operator=(const luabind::object &obj)
+	{
+		Set(obj);
+		return *this;
+	}
+
+	void Set(const luabind::object &obj)
+	{
+		using namespace luabind;
+
+		switch (type(obj)) {
+			case LUA_TUSERDATA:
+			case LUA_TFUNCTION:
+				ref = obj;
+				break;
+			case LUA_TNIL:
+				ref.Clear();
+				break;
+			default:
+				throw ScriptExn("Expected a constructor or function.");
+		}
+	}
+
+	/**
+	 * Wrap a native object in the wrapper.
+	 * @param inside The native object to wrap.
+	 * @return The wrapped object.  If no factory has been set or there was
+	 *         an error while executing the factory, then a
+	 *         new instance of the Outside class will be returned.
+	 */
+	std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside) const
+	{
+		using namespace luabind;
+		using namespace Util;
+
+		if (!ref) {
+			return std::make_shared<Outside>(inside);
 		}
 
-		void Set(const luabind::object &obj)
-		{
-			using namespace luabind;
+		lua_State *L = scripting->GetState();
 
-			switch (type(obj)) {
-				case LUA_TUSERDATA:
-				case LUA_TFUNCTION:
-					ref = obj;
-					break;
-				case LUA_TNIL:
-					ref.Clear();
-					break;
-				default:
-					throw ScriptExn("Expected a constructor or function.");
+		object obj(L, inside);
+		std::shared_ptr<Outside> retv;
+
+		ref.Push();
+		obj.push(L);
+		scripting->Invoke(1, nullptr, [&](lua_State *L, int num) {
+			if (num < 1) {
+				Log::Error("Expected a return value.");
 			}
-		}
-
-		/**
-		 * Wrap a native object in the wrapper.
-		 * @param inside The native object to wrap.
-		 * @return The wrapped object.  If no factory has been set or there was
-		 *         an error while executing the factory, then a
-		 *         new instance of the Outside class will be returned.
-		 */
-		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside) const
-		{
-			using namespace luabind;
-			using namespace Util;
-
-			if (!ref) {
-				return std::make_shared<Outside>(inside);
+			else {
+				object retObj(from_stack(L, -num));
+				try {
+					retv = object_cast<std::shared_ptr<Outside>>(retObj);
+				}
+				catch (cast_failed &ex)
+				{
+					Log::Error("Unexpected return value: %s", ex.what());
+				}
 			}
+			lua_pop(L, num);
+			return 0;
+		});
 
-			lua_State *L = scripting->GetState();
+		return retv ? retv : std::make_shared<Outside>(inside);
+	}
 
-			object obj(L, inside);
-			std::shared_ptr<Outside> retv;
-
-			ref.Push();
-			obj.push(L);
-			scripting->Invoke(1, nullptr, [&](lua_State *L, int num) {
-				if (num < 1) {
-					Log::Error("Expected a return value.");
-				}
-				else {
-					object retObj(from_stack(L, -num));
-					try {
-						retv = object_cast<std::shared_ptr<Outside>>(retObj);
-					}
-					catch (cast_failed &ex)
-					{
-						Log::Error("Unexpected return value: %s", ex.what());
-					}
-				}
-				lua_pop(L, num);
-				return 0;
-			});
-
-			return retv ? retv : std::make_shared<Outside>(inside);
-		}
-
-	private:
-		Script::Core *scripting;
-		RegistryRef ref;
+private:
+	Script::Core *scripting;
+	RegistryRef ref;
 };
 
 }  // namespace Script
