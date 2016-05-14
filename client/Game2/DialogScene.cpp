@@ -78,6 +78,7 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 	statusRoot->SetVisible(false);
 
+	titleColor = s.headingFg;
 	size_t col = 0;
 	titleGrid = std::make_shared<FlexGrid>(display);
 	titleGrid->AttachView(display);
@@ -98,14 +99,14 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 		{
 			titleGrid->At(0, col++).NewChild<Label>(
 				boost::lexical_cast<std::string>(*iter),
-				s.headingFont, s.headingFg)->GetContents()->SetFixedScale(true);
+				s.headingFont, titleColor)->GetContents()->SetFixedScale(true);
 			titleSepLbl = titleGrid->At(0, col++).NewChild<Label>(
-				TITLE_SEPARATOR, s.headingFont, s.headingFg)->GetContents();
+				TITLE_SEPARATOR, s.headingFont, titleColor)->GetContents();
 			titleSepLbl->SetFixedScale(true);
 		}
 	}
 	titleLbl = titleGrid->At(0, col++).NewChild<Label>(title,
-		s.headingFont, s.headingFg)->GetContents();
+		s.headingFont, titleColor)->GetContents();
 	titleLbl->SetFixedScale(true);
 
 	// The default action buttons (OK, Cancel).
@@ -283,11 +284,17 @@ void DialogScene::OnPhaseTransition(double progress)
 		fader->SetOpacity(progress);
 	}
 
-	double x = 1280.0 - (progress * 1280.0);
+	auto color = titleColor;
+	color.bits.a = static_cast<MR_UInt8>(
+		progress * static_cast<double>(titleColor.bits.a));
+
+	double x = 320.0 - (progress * 320.0);
 	if (titleSepLbl) {
 		titleSepLbl->SetTranslation(x, 0);
+		titleSepLbl->SetColor(color);
 	}
 	titleLbl->SetTranslation(x, 0);
+	titleLbl->SetColor(color);
 
 	SUPER::OnPhaseTransition(progress);
 }

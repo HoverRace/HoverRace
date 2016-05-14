@@ -101,6 +101,7 @@ private:
 	std::string parentTitle;
 	std::string title;
 	std::string fullTitle;
+	Display::Color titleColor;
 	bool stoppingTransitionEnabled;
 	size_t actionGridCol;
 
