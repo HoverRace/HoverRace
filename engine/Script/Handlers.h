@@ -46,30 +46,30 @@ class Core;
  */
 class MR_DllDeclare Handlers
 {
-	public:
-		Handlers(Core *scripting=nullptr);
-		Handlers(const Handlers&) = default;
-		Handlers(Handlers&&) = default;
-		virtual ~Handlers() { }
+public:
+	Handlers(Core *scripting = nullptr);
+	Handlers(const Handlers&) = default;
+	Handlers(Handlers&&) = default;
+	virtual ~Handlers() { }
 
-		Handlers &operator=(const Handlers&) = default;
-		Handlers &operator=(Handlers&&) = default;
+	Handlers &operator=(const Handlers&) = default;
+	Handlers &operator=(Handlers&&) = default;
 
-	protected:
-		void Call(int numParams) const;
-	public:
-		void CallHandlers() const;
-		void CallHandlers(const luabind::object &p1) const;
-		void CallHandlers(const luabind::object &p1,
-			const luabind::object &p2) const;
+protected:
+	void Call(int numParams) const;
+public:
+	void CallHandlers() const;
+	void CallHandlers(const luabind::object &p1) const;
+	void CallHandlers(const luabind::object &p1,
+		const luabind::object &p2) const;
 
-		void AddHandler(const luabind::object &fn);
-		void AddHandler(const std::string &name, const luabind::object &fn);
+	void AddHandler(const luabind::object &fn);
+	void AddHandler(const std::string &name, const luabind::object &fn);
 
-	private:
-		Core *scripting;
-		int seq;
-		RegistryRef ref;
+private:
+	Core *scripting;
+	int seq;
+	RegistryRef ref;
 };
 
 }  // namespace Script
