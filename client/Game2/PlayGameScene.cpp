@@ -1,7 +1,7 @@
 
 // PlayGameScene.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,9 +34,8 @@ namespace HoverRace {
 namespace Client {
 
 PlayGameScene::PlayGameScene(Display::Display &display, GameDirector &director,
-                             Script::Core *scripting,
-                             std::shared_ptr<Rules> rules,
-                             std::shared_ptr<Loader> loader) :
+	Script::Core &scripting, std::shared_ptr<Rules> rules,
+	std::shared_ptr<Loader> loader) :
 	SUPER("Game", display, director, scripting, rules, loader)
 {
 }

@@ -40,7 +40,7 @@ namespace Script {
  * @param scripting The scripting engine.
  */
 Env::Env(Core &scripting) :
-	scripting(scripting), initialized(false), envRef(&scripting),
+	scripting(scripting), initialized(false), envRef(scripting),
 	helpHandler(nullptr)
 {
 	lua_State *state = GetState();

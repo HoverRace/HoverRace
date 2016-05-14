@@ -53,8 +53,8 @@ GamePeer::GamePeer(Script::Core &scripting, GameDirector &director,
 	SUPER(scripting, "Game"),
 	director(director), rulebookLibrary(rulebookLibrary), display(nullptr),
 	initialized(false),
-	onInit(&scripting), onShutdown(&scripting),
-	onSessionStart(&scripting), onSessionEnd(&scripting)
+	onInit(scripting), onShutdown(scripting),
+	onSessionStart(scripting), onSessionEnd(scripting)
 {
 }
 

@@ -50,8 +50,8 @@ namespace Script {
 class MR_DllDeclare RegistryRef
 {
 public:
-	constexpr RegistryRef(Core *scripting) noexcept :
-		scripting(scripting), ref(LUA_NOREF) { }
+	constexpr RegistryRef(Core &scripting) noexcept :
+		scripting(&scripting), ref(LUA_NOREF) { }
 	RegistryRef(const RegistryRef &o) noexcept;
 	RegistryRef(RegistryRef &&o) noexcept :
 		scripting(o.scripting), ref(o.ref)
@@ -85,7 +85,7 @@ public:
 	}
 
 public:
-	Core *GetScripting() const noexcept { return scripting; }
+	Core &GetScripting() const noexcept { return *scripting; }
 
 public:
 	void Clear() noexcept;

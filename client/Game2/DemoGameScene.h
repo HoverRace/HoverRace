@@ -1,7 +1,7 @@
 
 // DemoGameScene.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class DemoGameScene : public GameScene
 
 public:
 	DemoGameScene(Display::Display &display, GameDirector &director,
-		Script::Core *scripting,
+		Script::Core &scripting,
 		std::shared_ptr<Util::Loader> loader);
 	virtual ~DemoGameScene();
 

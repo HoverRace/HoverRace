@@ -1,7 +1,7 @@
 
 // PlayGameScene.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class PlayGameScene : public GameScene
 
 public:
 	PlayGameScene(Display::Display &display, GameDirector &director,
-		Script::Core *scripting, std::shared_ptr<Rules> rules,
+		Script::Core &scripting, std::shared_ptr<Rules> rules,
 		std::shared_ptr<Util::Loader> loader);
 	virtual ~PlayGameScene();
 

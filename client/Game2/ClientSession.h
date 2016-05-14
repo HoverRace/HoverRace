@@ -1,7 +1,7 @@
 // ClientSession.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public:
 	// Simulation control
 	virtual void Process();
 
-	virtual bool LoadNew(const char *pTitle, Script::Core *scripting,
+	virtual bool LoadNew(const char *pTitle, Script::Core &scripting,
 		std::shared_ptr<Model::Track> track,
 		VideoServices::VideoBuffer *pVideo);
 

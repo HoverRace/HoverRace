@@ -65,7 +65,7 @@ void GameScene::Viewport::SetCell(Display::HudCell cell)
 
 GameScene::GameScene(const std::string &name,
 	Display::Display &display, GameDirector &director,
-	Script::Core *scripting, std::shared_ptr<Rules> rules,
+	Script::Core &scripting, std::shared_ptr<Rules> rules,
 	std::shared_ptr<Loader> loader) :
 	SUPER(name),
 	display(display), director(director), scripting(scripting), rules(rules),
@@ -168,7 +168,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 
 	loader->AddLoader("Session", [=]{
 		metaSession = rulebook->GetMetas().session(
-			std::make_shared<SessionPeer>(*scripting, session));
+			std::make_shared<SessionPeer>(scripting, session));
 		metaSession->OnInit();
 		session->SetMeta(metaSession);
 
@@ -184,7 +184,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			for (auto &viewport : viewports) {
 				if (viewport.player.get() == playerPeer->GetPlayer()) {
 					playerPeer->SetHud(
-						std::make_shared<HudPeer>(*scripting, display,
+						std::make_shared<HudPeer>(scripting, display,
 							viewport.hud));
 					break;
 				}

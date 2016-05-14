@@ -1,7 +1,7 @@
 
 // DemoGameScene.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace Client {
 
 namespace {
 
-std::shared_ptr<Rules> GenRules(Script::Core *scripting)
+std::shared_ptr<Rules> GenRules(Script::Core &scripting)
 {
 	// Pick a random track from our standard list.
 	const char *tracks[] = {
@@ -66,7 +66,7 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 }  // namespace
 
 DemoGameScene::DemoGameScene(Display::Display &display, GameDirector &director,
-	Script::Core *scripting, std::shared_ptr<Loader> loader) :
+	Script::Core &scripting, std::shared_ptr<Loader> loader) :
 	SUPER("Demo", display, director, scripting, GenRules(scripting), loader)
 {
 }

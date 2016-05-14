@@ -57,7 +57,7 @@ namespace Client {
 class Rulebook
 {
 public:
-	Rulebook(Script::Core *scripting,
+	Rulebook(Script::Core &scripting,
 		const Util::OS::path_t &basePath);
 	Rulebook(const Rulebook&) = delete;
 	~Rulebook() { }
@@ -83,7 +83,7 @@ public:
 public:
 	struct metas_t
 	{
-		metas_t(Script::Core *scripting) :
+		metas_t(Script::Core &scripting) :
 			player(scripting), session(scripting) { }
 		metas_t(const metas_t&) = default;
 		metas_t(metas_t&&) = default;
@@ -124,7 +124,7 @@ public:
 	friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
 
 private:
-	Script::Core *scripting;
+	Script::Core &scripting;
 	Util::OS::path_t basePath;
 	std::shared_ptr<HoverScript::RulebookEnv> env;
 	std::string defaultName;

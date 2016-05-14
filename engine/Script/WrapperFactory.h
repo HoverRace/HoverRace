@@ -44,8 +44,8 @@ template<class Inside, class Outside>
 class WrapperFactory
 {
 public:
-	WrapperFactory(Script::Core *scripting) :
-		scripting(scripting), ref(scripting) { }
+	WrapperFactory(Script::Core &scripting) :
+		scripting(&scripting), ref(scripting) { }
 	WrapperFactory(const WrapperFactory&) = default;
 	WrapperFactory(WrapperFactory&&) = default;
 

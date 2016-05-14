@@ -47,7 +47,7 @@ class Core;
 class MR_DllDeclare Handlers
 {
 public:
-	Handlers(Core *scripting = nullptr);
+	Handlers(Core &scripting);
 	Handlers(const Handlers&) = default;
 	Handlers(Handlers&&) = default;
 	virtual ~Handlers() { }

@@ -1,7 +1,7 @@
 
 // RulebookLibrary.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace Client {
  */
 class RulebookLibrary {
 public:
-	RulebookLibrary(Script::Core *scripting);
+	RulebookLibrary(Script::Core &scripting);
 
 public:
 	void Reload();
@@ -61,7 +61,7 @@ public:
 	const_iterator cend() const { return sorted.cend(); }
 
 private:
-	Script::Core *scripting;
+	Script::Core &scripting;
 	std::map<std::string, std::shared_ptr<Rulebook>> library;
 	sorted_t sorted;
 	std::shared_ptr<Rulebook> defaultRulebook;

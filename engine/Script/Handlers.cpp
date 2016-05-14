@@ -1,7 +1,7 @@
 
 // Handlers.cpp
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ namespace Script {
 
 /**
  * Constructor.
- * @param scripting The scripting core (may not be @c NULL).
+ * @param scripting The scripting core.
  */
-Handlers::Handlers(Core *scripting) :
-	scripting(scripting), seq(1), ref(scripting)
+Handlers::Handlers(Core &scripting) :
+	scripting(&scripting), seq(1), ref(scripting)
 {
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 	lua_newtable(L);
 	ref.SetFromStack();
 }
@@ -107,8 +107,9 @@ void Handlers::CallHandlers(const luabind::object &p1) const
 /**
  * Call all registered event handlers with two parameters.
  */
-void Handlers::CallHandlers(const luabind::object &p1,
-                            const luabind::object &p2) const
+void Handlers::CallHandlers(
+	const luabind::object &p1,
+	const luabind::object &p2) const
 {
 	lua_State *L = scripting->GetState();
 	p1.push(L);

@@ -71,7 +71,7 @@ void InputPeer::LHotkey(const std::string &key, const luabind::object &fn)
 		luaL_error(L, "Invalid hotkey: %s", key.c_str());
 	}
 	else {
-		hotkeyHandlers.emplace_back(&scripting);
+		hotkeyHandlers.emplace_back(scripting);
 		auto &handler = hotkeyHandlers.back();
 		handler.AddHandler(fn);
 

@@ -158,7 +158,7 @@ RulebookEnv::RulebookEnv(Script::Core &scripting,
 	SUPER(scripting),
 	basePath(basePath),
 	rulebook(rulebook),
-	requireCache(&scripting)
+	requireCache(scripting)
 {
 	lua_newtable(scripting.GetState());
 	requireCache.SetFromStack();

@@ -152,7 +152,7 @@ ClientApp::ClientApp() :
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting.reset((new ClientScriptCore())->Reset());
-	rulebookLibrary.reset(new RulebookLibrary(scripting.get()));
+	rulebookLibrary.reset(new RulebookLibrary(*scripting));
 	rulebookLibrary->Reload();
 	debugPeer.reset(new DebugPeer(*scripting, *this));
 	gamePeer.reset(new GamePeer(*scripting, *this, *rulebookLibrary));
@@ -704,7 +704,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	try {
 		RequestReplaceScene(std::make_shared<DemoGameScene>(
-			*display, *this, scripting.get(), loadingScene->ShareLoader()));
+			*display, *this, *scripting, loadingScene->ShareLoader()));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -752,7 +752,7 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 
 	try {
 		RequestReplaceScene(std::make_shared<PlayGameScene>(
-			*display, *this, scripting.get(), rules, loadingScene->ShareLoader()));
+			*display, *this, *scripting, rules, loadingScene->ShareLoader()));
 		RequestPushScene(loadingScene);
 	}
 	catch (Parcel::ObjStreamExn&) {

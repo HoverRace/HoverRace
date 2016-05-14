@@ -195,14 +195,14 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFile *pRecordFile,
 	}
 }
 
-bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
+bool ClientSession::LoadNew(const char *pTitle, Script::Core &scripting,
 	std::shared_ptr<Model::Track> track, VideoServices::VideoBuffer *pVideo)
 {
 	bool retv = mSession.LoadNew(pTitle, track, rules->GetGameOpts());
 
 	if (retv) {
 		ReadLevelAttrib(track->GetRecordFile(), pVideo);
-		trackPeer = std::make_shared<HoverScript::TrackPeer>(*scripting, track);
+		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting, track);
 	}
 
 	return retv;

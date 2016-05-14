@@ -54,7 +54,7 @@ private:
 
 }  // namespace
 
-Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
+Rulebook::Rulebook(Script::Core &scripting, const Util::OS::path_t &basePath) :
 	scripting(scripting),
 	basePath(basePath),
 	defaultName((const char*)Str::PU(basePath.filename())),
@@ -66,7 +66,7 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	loaded(false)
 {
 	env = std::make_shared<HoverScript::RulebookEnv>(
-		*scripting, basePath, *this);
+		scripting, basePath, *this);
 }
 
 void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
@@ -76,7 +76,7 @@ void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
 
 luabind::object Rulebook::CreateDefaultRules() const
 {
-	luabind::object obj = luabind::newtable(scripting->GetState());
+	luabind::object obj = luabind::newtable(scripting.GetState());
 
 	for (auto ent : rules) {
 		obj[ent.first] = ent.second->GetDefault();
@@ -124,7 +124,7 @@ void Rulebook::SetOnLoad(const luabind::object &fn)
 {
 	using namespace luabind;
 
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	switch (type(fn)) {
 		case LUA_TFUNCTION:
@@ -147,7 +147,7 @@ void Rulebook::OnLoad() const
 
 		// Call the function.
 		onLoad.Push();  // fn
-		scripting->Invoke(0, nullptr, [&](lua_State *L, int num) {
+		scripting.Invoke(0, nullptr, [&](lua_State *L, int num) {
 			using namespace luabind;
 
 			if (num == 0) {
