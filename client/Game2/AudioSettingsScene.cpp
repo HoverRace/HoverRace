@@ -37,7 +37,7 @@ namespace Client {
 
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
-	SUPER(display, director, parentTitle, _("Audio"), "Audio Settings"),
+	SUPER(display, director, parentTitle, _("AUDIO"), "Audio Settings"),
 	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg),
 	skipSoundTest(true),
 	testSound(LoadSound(MR_SND_START))

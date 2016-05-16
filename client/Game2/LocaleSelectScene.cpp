@@ -1,7 +1,7 @@
 
 // LocaleSelectScene.cpp
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	GameDirector &director,
 	const std::string &parentTitle, const Util::Locale &locale,
 	const std::string&) :
-	SUPER(display, director, JoinTitles(parentTitle, _("Select Language")),
+	SUPER(display, director, JoinTitles(parentTitle, _("SELECT LANGUAGE")),
 		"Locale Select")
 {
 	using namespace Display;

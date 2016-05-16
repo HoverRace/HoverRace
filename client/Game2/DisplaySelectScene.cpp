@@ -95,7 +95,7 @@ private:
 DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	int monitorIdx, int xRes, int yRes, int refreshRate) :
-	SUPER(display, director, parentTitle, _("Select Resolution"),
+	SUPER(display, director, parentTitle, _("SELECT RESOLUTION"),
 		"Display Select"),
 	reqRes(xRes, yRes, refreshRate)
 {

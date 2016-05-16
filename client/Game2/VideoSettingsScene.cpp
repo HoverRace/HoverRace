@@ -37,7 +37,7 @@ namespace Client {
 
 VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
-	SUPER(display, director, parentTitle, _("Video"), "Video Settings"),
+	SUPER(display, director, parentTitle, _("VIDEO"), "Video Settings"),
 	videoCfg(Config::GetInstance()->video), origVideoCfg(videoCfg),
 	splitModeGroup()
 {

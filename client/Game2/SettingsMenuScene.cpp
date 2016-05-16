@@ -83,7 +83,7 @@ private:
 
 SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 	GameDirector &director) :
-	SUPER(display, director, _("Settings"), "Settings")
+	SUPER(display, director, _("SETTINGS"), "Settings")
 {
 	using Alignment = Display::UiViewModel::Alignment;
 

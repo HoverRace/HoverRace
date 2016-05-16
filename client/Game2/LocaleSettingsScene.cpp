@@ -1,7 +1,7 @@
 
 // LocaleSettingsScene.cpp
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace Client {
 
 LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
-	SUPER(display, director, parentTitle, _("Language and Units"),
+	SUPER(display, director, parentTitle, _("LANGUAGE AND UNITS"),
 		"Locale Settings"),
 	locale(Config::GetInstance()->GetLocale()),
 	i18nCfg(Config::GetInstance()->i18n), origI18nCfg(i18nCfg)

@@ -81,7 +81,7 @@ private:
 ProfileEditScene::ProfileEditScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::Profile> origProfile) :
-	SUPER(display, director, parentTitle, _("Profile"), "Profile"),
+	SUPER(display, director, parentTitle, _("PROFILE"), "Profile"),
 	profile(new FormProfile(*origProfile)), editProfile(profile->Edit()),
 	origProfile(std::move(origProfile))
 {
