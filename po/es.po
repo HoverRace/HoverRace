@@ -48,6 +48,10 @@ msgstr "%d.%02d.%02d  Vuelta:%d/%d"
 msgid "%s has joined"
 msgstr "se ha marchado"
 
+#: client/Game2/AudioSettingsScene.cpp
+msgid "AUDIO"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -80,7 +84,6 @@ msgstr ""
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr ""
 
-#: client/Game2/AudioSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Audio"
 msgstr "Audio"
@@ -466,10 +469,13 @@ msgid "Jump"
 msgstr "Saltar:"
 
 #: client/Game2/LocaleSettingsScene.cpp
-msgid "Language"
+msgid "LANGUAGE AND UNITS"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
+msgid "Language"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Language and Units"
 msgstr ""
@@ -719,6 +725,10 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "PROFILE"
+msgstr ""
+
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Page Down"
@@ -795,7 +805,6 @@ msgstr "&Multijugador"
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -865,6 +874,22 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/AvatarSelectScene.cpp
+msgid "SELECT AVATAR"
+msgstr ""
+
+#: client/Game2/LocaleSelectScene.cpp
+msgid "SELECT LANGUAGE"
+msgstr ""
+
+#: client/Game2/DisplaySelectScene.cpp
+msgid "SELECT RESOLUTION"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
+msgid "SETTINGS"
+msgstr ""
+
 #: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
@@ -885,26 +910,11 @@ msgstr ""
 msgid "Select"
 msgstr "Seleccionar arma:"
 
-#: client/Game2/AvatarSelectScene.cpp
-#, fuzzy
-msgid "Select Avatar"
-msgstr "Seleccionar arma:"
-
-#: client/Game2/LocaleSelectScene.cpp
-msgid "Select Language"
-msgstr ""
-
-#: client/Game2/DisplaySelectScene.cpp
-#, fuzzy
-msgid "Select Resolution"
-msgstr "La Resolución de pantalla completa"
-
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
 msgstr "Seleccione su nave con las flechas de dirección"
 
 #: client/Game2/MainMenuScene.cpp
-#: client/Game2/SettingsMenuScene.cpp
 #, fuzzy
 msgid "Settings"
 msgstr "&Opciones"
@@ -1146,8 +1156,11 @@ msgstr ""
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
+msgid "VIDEO"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
 msgid "Video"
 msgstr "Video"
 
@@ -1832,6 +1845,14 @@ msgstr "Imposible de enviar la información actualizada"
 
 #~ msgid "Room:"
 #~ msgstr "Sala:"
+
+#, fuzzy
+#~ msgid "Select Avatar"
+#~ msgstr "Seleccionar arma:"
+
+#, fuzzy
+#~ msgid "Select Resolution"
+#~ msgstr "La Resolución de pantalla completa"
 
 #~ msgid "Sending message to the Internet Meeting Room..."
 #~ msgstr "Enviando mensaje a la sala de encuentros por internet..."

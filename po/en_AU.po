@@ -48,6 +48,10 @@ msgstr "%d.%02d.%02d  Lap:%d/%d"
 msgid "%s has joined"
 msgstr "%s has left"
 
+#: client/Game2/AudioSettingsScene.cpp
+msgid "AUDIO"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -81,7 +85,6 @@ msgstr "Are you sure you want to abandon the race and exit the game?"
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr "Are you sure you want to abandon the race and return to the main menu?"
 
-#: client/Game2/AudioSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Audio"
 msgstr "Audio"
@@ -460,10 +463,13 @@ msgid "Jump"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
-msgid "Language"
+msgid "LANGUAGE AND UNITS"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
+msgid "Language"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Language and Units"
 msgstr ""
@@ -707,6 +713,10 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "PROFILE"
+msgstr ""
+
 #: engine/Control/Controller.cpp
 msgid "Page Down"
 msgstr ""
@@ -778,7 +788,6 @@ msgstr "&Split Screen"
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -848,6 +857,22 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/AvatarSelectScene.cpp
+msgid "SELECT AVATAR"
+msgstr ""
+
+#: client/Game2/LocaleSelectScene.cpp
+msgid "SELECT LANGUAGE"
+msgstr ""
+
+#: client/Game2/DisplaySelectScene.cpp
+msgid "SELECT RESOLUTION"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
+msgid "SETTINGS"
+msgstr ""
+
 #: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
@@ -867,25 +892,11 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: client/Game2/AvatarSelectScene.cpp
-msgid "Select Avatar"
-msgstr ""
-
-#: client/Game2/LocaleSelectScene.cpp
-msgid "Select Language"
-msgstr ""
-
-#: client/Game2/DisplaySelectScene.cpp
-#, fuzzy
-msgid "Select Resolution"
-msgstr "Fullscreen Resolution"
-
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
 msgstr "Select your craft with the arrow keys"
 
 #: client/Game2/MainMenuScene.cpp
-#: client/Game2/SettingsMenuScene.cpp
 msgid "Settings"
 msgstr "Settings"
 
@@ -1122,8 +1133,11 @@ msgstr ""
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
+msgid "VIDEO"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
 msgid "Video"
 msgstr "Video"
 
@@ -1789,6 +1803,10 @@ msgstr "Unable to open file for writing:"
 
 #~ msgid "Saving chat session to:"
 #~ msgstr "Saving chat session to:"
+
+#, fuzzy
+#~ msgid "Select Resolution"
+#~ msgstr "Fullscreen Resolution"
 
 #~ msgid "Select a destination folder for saved chat sessions."
 #~ msgstr "Select a destination folder for saved chat sessions."

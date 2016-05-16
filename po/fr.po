@@ -47,6 +47,10 @@ msgstr ""
 msgid "%s has joined"
 msgstr ""
 
+#: client/Game2/AudioSettingsScene.cpp
+msgid "AUDIO"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -79,7 +83,6 @@ msgstr ""
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr ""
 
-#: client/Game2/AudioSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Audio"
 msgstr ""
@@ -459,10 +462,13 @@ msgid "Jump"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
-msgid "Language"
+msgid "LANGUAGE AND UNITS"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
+msgid "Language"
+msgstr ""
+
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Language and Units"
 msgstr ""
@@ -708,6 +714,10 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "PROFILE"
+msgstr ""
+
 #: engine/Control/Controller.cpp
 msgid "Page Down"
 msgstr ""
@@ -778,7 +788,6 @@ msgstr "Écra&n partagé"
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
@@ -847,6 +856,22 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
+#: client/Game2/AvatarSelectScene.cpp
+msgid "SELECT AVATAR"
+msgstr ""
+
+#: client/Game2/LocaleSelectScene.cpp
+msgid "SELECT LANGUAGE"
+msgstr ""
+
+#: client/Game2/DisplaySelectScene.cpp
+msgid "SELECT RESOLUTION"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
+msgid "SETTINGS"
+msgstr ""
+
 #: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
@@ -866,25 +891,11 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: client/Game2/AvatarSelectScene.cpp
-msgid "Select Avatar"
-msgstr ""
-
-#: client/Game2/LocaleSelectScene.cpp
-msgid "Select Language"
-msgstr ""
-
-#: client/Game2/DisplaySelectScene.cpp
-#, fuzzy
-msgid "Select Resolution"
-msgstr "&Plein Écran"
-
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
 msgstr "Sélectionnez votre aéroglisseur avec les flèches de votre clavier"
 
 #: client/Game2/MainMenuScene.cpp
-#: client/Game2/SettingsMenuScene.cpp
 #, fuzzy
 msgid "Settings"
 msgstr "&Paramètres"
@@ -1117,8 +1128,11 @@ msgstr ""
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
+msgid "VIDEO"
+msgstr ""
+
+#: client/Game2/SettingsMenuScene.cpp
 msgid "Video"
 msgstr ""
 
@@ -1454,6 +1468,10 @@ msgstr ""
 
 #~ msgid "Port value must be greater than 0"
 #~ msgstr "La valeur du port doit être plus élevée que 0"
+
+#, fuzzy
+#~ msgid "Select Resolution"
+#~ msgstr "&Plein Écran"
 
 #~ msgid "TCP Client"
 #~ msgstr "Client TCP"
