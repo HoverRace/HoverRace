@@ -36,7 +36,7 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	GameDirector &director,
 	const std::string &parentTitle, const Util::Locale &locale,
 	const std::string&) :
-	SUPER(display, director, JoinTitles(parentTitle, _("SELECT LANGUAGE")),
+	SUPER(display, director, parentTitle, _("SELECT LANGUAGE"),
 		"Locale Select")
 {
 	using namespace Display;

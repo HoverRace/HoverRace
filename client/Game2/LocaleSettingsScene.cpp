@@ -102,7 +102,7 @@ void LocaleSettingsScene::OnCancel()
 void LocaleSettingsScene::OnLangClicked()
 {
 	auto scene = std::make_shared<LocaleSelectScene>(display, director,
-		GetTitle(), locale, i18nCfg.preferredLocale);
+		GetFullTitle(), locale, i18nCfg.preferredLocale);
 
 	auto sp = scene.get();  // Prevent circular reference.
 	langSelConn = scene->GetConfirmSignal().connect([=]() {
