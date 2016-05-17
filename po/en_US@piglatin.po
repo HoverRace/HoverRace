@@ -467,7 +467,7 @@ msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "LANGUAGE AND UNITS"
-msgstr ""
+msgstr "ANGUAGELAY AND NITSUAY"
 
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Language"
@@ -720,7 +720,7 @@ msgstr "OK"
 
 #: client/Game2/ProfileEditScene.cpp
 msgid "PROFILE"
-msgstr ""
+msgstr "OFILEPRAY"
 
 #: engine/Control/Controller.cpp
 #, fuzzy
@@ -866,25 +866,24 @@ msgstr ""
 
 #: client/Game2/AvatarSelectScene.cpp
 msgid "SELECT AVATAR"
-msgstr ""
+msgstr "ELECTSAY AVATARWAY"
 
 #: client/Game2/LocaleSelectScene.cpp
 msgid "SELECT LANGUAGE"
-msgstr ""
+msgstr "ELECTSAY ANGUAGELAY"
 
 #: client/Game2/DisplaySelectScene.cpp
 msgid "SELECT RESOLUTION"
-msgstr ""
+msgstr "ELECTSAY ESOLUTIONRAY"
 
 #: client/Game2/SettingsMenuScene.cpp
 msgid "SETTINGS"
-msgstr ""
+msgstr "ETTINGSAY"
 
 #: client/Game2/ProfileEditScene.cpp
 #: client/Game2/SettingsScene.cpp
-#, fuzzy
 msgid "Save Settings"
-msgstr "Avesay Ettings"
+msgstr "Avesay Ettingsay"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Scroll Lock"
@@ -908,9 +907,8 @@ msgid "Settings"
 msgstr "Ettingsay"
 
 #: client/Game2/SettingsScene.cpp
-#, fuzzy
 msgid "Settings changed"
-msgstr "Etting&say"
+msgstr "Ettingsay angedchay"
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Side-by-side"
@@ -923,7 +921,7 @@ msgstr "Ilentsay Odemay"
 
 #: client/Game2/AudioSettingsScene.cpp
 msgid "Sound Effects"
-msgstr ""
+msgstr "Oundsay Effectslay"
 
 #: client/Game2/MainMenuScene.cpp
 msgid ""
@@ -935,13 +933,12 @@ msgid "Space"
 msgstr ""
 
 #: client/Game2/VideoSettingsScene.cpp
-#, fuzzy
 msgid "Split-screen mode"
-msgstr "Lit&spay Eenscray"
+msgstr "Litspay-eenscray odemay"
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Stacked"
-msgstr ""
+msgstr "Ackedstay"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -971,7 +968,7 @@ msgstr ""
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Text Scale"
-msgstr ""
+msgstr "Extay Alescay"
 
 #: client/Game2/MainMenuScene.cpp
 #, c-format, boost-format
@@ -1141,7 +1138,7 @@ msgstr ""
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "VIDEO"
-msgstr ""
+msgstr "IDEOVAY"
 
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Video"
