@@ -1,7 +1,7 @@
 
 // PracticeSetupScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace Client {
  */
 PracticeSetupScene::PracticeSetupScene(Display::Display &display,
 	GameDirector &director, RulebookLibrary &rulebookLibrary) :
-	SUPER(display, director, "PRACTICE", "Practice Setup"),
+	SUPER(display, director, _("PRACTICE"), "Practice Setup"),
 	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
 	using namespace Display;
