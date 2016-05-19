@@ -1,7 +1,7 @@
 
 // GameSelectScene.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -84,6 +84,7 @@ private:
 	bool trackSelected;  ///< Are we exiting because a track was selected?
 
 	std::shared_ptr<Display::Container> rulebookPanel;
+	std::vector<std::shared_ptr<Display::Button>> modeBtns;
 
 	okSignal_t okSignal;
 	cancelSignal_t cancelSignal;

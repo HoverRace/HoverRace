@@ -1,7 +1,7 @@
 
 // GameSelectScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	rulebookPanel = root->NewChild<Container>(display,
 		Vec2(panelWidth, BTN_HEIGHT));
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, 0);
+	rulebookPanel->SetClip(false);
 
 	const Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
 	double x = 0;
@@ -90,6 +91,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 		btn->SetPos(x, 0);
 		btn->GetClickedSignal().connect(std::bind(
 			&GameSelectScene::OnRulebookSelected, this, rulebook));
+
+		modeBtns.emplace_back(std::move(btn));
 
 		x += BTN_WIDTH + BTN_GAP;
 	}
@@ -132,6 +135,12 @@ void GameSelectScene::OnPhaseTransition(double progress)
 	double f = pow((1.0 - progress), 4);
 
 	rulebookPanel->SetTranslation(f * 1280.0, 0);
+
+	double offset = 0;
+	for (auto &btn : modeBtns) {
+		btn->SetTranslation(f * offset, 0);
+		offset += 600.0;
+	}
 
 	SUPER::OnPhaseTransition(progress);
 }
