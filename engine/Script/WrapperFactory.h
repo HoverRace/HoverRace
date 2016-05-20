@@ -100,7 +100,7 @@ public:
 		obj.push(L);
 		scripting->Invoke(1, nullptr, [&](lua_State *L, int num) {
 			if (num < 1) {
-				Log::Error("Expected a return value.");
+				HR_LOG(error) << "Expected a return value.";
 			}
 			else {
 				object retObj(from_stack(L, -num));
@@ -109,7 +109,7 @@ public:
 				}
 				catch (cast_failed &ex)
 				{
-					Log::Error("Unexpected return value: %s", ex.what());
+					HR_LOG(error) << "Unexpected return value: " << ex.what();
 				}
 			}
 			lua_pop(L, num);
