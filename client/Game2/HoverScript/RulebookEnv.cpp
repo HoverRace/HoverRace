@@ -1,7 +1,7 @@
 
 // RulebookEnv.cpp
 //
-// Copyright (c) 2013, 2014, 2016 Michael Imamura.
+// Copyright (c) 2013-2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -279,7 +279,7 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 
 	rulebook.SetOnLoad(ExpectHandler(scripting, defn, "on_load"));
 
-	Log::Info("Registered: %s: %s, %s", name.c_str(), title.c_str(), desc.c_str());
+	HR_LOG(info) << "Registered: " << name << ": " << title << ", " << desc;
 }
 
 void RulebookEnv::DefineRules(const luabind::object &rulesObj)
@@ -293,8 +293,8 @@ void RulebookEnv::DefineRules(const luabind::object &rulesObj)
 		//TODO: Check type of ruleObj and cast to Rule if necessary.
 		rulebook.AddRule(name, ruleObj);
 
-		Log::Info("Added rule '%s' with type %d.", name.c_str(),
-			type(ruleObj));
+		HR_LOG(info) << "Added rule '" << name << "' with type " <<
+			type(ruleObj) << ".";
 	}
 }
 
@@ -307,12 +307,12 @@ bool RulebookEnv::RunRulebookScript()
 	bootPath /= Str::UP("rulebook.lua");
 
 	if (!fs::exists(bootPath)) {
-		Log::Info("Rulebook path does not have a rulebook.lua: %s",
-			(const char*)Str::PU(basePath));
+		HR_LOG(info) << "Rulebook path does not have a rulebook.lua: " <<
+			basePath;
 		return false;
 	}
 
-	Log::Info("Running: %s", (const char*)Str::PU(bootPath));
+	HR_LOG(info) << "Running: " << bootPath;
 
 	return RunScript(bootPath);
 }
@@ -408,12 +408,14 @@ int RulebookEnv::LRequire(lua_State *L)
 	//
 	// Returns the return value of executing the script.
 
-	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(1)));
+	RulebookEnv *self = static_cast<RulebookEnv*>(
+		lua_touserdata(L, lua_upvalueindex(1)));
 
 	const auto &basePath = self->basePath;
 
 	if (basePath.empty()) {
-		Log::Error("Rulebook require() called outside of Rulebook context.");
+		HR_LOG(error) <<
+			"Rulebook require() called outside of Rulebook context.";
 		return 0;
 	}
 
@@ -437,8 +439,8 @@ int RulebookEnv::LRequire(lua_State *L)
 		// Return the cached value.
 		lua_remove(L, -2);  // val
 
-		Log::Info("Returning cached module '%s' from: %s", name.c_str(),
-			(const char*)Str::PU(modulePath));
+		HR_LOG(info) << "Returning cached module '" << name << "' "
+			"from: " << modulePath;
 
 		return 1;
 	}
@@ -446,8 +448,8 @@ int RulebookEnv::LRequire(lua_State *L)
 		// Not in the cache.
 		lua_pop(L, 1);  // cache
 
-		Log::Info("Loading module '%s' from: %s", name.c_str(),
-			(const char*)Str::PU(modulePath));
+		HR_LOG(info) << "Loading module '" << name << "' "
+			"from: " << modulePath;
 
 		try {
 			int retv = self->Execute(LoadChunkFromFile(modulePath),
@@ -467,7 +469,7 @@ int RulebookEnv::LRequire(lua_State *L)
 			return retv;
 		}
 		catch (Script::ScriptExn &ex) {
-			Log::Error("%s", ex.what());
+			HR_LOG(error) << ex.what();
 			return 0;
 		}
 	}
