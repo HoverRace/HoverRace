@@ -288,7 +288,8 @@ void DialogScene::OnPhaseTransition(double progress)
 	color.bits.a = static_cast<MR_UInt8>(
 		progress * static_cast<double>(titleColor.bits.a));
 
-	double x = 320.0 - (progress * 320.0);
+	double f = 1.0 - pow((1.0 - progress), 4);
+	double x = 320.0 - (f * 320.0);
 	if (titleSepLbl) {
 		titleSepLbl->SetTranslation(x, 0);
 		titleSepLbl->SetColor(color);
