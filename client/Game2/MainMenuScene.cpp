@@ -169,11 +169,11 @@ void MainMenuScene::OnStateChanged(State oldState)
 
 void MainMenuScene::OnStateTransition(double interval)
 {
+	double f = 1.0 - pow((1.0 - interval), 4);
+
 	double titleHeight = titleContainer->GetSize().y;
-	//titleContainer->SetOpacity(interval);
-	titleContainer->SetPos(0, titleHeight * interval - titleHeight);
-	//menuContainer->SetOpacity(interval);
-	menuContainer->SetPos(0, 720 - (menuContainer->GetSize().y * interval));
+	titleContainer->SetPos(0, titleHeight * f - titleHeight);
+	menuContainer->SetPos(0, 720 - (menuContainer->GetSize().y * f));
 }
 
 void MainMenuScene::Layout()
