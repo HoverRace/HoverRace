@@ -749,7 +749,8 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	displayInfoBox = root->NewChild<FillBox>(1280, 720, 0xff3f3f3f);
 	root->ReorderChild(displayInfoBox, 0);
 
-	displayInfoLbl = root->NewChild<Label>("Res", UiFont(20), COLOR_WHITE);
+	displayInfoLbl = root->NewChild<Label>("Res", UiFont(40), COLOR_WHITE);
+	displayInfoLbl->SetFixedScale(true);
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
