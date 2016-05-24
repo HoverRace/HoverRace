@@ -74,7 +74,8 @@ protected:
 		double h = size.y;
 
 		screenPos = this->display.LayoutUiPosition(
-			this->model.GetAlignedPos(w, h));
+			this->model.GetAlignedPos(w, h),
+			this->model.GetLayoutFlags());
 
 		if (!this->model.IsLayoutUnscaled()) {
 			double uiScale = this->display.GetUiScale();
