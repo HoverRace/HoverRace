@@ -54,14 +54,19 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	auto root = GetRoot();
 
-	//TODO: Letterbox mask.
-
 	double sliderHeight = 120;
+
+	// Letterbox mask.
+	// These will be sized and positioned in Layout().
+	letterUpBox.reset(new FillBox(0, 0, 0xff000000,
+		UiLayoutFlags::FLOATING | UiLayoutFlags::UNSCALED));
+	letterUpBox->AttachView(display);
+	letterDownBox.reset(new FillBox(0, 0, 0xff000000,
+		UiLayoutFlags::FLOATING | UiLayoutFlags::UNSCALED));
+	letterDownBox->AttachView(display);
 
 	titleContainer = root->NewChild<Container>(display,
 		Vec2(1280, sliderHeight));
-
-	titleContainer->NewChild<FillBox>(titleContainer->GetSize(), 0xff000000);
 
 	auto titleLbl = titleContainer->NewChild<Label>(
 		"HoverRace",
@@ -73,8 +78,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	menuContainer = root->NewChild<Container>(display,
 		Vec2(1280, sliderHeight));
-
-	menuContainer->NewChild<FillBox>(menuContainer->GetSize(), 0xff000000);
+	menuContainer->SetPos(0, 720 - sliderHeight + 2);
 
 	AddButton(_("Practice"), true, true)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
@@ -101,6 +105,10 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 		mutedBtn->GetClickedSignal().connect(
 			std::bind(&MainMenuScene::OnMutedClicked, this));
 	}
+
+	displayConfigChangedConn =
+		display.GetDisplayConfigChangedSignal().connect(
+			std::bind(&MainMenuScene::RequestLayout, this));
 }
 
 MainMenuScene::~MainMenuScene()
@@ -169,15 +177,36 @@ void MainMenuScene::OnStateChanged(State oldState)
 
 void MainMenuScene::OnStateTransition(double interval)
 {
-	double f = 1.0 - pow((1.0 - interval), 4);
+	double f = pow((1.0 - interval), 4);
+
+	double sliderHeight = letterUpBox->GetSize().y;
+	letterUpBox->SetTranslation(0, f * -sliderHeight);
+	letterDownBox->SetTranslation(0, f * sliderHeight);
 
 	double titleHeight = titleContainer->GetSize().y;
-	titleContainer->SetPos(0, titleHeight * f - titleHeight);
-	menuContainer->SetPos(0, 720 - (menuContainer->GetSize().y * f));
+	titleContainer->SetTranslation(0, f * -titleHeight);
+	menuContainer->SetTranslation(0, f * titleHeight);
 }
 
 void MainMenuScene::Layout()
 {
+	const auto &vidCfg = Config::GetInstance()->video;
+	double w = vidCfg.xRes;
+	double h = vidCfg.yRes;
+
+	// Position the letterbox mask, since it extends beyond the UI area.
+
+	auto uiScale = display.GetUiScale();
+	auto &uiOffset = display.GetUiOffset();
+
+	double sliderHeight = uiOffset.y + (120.0 * uiScale);
+
+	letterUpBox->SetPos(0, 0);
+	letterUpBox->SetSize(w, sliderHeight);
+
+	letterDownBox->SetPos(0, h - sliderHeight + 1);
+	letterDownBox->SetSize(w, sliderHeight);
+
 	// Set equal spacing between each of the buttons.
 
 	const double sidePadding = 40;
@@ -196,6 +225,22 @@ void MainMenuScene::Layout()
 		btn->SetPos(x, 0);
 		x += btn->Measure().x + spacing;
 	}
+}
+
+void MainMenuScene::PrepareRender()
+{
+	letterUpBox->PrepareRender();
+	letterDownBox->PrepareRender();
+
+	SUPER::PrepareRender();
+}
+
+void MainMenuScene::Render()
+{
+	letterUpBox->Render();
+	letterDownBox->Render();
+
+	SUPER::Render();
 }
 
 }  // namespace Client

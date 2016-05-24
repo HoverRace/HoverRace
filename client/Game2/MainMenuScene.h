@@ -64,15 +64,20 @@ public:
 	void OnStateChanged(State oldState) override;
 	void OnStateTransition(double interval) override;
 	void Layout() override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	Display::Display &display;
 	GameDirector &director;
 	RulebookLibrary &rulebookLibrary;
 
+	std::unique_ptr<Display::FillBox> letterUpBox;
+	std::unique_ptr<Display::FillBox> letterDownBox;
 	std::shared_ptr<Display::Container> titleContainer;
 	std::shared_ptr<Display::Container> menuContainer;
 	std::vector<std::shared_ptr<Display::Button>> menuButtons;
+	boost::signals2::scoped_connection displayConfigChangedConn;
 };
 
 }  // namespace Client
