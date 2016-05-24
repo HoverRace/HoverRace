@@ -231,7 +231,9 @@ public:
 	{
 		Vec2 adjustedPos = relPos;
 		adjustedPos += GetUiOrigin();
-		adjustedPos *= GetUiScale();
+		if (!((layoutFlags | uiLayoutFlags) & UiLayoutFlags::UNSCALED)) {
+			adjustedPos *= GetUiScale();
+		}
 		if (!((layoutFlags | uiLayoutFlags) & UiLayoutFlags::FLOATING)) {
 			adjustedPos += GetUiOffset();
 		}
