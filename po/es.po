@@ -725,6 +725,10 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
+#: client/Game2/PracticeSetupScene.cpp
+msgid "PRACTICE"
+msgstr ""
+
 #: client/Game2/ProfileEditScene.cpp
 msgid "PROFILE"
 msgstr ""
