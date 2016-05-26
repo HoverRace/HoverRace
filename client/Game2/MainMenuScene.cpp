@@ -179,9 +179,14 @@ void MainMenuScene::OnStateTransition(double interval)
 {
 	double f = pow((1.0 - interval), 4);
 
+	auto color = Display::COLOR_BLACK;
+	color.bits.a = 255 - static_cast<MR_UInt8>(f * 255.0);
+
 	double sliderHeight = letterUpBox->GetSize().y;
 	letterUpBox->SetTranslation(0, f * -sliderHeight);
+	letterUpBox->SetColor(color);
 	letterDownBox->SetTranslation(0, f * sliderHeight);
+	letterDownBox->SetColor(color);
 
 	double titleHeight = titleContainer->GetSize().y;
 	titleContainer->SetTranslation(0, f * -titleHeight);
