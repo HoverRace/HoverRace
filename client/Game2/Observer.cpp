@@ -678,11 +678,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 				const char *lPlayerName;
 				int lHoverId;
 				BOOL lConnected;
-				int lNbLap;
-				MR_SimulationTime lFinishTime;
-				MR_SimulationTime lBestLap;
-				int lNbFor;
-				int lNbAgain;
+				int lNbLap = 0;
+				MR_SimulationTime lFinishTime = 0;
+				MR_SimulationTime lBestLap = 0;
+				int lNbFor = 0;
+				int lNbAgain = 0;
 
 				if (lShowHits) {
 					pSession->GetHitResult(pi, lPlayerName, lHoverId,
