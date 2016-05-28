@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../engine/Display/Color.h"
+
 #include "GameDirector.h"
 
 #include "FormScene.h"
@@ -28,8 +30,9 @@
 namespace HoverRace {
 	namespace Display {
 		class ActionButton;
-		class FlexGrid;
 		class Background;
+		class FlexGrid;
+		class Label;
 	}
 }
 
