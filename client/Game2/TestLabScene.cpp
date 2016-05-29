@@ -49,6 +49,7 @@
 #include "../../engine/Util/Log.h"
 
 #include "MessageScene.h"
+#include "TextEditScene.h"
 
 #include "TestLabScene.h"
 
@@ -298,6 +299,9 @@ public:
 private:
 	void AdjustWrapWidth(double amt);
 
+private:
+	void OnEditInput();
+
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
 
@@ -305,6 +309,11 @@ private:
 	std::shared_ptr<Display::FillBox> wrapBox;
 	std::shared_ptr<Display::Label> wrapLbl;
 	std::shared_ptr<Display::ActiveText> randomLbl;
+
+	std::shared_ptr<Display::ActiveText> inputLbl;
+	std::shared_ptr<Display::Button> inputBtn;
+
+	boost::signals2::scoped_connection inputConn;
 }; //}}}
 
 class TransitionModule : public TestLabScene::LabModule /*{{{*/
@@ -970,6 +979,14 @@ TextModule::TextModule(Display::Display &display, GameDirector &director) :
 
 	randomLbl = root->NewChild<ActiveText>("0", UiFont(), 0xffffffff);
 	randomLbl->SetPos(640, 150);
+
+	inputLbl = root->NewChild<ActiveText>("", UiFont{}, 0xffffffff);
+	inputLbl->SetPos(640, 170);
+
+	inputBtn = root->NewChild<Button>(display, "Edit");
+	inputBtn->SetPos(740, 170);
+	inputConn = inputBtn->GetClickedSignal().connect(std::bind(
+		&TextModule::OnEditInput, this));
 }
 
 void TextModule::AdjustWrapWidth(double amt)
@@ -981,6 +998,13 @@ void TextModule::AdjustWrapWidth(double amt)
 		wrapBox->SetSize(newWidth, curSize.y);
 		wrapLbl->SetWrapWidth(newWidth);
 	}
+}
+
+void TextModule::OnEditInput()
+{
+	auto scene = std::make_shared<TextEditScene>(display, director, "",
+		"MAKE SOME TEXT", inputLbl->GetText());
+	director.RequestPushScene(scene);
 }
 
 void TextModule::Advance(Util::OS::timestamp_t tick)
