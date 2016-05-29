@@ -13,6 +13,7 @@ do
 	local w, h = cfg:get_video_res()
 	print("Configured window res: " .. w .. "x" .. h)
 	cfg:set_video_res(800, 450)
+	--cfg:set_video_res(1280, 720)
 	w, h = cfg:get_video_res()
 	print("New window res: " .. w .. "x" .. h)
 end
