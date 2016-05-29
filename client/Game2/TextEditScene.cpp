@@ -64,6 +64,7 @@ void TextEditScene::OnTextInput(const std::string &s)
 	cursorTick = OS::Time();
 
 	text += s;
+	inputLbl->SetText(text);
 }
 
 void TextEditScene::OnTextControl(Control::TextControl::key_t key)
@@ -75,6 +76,7 @@ void TextEditScene::OnTextControl(Control::TextControl::key_t key)
 			if (!text.empty()) {
 				text.resize(text.length() - 1);
 			}
+			inputLbl->SetText(text);
 			break;
 
 		case Control::TextControl::ENTER:
