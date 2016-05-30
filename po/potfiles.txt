@@ -54,6 +54,7 @@ client/Game2/SettingsMenuScene.cpp
 client/Game2/SettingsScene.cpp
 client/Game2/StatusOverlayScene.cpp
 client/Game2/TestLabScene.cpp
+client/Game2/TextEditScene.cpp
 client/Game2/TrackSelectScene.cpp
 client/Game2/UiScene.cpp
 client/Game2/VideoSettingsScene.cpp
