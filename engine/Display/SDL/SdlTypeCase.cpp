@@ -1,7 +1,7 @@
 
 // SdlTypeCase.cpp
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -338,12 +338,20 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y,
 		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
 	}
 
-	// If caret position wasn't within the text, we assume it's at the end.
+
 	if (caret && !foundCaretPos) {
 		foundCaretPos = true;
-		const auto &glyph = s.glyphs.back();
-		caretRect.x = x + glyph.second.x + glyph.second.w;
-		caretRect.y = y + glyph.second.y;
+
+		if (s.glyphs.empty()) {
+			caretRect.x = x;
+			caretRect.y = y;
+		}
+		else {
+			// If caret position wasn't within the text, we assume it's at the end.
+			const auto &glyph = s.glyphs.back();
+			caretRect.x = x + glyph.second.x + glyph.second.w;
+			caretRect.y = y + glyph.second.y;
+		}
 	}
 
 	if (foundCaretPos) {
