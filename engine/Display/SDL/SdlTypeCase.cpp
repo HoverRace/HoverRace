@@ -193,16 +193,16 @@ GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp,
 
 void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 {
+	if (rects) {
+		rects->typeCase = shared_from_this();
+		rects->glyphs.clear();
+	}
+
 	if (s.empty()) return;
 
 	std::string buf;
 
 	HR_LOG(trace) << "Preparing: " << s;
-
-	if (rects) {
-		rects->typeCase = shared_from_this();
-		rects->glyphs.clear();
-	}
 
 	std::string added;
 	auto prev = s.begin();
