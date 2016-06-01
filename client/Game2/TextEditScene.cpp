@@ -56,7 +56,8 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	const auto &s = display.styles;
 
 	inputLbl = root->NewChild<ActiveText>(text, s.bodyFont, s.bodyFg);
-	inputLbl->SetPos(400, 400);
+	inputLbl->SetPos(640, 300);
+	inputLbl->SetAlignment(UiViewModel::Alignment::N);
 }
 
 void TextEditScene::OnTextInput(const std::string &s)
