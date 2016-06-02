@@ -93,6 +93,8 @@ void TextEditScene::OnTextControl(Control::TextControl::key_t key)
 void TextEditScene::AttachController(Control::InputEventController &controller,
 	ConnList &conns)
 {
+	SUPER::AttachController(controller, conns);
+
 	conns <<
 		controller.actions.ui.control->Connect(
 			std::bind(&TextEditScene::OnTextControl, this, std::placeholders::_1)) <<
@@ -102,9 +104,12 @@ void TextEditScene::AttachController(Control::InputEventController &controller,
 	SDL_StartTextInput();
 }
 
-void TextEditScene::DetachController(Control::InputEventController&, ConnList&)
+void TextEditScene::DetachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
 	SDL_StopTextInput();
+
+	SUPER::DetachController(controller, conns);
 }
 
 void TextEditScene::Advance(Util::OS::timestamp_t tick)
