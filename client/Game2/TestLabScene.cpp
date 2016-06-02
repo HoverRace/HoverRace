@@ -1004,6 +1004,9 @@ void TextModule::OnEditInput()
 {
 	auto scene = std::make_shared<TextEditScene>(display, director, "",
 		"MAKE SOME TEXT", inputLbl->GetText());
+	scene->GetConfirmSignal().connect([=](const std::string &s) {
+		inputLbl->SetText(s);
+	});
 	director.RequestPushScene(scene);
 }
 
