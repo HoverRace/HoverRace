@@ -49,6 +49,7 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 {
 	using namespace Display;
 
+	SupportOkAction();
 	SupportCancelAction();
 
 	auto root = GetContentRoot();
