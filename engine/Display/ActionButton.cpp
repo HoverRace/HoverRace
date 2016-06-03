@@ -1,7 +1,7 @@
 
 // ActionButton.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -114,7 +114,10 @@ void ActionButton::DetachAction()
 
 void ActionButton::FireClickedSignal()
 {
-	SUPER::FireClickedSignal();
+	// Note: We don't trigger FireClickedSignal() to avoid infinite recursion
+	//       if the "OK" action is attached.  Anyway, the point of an action
+	//       button is to trigger the action.
+
 	if (auto actionLock = action.lock()) {
 		(*actionLock)(1);
 	}
