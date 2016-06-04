@@ -62,6 +62,8 @@ public:
 private:
 	void OnTextInput(const std::string &s);
 	void OnTextControl(Control::TextControl::key_t key);
+protected:
+	void OnOk() override;
 
 public:
 	// Scene

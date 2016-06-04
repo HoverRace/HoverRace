@@ -91,6 +91,13 @@ void TextEditScene::OnTextControl(Control::TextControl::key_t key)
 	}
 }
 
+void TextEditScene::OnOk()
+{
+	confirmSignal(text);
+
+	SUPER::OnOk();
+}
+
 void TextEditScene::AttachController(Control::InputEventController &controller,
 	ConnList &conns)
 {
