@@ -2,7 +2,7 @@
 // ControlAction.h
 //
 // Copyright (c) 2010 Ryan Curtin.
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,13 @@ protected:
 	int listOrder;
 };
 using ControlActionPtr = std::shared_ptr<ControlAction<int>>;
+
+template<class T>
+std::ostream &operator<<(std::ostream &os, const ControlAction<T> &action)
+{
+	os << action.GetName();
+	return os;
+}
 
 /**
  * An action performer that does absolutely nothing.
