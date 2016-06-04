@@ -55,6 +55,21 @@ ActionButton::ActionButton(Display &display, const std::string &text,
 }
 
 /**
+ * Constructor for fixed-sized button with automatic label.
+ * @note The button will have no text until an action is attached.
+ * @param display The display child elements will be attached to.
+ * @param size The fixed button size.
+ * @param layoutFlags Optional layout flags.
+ */
+ActionButton::ActionButton(Display &display, const Vec2 &size,
+	uiLayoutFlags_t layoutFlags) :
+	SUPER(display, size, "", layoutFlags),
+	fixedText()
+{
+	InitKeycap();
+}
+
+/**
  * Constructor for fixed-sized button with fixed label.
  * @note The button will have no text until an action is attached.
  * @param display The display child elements will be attached to.
