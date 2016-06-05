@@ -84,6 +84,7 @@ private:
 	std::string fixedText;
 	std::shared_ptr<KeycapIcon> keycap;
 	std::weak_ptr<Control::InputEventController::VoidActionPtr::element_type> action;
+	bool armed;
 };
 
 }  // namespace Display

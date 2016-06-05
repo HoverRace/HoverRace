@@ -34,7 +34,7 @@ namespace Display {
  */
 ActionButton::ActionButton(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, "", layoutFlags),
-	fixedText()
+	fixedText(), armed(true)
 {
 	InitKeycap();
 }
@@ -49,7 +49,7 @@ ActionButton::ActionButton(Display &display, uiLayoutFlags_t layoutFlags) :
 ActionButton::ActionButton(Display &display, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, "", layoutFlags),
-	fixedText(text)
+	fixedText(text), armed(true)
 {
 	InitKeycap();
 }
@@ -64,7 +64,7 @@ ActionButton::ActionButton(Display &display, const std::string &text,
 ActionButton::ActionButton(Display &display, const Vec2 &size,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, "", layoutFlags),
-	fixedText()
+	fixedText(), armed(true)
 {
 	InitKeycap();
 }
@@ -80,7 +80,7 @@ ActionButton::ActionButton(Display &display, const Vec2 &size,
 ActionButton::ActionButton(Display &display, const Vec2 &size,
 	const std::string &text, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, "", layoutFlags),
-	fixedText(text)
+	fixedText(text), armed(true)
 {
 	InitKeycap();
 }
@@ -129,13 +129,20 @@ void ActionButton::DetachAction()
 
 void ActionButton::FireClickedSignal()
 {
-	// Note: We don't trigger FireClickedSignal() to avoid infinite recursion
-	//       if the "OK" action is attached.  Anyway, the point of an action
-	//       button is to trigger the action.
+	// "Disarm" this button to prevent infinite recursion when the "OK" action
+	// is in play -- the action would fire and be received by the scene, which
+	// would pass it to the focused button, which is probably this button.
+	//
+	// We don't simply disable the button temporarily -- that would pass the
+	// focus to another button, triggering it instead.
+	if (!armed) return;
+	armed = false;
 
 	if (auto actionLock = action.lock()) {
 		(*actionLock)(1);
 	}
+
+	armed = true;
 }
 
 }  // namespace Display
