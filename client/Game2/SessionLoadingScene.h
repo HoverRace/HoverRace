@@ -1,7 +1,7 @@
 
 // SessionLoadingScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,17 +42,18 @@ namespace Client {
  */
 class SessionLoadingScene : public LoadingScene
 {
-	typedef LoadingScene SUPER;
-	public:
-		SessionLoadingScene(Display::Display &display, GameDirector &director,
-			std::shared_ptr<Display::Res<Display::Texture>> mapRes);
-		virtual ~SessionLoadingScene();
+	using SUPER = LoadingScene;
 
-	public:
-		void OnPhaseTransition(double progress) override;
+public:
+	SessionLoadingScene(Display::Display &display, GameDirector &director,
+		std::shared_ptr<Display::Res<Display::Texture>> mapRes);
+	virtual ~SessionLoadingScene();
 
-	private:
-		std::shared_ptr<Display::Picture> mapPic;
+public:
+	void OnPhaseTransition(double progress) override;
+
+private:
+	std::shared_ptr<Display::Picture> mapPic;
 };
 
 }  // namespace Client
