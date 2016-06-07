@@ -977,14 +977,14 @@ TextModule::TextModule(Display::Display &display, GameDirector &director) :
 	btn->GetClickedSignal().connect(std::bind(
 		&TextModule::AdjustWrapWidth, this, -50));
 
-	randomLbl = root->NewChild<ActiveText>("0", UiFont(), 0xffffffff);
+	randomLbl = root->NewChild<ActiveText>("0", UiFont{30}, 0xffffffff);
 	randomLbl->SetPos(640, 150);
 
-	inputLbl = root->NewChild<ActiveText>("", UiFont{}, 0xffffffff);
-	inputLbl->SetPos(640, 170);
+	inputLbl = root->NewChild<ActiveText>("", UiFont{30}, 0xffffffff);
+	inputLbl->SetPos(640, 200);
 
 	inputBtn = root->NewChild<Button>(display, "Edit");
-	inputBtn->SetPos(740, 170);
+	inputBtn->SetPos(840, 200);
 	inputConn = inputBtn->GetClickedSignal().connect(std::bind(
 		&TextModule::OnEditInput, this));
 }
