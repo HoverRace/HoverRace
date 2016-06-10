@@ -1,7 +1,7 @@
 
 // SdlActiveTextView.cpp
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -101,7 +101,9 @@ void SdlActiveTextView::UpdateTexture()
 
 	// Apply text scale since SdlTypeCase always uses unscaled fonts for
 	// cache reasons.
-	font.size *= Config::GetInstance()->video.textScale;
+	if (!model.IsFixedScale()) {
+		font.size *= Config::GetInstance()->video.textScale;
+	}
 
 	if (!typeCase) {
 		typeCase = display.GetTypeCase(font);

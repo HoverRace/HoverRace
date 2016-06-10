@@ -1,7 +1,7 @@
 
 // Label.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ Label::Label(const std::string &text,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(text, font, color, layoutFlags),
-	fixedScale(false), scale(1.0), wrapWidth(-1)
+	scale(1.0), wrapWidth(-1)
 {
 }
 
@@ -56,7 +56,7 @@ Label::Label(double wrapWidth,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(text, font, color, layoutFlags),
-	fixedScale(false), scale(1.0), wrapWidth(wrapWidth)
+	scale(1.0), wrapWidth(wrapWidth)
 {
 }
 
@@ -69,14 +69,6 @@ void Label::SetAutoWidth()
 	if (wrapWidth > 0) {
 		wrapWidth = -1;
 		FireModelUpdate(Props::WRAP_WIDTH);
-	}
-}
-
-void Label::SetFixedScale(bool fixedScale)
-{
-	if (this->fixedScale != fixedScale) {
-		this->fixedScale = fixedScale;
-		FireModelUpdate(Props::FIXED_SCALE);
 	}
 }
 

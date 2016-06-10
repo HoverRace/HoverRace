@@ -1,7 +1,7 @@
 
 // BaseText.h
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ public:
 			COLOR = SUPER::Props::NEXT_,
 			FONT,
 			TEXT,
+			FIXED_SCALE,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -74,10 +75,18 @@ public:
 	const std::string &GetText() const { return text; }
 	void SetText(const std::string &text);
 
+	/**
+	 * Check if the scaling is fixed (i.e., ignores user text scale config).
+	 * @return @c true if fixed scale, @c false if not.
+	 */
+	bool IsFixedScale() const { return fixedScale; }
+	void SetFixedScale(bool fixedScale);
+
 private:
 	std::string text;
 	UiFont font;
 	Color color;
+	bool fixedScale;
 };
 
 }  // namespace Display

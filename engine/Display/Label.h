@@ -1,7 +1,7 @@
 
 // Label.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,8 +57,7 @@ public:
 	{
 		enum
 		{
-			FIXED_SCALE = SUPER::Props::NEXT_,
-			SCALE,
+			SCALE = SUPER::Props::NEXT_,
 			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
 			NEXT_,  ///< First index for subclasses.
 		};
@@ -85,13 +84,6 @@ public:
 	void SetAutoWidth();
 
 	/**
-	 * Check if the scaling is fixed (i.e., ignores user text scale config).
-	 * @return @c true if fixed scale, @c false if not.
-	 */
-	bool IsFixedScale() const { return fixedScale; }
-	void SetFixedScale(bool fixedScale);
-
-	/**
 	 * Gets the scaling of this label.
 	 * @return The scale.
 	 */
@@ -107,7 +99,6 @@ public:
 	void SetWrapWidth(double wrapWidth);
 
 private:
-	bool fixedScale;
 	double scale;
 	double wrapWidth;
 };

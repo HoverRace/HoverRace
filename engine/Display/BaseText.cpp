@@ -1,7 +1,7 @@
 
 // BaseText.cpp
 //
-// Copyright (c) 2015 Michael Imamura.
+// Copyright (c) 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ BaseText::BaseText(const std::string &text,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
-	text(text), font(font), color(color)
+	text(text), font(font), color(color), fixedScale(false)
 {
 }
 
@@ -63,6 +63,14 @@ void BaseText::SetText(const std::string &text)
 	if (this->text != text) {
 		this->text = text;
 		FireModelUpdate(Props::TEXT);
+	}
+}
+
+void BaseText::SetFixedScale(bool fixedScale)
+{
+	if (this->fixedScale != fixedScale) {
+		this->fixedScale = fixedScale;
+		FireModelUpdate(Props::FIXED_SCALE);
 	}
 }
 
