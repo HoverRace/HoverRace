@@ -31,6 +31,13 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+
+const size_t DEFAULT_MAX_LENGTH = 64;
+const size_t MAX_MAX_LENGTH = 65536;
+
+}
+
 /**
  * Constructor.
  * @param display The target display.
@@ -44,10 +51,18 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	const std::string &text) :
 	SUPER(display, director, parentTitle, title,
 		"Text Edit (" + title + ")"),
-	text(text),
+	maxLength(MAX_MAX_LENGTH), text(),
 	cursorOn(true), cursorTick(0)
 {
 	using namespace Display;
+
+	this->text.reserve(maxLength);
+	if (this->text.size() > maxLength) {
+		this->text = text.substr(0, maxLength);
+	}
+	else {
+		this->text = text;
+	}
 
 	SupportOkAction();
 	SupportCancelAction();
@@ -61,11 +76,32 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetAlignment(UiViewModel::Alignment::N);
 }
 
+void TextEditScene::SetMaxLength(size_t chars)
+{
+	if (chars > MAX_MAX_LENGTH) {
+		HR_LOG(warning) << "Exceeded maximum length for text edit scene: " <<
+			chars << " > " << MAX_MAX_LENGTH;
+		chars = MAX_MAX_LENGTH;
+	}
+
+	maxLength = chars;
+	if (text.size() > maxLength) {
+		text.resize(maxLength);
+	}
+	text.reserve(chars);
+}
+
 void TextEditScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
 
-	text += s;
+	if (text.size() + s.size() > maxLength) {
+		text += s.substr(0, maxLength - text.size());
+	}
+	else {
+		text += s;
+	}
+
 	inputLbl->SetText(text);
 }
 

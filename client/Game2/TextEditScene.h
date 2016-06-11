@@ -53,6 +53,9 @@ public:
 	virtual ~TextEditScene() { }
 
 public:
+	size_t GetMaxLength() const { return maxLength; }
+	void SetMaxLength(size_t bytes);
+
 	const std::string &GetText() const { return text; }
 
 public:
@@ -77,6 +80,7 @@ public:
 	void PrepareRender() override;
 
 private:
+	size_t maxLength;
 	std::string text;
 
 	bool cursorOn;
