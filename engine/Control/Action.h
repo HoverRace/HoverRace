@@ -50,7 +50,7 @@ enum key_t {
 	ENTER = SDLK_RETURN
 };
 
-}  // namepsace TextControl
+}  // namespace TextControl
 
 namespace Mouse {
 
