@@ -1,7 +1,7 @@
 
 // Action.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -64,8 +64,11 @@ enum button_t {
 };
 
 /// Mouse click events.
-struct Click {
-	Click(double x, double y, button_t btn) : pos(x, y), btn(btn) { }
+struct Click
+{
+	constexpr Click(double x, double y, button_t btn) noexcept :
+		pos(x, y), btn(btn) { }
+
 	Vec2 pos;
 	button_t btn;
 };
@@ -73,8 +76,9 @@ struct Click {
 /// Mouse scroll events.
 struct Scroll
 {
-	Scroll(double x, double y, double dx, double dy) :
+	constexpr Scroll(double x, double y, double dx, double dy) noexcept :
 		pos(x, y), motion(dx, dy) { }
+
 	Vec2 pos;
 	Vec2 motion;
 };
