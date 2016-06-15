@@ -72,8 +72,9 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	const auto &s = display.styles;
 
 	inputLbl = root->NewChild<ActiveText>(text, s.bodyFont, s.bodyFg);
-	inputLbl->SetPos(640, 300);
+	inputLbl->SetPos(640, 250);
 	inputLbl->SetAlignment(UiViewModel::Alignment::N);
+	inputLbl->SetFixedScale(true);
 }
 
 void TextEditScene::SetMaxLength(size_t chars)
