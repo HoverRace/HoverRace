@@ -32,6 +32,7 @@ namespace HoverRace {
 	namespace Display {
 		class ActiveText;
 		class Display;
+		class Label;
 	}
 }
 
@@ -55,6 +56,8 @@ public:
 public:
 	size_t GetMaxLength() const { return maxLength; }
 	void SetMaxLength(size_t bytes);
+
+	void SetHint(const std::string &text);
 
 	const std::string &GetText() const { return text; }
 
@@ -88,6 +91,7 @@ private:
 
 	confirmSignal_t confirmSignal;
 
+	std::shared_ptr<Display::Label> hintLbl;
 	std::shared_ptr<Display::ActiveText> inputLbl;
 };
 

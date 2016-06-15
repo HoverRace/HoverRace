@@ -22,6 +22,7 @@
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/ActiveText.h"
 #include "../../engine/Display/Container.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"
 
 #include "TextEditScene.h"
@@ -90,6 +91,27 @@ void TextEditScene::SetMaxLength(size_t chars)
 		text.resize(maxLength);
 	}
 	text.reserve(chars);
+}
+
+/**
+ * Set instructions to display to the user.
+ * @param text The instruction text to accompany the input box.
+ */
+void TextEditScene::SetHint(const std::string &text)
+{
+	if (hintLbl) {
+		hintLbl->SetText(text);
+	}
+	else {
+		using namespace Display;
+
+		auto root = GetContentRoot();
+		const auto &s = display.styles;
+
+		hintLbl = root->NewChild<Label>(text, s.bodyFont, s.bodyFg);
+		hintLbl->SetPos(640, 150);
+		hintLbl->SetAlignment(UiViewModel::Alignment::S);
+	}
 }
 
 void TextEditScene::OnTextInput(const std::string &s)
