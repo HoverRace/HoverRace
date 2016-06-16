@@ -26,6 +26,10 @@
 #include "DialogScene.h"
 
 namespace HoverRace {
+	namespace Display {
+		class Button;
+		class Label;
+	}
 	namespace Player {
 		class Profile;
 	}
@@ -59,9 +63,11 @@ protected:
 private:
 	std::unique_ptr<Player::Profile> profile;
 	Player::EditableProfile *editProfile;
+	Player::RenamableProfile *renameProfile;
 	std::shared_ptr<Player::Profile> origProfile;
 
 	std::shared_ptr<Display::Button> avatarBtn;
+	std::shared_ptr<Display::Label> nameLbl;
 
 	boost::signals2::scoped_connection avatarClickedConn;
 	boost::signals2::scoped_connection avatarSelConn;

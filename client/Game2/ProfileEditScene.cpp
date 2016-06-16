@@ -30,6 +30,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 #include "AvatarSelectScene.h"
+#include "TextEditScene.h"
 
 #include "ProfileEditScene.h"
 
@@ -55,12 +56,16 @@ public:
 
 public:
 	Player::EditableProfile *Edit() override { return this; }
+	Player::RenamableProfile *EditName() override { return this; }
 
 protected:
 	void Save() override
 	{
+		if (auto editor = profile.EditName()) {
+			editor->Rename(GetName());
+		}
+
 		if (auto editor = profile.Edit()) {
-			//editor->SetName(GetName());
 			editor->SetAvatarName(GetAvatarName());
 			editor->SetPrimaryColor(GetPrimaryColor());
 			editor->SetSecondaryColor(GetSecondaryColor());
@@ -82,7 +87,8 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	std::shared_ptr<Player::Profile> origProfile) :
 	SUPER(display, director, parentTitle, _("PROFILE"), "Profile"),
-	profile(new FormProfile(*origProfile)), editProfile(profile->Edit()),
+	profile(new FormProfile(*origProfile)),
+	editProfile(profile->Edit()), renameProfile(profile->EditName()),
 	origProfile(std::move(origProfile))
 {
 	using namespace Display;
@@ -104,14 +110,15 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	mainGrid->SetPos(580, 60);
 
 	size_t row = 0;
-	mainGrid->At(row++, 0).NewChild<Label>(this->origProfile->GetName(),
-		s.headingFont, s.headingFg);
+	nameLbl = mainGrid->At(row++, 0).NewChild<Label>(
+		this->origProfile->GetName(),
+		s.headingFont, s.headingFg)->GetContents();
 
 	auto renameBtn = mainGrid->At(row++, 0).
 		NewChild<Button>(display, _("Change Name"))->GetContents();
 	renameConn = renameBtn->GetClickedSignal().connect(
 		std::bind(&ProfileEditScene::OnRename, this));
-	renameBtn->SetEnabled(false);
+	renameBtn->SetEnabled(editProfile != nullptr);
 
 	auto saveCell = mainGrid->At(row++, 0).
 		NewChild<Button>(display, _("Save Settings"));
@@ -131,7 +138,14 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 
 void ProfileEditScene::OnRename()
 {
-	//TODO: Display text dialog.
+	auto scene = std::make_shared<TextEditScene>(display, director,
+		GetFullTitle(), _("EDIT NAME"), profile->GetName());
+
+	scene->GetConfirmSignal().connect([=](const std::string &s) {
+		nameLbl->SetText(s);
+		renameProfile->Rename(s);
+	});
+	director.RequestPushScene(scene);
 }
 
 void ProfileEditScene::OnAvatarSelect()
