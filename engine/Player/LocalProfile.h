@@ -66,8 +66,11 @@ public:
 
 private:
 	void Load(Util::yaml::MapNode *root, const std::string &filename);
+
 public:
 	EditableProfile *Edit() override { return this; }
+	RenamableProfile *EditName() override { return this; }
+
 protected:
 	void Save() override;
 
