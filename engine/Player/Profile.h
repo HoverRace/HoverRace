@@ -53,7 +53,9 @@ namespace Player {
  * Base class for player profiles.
  * @author Michael Imamura
  */
-class MR_DllDeclare Profile : protected EditableProfile
+class MR_DllDeclare Profile :
+	protected EditableProfile,
+	protected RenamableProfile
 {
 public:
 	Profile(std::shared_ptr<AvatarGallery> avatarGallery = {});
@@ -106,6 +108,9 @@ public:
 protected:
 	virtual void SetSecondaryColor(Display::Color color);
 
+protected:
+	virtual void Rename(const std::string &name) { SetName(name); }
+
 public:
 	virtual std::shared_ptr<Display::Res<Display::Texture>>
 		GetAvatar() const;
@@ -117,6 +122,14 @@ public:
 	 *         @c nullptr if this profile cannot be edited.
 	 */
 	virtual EditableProfile *Edit() { return nullptr; }
+
+	/**
+	 * Retrieve an renamable view of this profile.
+	 * @return An editable profile backed by this profile, or
+	 *         @c nullptr if this profile cannot change the name.
+	 */
+	virtual RenamableProfile *EditName() { return nullptr; }
+
 protected:
 	virtual void Save() = 0;
 
