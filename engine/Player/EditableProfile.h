@@ -58,6 +58,11 @@ public:
 class MR_DllDeclare RenamableProfile
 {
 public:
+	/**
+	 * Attempt to rename the profile.
+	 * This implies saving the profile.
+	 * @param name The new name (may not be blank).
+	 */
 	virtual void Rename(const std::string &name) = 0;
 };
 
