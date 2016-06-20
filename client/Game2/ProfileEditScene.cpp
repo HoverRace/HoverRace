@@ -140,7 +140,8 @@ void ProfileEditScene::OnRename()
 {
 	auto scene = std::make_shared<TextEditScene>(display, director,
 		GetFullTitle(), _("EDIT NAME"), profile->GetName());
-	scene->SetHint(_("Select a new name."));
+	scene->SetHint(_("Select a new name. "
+		"Changes will take effect immediately."));
 	scene->SetMaxLength(30);
 
 	scene->GetConfirmSignal().connect([=](const std::string &s) {
