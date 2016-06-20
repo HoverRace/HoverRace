@@ -133,6 +133,8 @@ public:
 protected:
 	virtual void Save() = 0;
 
+public:
+	static const int MAX_NAME_LENGTH = 30;
 private:
 	std::shared_ptr<AvatarGallery> avatarGallery;
 	boost::uuids::uuid uid;

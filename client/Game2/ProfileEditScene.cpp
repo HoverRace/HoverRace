@@ -142,7 +142,7 @@ void ProfileEditScene::OnRename()
 		GetFullTitle(), _("EDIT NAME"), profile->GetName());
 	scene->SetHint(_("Select a new name. "
 		"Changes will take effect immediately."));
-	scene->SetMaxLength(30);
+	scene->SetMaxLength(Player::Profile::MAX_NAME_LENGTH);
 
 	scene->GetConfirmSignal().connect([=](const std::string &s) {
 		nameLbl->SetText(s);
