@@ -134,7 +134,11 @@ protected:
 	virtual void Save() = 0;
 
 public:
-	static const int MAX_NAME_LENGTH = 30;
+	/**
+	 * Maximum length for the name.
+	 * Length is in Unicode code points (not bytes!).
+	 */
+	static const size_t MAX_NAME_LENGTH = 30;
 private:
 	std::shared_ptr<AvatarGallery> avatarGallery;
 	boost::uuids::uuid uid;
