@@ -1,7 +1,7 @@
 
 // Str.h
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ namespace Str {
 
 MR_DllDeclare wchar_t *Utf8ToWide(const char *s);
 MR_DllDeclare char *WideToUtf8(const wchar_t *ws);
+
+MR_DllDeclare size_t Assign(std::string &dest, const std::string &src,
+	size_t len);
 
 /** Utility class for easy conversion of UTF-8 to wide strings. */
 class MR_DllDeclare UW

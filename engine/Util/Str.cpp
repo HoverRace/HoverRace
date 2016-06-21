@@ -1,7 +1,7 @@
 
 // Str.cpp
 //
-// Copyright (c) 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -135,6 +135,29 @@ char *Str::WideToUtf8(const wchar_t *ws)
 	}
 
 	return strdup(s.c_str());
+}
+
+/**
+ * Assign a UTF-8 string to another, with a maximum length.
+ * @param dest The destination string.  The contents will be replaced.
+ * @param src The source string.
+ * @param len The maximum length, in code points.
+ * @return The destination length, in code points copied.
+ */
+size_t Str::Assign(std::string &dest, const std::string &src, size_t len)
+{
+	auto start = src.cbegin();
+	auto iter = start;
+	auto end = src.cend();
+	size_t sz = 0;
+
+	while (sz < len && iter != end) {
+		utf8::next(iter, end);
+		sz++;
+	}
+	dest.assign(start, iter);
+
+	return sz;
 }
 
 std::ostream &Str::Lua::StreamOut(std::ostream &os) const
