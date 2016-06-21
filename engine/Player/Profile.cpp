@@ -21,6 +21,7 @@
 
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <utf8/utf8.h>
 
 #include "../Display/MediaRes.h"
 #include "AvatarGallery.h"
@@ -48,7 +49,14 @@ const std::string Profile::GetUidStr() const
 
 void Profile::SetName(const std::string &name)
 {
-	this->name = name;
+	if (utf8::distance(name.cbegin(), name.cend()) > MAX_NAME_LENGTH) {
+		auto divIter = name.cbegin();
+		utf8::advance(divIter, MAX_NAME_LENGTH, name.cend());
+		this->name.assign(name.cbegin(), divIter);
+	}
+	else {
+		this->name = name;
+	}
 }
 
 void Profile::SetAvatarName(const std::string &avatarName)
