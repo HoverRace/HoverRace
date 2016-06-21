@@ -24,6 +24,7 @@
 #include <utf8/utf8.h>
 
 #include "../Display/MediaRes.h"
+#include "../Util/Str.h"
 #include "AvatarGallery.h"
 
 #include "Profile.h"
@@ -49,14 +50,7 @@ const std::string Profile::GetUidStr() const
 
 void Profile::SetName(const std::string &name)
 {
-	if (utf8::distance(name.cbegin(), name.cend()) > MAX_NAME_LENGTH) {
-		auto divIter = name.cbegin();
-		utf8::advance(divIter, MAX_NAME_LENGTH, name.cend());
-		this->name.assign(name.cbegin(), divIter);
-	}
-	else {
-		this->name = name;
-	}
+	Str::Assign(this->name, name, MAX_NAME_LENGTH);
 }
 
 void Profile::SetAvatarName(const std::string &avatarName)
