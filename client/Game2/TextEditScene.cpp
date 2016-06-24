@@ -95,7 +95,7 @@ void TextEditScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
 
-	size_t len = utf8::distance(text.cbegin(), text.cend());
+	auto len = static_cast<size_t>(utf8::distance(text.cbegin(), text.cend()));
 	auto iter = s.cbegin();
 	auto end = s.cend();
 	auto inserter = std::back_inserter(text);
