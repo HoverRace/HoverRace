@@ -34,6 +34,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Player {
 
+/**
+ * Maximum length for the name.
+ * Length is in Unicode code points (not bytes!).
+ */
+const size_t Profile::MAX_NAME_LENGTH;
+
 Profile::Profile(std::shared_ptr<AvatarGallery> avatarGallery) :
 	Profile(avatarGallery, boost::uuids::nil_uuid())
 {
