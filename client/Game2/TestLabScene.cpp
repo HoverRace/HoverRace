@@ -1003,7 +1003,7 @@ void TextModule::AdjustWrapWidth(double amt)
 void TextModule::OnEditInput()
 {
 	auto scene = std::make_shared<TextEditScene>(display, director, "",
-		"MAKE SOME TEXT", inputLbl->GetText());
+		"MAKE SOME TEXT", 10, inputLbl->GetText());
 	scene->SetHint("Enter some text.  I dare you.");
 
 	scene->GetConfirmSignal().connect([=](const std::string &s) {

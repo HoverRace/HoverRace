@@ -139,10 +139,10 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 void ProfileEditScene::OnRename()
 {
 	auto scene = std::make_shared<TextEditScene>(display, director,
-		GetFullTitle(), _("EDIT NAME"), profile->GetName());
+		GetFullTitle(), _("EDIT NAME"), Player::Profile::MAX_NAME_LENGTH,
+		profile->GetName());
 	scene->SetHint(_("Select a new name. "
 		"Changes will take effect immediately."));
-	scene->SetMaxLength(Player::Profile::MAX_NAME_LENGTH);
 
 	scene->GetConfirmSignal().connect([=](const std::string &s) {
 		nameLbl->SetText(s);

@@ -19,11 +19,14 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <utf8/utf8.h>
+
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/ActiveText.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"
+#include "../../engine/Util/Str.h"
 
 #include "TextEditScene.h"
 
@@ -32,38 +35,27 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-namespace {
-
-const size_t DEFAULT_MAX_LENGTH = 64;
-const size_t MAX_MAX_LENGTH = 65536;
-
-}
-
 /**
  * Constructor.
  * @param display The target display.
  * @param director The current director.
  * @param parentTitle The title of the parent dialog (may be blank).
  * @param title Dialog title.
+ * @param maxLength Maximum text length, in code points.
  * @param text Optional initial text.
  */
 TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	const std::string &parentTitle, const std::string &title,
-	const std::string &text) :
+	size_t maxLength, const std::string &text) :
 	SUPER(display, director, parentTitle, title,
 		"Text Edit (" + title + ")"),
-	maxLength(MAX_MAX_LENGTH), text(),
+	maxLength(maxLength), text(),
 	cursorOn(true), cursorTick(0)
 {
 	using namespace Display;
 
-	this->text.reserve(maxLength);
-	if (this->text.size() > maxLength) {
-		this->text = text.substr(0, maxLength);
-	}
-	else {
-		this->text = text;
-	}
+	this->text.reserve(maxLength * 2);
+	Str::Assign(this->text, text, maxLength);
 
 	SupportOkAction();
 	SupportCancelAction();
@@ -76,21 +68,6 @@ TextEditScene::TextEditScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetPos(640, 250);
 	inputLbl->SetAlignment(UiViewModel::Alignment::N);
 	inputLbl->SetFixedScale(true);
-}
-
-void TextEditScene::SetMaxLength(size_t chars)
-{
-	if (chars > MAX_MAX_LENGTH) {
-		HR_LOG(warning) << "Exceeded maximum length for text edit scene: " <<
-			chars << " > " << MAX_MAX_LENGTH;
-		chars = MAX_MAX_LENGTH;
-	}
-
-	maxLength = chars;
-	if (text.size() > maxLength) {
-		text.resize(maxLength);
-	}
-	text.reserve(chars);
 }
 
 /**
@@ -118,11 +95,13 @@ void TextEditScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
 
-	if (text.size() + s.size() > maxLength) {
-		text += s.substr(0, maxLength - text.size());
-	}
-	else {
-		text += s;
+	size_t len = utf8::distance(text.cbegin(), text.cend());
+	auto iter = s.cbegin();
+	auto end = s.cend();
+	auto inserter = std::back_inserter(text);
+	while (len < maxLength && iter != end) {
+		utf8::append(utf8::next(iter, end), inserter);
+		len++;
 	}
 
 	inputLbl->SetText(text);

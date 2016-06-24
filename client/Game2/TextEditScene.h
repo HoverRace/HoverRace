@@ -50,12 +50,11 @@ class TextEditScene : public DialogScene
 public:
 	TextEditScene(Display::Display &display, GameDirector &director,
 		const std::string &parentTitle, const std::string &title,
-		const std::string &text = {});
+		size_t maxLength, const std::string &text = {});
 	virtual ~TextEditScene() { }
 
 public:
 	size_t GetMaxLength() const { return maxLength; }
-	void SetMaxLength(size_t bytes);
 
 	void SetHint(const std::string &text);
 
