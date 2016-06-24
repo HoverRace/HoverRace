@@ -252,6 +252,10 @@ msgstr "Olumevay"
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "EDIT NAME"
+msgstr ""
+
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp
@@ -900,6 +904,10 @@ msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Select"
+msgstr ""
+
+#: client/Game2/ProfileEditScene.cpp
+msgid "Select a new name. Changes will take effect immediately."
 msgstr ""
 
 #: client/Game2/Observer.cpp

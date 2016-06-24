@@ -251,6 +251,10 @@ msgstr ""
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
+#: client/Game2/ProfileEditScene.cpp
+msgid "EDIT NAME"
+msgstr ""
+
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp
@@ -907,6 +911,10 @@ msgstr ""
 #, fuzzy
 msgid "Select"
 msgstr "Selecteer wapen:"
+
+#: client/Game2/ProfileEditScene.cpp
+msgid "Select a new name. Changes will take effect immediately."
+msgstr ""
 
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
