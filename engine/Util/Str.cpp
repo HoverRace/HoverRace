@@ -138,6 +138,24 @@ char *Str::WideToUtf8(const wchar_t *ws)
 }
 
 /**
+ * Append a string onto another string with a specific maximum length.
+ * @param dest The destination string.
+ * @param src The string to append.
+ * @param len The maximum length of the destination string, in code points.
+ */
+void Str::Append(std::string &dest, const std::string &src, size_t len)
+{
+	auto sz = static_cast<size_t>(utf8::distance(dest.cbegin(), dest.cend()));
+	auto iter = src.cbegin();
+	auto end = src.cend();
+	auto inserter = std::back_inserter(dest);
+	while (sz < len && iter != end) {
+		utf8::append(utf8::next(iter, end), inserter);
+		sz++;
+	}
+}
+
+/**
  * Assign a UTF-8 string to another, with a maximum length.
  * @param dest The destination string.  The contents will be replaced.
  * @param src The source string.

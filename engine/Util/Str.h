@@ -41,6 +41,8 @@ namespace Str {
 MR_DllDeclare wchar_t *Utf8ToWide(const char *s);
 MR_DllDeclare char *WideToUtf8(const wchar_t *ws);
 
+MR_DllDeclare void Append(std::string &dest, const std::string &src,
+	size_t len);
 MR_DllDeclare size_t Assign(std::string &dest, const std::string &src,
 	size_t len);
 

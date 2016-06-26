@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include <utf8/utf8.h>
-
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/ActiveText.h"
 #include "../../engine/Display/Container.h"
@@ -95,14 +93,7 @@ void TextEditScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
 
-	auto len = static_cast<size_t>(utf8::distance(text.cbegin(), text.cend()));
-	auto iter = s.cbegin();
-	auto end = s.cend();
-	auto inserter = std::back_inserter(text);
-	while (len < maxLength && iter != end) {
-		utf8::append(utf8::next(iter, end), inserter);
-		len++;
-	}
+	Str::Append(text, s, maxLength);
 
 	inputLbl->SetText(text);
 }
