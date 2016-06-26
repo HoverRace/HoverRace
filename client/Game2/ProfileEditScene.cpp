@@ -81,6 +81,34 @@ private:
 	Player::Profile &profile;
 };
 
+class ColorGrid : public Display::FlexGrid
+{
+	using SUPER = FlexGrid;
+
+public:
+	ColorGrid(Display::Display &display) : SUPER(display), col(0) { }
+	virtual ~ColorGrid() { }
+
+public:
+	std::shared_ptr<Display::Button> AddColorButton(Display::Color color)
+	{
+		static const Vec2 size{200, 40};
+
+		auto cell = At(0, col++).
+			NewChild<Display::Button>(display, size, "");
+		auto btn = cell->GetContents();
+
+		auto box = std::make_shared<Display::FillBox>(size, color);
+		box->AttachView(display);
+		btn->SetIcon(box);
+
+		return btn;
+	}
+
+private:
+	size_t col;
+};
+
 }  // namespace
 
 ProfileEditScene::ProfileEditScene(Display::Display &display,
@@ -120,18 +148,18 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 		std::bind(&ProfileEditScene::OnRename, this));
 	renameBtn->SetEnabled(editProfile != nullptr);
 
+	auto colorGrid = mainGrid->At(row++, 0).
+		NewChild<ColorGrid>(display)->GetContents();
+	primaryColorBtn = colorGrid->AddColorButton(
+		this->origProfile->GetPrimaryColor());
+	secondaryColorBtn = colorGrid->AddColorButton(
+		this->origProfile->GetSecondaryColor());
+
 	auto saveCell = mainGrid->At(row++, 0).
 		NewChild<Button>(display, _("Save Settings"));
 	saveCell->SetAlignment(Alignment::N);
 	saveConn = saveCell->GetContents()->GetClickedSignal().connect(
 		std::bind(&ProfileEditScene::OnOk, this));
-
-	/*
-	AddSetting(_("Primary Color")).
-		NewChild<FillBox>(20, 20, this->origProfile->GetPrimaryColor());
-	AddSetting(_("Secondary Color")).
-		NewChild<FillBox>(20, 20, this->origProfile->GetSecondaryColor());
-	*/
 
 	avatarBtn->RequestFocus();
 }

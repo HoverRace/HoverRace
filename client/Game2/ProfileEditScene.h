@@ -68,6 +68,8 @@ private:
 
 	std::shared_ptr<Display::Button> avatarBtn;
 	std::shared_ptr<Display::Label> nameLbl;
+	std::shared_ptr<Display::Button> primaryColorBtn;
+	std::shared_ptr<Display::Button> secondaryColorBtn;
 
 	boost::signals2::scoped_connection avatarClickedConn;
 	boost::signals2::scoped_connection avatarSelConn;
