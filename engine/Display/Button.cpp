@@ -123,6 +123,11 @@ void Button::Init(const std::string &text)
 
 	background.reset(new FillBox(0, 0, s.buttonBg));
 	background->AttachView(display);
+
+	highlight.reset(new FillBox(0, 0, 0x00000000));
+	highlight->AttachView(display);
+	highlight->SetBorder(4);
+	highlight->SetBorderColor(s.buttonFocusedBg);
 }
 
 bool Button::OnNavigate(const Control::Nav &nav)
@@ -142,6 +147,7 @@ void Button::Layout()
 	const auto &s = display.styles;
 
 	background->SetSize(size);
+	highlight->SetSize(size);
 
 	Vec2 boundsPos(paddingLeft, paddingTop);
 	Vec2 boundsSize(
@@ -171,9 +177,9 @@ void Button::Layout()
 	if (!IsEnabled()) {
 		bgColor = s.buttonDisabledBg;
 		background->SetPos(0, 0);
-		background->SetBorder(0);
 		label->SetColor(s.formDisabledFg);
 		label->SetPos(labelPos);
+		highlight->SetPos(0, 0);
 	}
 	else if (IsPressed()) {
 		pressOffset = DEFAULT_PRESS_DEPTH;
@@ -181,12 +187,14 @@ void Button::Layout()
 		background->SetPos(0, pressOffset);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos.x, labelPos.y + pressOffset);
+		highlight->SetPos(0, pressOffset);
 	}
 	else {
 		bgColor = s.buttonBg;
 		background->SetPos(0, 0);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos);
+		highlight->SetPos(0, 0);
 	}
 
 	if (picture) {
@@ -196,14 +204,6 @@ void Button::Layout()
 	}
 	else {
 		background->SetColor(bgColor);
-	}
-
-	if (IsFocused()) {
-		background->SetBorder(4);
-		background->SetBorderColor(s.buttonFocusedBg);
-	}
-	else {
-		background->SetBorder(0);
 	}
 }
 

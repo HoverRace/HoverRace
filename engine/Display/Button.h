@@ -102,6 +102,7 @@ public:
 	Label *GetLabelChild() const { return label.get(); }
 	Box *GetIconChild() const { return icon.get(); }
 	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
+	FillBox *GetHighlightChild() const { return highlight.get(); }
 
 	void SetFixedWidth(double width);
 
@@ -117,6 +118,7 @@ private:
 	std::unique_ptr<Label> label;
 	std::shared_ptr<Box> icon;
 	std::unique_ptr<Picture> picture;
+	std::unique_ptr<FillBox> highlight;
 	boost::optional<double> fixedWidth;
 	double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;
 };

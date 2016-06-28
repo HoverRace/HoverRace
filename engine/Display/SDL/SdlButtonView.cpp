@@ -62,6 +62,10 @@ void SdlButtonView::PrepareRender()
 
 	Box *icon = model.GetIconChild();
 	if (icon) icon->PrepareRender();
+
+	if (model.IsFocused()) {
+		model.GetHighlightChild()->PrepareRender();
+	}
 }
 
 void SdlButtonView::Render()
@@ -77,6 +81,10 @@ void SdlButtonView::Render()
 
 	Box *icon = model.GetIconChild();
 	if (icon) icon->Render();
+
+	if (model.IsFocused()) {
+		model.GetHighlightChild()->Render();
+	}
 
 	display.SetUiOrigin(oldOrigin);
 }
