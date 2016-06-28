@@ -24,6 +24,7 @@
 #include "Res.h"
 
 #include "ClickRegion.h"
+#include "FillBox.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -37,9 +38,7 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Box;
 		class Display;
-		class FillBox;
 		class Label;
 		class Picture;
 		class Texture;
@@ -99,7 +98,7 @@ public:
 	std::shared_ptr<Res<Texture>> ShareTexture() const;
 	void SetTexture(std::shared_ptr<Res<Texture>> image);
 
-	FillBox *GetBackgroundChild() const { return background.get(); }
+	Box *GetBackgroundChild() const { return background.get(); }
 	Label *GetLabelChild() const { return label.get(); }
 	Box *GetIconChild() const { return icon.get(); }
 	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
