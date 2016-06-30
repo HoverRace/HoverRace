@@ -135,6 +135,7 @@ protected:
 
 public:
 	static const size_t MAX_NAME_LENGTH = 30;
+	static const size_t MAX_AVATAR_NAME_LENGTH = 16;
 private:
 	std::shared_ptr<AvatarGallery> avatarGallery;
 	boost::uuids::uuid uid;

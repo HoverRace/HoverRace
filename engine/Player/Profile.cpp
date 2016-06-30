@@ -40,6 +40,8 @@ namespace Player {
  */
 const size_t Profile::MAX_NAME_LENGTH;
 
+const size_t Profile::MAX_AVATAR_NAME_LENGTH;
+
 Profile::Profile(std::shared_ptr<AvatarGallery> avatarGallery) :
 	Profile(avatarGallery, boost::uuids::nil_uuid())
 {
@@ -61,8 +63,8 @@ void Profile::SetName(const std::string &name)
 
 void Profile::SetAvatarName(const std::string &avatarName)
 {
-	//TODO: Trim and validate avatar name.
-	this->avatarName = avatarName;
+	//TODO: Validate avatar name chars.
+	Str::Assign(this->avatarName, avatarName, MAX_AVATAR_NAME_LENGTH);
 }
 
 void Profile::SetPrimaryColor(Display::Color color)
