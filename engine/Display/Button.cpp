@@ -213,11 +213,8 @@ void Button::Layout()
 	if (picture) {
 		picture->SetPos(0, pressOffset);
 		picture->SetSize(size);
-		background->SetColor(0x00000000);  // Image replaces background.
 	}
-	else {
-		background->SetColor(bgColor);
-	}
+	background->SetColor(bgColor);
 }
 
 const std::string &Button::GetText() const
