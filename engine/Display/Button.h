@@ -38,6 +38,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class BaseContainer;
 		class Display;
 		class Label;
 		class Picture;
@@ -64,6 +65,7 @@ public:
 			TEXT = SUPER::Props::NEXT_,
 			ICON,
 			IMAGE,
+			CONTENTS,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -98,9 +100,12 @@ public:
 	std::shared_ptr<Res<Texture>> ShareTexture() const;
 	void SetTexture(std::shared_ptr<Res<Texture>> image);
 
+	void SetContents(std::shared_ptr<BaseContainer> contents);
+
 	Box *GetBackgroundChild() const { return background.get(); }
 	Label *GetLabelChild() const { return label.get(); }
 	Box *GetIconChild() const { return icon.get(); }
+	BaseContainer *GetContentsChild() const { return contents.get(); }
 	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
 	FillBox *GetHighlightChild() const { return highlight.get(); }
 
@@ -117,6 +122,7 @@ private:
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<Label> label;
 	std::shared_ptr<Box> icon;
+	std::shared_ptr<BaseContainer> contents;
 	std::unique_ptr<Picture> picture;
 	std::unique_ptr<FillBox> highlight;
 	boost::optional<double> fixedWidth;

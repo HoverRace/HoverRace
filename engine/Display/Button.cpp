@@ -21,10 +21,11 @@
 
 #include "../Control/Action.h"
 #include "../Util/Config.h"
-#include "UiFont.h"
+#include "BaseContainer.h"
 #include "FillBox.h"
 #include "Label.h"
 #include "Picture.h"
+#include "UiFont.h"
 
 #include "Button.h"
 
@@ -147,6 +148,9 @@ void Button::Layout()
 	const auto &s = display.styles;
 
 	background->SetSize(size);
+	if (contents) {
+		contents->SetSize(size);
+	}
 	highlight->SetSize(size);
 
 	Vec2 boundsPos(paddingLeft, paddingTop);
@@ -179,6 +183,9 @@ void Button::Layout()
 		background->SetPos(0, 0);
 		label->SetColor(s.formDisabledFg);
 		label->SetPos(labelPos);
+		if (contents) {
+			contents->SetPos(0, 0);
+		}
 		highlight->SetPos(0, 0);
 	}
 	else if (IsPressed()) {
@@ -187,6 +194,9 @@ void Button::Layout()
 		background->SetPos(0, pressOffset);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos.x, labelPos.y + pressOffset);
+		if (contents) {
+			contents->SetPos(0, pressOffset);
+		}
 		highlight->SetPos(0, pressOffset);
 	}
 	else {
@@ -194,6 +204,9 @@ void Button::Layout()
 		background->SetPos(0, 0);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos);
+		if (contents) {
+			contents->SetPos(0, 0);
+		}
 		highlight->SetPos(0, 0);
 	}
 
@@ -284,6 +297,22 @@ void Button::SetTexture(std::shared_ptr<Res<Texture>> image)
 			picture->AttachView(display);
 		}
 		FireModelUpdate(Props::IMAGE);
+		RequestLayout();
+	}
+}
+
+/**
+ * Set a container of widgets to render as the contents of the button.
+ *
+ * This allows for more advanced customization of the rendering of the button.
+ *
+ * @param contents The container containing the contents (may be @c nullptr).
+ */
+void Button::SetContents(std::shared_ptr<BaseContainer> contents)
+{
+	if (this->contents != contents) {
+		this->contents = contents;
+		FireModelUpdate(Props::CONTENTS);
 		RequestLayout();
 	}
 }

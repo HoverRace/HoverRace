@@ -21,6 +21,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "../BaseContainer.h"
 #include "../Button.h"
 #include "../Box.h"
 #include "../FillBox.h"
@@ -58,6 +59,11 @@ void SdlButtonView::PrepareRender()
 	if (picture) picture->PrepareRender();
 
 	model.GetBackgroundChild()->PrepareRender();
+
+	if (auto contents = model.GetContentsChild()) {
+		contents->PrepareRender();
+	}
+
 	model.GetLabelChild()->PrepareRender();
 
 	Box *icon = model.GetIconChild();
@@ -77,6 +83,11 @@ void SdlButtonView::Render()
 	if (picture) picture->Render();
 
 	model.GetBackgroundChild()->Render();
+
+	if (auto contents = model.GetContentsChild()) {
+		contents->Render();
+	}
+
 	model.GetLabelChild()->Render();
 
 	Box *icon = model.GetIconChild();
