@@ -81,27 +81,48 @@ private:
 	Player::Profile &profile;
 };
 
+class ColorButton : public Display::Button
+{
+	using SUPER = Display::Button;
+
+	static const Vec2 SIZE;
+
+public:
+	ColorButton(Display::Display &display) :
+		SUPER(display, SIZE, ""),
+		colorContainer(std::make_shared<Display::Container>(display))
+	{
+		colorContainer->AttachView(display);
+		colorBox = colorContainer->NewChild<Display::FillBox>(SIZE, 0xffffffff);
+		SetContents(colorContainer);
+	}
+
+public:
+	void SetColor(Display::Color color)
+	{
+		colorBox->SetColor(color);
+	}
+
+private:
+	std::shared_ptr<Display::Container> colorContainer;
+	std::shared_ptr<Display::FillBox> colorBox;
+};
+
+const Vec2 ColorButton::SIZE{ 200, 40 };
+
 class ColorGrid : public Display::FlexGrid
 {
-	using SUPER = FlexGrid;
+	using SUPER = Display::FlexGrid;
 
 public:
 	ColorGrid(Display::Display &display) : SUPER(display), col(0) { }
 	virtual ~ColorGrid() { }
 
 public:
-	std::shared_ptr<Display::Button> AddColorButton(Display::Color color)
+	std::shared_ptr<ColorButton> AddColorButton(Display::Color color)
 	{
-		static const Vec2 size{200, 40};
-
-		auto cell = At(0, col++).
-			NewChild<Display::Button>(display, size, "");
-		auto btn = cell->GetContents();
-
-		auto box = std::make_shared<Display::FillBox>(size, color);
-		box->AttachView(display);
-		btn->SetIcon(box);
-
+		auto btn = At(0, col++).NewChild<ColorButton>(display)->GetContents();
+		btn->SetColor(color);
 		return btn;
 	}
 
