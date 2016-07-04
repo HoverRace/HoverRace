@@ -24,6 +24,7 @@
 #include <utf8/utf8.h>
 
 #include "../Display/MediaRes.h"
+#include "../Util/Log.h"
 #include "../Util/Str.h"
 #include "AvatarGallery.h"
 
@@ -65,6 +66,37 @@ void Profile::SetAvatarName(const std::string &avatarName)
 {
 	//TODO: Validate avatar name chars.
 	Str::Assign(this->avatarName, avatarName, MAX_AVATAR_NAME_LENGTH);
+}
+
+/**
+ * Retrieve the color by index.
+ * @param i The color index (starts at zero).
+ * @return The color at the index.
+ */
+Display::Color Profile::GetColor(size_t i) const
+{
+	switch (i) {
+		case 0: return primaryColor;
+		case 1: return secondaryColor;
+		default:
+			HR_LOG(warning) << "Retrieving invalid profile color index: " << i;
+			return 0;
+	}
+}
+
+/**
+ * Set the color by index.
+ * @param i The color index (starts at zero).
+ * @param color The color to set.
+ */
+void Profile::SetColor(size_t i, Display::Color color)
+{
+	switch (i) {
+		case 0: SetPrimaryColor(color); break;
+		case 1: SetSecondaryColor(color); break;
+		default:
+			HR_LOG(warning) << "Setting invalid profile color index: " << i;
+	}
 }
 
 void Profile::SetPrimaryColor(Display::Color color)

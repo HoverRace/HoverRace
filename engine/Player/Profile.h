@@ -99,6 +99,10 @@ protected:
 	virtual void SetAvatarName(const std::string &avatarName);
 
 public:
+	Display::Color GetColor(size_t i) const;
+	void SetColor(size_t i, Display::Color color);
+
+public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
 protected:
 	virtual void SetPrimaryColor(Display::Color color);
