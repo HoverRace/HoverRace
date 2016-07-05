@@ -115,18 +115,22 @@ class ColorGrid : public Display::FlexGrid
 	using SUPER = Display::FlexGrid;
 
 public:
-	ColorGrid(Display::Display &display) : SUPER(display), col(0) { }
+	ColorGrid(Display::Display &display, Player::Profile &profile,
+		Player::EditableProfile &editProfile) :
+		SUPER(display), profile(profile), editProfile(editProfile), col(0) { }
 	virtual ~ColorGrid() { }
 
 public:
-	std::shared_ptr<ColorButton> AddColorButton(Display::Color color)
+	std::shared_ptr<ColorButton> AddColorButton(size_t i)
 	{
 		auto btn = At(0, col++).NewChild<ColorButton>(display)->GetContents();
-		btn->SetColor(color);
+		btn->SetColor(profile.GetColor(i));
 		return btn;
 	}
 
 private:
+	Player::Profile &profile;
+	Player::EditableProfile &editProfile;
 	size_t col;
 };
 
@@ -170,11 +174,10 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 	renameBtn->SetEnabled(editProfile != nullptr);
 
 	auto colorGrid = mainGrid->At(row++, 0).
-		NewChild<ColorGrid>(display)->GetContents();
-	primaryColorBtn = colorGrid->AddColorButton(
-		this->origProfile->GetPrimaryColor());
-	secondaryColorBtn = colorGrid->AddColorButton(
-		this->origProfile->GetSecondaryColor());
+		NewChild<ColorGrid>(display, *(this->origProfile), *editProfile)->
+			GetContents();
+	primaryColorBtn = colorGrid->AddColorButton(0);
+	secondaryColorBtn = colorGrid->AddColorButton(1);
 
 	auto saveCell = mainGrid->At(row++, 0).
 		NewChild<Button>(display, _("Save Settings"));
