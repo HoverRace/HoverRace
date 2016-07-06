@@ -44,6 +44,7 @@ class MR_DllDeclare EditableProfile
 {
 public:
 	virtual void SetAvatarName(const std::string &avatarName) = 0;
+	virtual void SetColor(size_t i, Display::Color color) = 0;
 	virtual void SetPrimaryColor(Display::Color color) = 0;
 	virtual void SetSecondaryColor(Display::Color color) = 0;
 

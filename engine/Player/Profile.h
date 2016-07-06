@@ -100,7 +100,7 @@ protected:
 
 public:
 	Display::Color GetColor(size_t i) const;
-	void SetColor(size_t i, Display::Color color);
+	virtual void SetColor(size_t i, Display::Color color);
 
 public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
