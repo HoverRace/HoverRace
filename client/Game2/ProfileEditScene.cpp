@@ -123,8 +123,18 @@ public:
 public:
 	std::shared_ptr<ColorButton> AddColorButton(size_t i)
 	{
+		using namespace Display;
+
+		assert(i < 2);
+
 		auto btn = At(0, col++).NewChild<ColorButton>(display)->GetContents();
 		btn->SetColor(profile.GetColor(i));
+		auto btnPtr = btn.get();
+		conns[i] = btn->GetClickedSignal().connect([=](ClickRegion&) {
+			btnPtr->SetColor(0xffffffff);
+			editProfile.SetColor(i, 0xffffffff);
+		});
+
 		return btn;
 	}
 
@@ -132,6 +142,7 @@ private:
 	Player::Profile &profile;
 	Player::EditableProfile &editProfile;
 	size_t col;
+	std::array<boost::signals2::scoped_connection, 2> conns;
 };
 
 }  // namespace
