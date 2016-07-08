@@ -29,6 +29,7 @@
 #include "../../engine/Player/ProfileExn.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
+#include "../../engine/Util/OS.h"
 #include "AvatarSelectScene.h"
 #include "TextEditScene.h"
 
@@ -131,8 +132,11 @@ public:
 		btn->SetColor(profile.GetColor(i));
 		auto btnPtr = btn.get();
 		conns[i] = btn->GetClickedSignal().connect([=](ClickRegion&) {
-			btnPtr->SetColor(0xffffffff);
-			editProfile.SetColor(i, 0xffffffff);
+			Color newColor(OS::RandInt<MR_UInt32>(0, 0xffffff));
+			newColor.bits.a = 0xff;
+
+			btnPtr->SetColor(newColor);
+			editProfile.SetColor(i, newColor);
 		});
 
 		return btn;
