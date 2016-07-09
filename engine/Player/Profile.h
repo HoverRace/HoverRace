@@ -96,24 +96,24 @@ protected:
 public:
 	const std::string &GetAvatarName() const { return avatarName; }
 protected:
-	virtual void SetAvatarName(const std::string &avatarName);
+	void SetAvatarName(const std::string &avatarName) override;
 
 public:
 	Display::Color GetColor(size_t i) const;
-	virtual void SetColor(size_t i, Display::Color color);
+	void SetColor(size_t i, Display::Color color) override;
 
 public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
 protected:
-	virtual void SetPrimaryColor(Display::Color color);
+	void SetPrimaryColor(Display::Color color) override;
 
 public:
 	Display::Color GetSecondaryColor() const { return secondaryColor; }
 protected:
-	virtual void SetSecondaryColor(Display::Color color);
+	void SetSecondaryColor(Display::Color color) override;
 
 protected:
-	virtual void Rename(const std::string &name) { SetName(name); }
+	void Rename(const std::string &name) override { SetName(name); }
 
 public:
 	virtual std::shared_ptr<Display::Res<Display::Texture>>
