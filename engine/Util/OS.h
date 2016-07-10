@@ -22,7 +22,6 @@
 #pragma once
 
 #include <locale>
-#include <random>
 #include <set>
 #include <string>
 #include <vector>
@@ -90,21 +89,6 @@ constexpr inline timestamp_t TimeDiff(timestamp_t laterTs,
 
 std::string FileTimeString();
 void TimeShutdown();
-
-template<class T = int>
-T RandInt(T min, T max)
-{
-	struct RandSource : public std::mt19937
-	{
-		RandSource() : std::mt19937()
-		{
-			seed(std::random_device()());
-		}
-	};
-
-	thread_local RandSource source;
-	return std::uniform_int_distribution<T>(min, max)(source);
-}
 
 bool OpenLink(const std::string &url);
 bool OpenPath(const path_t &path);

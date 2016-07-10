@@ -30,6 +30,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
+#include "../../engine/Util/Random.h"
 #include "AvatarSelectScene.h"
 #include "TextEditScene.h"
 
@@ -132,7 +133,7 @@ public:
 		btn->SetColor(profile.GetColor(i));
 		auto btnPtr = btn.get();
 		conns[i] = btn->GetClickedSignal().connect([=](ClickRegion&) {
-			Color newColor(OS::RandInt<MR_UInt32>(0, 0xffffff));
+			Color newColor(RandomInt<MR_UInt32>(0, 0xffffff).Next());
 			newColor.bits.a = 0xff;
 
 			btnPtr->SetColor(newColor);
