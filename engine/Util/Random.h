@@ -47,6 +47,14 @@ public:
 	static RandSource &ForThread();
 };
 
+/**
+ * Ranged pseudo-random number generator.
+ *
+ * Each instance of this generator is safe to use in a single thread, but
+ * may not be shared between threads.
+ *
+ * @author Michael Imamura
+ */
 template<class T>
 class RandomInt
 {

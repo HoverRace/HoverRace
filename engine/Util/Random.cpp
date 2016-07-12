@@ -30,6 +30,14 @@ RandSource::RandSource() :
 	seed(std::random_device()());
 }
 
+/**
+ * Retrieve the per-thread random data source.
+ *
+ * If this is the first time this is called for a given thread, a new random
+ * data source will be created and seeded.
+ *
+ * @return The random source.
+ */
 RandSource &RandSource::ForThread()
 {
 	thread_local RandSource source;
