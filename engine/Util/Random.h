@@ -63,7 +63,7 @@ public:
 		dist(min, max), src(RandSource::ForThread()) { }
 
 public:
-	T Next() const { return dist(src); }
+	T Next() { return dist(src); }
 
 private:
 	std::uniform_int_distribution<T> dist;
