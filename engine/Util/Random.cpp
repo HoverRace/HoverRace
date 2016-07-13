@@ -24,6 +24,10 @@
 namespace HoverRace {
 namespace Util {
 
+/**
+ * Constructor.
+ * Ensures that the PRNG is seeded with a random seed.
+ */
 RandSource::RandSource() :
 	SUPER()
 {
