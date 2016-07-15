@@ -106,7 +106,7 @@ public:
 	Label *GetLabelChild() const { return label.get(); }
 	Box *GetIconChild() const { return icon.get(); }
 	BaseContainer *GetContentsChild() const { return contents.get(); }
-	Picture *GetPictureChild() const { return picture ? picture.get() : nullptr; }
+	Picture *GetPictureChild() const { return picture.get(); }
 	FillBox *GetHighlightChild() const { return highlight.get(); }
 
 	void SetFixedWidth(double width);
