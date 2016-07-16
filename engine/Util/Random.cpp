@@ -19,6 +19,10 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <thread>
+
+#include "Log.h"
+
 #include "Random.h"
 
 namespace HoverRace {
@@ -31,6 +35,8 @@ namespace Util {
 RandSource::RandSource() :
 	SUPER()
 {
+	HR_LOG(debug) << "Creating PRNG for thread: " << std::this_thread::get_id();
+
 	seed(std::random_device()());
 }
 
