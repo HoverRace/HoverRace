@@ -202,6 +202,7 @@ engine/Util/Locale.cpp
 engine/Util/Log.cpp
 engine/Util/OS.cpp
 engine/Util/Profiler.cpp
+engine/Util/Random.cpp
 engine/Util/SelFmt.cpp
 engine/Util/Stopwatch.cpp
 engine/Util/Str.cpp
