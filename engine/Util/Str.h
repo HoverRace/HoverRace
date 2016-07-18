@@ -51,10 +51,10 @@ class MR_DllDeclare UW
 {
 	wchar_t *cs;
 public:
-	UW(const char *s=NULL) throw() : cs(Utf8ToWide(s)) { }
-	explicit UW(const std::string &s) throw() : cs(Utf8ToWide(s.c_str())) { }
-	~UW() throw() { free(cs); }
-	operator const wchar_t*() const throw() { return cs; }
+	UW(const char *s = nullptr) noexcept : cs(Utf8ToWide(s)) { }
+	explicit UW(const std::string &s) noexcept : cs(Utf8ToWide(s.c_str())) { }
+	~UW() noexcept { free(cs); }
+	operator const wchar_t*() const noexcept { return cs; }
 	operator const std::wstring() const { return cs; }
 };
 
@@ -63,20 +63,20 @@ class MR_DllDeclare WU
 {
 	char *cs;
 public:
-	WU(const wchar_t *ws=NULL) throw() : cs(WideToUtf8(ws)) { }
-	explicit WU(const std::wstring &s) throw() : cs(WideToUtf8(s.c_str())) { }
-	~WU() throw() { free(cs); }
-	operator const char*() const throw() { return cs; }
+	WU(const wchar_t *ws = nullptr) noexcept : cs(WideToUtf8(ws)) { }
+	explicit WU(const std::wstring &s) noexcept : cs(WideToUtf8(s.c_str())) { }
+	~WU() noexcept { free(cs); }
+	operator const char*() const noexcept { return cs; }
 	operator const std::string() const { return cs; }
 };
 
 // Convert UTF-8 to path_t.
 #ifdef WITH_WIDE_PATHS
-	inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t((const wchar_t*)Str::UW(s)); }
-	inline OS::path_t UP(const std::string &s) throw() { return OS::path_t((const wchar_t*)Str::UW(s)); }
+	inline OS::path_t UP(const char *s = nullptr) noexcept { return OS::path_t((const wchar_t*)Str::UW(s)); }
+	inline OS::path_t UP(const std::string &s) noexcept { return OS::path_t((const wchar_t*)Str::UW(s)); }
 #else
-	inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t(s); }
-	inline OS::path_t UP(const std::string &s) throw() { return OS::path_t(s); }
+	inline OS::path_t UP(const char *s = nullptr) noexcept { return OS::path_t(s); }
+	inline OS::path_t UP(const std::string &s) noexcept { return OS::path_t(s); }
 #endif
 
 // Convert path_t to UTF-8.
@@ -85,25 +85,25 @@ class MR_DllDeclare PU
 #	ifdef WITH_WIDE_PATHS
 		WU cs;
 	public:
-		explicit PU(const OS::path_t &path) throw() : cs(path.wstring()) { }
-		operator const char*() const throw() { return (const char*)cs; }
+		explicit PU(const OS::path_t &path) noexcept : cs(path.wstring()) { }
+		operator const char*() const noexcept { return (const char*)cs; }
 		operator const std::string() const { return std::string((const char*)cs); }
 #	else
 		std::string cs;
 	public:
-		explicit PU(const OS::path_t &path) throw() : cs(path.string()) { }
-		operator const char*() const throw() { return cs.c_str(); }
+		explicit PU(const OS::path_t &path) noexcept : cs(path.string()) { }
+		operator const char*() const noexcept { return cs.c_str(); }
 		operator const std::string() const { return cs; }
 #	endif
 };
 
 	// Convert wide strings to path_t.
 #ifdef WITH_WIDE_PATHS
-	inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(s); }
-	inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(s); }
+	inline OS::path_t WP(const wchar_t *s = nullptr) noexcept { return OS::path_t(s); }
+	inline OS::path_t WP(const std::wstring &s) noexcept { return OS::path_t(s); }
 #else
-	inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t((const char*)Str::WU(s)); }
-	inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t((const char*)Str::WU(s)); }
+	inline OS::path_t WP(const wchar_t *s=NULL) noexcept { return OS::path_t((const char*)Str::WU(s)); }
+	inline OS::path_t WP(const std::wstring &s) noexcept { return OS::path_t((const char*)Str::WU(s)); }
 #endif
 
 // Convert path_t to wide string.
@@ -112,14 +112,14 @@ class MR_DllDeclare PW
 #	ifdef WITH_WIDE_PATHS
 		std::wstring cs;
 		public:
-			explicit PW(const OS::path_t &path) throw() : cs(path.wstring()) { }
-			operator const wchar_t*() const throw() { return cs.c_str(); }
+			explicit PW(const OS::path_t &path) noexcept : cs(path.wstring()) { }
+			operator const wchar_t*() const noexcept { return cs.c_str(); }
 			operator const std::wstring() const { return cs; }
 #	else
 		UW cs;
 		public:
-			explicit PW(const OS::path_t &path) throw() : cs(path.string()) { }
-			operator const wchar_t*() const throw() { return (const wchar_t*)cs; }
+			explicit PW(const OS::path_t &path) noexcept : cs(path.string()) { }
+			operator const wchar_t*() const noexcept { return (const wchar_t*)cs; }
 			operator const std::wstring() const { return cs; }
 #	endif
 };
