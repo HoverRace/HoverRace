@@ -133,7 +133,7 @@ public:
 		btn->SetColor(profile.GetColor(i));
 		auto btnPtr = btn.get();
 		conns[i] = btn->GetClickedSignal().connect([=](ClickRegion&) {
-			Color newColor(RandomInt<MR_UInt32>(0, 0xffffff).Next());
+			Color newColor(RandomInt<MR_UInt32>(0, 0xffffff)());
 			newColor.bits.a = 0xff;
 
 			btnPtr->SetColor(newColor);
