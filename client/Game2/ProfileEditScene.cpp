@@ -99,6 +99,8 @@ public:
 		SetContents(colorContainer);
 	}
 
+	virtual ~ColorButton() { }
+
 public:
 	void SetColor(Display::Color color)
 	{
@@ -244,11 +246,6 @@ void ProfileEditScene::OnOk()
 		//TODO: Show error in message scene.
 		HR_LOG(error) << ex.what();
 	}
-}
-
-void ProfileEditScene::OnCancel()
-{
-	SUPER::OnCancel();
 }
 
 }  // namespace Client
