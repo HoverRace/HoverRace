@@ -58,7 +58,6 @@ private:
 
 protected:
 	void OnOk() override;
-	void OnCancel() override;
 
 private:
 	std::unique_ptr<Player::Profile> profile;
