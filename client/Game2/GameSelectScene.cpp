@@ -44,7 +44,23 @@ const double BTN_WIDTH = 240;
 const double BTN_HEIGHT = 520;
 const double BTN_GAP = 20;
 
-}
+const Vec2 BTN_SIZE{ BTN_WIDTH, BTN_HEIGHT };
+
+class ModeButton : public Display::Button
+{
+	using SUPER = Display::Button;
+
+public:
+	ModeButton(Display::Display &display,
+		std::shared_ptr<const Rulebook> rulebook) :
+		SUPER(display, BTN_SIZE, rulebook->GetTitle())
+	{
+	}
+
+	virtual ~ModeButton() { }
+};
+
+}  // namespace
 
 GameSelectScene::GameSelectScene(Display::Display &display,
 	GameDirector &director, RulebookLibrary &rulebookLibrary,
@@ -86,8 +102,7 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	const Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
 	double x = 0;
 	for (auto rulebook : rulebooks) {
-		auto btn = rulebookPanel->NewChild<Button>(
-			display, btnSize, rulebook->GetTitle());
+		auto btn = rulebookPanel->NewChild<ModeButton>(display, rulebook);
 		btn->SetPos(x, 0);
 		btn->GetClickedSignal().connect(std::bind(
 			&GameSelectScene::OnRulebookSelected, this, rulebook));
