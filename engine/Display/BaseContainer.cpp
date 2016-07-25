@@ -44,7 +44,7 @@ BaseContainer::BaseContainer(Display &display, uiLayoutFlags_t layoutFlags) :
  * @param layoutFlags Optional layout flags.
  */
 BaseContainer::BaseContainer(Display &display, const Vec2 &size, bool clip,
-                     uiLayoutFlags_t layoutFlags) :
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
 	opacity(1.0), visible(true), childOffset(0, 0)
 {
