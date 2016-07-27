@@ -144,6 +144,8 @@ private:
 	bool needsLocaleCheck;  ///< Check locale and warn on next menu.
 	MR_UInt32 userEventId;
 
+	std::unique_ptr<Display::Display> display;
+
 	std::unique_ptr<Control::InputEventController> controller;
 	std::shared_ptr<Player::AvatarGallery> avatarGallery;
 	std::unique_ptr<Roster> party;
@@ -155,8 +157,6 @@ private:
 	std::unique_ptr<HoverScript::InputPeer> inputPeer;
 	std::unique_ptr<HoverScript::SysEnv> sysEnv;
 	std::unique_ptr<HoverScript::SysConsole> sysConsole;
-
-	std::unique_ptr<Display::Display> display;
 
 	// Stats counters.
 	std::unique_ptr<Display::ActiveText> fpsLbl;
