@@ -53,8 +53,6 @@ namespace Util {
 
 namespace {
 
-const std::string DEFAULT_NICKNAME{ "Player" };
-
 using clock_t = std::chrono::high_resolution_clock;
 clock_t::time_point chronoStart;
 
@@ -419,6 +417,7 @@ OS::path_t OS::FindExePath()
  */
 std::string OS::GetUsername()
 {
+	static const std::string DEFAULT_NICKNAME = _("Player");
 	std::string retv;
 
 #	ifdef _WIN32
