@@ -23,6 +23,8 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/FlexGrid.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
@@ -53,11 +55,36 @@ class ModeButton : public Display::Button
 public:
 	ModeButton(Display::Display &display,
 		std::shared_ptr<const Rulebook> rulebook) :
-		SUPER(display, BTN_SIZE, rulebook->GetTitle())
+		SUPER(display, BTN_SIZE, ""),
+		contentRoot(std::make_shared<Display::Container>(display))
 	{
+		using namespace Display;
+
+		contentRoot->AttachView(display);
+
+		labelGrid = contentRoot->NewChild<FlexGrid>(display);
+		labelGrid->SetPos(20, 320);
+		labelGrid->SetMargin(0, 10);
+
+		const auto &s = display.styles;
+		const auto wrapWidth = BTN_SIZE.x - 40.0;
+
+		size_t row = 0;
+		labelGrid->At(row++, 1).NewChild<Label>(
+			rulebook->GetTitle(), s.headingFont, s.headingFg)->
+			GetContents()->SetWrapWidth(wrapWidth);
+		labelGrid->At(row++, 1).NewChild<Label>(
+			rulebook->GetDescription(), s.bodyFont, s.bodyFg)->
+			GetContents()->SetWrapWidth(wrapWidth);
+
+		SetContents(contentRoot);
 	}
 
 	virtual ~ModeButton() { }
+
+private:
+	std::shared_ptr<Display::Container> contentRoot;
+	std::shared_ptr<Display::FlexGrid> labelGrid;
 };
 
 }  // namespace
