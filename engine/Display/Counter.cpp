@@ -1,7 +1,7 @@
 
 // Counter.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,13 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <cmath>
+
 #include "ActiveText.h"
 #include "FillBox.h"
 #include "Label.h"
 
 #include "Counter.h"
-
-#ifdef _WIN32
-#	define isnan _isnan
-#endif
 
 using namespace HoverRace::Util;
 
@@ -115,7 +113,7 @@ void Counter::SetTotal(double total)
  */
 bool Counter::IsTotalHidden() const
 {
-	return isnan(total) != 0;
+	return std::isnan(total);
 }
 
 /**
