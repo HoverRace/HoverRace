@@ -1,4 +1,5 @@
 
+# Process and install a launch script.
 function(copy_wrapper_script src dest)
 	configure_file(${src} ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${dest})
 	file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${dest}
