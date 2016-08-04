@@ -135,7 +135,7 @@ public:
 	virtual RenamableProfile *EditName() { return nullptr; }
 
 protected:
-	virtual void Save() = 0;
+	void Save() override = 0;
 
 public:
 	static const size_t MAX_NAME_LENGTH = 30;
