@@ -756,6 +756,7 @@ msgid "Play"
 msgstr "&2 Jogadores"
 
 #: engine/Control/Controller.cpp
+#: engine/Util/OS.cpp
 msgid "Player"
 msgstr ""
 

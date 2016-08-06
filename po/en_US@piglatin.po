@@ -771,6 +771,7 @@ msgid "Play"
 msgstr "Ayerplay"
 
 #: engine/Control/Controller.cpp
+#: engine/Util/OS.cpp
 msgid "Player"
 msgstr "Ayerplay"
 

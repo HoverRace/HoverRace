@@ -770,6 +770,7 @@ msgid "Play"
 msgstr "&2 Spielern"
 
 #: engine/Control/Controller.cpp
+#: engine/Util/OS.cpp
 #, fuzzy
 msgid "Player"
 msgstr "&2 Spielern"

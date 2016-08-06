@@ -773,6 +773,7 @@ msgid "Play"
 msgstr "Speler"
 
 #: engine/Control/Controller.cpp
+#: engine/Util/OS.cpp
 msgid "Player"
 msgstr "Speler"
 
