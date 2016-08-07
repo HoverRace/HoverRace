@@ -1,7 +1,7 @@
 
 // FlexGrid.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -19,14 +19,12 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <cmath>
+
 #include "../Util/Log.h"
 #include "../Exception.h"
 
 #include "FlexGrid.h"
-
-#ifdef _WIN32
-#	define isnan _isnan
-#endif
 
 namespace HoverRace {
 namespace Display {
@@ -348,12 +346,12 @@ void FlexGrid::SetPadding(double width, double height)
 
 bool FlexGrid::IsFixedWidth() const
 {
-	return isnan(fixedSize.x) == 0;
+	return std::isnan(fixedSize.x) == 0;
 }
 
 bool FlexGrid::IsFixedHeight() const
 {
-	return isnan(fixedSize.y) == 0;
+	return std::isnan(fixedSize.y) == 0;
 }
 
 void FlexGrid::SetFixedSize(double w, double h)
