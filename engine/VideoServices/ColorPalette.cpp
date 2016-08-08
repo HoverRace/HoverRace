@@ -89,11 +89,8 @@ paletteEntry_t *GetColors(double pGamma, double pIntensity, double pIntensityBas
 		AssignPaletteEntry(lReturnValue[lColorIndex], lRed, lGreen, lBlue);
 	}
 
-	for(; lColorIndex < MR_BASIC_COLORS; lColorIndex++) {
-
+	for(; lColorIndex < MR_BASIC_COLORS; lColorIndex += 2) {
 		AssignPaletteEntry(lReturnValue[lColorIndex], 255, 255, lColorIndex - 15);
-
-		lColorIndex++;
 	}
 
 	return lReturnValue;
