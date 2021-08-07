@@ -27,6 +27,9 @@
 #include "resource.h"
 #include "../Util/StrRes.h"
 
+#include "../Util/Net/Agent.h"
+#include "../Util/Net/NetExn.h"
+
 #define MRM_DNS_ANSWER        (WM_USER + 1)
 #define MRM_NET_EVENT         (WM_USER + 7)
 #define MRM_DLG_END_ADD       (WM_USER + 10)
@@ -34,7 +37,7 @@
 
 #define MRM_BIN_BUFFER_SIZE    25000			  // 25 K this is BIG enough
 
-#define REFRESH_DELAY        200
+#define REFRESH_DELAY       2500
 #define REFRESH_TIMEOUT    11000
 #define OP_TIMEOUT         22000
 #define FAST_OP_TIMEOUT     6000
@@ -63,6 +66,7 @@
 #define MR_NREG_BANNER_SERVER    8
 #define MR_REG_BANNER_SERVER     9
 
+using namespace HoverRace;
 using namespace HoverRace::Client;
 
 class MR_InternetServerEntry
@@ -2448,7 +2452,7 @@ CString MR_Pad(const char *pStr)
 		else {
 			switch (*(const unsigned char *) pStr) {
 				case 187:
-					// Reserved character for prompt ï¿½
+					// Reserved character for prompt »
 					break;
 
 				case '$':
