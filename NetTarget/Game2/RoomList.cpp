@@ -170,8 +170,10 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &
 	// We store both the string and unsigned long versions for now
 	// to ease in the transition.
 
+	
 	in >> ip.s;
 	
+	/*	
 	unsigned long i = 0;
 	unsigned int nibble = 0;
 	unsigned int components = 1;
@@ -199,6 +201,7 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &
 	}
 
 	ip.ud = i;
+	*/	
 
 	return in;
 }

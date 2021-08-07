@@ -162,7 +162,7 @@ void MR_InternetRequest::Clear()
 
 }
 
-BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, const char *pURL, const char *pCookie)
+BOOL MR_InternetRequest::Send(HWND pWindow, const std::string pIP, unsigned pPort, const char *pURL, const char *pCookie)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -186,20 +186,23 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, c
 		}
 
 		if(pCookie == NULL) {
-			sprintf(lReqBuffer, "GET %s HTTP/1.0\n\r"
-			// "Connection: Keep-Alive\n\r"
-				"Accept: */*\n\r" "User-Agent: HoverRace/0.1\n\r"
-			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
-			// "Host: 205.181.206.67:80\n\r"
-			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
-				"\n\r" "\n\r", lURL);
+			sprintf(lReqBuffer, "GET %s HTTP/1.0\r\n"
+				"Host: %s\r\n"
+			// "Connection: Keep-Alive\r\n"
+				"Accept: */*\r\n"
+				"User-Agent: HoverRace/1.23.4\r\n"
+			// "User-Agent: Mozilla/3.0 (Win95; I)\r\n\r\n"
+			// "Host: 205.181.206.67:80\r\n\r\n"
+			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\r\n\r\n"
+				"\r\n" "\r\n", lURL, pIP.c_str());
 		}
 		else {
-			sprintf(lReqBuffer, "GET %s HTTP/1.0\n\r"
-			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
-			// "Host: 205.181.206.67:80\n\r"
-			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
-				"Accept: */*\n\r" "User-Agent: HoverRace/0.1\n\r" "Cookie: %s\n\r" "\n\r" "\n\r", lURL, pCookie);
+			sprintf(lReqBuffer, "GET %s HTTP/1.0\r\n"
+				"Host: %s\r\n"
+			// "User-Agent: Mozilla/3.0 (Win95; I)\r\n"
+			// "Host: 205.181.206.67:80\r\n"
+			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\r\n"
+				"Accept: */*\r\n" "User-Agent: HoverRace/0.1\r\n" "Cookie: %s\r\n" "\r\n" "\r\n", lURL, pIP.c_str(), pCookie);
 		}
 
 		mRequest = lReqBuffer;
@@ -210,8 +213,11 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, c
 
 		SOCKADDR_IN lAddr;
 
+		struct hostent *he = gethostbyname(pIP.c_str());
+		char *ip=inet_ntoa(*(struct in_addr*)he->h_addr_list[0]);
+
 		lAddr.sin_family = AF_INET;
-		lAddr.sin_addr.s_addr = htonl(pIP);
+		memcpy(&lAddr.sin_addr, he->h_addr_list[0], he->h_length);
 		lAddr.sin_port = htons((unsigned short) pPort);
 
 		WSAAsyncSelect(mSocket, pWindow, MRM_NET_EVENT, FD_CONNECT | FD_READ | FD_CLOSE);
@@ -1888,13 +1894,13 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 {
 	BOOL lReturnValue = FALSE;
 
-	static unsigned long gServerIP;
+	static std::string gServerIP;
 
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
-				gServerIP = 0;
+				gServerIP = "";
 	
 				// Setup message
 				SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_LOC_MSERVER));
@@ -1915,7 +1921,7 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 				lServer[lLen] = 0;
 	
 				mThis->mCurrentLocateRequest = WSAAsyncGetHostByName(pWindow, MRM_DNS_ANSWER, lServer, mThis->mHostEnt, MAXGETHOSTSTRUCT);
-				gServerIP = 0;
+				gServerIP = "";
 	
 				// start a timeout timer
 				SetTimer(pWindow, 1, 20000 + OP_TIMEOUT, NULL);
@@ -1930,7 +1936,7 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 				switch (pWParam) {
 					case 1:
 	
-						if(gServerIP == 0) {
+						if(gServerIP == "") {
 							MessageBox(pWindow, MR_LoadString(IDS_CANT_FIND_SERVER), MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 	
 							EndDialog(pWindow, IDCANCEL);
@@ -1961,7 +1967,7 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 				KillTimer(pWindow, 1);
 	
 				if((WSAGETASYNCERROR(pLParam) == 0) && (lData->h_addr_list[0] != NULL)) {
-					gServerIP = *(unsigned long *) (lData->h_addr_list[0]);
+					gServerIP = (lData->h_addr_list[0]);
 	
 					// Now fetch the server list file
 	
@@ -2154,7 +2160,7 @@ BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 			{
 				// Setup message
 				SetDlgItemText(pWindow, IDC_TEXT, mThis->mNetOpString);
-	
+
 				// Initiate the request
 				mThis->mOpRequest.Send(pWindow,
 					mThis->roomList->GetSelectedRoom()->addr,
@@ -2291,7 +2297,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 
 				gScoreRequest.Send(pWindow,
 					//roomList->GetScoreServer().addr,
-					gScoreServer.mAddress,
+					//gScoreServer.mAddress,
+					"www.hoverrace.com",
 					//roomList->GetScoreServer().port,
 					gScoreServer.mPort,
 					gScoreRequestStr);
@@ -2315,7 +2322,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 					// Initiate the request
 					gScoreRequest.Send(pWindow,
 						//roomList->GetScoreServer().addr,
-						gScoreServer.mAddress,
+						//gScoreServer.mAddress,
+						"www.hoverrace.com",
 						//roomList->GetScoreServer().port,
 						gScoreServer.mPort,
 						gScoreRequestStr);
@@ -2440,7 +2448,7 @@ CString MR_Pad(const char *pStr)
 		else {
 			switch (*(const unsigned char *) pStr) {
 				case 187:
-					// Reserved character for prompt »
+					// Reserved character for prompt ï¿½
 					break;
 
 				case '$':

@@ -217,11 +217,11 @@ void MR_Config::ResetToDefaults()
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = false;
 
-	audio.sfxVolume = 1.0;
+	audio.sfxVolume = 0.2;
 
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
-   misc.mainLoopSleepLength = 12;
+   misc.mainLoopSleepLength = 0;
 
 	// Get current user name as default nickname.
 #ifdef _WIN32

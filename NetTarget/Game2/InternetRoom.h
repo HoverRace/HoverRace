@@ -55,7 +55,7 @@ class MR_InternetRequest
 
 		void SetBin();
 
-		BOOL Send(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURL, const char *pCoookie = NULL);
+		BOOL Send(HWND pWindow, const std::string pIP, unsigned int pPort, const char *pURL, const char *pCoookie = NULL);
 		void Clear();							  // Abort and clean
 												  // return TRUE if some processing was done
 		BOOL ProcessEvent(WPARAM pWParam, LPARAM pLParam);
