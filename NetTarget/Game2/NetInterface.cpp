@@ -834,13 +834,19 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			{	
+				TRACE("\n%s: [WaitGameNameCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
+
 				// set up the static socket used to connect to the server
 				sNewSocket = socket(PF_INET, SOCK_STREAM, 0);
 	
 				if(sNewSocket == INVALID_SOCKET && !mActiveInterface->mSteamID.IsValid()) { // socket creation failed
+					TRACE("INVALID_SOCKET ");
+
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CREATE_SOCK));
 				}
 				else {
+					TRACE("SOCKET_CONNECT ");
+
 					// "Connecting to server..."
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CONNECTING_SERV));
 
@@ -889,9 +895,13 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		// sNewSocket has connected to the server successfully, now let's get the game information
 		case MRM_SERVER_CONNECT:
 			{
+				TRACE("\n%s: [WaitGameNameCallBack] MRM_SERVER_CONNECT ", mActiveInterface->GetPlayerName());
+
 				MR_NetMessageBuffer lOutputBuffer;
 	
 				if(WSAGETSELECTERROR(pLParam) == 0) {
+					TRACE("CONNECTING ");
+
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_GET_GAMEINFO));
 	
 					// mClient[0] is the server (if we're not the server)
@@ -914,6 +924,8 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					lAddr.sin_port = htons(mActiveInterface->mTCPRecvPort);
 	
 					if(bind(mActiveInterface->mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0 && !mActiveInterface->mSteamID.IsValid()) {
+						TRACE("IDS_CANT_CREATE_SOCK ");
+
 						MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 					}
 
@@ -935,6 +947,8 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					mActiveInterface->mClient[0].Send(&lOutputBuffer, MR_NET_REQUIRED);
 				}
 				else if(!mActiveInterface->mSteamID.IsValid()) {
+					TRACE("IDS_CANT_CONNECT ");
+
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CONNECT));
 				}
 			}
@@ -943,12 +957,16 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 		case MRM_CLIENT:
 			{
+				TRACE("\n%s: [WaitGameNameCallBack] MRM_CLIENT ", mActiveInterface->GetPlayerName());
+
 				const MR_NetMessageBuffer *lBuffer = NULL;
 
 				int param = mActiveInterface->mClient[0].mSocketConnected ? WSAGETSELECTEVENT(pLParam) : pLParam;
 	
 				switch (param) {
 					case FD_READ:
+						TRACE("FD_READ ");
+
 						// disable reception of this message
 						WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, 0);
 						if (mActiveInterface->mClient[0].mSocketConnected) {
@@ -958,10 +976,14 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 						}
 	
 						if((lBuffer != NULL) && (lBuffer->mMessageType == MRNM_GAME_NAME)) {
+							TRACE("MRNM_GAME_NAME ");
+
 							mActiveInterface->mGameName = CString((const char *) lBuffer->mData, lBuffer->mDataLen);
 							EndDialog(pWindow, IDOK);
 						}
 						else {
+							TRACE("BAD_MESSAGE ");
+
 							// Bad message, reenable reception
 							WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, FD_READ);
 						}
@@ -973,8 +995,10 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 			break;
 
 		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
+			switch (LOWORD(pWParam)) {	
 				case IDCANCEL: // user canceled connection
+					TRACE("\n%s: [WaitGameNameCallBack] IDCANCEL ", mActiveInterface->GetPlayerName());
+
 					lReturnValue = TRUE;
 					closesocket(sNewSocket);
 					SteamNetworking()->CloseP2PSessionWithUser(mActiveInterface->mSteamID);
@@ -1046,6 +1070,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the window
 			{
+				TRACE("\n%s: [ListCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
+
 				RECT lRect;
 	
 				lListHandle = GetDlgItem(pWindow, IDC_LIST);
@@ -1116,8 +1142,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				// Put the registry socket in listen mode, for the MRM_NEW_CLIENT message
 				listen(mActiveInterface->mRegistrySocket, 5);
 				WSAAsyncSelect(mActiveInterface->mRegistrySocket, pWindow, MRM_NEW_CLIENT, FD_ACCEPT);
+
+				TRACE("WSAAsyncSelect/MRM_NEW_CLIENT ");
 	
 				if(!mActiveInterface->mServerMode) {
+					TRACE("!mServerMode ");
+
 					// allow reception of messages with id MRM_CLIENT + 0, MRM_CLIENT + 1
 					WSAAsyncSelect(mActiveInterface->mClient[0].GetSocket(), pWindow, MRM_CLIENT + 0, FD_READ);
 					WSAAsyncSelect(mActiveInterface->mClient[0].GetUDPSocket(), pWindow, MRM_CLIENT + 1, FD_READ);
@@ -1136,8 +1166,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 			break;
 
 		case WM_COMMAND:
+			TRACE("\n%s: [ListCallBack] WM_COMMAND ", mActiveInterface->GetPlayerName());
+
 			switch (LOWORD(pWParam)) {
 				case IDCANCEL:
+					TRACE("IDCANCEL\n");
+
 					// if we are the server we must tell the other clients to disconnect
 					if(mActiveInterface->mServerMode) {
 						// technically this is not an answer but lAnswer is already declared so I will use it
@@ -1160,6 +1194,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 				case IDOK:
 					{
+						TRACE("IDOK\n");
+
 						ASSERT(mActiveInterface->mServerMode);
 	
 						int lCounter;
@@ -1201,6 +1237,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								}
 							}
 							WSAAsyncSelect(mActiveInterface->mRegistrySocket, pWindow, MRM_CLIENT, 0);
+
+
 	
 							if(mActiveInterface->mReturnMessage == 0) {
 								EndDialog(pWindow, IDOK);
@@ -1220,11 +1258,15 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 		case MRM_NEW_CLIENT: // a new client has connected
 			{
+				TRACE("\n%s: [ListCallBack] MRM_NEW_CLIENT ", mActiveInterface->GetPlayerName());
+
 				int lNewSlot = -1;
 	
 				// figure out what slot we're going to put them in
 				for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 					if(!mActiveInterface->mClient[lCounter].IsConnected()) {
+						TRACE("lNewSlot %d ", lNewSlot);
+
 						lNewSlot = lCounter;
 						break;
 					}
@@ -1263,6 +1305,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						// wait for new message (MRM_CLIENT + lNewSlot)
 						WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lNewSlot, FD_READ | FD_CLOSE);
 						WSAAsyncSelect(mActiveInterface->mClient[lNewSlot].GetUDPSocket(), pWindow, MRM_CLIENT + lNewSlot, FD_READ | FD_CLOSE);
+
+						TRACE("WSAAsyncSelect/MRM_CLIENT+lNewSlot ");
 					}
 				}
 			}
@@ -1270,9 +1314,13 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 		case WM_TIMER: // used for lag tests
 			{
+				TRACE("\n%s: [ListCallBack] WM_TIMER ", mActiveInterface->GetPlayerName());
+
 				if(pWParam - 10 > 0) { // client connect attempt timed out
 					// retry
 					KillTimer(pWindow, pWParam);
+
+					TRACE("CLIENT_CONNECT_TIMED_OUT ");
 
 					int lClient = pWParam - 20;
 
@@ -1310,6 +1358,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							TRACE("Late ping message A %d\n", lClient);
 						}
 						else {
+							TRACE("MR_PING_RETRY_TIME ");
+
 							// Start a time-out timer because the request may fail
 							SetTimer(pWindow, lClient + 10, MR_PING_RETRY_TIME, NULL);
 	
@@ -1347,6 +1397,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 		switch (param) {
 			case FD_CLOSE:
+				TRACE("\n%s: [ListCallBack] FD_CLOSE ", mActiveInterface->GetPlayerName());
+
 				// client quit this game
 				TRACE("Client %d disconnected\n", lClient);
 				mActiveInterface->mClient[lClient].Disconnect();
@@ -1359,7 +1411,9 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 				break;
 
-			case FD_READ:			
+			case FD_READ:		
+				TRACE("\n%s: [ListCallBack] FD_READ ", mActiveInterface->GetPlayerName());
+
 				// get our message
 				if (mActiveInterface->mClient[lClient].mSocketConnected) {
 					lBuffer = mActiveInterface->mClient[lClient].Poll(0, FALSE);
@@ -1381,15 +1435,19 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							lClient = lBuffer->mClient;
 					}
 
-					lAnswer.mClient = lClient;
+					TRACE("lClient %d ", lClient);
 
 					// disable further reception of this message
 					WSAAsyncSelect(mActiveInterface->mClient[lClient].GetSocket(), pWindow, MRM_CLIENT + lClient, 0);
 					WSAAsyncSelect(mActiveInterface->mClient[lClient].GetUDPSocket(), pWindow, MRM_CLIENT + lClient, 0);
-					TRACE("Packet processing: lClient is %d, ID is %d\n", lClient, lBuffer->mMessageType);
+					// TRACE("Packet processing: lClient is %d, ID is %d\n", lClient, lBuffer->mMessageType);
+
+					TRACE("DISABLING MRM_CLIENT + lClient ");
 
 					switch (lBuffer->mMessageType) {
 						case MRNM_GET_GAME_NAME: // can only occur in server mode: client asked for game name
+							TRACE("MRNM_GET_GAME_NAME ");
+
 							ASSERT(mActiveInterface->mServerMode);
 
 							// we want to get the IP ourselves instead of from the client
@@ -1403,7 +1461,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								} else {
 									mActiveInterface->mClientAddr[lClient] = *(int *) &(lClientAddr.sin_addr);
 								}
-								TRACE("Client addr: %08x (id %d)\n", mActiveInterface->mClientAddr[lClient], lClient);
+								// TRACE("Client addr: %08x (id %d)\n", mActiveInterface->mClientAddr[lClient], lClient);
 							}
 							mActiveInterface->mClientPort[lClient] = *(int *) &(lBuffer->mData[4]);
 
@@ -1417,6 +1475,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_CONN_NAME_GET_SET: // client has given us their name and their UDP recv port
 							{
+								TRACE("MRNM_CONN_NAME_GET_SET ");
+
 								// Add the item int the list
 								LV_ITEM lItem;
 								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
@@ -1485,6 +1545,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_CONN_NAME_SET: // client returned information on their name and UDP recv port
 							{
+								TRACE("MRNM_CONN_NAME_SET ");
+
 								LV_ITEM lItem;
 								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
 	
@@ -1522,6 +1584,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							break;
 
 						case MRNM_REMOVE_ENTRY:
+							TRACE("MRNM_REMOVE_ENTRY ");
+
 							ASSERT(FALSE);		  // Bad code
 
 							/*
@@ -1532,7 +1596,11 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_CLIENT_ADDR: // server sent us a list of other clients and addresses
 							{
+								TRACE("MRNM_CLIENT_ADDR ");
+
 								if(lBuffer->mDataLen == 0) {
+									TRACE("END_OF_LIST ");
+
 									// end of list
 									mActiveInterface->mAllPreLoguedRecv = TRUE;
 									mActiveInterface->mPreLoguedClient[0] = TRUE;
@@ -1562,6 +1630,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									}
 									ASSERT(lSlot != -1);
 
+									TRACE("MORE_CLIENTS lSlot %d ", lSlot);
+
 									mActiveInterface->mClient[lSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID);
 									mActiveInterface->mPreLoguedClient[lSlot] = TRUE;
 
@@ -1589,6 +1659,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							break;
 
 						case MRNM_LAG_TEST: // a client we are connecting to is conducting a lag test
+							TRACE("MRNM_LAG_TEST ");
+
 							// return the message and add the current time
 							lAnswer.mMessageType = MRNM_LAG_ANSWER;
 							lAnswer.mDataLen = 4;
@@ -1601,6 +1673,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							break;
 
 						case MRNM_LAG_ANSWER: // lag test returned
+							TRACE("MRNM_LAG_ANSWER ");
+
 							// Desactivate time-out
 							KillTimer(pWindow, lClient + 10);
 
@@ -1649,6 +1723,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_LAG_INFO: // we are being sent lag info
 							{
+								TRACE("MRNM_LAG_INFO ");
+
 								mActiveInterface->mClient[lClient].SetLag(*(int *) &(lBuffer->mData[0]), *(int *) &(lBuffer->mData[4]));
 	
 								// Update display
@@ -1666,6 +1742,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_CONNECTION_DONE: // the client has told us they are connected to everyone
 							{
+								TRACE("MRNM_CONNECTION_DONE ");
+
 								ASSERT(mActiveInterface->mServerMode);
 	
 								// Mark the connection as completed
@@ -1675,6 +1753,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							break;
 
 						case MRNM_READY: // race is beginning
+							TRACE("MRNM_READY ");
+
 							// Get Client Id
 							mActiveInterface->mId = lBuffer->mData[0];
 
@@ -1701,6 +1781,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							return TRUE;
 
 						case MRNM_CANCEL_GAME: // game has been cancelled
+							TRACE("MRNM_CANCEL_GAME ");
+
 							// notify the user that the game ended
 							MessageBox(pWindow, MR_LoadString(IDS_GAME_CANCELLED), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 
@@ -1729,16 +1811,16 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				break;
 
 			case FD_CONNECT: // we have successfully connected to the server or another client
-				TRACE("received FD_CONNECT message");
+				TRACE("\n%s: [ListCallBack] FD_CONNECT ", mActiveInterface->GetPlayerName());
 				KillTimer(pWindow, lClient + 20); // kill timeout timer
 				if(WSAGETSELECTERROR(pLParam)) {
 					// Connection error with a client
 					//ASSERT(FALSE);
-					TRACE("Connection error with client %d: ", lClient);
+					TRACE("CONNECTION_ERROR %d ", lClient);
 
 					switch(WSAGETSELECTERROR(pLParam)) {
 						case WSAECONNREFUSED:
-							TRACE("connection refused\n");
+							TRACE("WSAECONNREFUSED ");
 							// assemble our message
 							{
 								char *lErrorString = new char[120]; // max player length is 40
@@ -1756,7 +1838,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case WSAETIMEDOUT:
 							/* try a different IP if possible */
 							/* but not if connecting to server */
-							TRACE("timeout or unreachable\n");
+							TRACE("WSAENETUNREACH/WSAETIMEDOUT ");
 							if(!mActiveInterface->mClient[lClient].mTriedBackupIP && lClient != 0) {
 								mActiveInterface->mClient[lClient].Disconnect();
 								mActiveInterface->mClient[lClient].mTriedBackupIP = TRUE;
@@ -1820,7 +1902,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							}
 							break;
 						default:
-							TRACE("Unknown error");
+							TRACE("UNKNOWN ");
 							{
 								char *lError = new char[120];
 								sprintf(lError, "%s%s.",
@@ -1833,6 +1915,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					}
 				}
 				else {
+					TRACE("\n%s: [ListCallBack] MRNM_CONN_NAME_GET_SET ", mActiveInterface->GetPlayerName());
+
 					// request client name to start the connection sequence
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
@@ -2102,11 +2186,11 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 					mLastClient[lQueueId] = mInputMessageBuffer.mClient;
 
 					mWatchdog = timeGetTime();
-					TRACE("UDP recv: client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+					// TRACE("UDP recv: client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
 					return &mInputMessageBuffer;
 				}
 				else {
-					TRACE("Late UDP %d %d client %d\n", (MR_Int8) (MR_UInt8) mInputMessageBuffer.mDatagramNumber, (MR_Int8) mLastReceivedDatagramNumber[lQueueId], mInputMessageBuffer.mClient);
+					// TRACE("Late UDP %d %d client %d\n", (MR_Int8) (MR_UInt8) mInputMessageBuffer.mDatagramNumber, (MR_Int8) mLastReceivedDatagramNumber[lQueueId], mInputMessageBuffer.mClient);
 				}
 			}
 			else {
@@ -2124,7 +2208,7 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 
 			if(lLen > 0) {
 				mInputMessageBufferIndex += lLen;
-				TRACE("Begin recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				// TRACE("Begin recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
 			}
 		}
 
@@ -2133,24 +2217,24 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 
 			if(lLen > 0) {
 				mInputMessageBufferIndex += lLen;
-				TRACE("Continue recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				// TRACE("Continue recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
 			}
 		}
 
 		if((mInputMessageBufferIndex >= MR_NET_HEADER_LEN) && (mInputMessageBufferIndex == (MR_NET_HEADER_LEN + mInputMessageBuffer.mDataLen))) {
 			mInputMessageBufferIndex = 0;
 			mWatchdog = timeGetTime();
-			TRACE("Done receiving packet from client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+			// TRACE("Done receiving packet from client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
 			return &mInputMessageBuffer;
 		}
 
 		if((mLastSendedDatagramNumber[1] > 16) && (timeGetTime() - mWatchdog) > MR_CONNECTION_TIMEOUT) {
 			// (mLastSendedDatagramNumber[1]>16) -- this condition avoid disconnecting
 			//                                   -- before game start
-			TRACE("Reception Timeout %d %d\n", timeGetTime() - mWatchdog, mInputMessageBufferIndex);
+			// TRACE("Reception Timeout %d %d\n", timeGetTime() - mWatchdog, mInputMessageBufferIndex);
 
 			if(mInputMessageBufferIndex != 0) {
-				TRACE("Message: %d %d\n", mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDataLen);
+				// TRACE("Message: %d %d\n", mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDataLen);
 			}
 
 			Disconnect();
