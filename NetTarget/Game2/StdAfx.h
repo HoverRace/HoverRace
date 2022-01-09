@@ -29,3 +29,10 @@
 #include <boost/thread/thread.hpp>
 #include <boost/format.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <steam/steam_api.h>
+#include <steam/isteamuser.h>
+#include <steam/isteamuserstats.h>
+#include <steam/steamencryptedappticket.h>
+#include <steam/isteamnetworking.h>

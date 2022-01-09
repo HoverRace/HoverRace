@@ -194,7 +194,7 @@ BOOL MR_InternetRequest::Send(HWND pWindow, const std::string pIP, unsigned pPor
 				"Host: %s\r\n"
 			// "Connection: Keep-Alive\r\n"
 				"Accept: */*\r\n"
-				"User-Agent: HoverRace/1.23.4\r\n"
+				"User-Agent: HoverRace/1.23.5\r\n"
 			// "User-Agent: Mozilla/3.0 (Win95; I)\r\n\r\n"
 			// "Host: 205.181.206.67:80\r\n\r\n"
 			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\r\n\r\n"
@@ -316,7 +316,7 @@ BOOL MR_InternetRequest::IsReady() const
 
 // MR_InternetRoom
 
-MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer) :
+MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, CSteamID pSteamID, const std::string &pMainServer) :
 	mMainServer(pMainServer)
 {
 	int lCounter;
@@ -326,6 +326,7 @@ MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorI
 	mAllowRegistred = pAllowRegistred;
 	mMajorID = pMajorID;
 	mMinorID = pMinorID;
+	mSteamID = pSteamID;
 	mKey2 = pKey2;
 	mKey3 = pKey3;
 
@@ -437,6 +438,9 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							mGameList[lEntry].mIPAddr = GetLine(lLinePtr);
 
 							lLinePtr = GetNextLine(lLinePtr);
+							mGameList[lEntry].mSteamID = CSteamID(boost::lexical_cast<uint64_t>(GetLine(lLinePtr)));
+
+							lLinePtr = GetNextLine(lLinePtr);
 
 							int lNbClient;
 							int lDummyBool;
@@ -534,7 +538,7 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 
 	mNetOpString.LoadString(IDS_IMR_CONNECT);
 
-	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s", (const char *) roomList->GetSelectedRoom()->path.c_str(), mMajorID, (mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3, (const char *) MR_Pad(mUser));
+	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s%%%%%I64d", (const char *) roomList->GetSelectedRoom()->path.c_str(), mMajorID, (mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3, (const char *) MR_Pad(mUser), mSteamID.ConvertToUint64());
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -1465,6 +1469,12 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 							mThis->roomList->GetSelectedRoom()->port,
 							//gServerList[gCurrentServerEntry].mPort,
 							lRequest.c_str());
+
+						// Run Steam Callbacks
+						SteamAPI_RunCallbacks();
+
+						// Check for Steam data
+						mThis->mNetInterface.CheckP2PAvailability();
 	
 						// Activate timeout
 						SetTimer(pWindow, REFRESH_TIMEOUT_EVENT, REFRESH_TIMEOUT, NULL);
@@ -1763,7 +1773,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 									lCurrentTrack.Format("%s  %d laps", (const char *) mThis->mGameList[lFocus].mTrack, mThis->mGameList[lFocus].mNbLap);
 									TRACE("ConnectToServer 1\n");
-									lSuccess = mThis->mSession->ConnectToServer(pWindow, mThis->mGameList[lFocus].mIPAddr, mThis->mGameList[lFocus].mPort, lCurrentTrack, &mThis->mModelessDlg, MRM_DLG_END_JOIN);
+									lSuccess = mThis->mSession->ConnectToServer(pWindow, mThis->mGameList[lFocus].mIPAddr, mThis->mGameList[lFocus].mPort, mThis->mGameList[lFocus].mSteamID.ConvertToUint64(), lCurrentTrack, &mThis->mModelessDlg, MRM_DLG_END_JOIN);
 
 									TRACE("ConnectToServer 2\n");
 								}

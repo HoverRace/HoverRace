@@ -429,6 +429,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	while(true) {
 		Sleep(sleepLength);
 
+		lThis->mNetInterface.CheckP2PAvailability();
+
 		EnterCriticalSection(&lThis->mMutex);
 
 		if(lThis->mTerminate)
@@ -604,6 +606,8 @@ MR_GameApp::~MR_GameApp()
 	delete mVideoBuffer;
 
 	MR_Config::Shutdown();
+
+	SteamAPI_Shutdown();
 }
 
 void MR_GameApp::Clean()
@@ -989,6 +993,20 @@ void MR_GameApp::RefreshTitleBar()
 
 BOOL MR_GameApp::InitGame()
 {
+	// Check we're running from Steam and signed in
+	if ( SteamAPI_RestartAppIfNecessary( 1862020 ) ) // Replace with your App ID
+	{
+		return false;
+	}
+
+	if(SteamAPI_Init()) {
+		if(SteamUser()->BLoggedOn()) {
+			mSteamIDLocalUser = SteamUser()->GetSteamID();
+		}
+	} else {
+		return false;
+	}
+
 	BOOL lReturnValue = TRUE;
 	MR_Config *cfg = MR_Config::GetInstance();
 
@@ -1646,7 +1664,7 @@ void MR_GameApp::NewInternetSession()
 	MR_NetworkSession *lCurrentSession = NULL;
 	MR_Config *cfg = MR_Config::GetInstance();
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
-	MR_InternetRoom lInternetRoom(TRUE, -1, -1, 0, 0, cfg->net.mainServer);
+	MR_InternetRoom lInternetRoom(TRUE, -1, -1, 0, 0, mSteamIDLocalUser, cfg->net.mainServer);
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)

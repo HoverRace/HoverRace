@@ -39,6 +39,9 @@
 #define MR_NOT_REQUIRED				0
 #define MR_NET_DATAGRAM				-1
 
+class ISteamUser;
+class ISteamNetworking;
+
 /**
  * The MR_NetMessageBuffer class is a wrapper for data being transmitted over the network.
  */
@@ -68,6 +71,7 @@ class MR_NetworkPort
 		// CString mNetAddr;
 		// int     mPort;
 		SOCKET mSocket;
+		CSteamID mSteamID;
 
 		// UDP Information
 		SOCKET mUDPRecvSocket;				/// the UDP socket we listen on
@@ -97,13 +101,14 @@ class MR_NetworkPort
 		MR_NetworkPort();
 		~MR_NetworkPort();
 
-		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
+		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID);
 		void SetRemoteUDPPort(unsigned int pPort);
 		void Disconnect();
 		BOOL IsConnected() const;
 
 		SOCKET GetSocket() const;
 		SOCKET GetUDPSocket() const;
+		CSteamID GetSteamId() const;
 
 		const MR_NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
 		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel);
@@ -118,6 +123,8 @@ class MR_NetworkPort
 		void SetLag(int pAvgLag, int pMinLag);
 
 		BOOL mTriedBackupIP;	/// if the first connection attempt fails we must try another
+
+		BOOL mSocketConnected;  // Using Steam otherwise
 };
 
 /**
@@ -144,12 +151,19 @@ class MR_NetworkInterface
 		int mUDPRecvPort;
 		int mTCPRecvPort;
 		CString mServerAddr;
+		CSteamID mSteamID;
 		CString mGameName;			/// just the track name
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
 		SOCKET mUDPOutLongPort;
 		SOCKET mUDPRecvSocket;		/// for one-port UDP hack
+
+		// Static Buffer
+		static MR_NetMessageBuffer *sBuffer;
+
+		// Static CSteamID
+		static CSteamID sSteamID;
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
@@ -161,6 +175,7 @@ class MR_NetworkInterface
 		DWORD mClientAddr[eMaxClient];
 		DWORD mClientBkAddr[eMaxClient];
 		int mClientPort[eMaxClient];
+		CSteamID mClientSteamID[eMaxClient];
 
 		int mReturnMessage;						  /// Message to return to the parent window in modeless mode
 
@@ -174,22 +189,26 @@ class MR_NetworkInterface
 		// Helper function
 		void SendConnectionDoneIfNeeded();
 
+		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionRequest, P2PSessionRequest_t ); // REQUIRED
+
 	public:
 		// Creation and destruction
 		MR_NetworkInterface();
 		~MR_NetworkInterface();
 
+		void SetId(const int id);
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
 
 		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
-		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
 		void Disconnect();
 
 		int GetClientCount() const;
 		int GetId() const;
+		CSteamID GetSteamId() const;
 
 		int GetLagFromServer() const;
 		int GetAvgLag(int pClient) const;
@@ -197,6 +216,8 @@ class MR_NetworkInterface
 
 		// helper function
 		BOOL CreateUDPRecvSocket(int pPort);
+
+		void CheckP2PAvailability() const;
 
 		// return TRUE if queue not full
 		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);

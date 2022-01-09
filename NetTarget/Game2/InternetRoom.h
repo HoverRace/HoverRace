@@ -32,6 +32,9 @@
 #include "Banner.h"
 #include "RoomList.h"
 #include "SelectRoomDialog.h"
+#include "NetInterface.h"
+
+class ISteamUser;
 
 class MR_InternetRequest
 {
@@ -92,6 +95,7 @@ class MR_InternetRoom
 				int mGame;
 				int mMajorID;
 				int mMinorID;
+				CSteamID mSteamID;
 
 		};
 
@@ -110,10 +114,12 @@ class MR_InternetRoom
 				int mClientList[eMaxPlayerGame];
 				CString mIPAddr;
 				unsigned mPort;
+				CSteamID mSteamID;
 
 		};
 
 		static MR_InternetRoom *mThis;
+		MR_NetworkInterface mNetInterface;
 
 		HoverRace::Client::RoomListPtr roomList;
 
@@ -126,6 +132,7 @@ class MR_InternetRoom
 
 		int mMajorID;
 		int mMinorID;
+		CSteamID mSteamID;
 		CString mUser;
 		unsigned mKey2;
 		unsigned mKey3;
@@ -195,7 +202,7 @@ class MR_InternetRoom
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time
 
 	public:
-		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer);
+		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, CSteamID pSteamID, const std::string &pMainServer);
 		~MR_InternetRoom();
 
 		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);

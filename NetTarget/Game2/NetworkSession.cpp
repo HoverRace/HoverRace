@@ -752,11 +752,11 @@ BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
  * @param pGameName String representing the name of the game (track name)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
+BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
 {
 	mMasterMode = FALSE;
 
-	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pGameName, pModalessDlg, pReturnMessage);
+	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID, pGameName, pModalessDlg, pReturnMessage);
 }
 
 /**

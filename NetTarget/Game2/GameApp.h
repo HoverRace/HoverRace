@@ -24,6 +24,9 @@
 
 #include "Observer.h"
 #include "ClientSession.h"
+#include "NetInterface.h"
+
+class ISteamUser;
 
 class MR_GameApp;
 
@@ -40,6 +43,9 @@ class MR_GameThread
 
 		MR_GameThread(MR_GameApp * pApp);
 		~MR_GameThread();
+
+	protected:		
+		MR_NetworkInterface mNetInterface;
 
 	public:
 		static MR_GameThread *New(MR_GameApp * pApp);
@@ -69,6 +75,7 @@ class MR_GameApp
 		MR_Observer *mObserver4;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
+		CSteamID mSteamIDLocalUser;
 
 		eViewMode mCurrentMode;
 
