@@ -47,8 +47,9 @@
 #define MRNM_CANCEL_GAME		52
 #define MRNM_SET_PLAYER_ID		53
 
-#define STNM_P2P_ESTABLISH		60
-#define STNM_P2P_ACCEPT			61
+#define STM_SERVER_CONNECT		54
+#define STM_NEW_CLIENT			55
+#define STM_CLIENT_CONNECT		56
 
 #define MR_CONNECTION_TIMEOUT   21000			  // 21 sec
 
@@ -88,7 +89,8 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mServerMode = FALSE;
 	mRegistrySocket = INVALID_SOCKET;
 	mServerPort = 0;
-	mSteamID = SteamUser()->GetSteamID();
+	mSteamID = CSteamID();
+	mSteamOnly = !MR_Config::GetInstance()->misc.directConnect;
 
 	mAllPreLoguedRecv = FALSE;
 
@@ -259,6 +261,14 @@ CSteamID MR_NetworkInterface::GetSteamId() const
 }
 
 /**
+ * Returns the player Steam ID.
+ */
+BOOL MR_NetworkInterface::GetSteamOnly() const
+{
+	return mSteamOnly;
+}
+
+/**
  * Returns the calculated lag to the server.
  */
 int MR_NetworkInterface::GetLagFromServer() const
@@ -335,7 +345,7 @@ BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BO
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	pMessage->mClient = mId;
-	return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast);
+	return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast, pClient);
 }
 
 /**
@@ -349,9 +359,9 @@ BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pR
 	pMessage->mClient = mId; // must ensure this
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		if(pReqLevel == MR_NET_DATAGRAM)
-			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE);
+			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE, lCounter);
 		else
-			mClient[lCounter].Send(pMessage, pReqLevel);
+			mClient[lCounter].Send(pMessage, pReqLevel, lCounter);
 	}
 	return TRUE;
 }
@@ -388,12 +398,26 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 {
 	BOOL lReturnValue = FALSE;
 	static int sLastClient = 0;
-
+	
 	for(int lCounter = 0; !lReturnValue && (lCounter < eMaxClient); lCounter++) {
 		int lClient = (lCounter + sLastClient + 1) % eMaxClient;
+		const MR_NetMessageBuffer *lMessage;
 
-		//TRACE("Polling client %d\n", lClient);
-		const MR_NetMessageBuffer *lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
+		// Check for Steam messages 
+		uint32 msgSize = 0;
+		if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, lClient ) )
+		{
+			void *msg = malloc( msgSize );
+			CSteamID steamIDRemote;
+			uint32 bytesRead = 0;
+			if ( SteamNetworking()->ReadP2PPacket( msg, msgSize, &bytesRead, &steamIDRemote, lClient ) )
+			{
+				lMessage = (MR_NetMessageBuffer*) msg;
+			}
+		} else {
+			//TRACE("Polling client %d\n", lClient);
+			lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
+		}
 
 		if(lMessage != NULL) {
 			lReturnValue = TRUE;
@@ -639,8 +663,8 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			// There was no pre-connect phase, do the preconnection now
 			mServerAddr = pServerIP;
 			mServerPort = pDefaultPort;
-			mActiveInterface = this;
 			mSteamID = CSteamID(pSteamID);
+			mActiveInterface = this;
 
 			lReturnValue = CreateUDPRecvSocket(htons(mUDPRecvPort));
 
@@ -834,18 +858,27 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			{	
+				mActiveInterface->mConnectModal = pWindow;
+
 				TRACE("\n%s: [WaitGameNameCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
 
 				// set up the static socket used to connect to the server
 				sNewSocket = socket(PF_INET, SOCK_STREAM, 0);
 	
-				if(sNewSocket == INVALID_SOCKET && !mActiveInterface->mSteamID.IsValid()) { // socket creation failed
+				if(!mActiveInterface->mSteamOnly && sNewSocket == INVALID_SOCKET) { // socket creation failed
 					TRACE("INVALID_SOCKET ");
 
-					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CREATE_SOCK));
-				}
-				else {
+					if (!mActiveInterface->mSteamID.IsValid()) {
+						SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CREATE_SOCK));
+					}
+				} else {
 					TRACE("SOCKET_CONNECT ");
+
+					int lCode;
+					int lTrue = 1;
+
+					unsigned long lNonBlock = TRUE;
+					lCode = ioctlsocket(sNewSocket, FIONBIO, &lNonBlock);
 
 					// "Connecting to server..."
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CONNECTING_SERV));
@@ -865,8 +898,8 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 	
 					// Disable Nagle's algorithm: we don't want to accumulate packets and send as larger ones,
 					// but instead send packets as quickly as they are ready -- screw TCP/IP efficiency
-					int lCode;
-					int lTrue = 1;
+
+					ASSERT(lCode != SOCKET_ERROR);
 	
 					lCode = setsockopt(sNewSocket, IPPROTO_TCP, TCP_NODELAY, (char *) &lTrue, sizeof(int));
 	
@@ -878,16 +911,9 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					lCode = setsockopt(sNewSocket, SOL_SOCKET, SO_SNDBUF, (char *) &lQueueSize, sizeof(int));
 	
 					ASSERT(lCode != SOCKET_ERROR);
-
-					// attempt a Steam P2P connection at the same time
-					MR_NetMessageBuffer lOutputBuffer;
-					lOutputBuffer.mMessageType = STNM_P2P_ESTABLISH;
-					lOutputBuffer.mClient = mActiveInterface->mId;
-
-					SteamNetworking()->SendP2PPacket(mActiveInterface->mSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
 	
 					// next instance of this function will be with the MRM_SERVER_CONNECT message
-					connect(sNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+					mActiveInterface->Connect(sNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr), mActiveInterface->mSteamID, STM_NEW_CLIENT, 0);
 				}
 			}
 			break;
@@ -905,7 +931,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_GET_GAMEINFO));
 	
 					// mClient[0] is the server (if we're not the server)
-					mActiveInterface->mClient[0].Connect(sNewSocket, mActiveInterface->mUDPRecvSocket, mActiveInterface->mSteamID);
+					mActiveInterface->mClient[0].Connect(sNewSocket, mActiveInterface->mUDPRecvSocket, mActiveInterface->mSteamID, mActiveInterface->mSteamOnly);
 	
 					// callback with MRM_CLIENT message once the socket reads data
 					WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, FD_READ);
@@ -961,7 +987,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 				const MR_NetMessageBuffer *lBuffer = NULL;
 
-				int param = mActiveInterface->mClient[0].mSocketConnected ? WSAGETSELECTEVENT(pLParam) : pLParam;
+				int param = !mActiveInterface->mClient[0].mSteamOnly ? WSAGETSELECTEVENT(pLParam) : pLParam;
 	
 				switch (param) {
 					case FD_READ:
@@ -969,7 +995,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 						// disable reception of this message
 						WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, 0);
-						if (mActiveInterface->mClient[0].mSocketConnected) {
+						if (!mActiveInterface->mClient[0].mSteamOnly) {
 							lBuffer = mActiveInterface->mClient[0].Poll(0, TRUE);
 						} else {
 							lBuffer = sBuffer;
@@ -1001,7 +1027,6 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 					lReturnValue = TRUE;
 					closesocket(sNewSocket);
-					SteamNetworking()->CloseP2PSessionWithUser(mActiveInterface->mSteamID);
 					mActiveInterface->mClient[0].Disconnect();
 					EndDialog(pWindow, IDCANCEL);
 					break;
@@ -1070,6 +1095,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the window
 			{
+				mActiveInterface->mGameModal = pWindow;
+
 				TRACE("\n%s: [ListCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
 
 				RECT lRect;
@@ -1265,7 +1292,6 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				// figure out what slot we're going to put them in
 				for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 					if(!mActiveInterface->mClient[lCounter].IsConnected()) {
-						TRACE("lNewSlot %d ", lNewSlot);
 
 						lNewSlot = lCounter;
 						break;
@@ -1274,7 +1300,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 				if(lNewSlot != -1) {
 					// accept our new connection
-					SOCKET lNewSocket = accept(mActiveInterface->mRegistrySocket, NULL, 0);
+					SOCKET lNewSocket = mActiveInterface->Accept(mActiveInterface->mRegistrySocket, NULL, 0, sSteamID, mActiveInterface->mServerMode ? STM_SERVER_CONNECT : STM_CLIENT_CONNECT, FD_CONNECT, lNewSlot);
 
 					TRACE(" -- MRM_NEW_CLIENT --\n");
 					TRACE("lNewSlot = %d / Valid? %s / SteamID %d\n", lNewSlot, (sSteamID.IsValid() ? "Yes" : "No"), sSteamID.GetAccountID());
@@ -1300,7 +1326,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							ASSERT(lCode != SOCKET_ERROR);
 						}
 
-						mActiveInterface->mClient[lNewSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID);
+						mActiveInterface->mClient[lNewSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID, mActiveInterface->mSteamOnly);
 
 						// wait for new message (MRM_CLIENT + lNewSlot)
 						WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lNewSlot, FD_READ | FD_CLOSE);
@@ -1331,7 +1357,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					mActiveInterface->mClient[lClient].Disconnect();
 					SOCKET lNewSocket = socket(PF_INET, SOCK_STREAM, 0);
 
-					mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID);
+					mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, mActiveInterface->mClient[lClient].GetSteamId(), mActiveInterface->mSteamOnly);
 					mActiveInterface->mPreLoguedClient[lClient] = TRUE;
 
 					SOCKADDR_IN lAddr;
@@ -1342,7 +1368,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 					// connect to the new client
 					WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lClient, FD_CONNECT | FD_READ | FD_CLOSE);
-					int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+					int lCode = mActiveInterface->Connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr), mActiveInterface->mClient[lClient].GetSteamId(), MRM_CLIENT + lClient, FD_CONNECT | FD_READ | FD_CLOSE);
 
 					// set timeout timer
 					SetTimer(pWindow, lClient + 20, MR_CLIENT_RETRY_TIME, NULL);
@@ -1393,7 +1419,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 		lListHandle = GetDlgItem(pWindow, IDC_LIST);
 
-		int param = mActiveInterface->mClient[lClient].mSocketConnected ? WSAGETSELECTEVENT(pLParam) : pLParam;
+		int param = mActiveInterface->mClient[lClient].mSocketConnected && !mActiveInterface->mClient[lClient].mSteamOnly ? WSAGETSELECTEVENT(pLParam) : pLParam;
 
 		switch (param) {
 			case FD_CLOSE:
@@ -1415,12 +1441,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				TRACE("\n%s: [ListCallBack] FD_READ ", mActiveInterface->GetPlayerName());
 
 				// get our message
-				if (mActiveInterface->mClient[lClient].mSocketConnected) {
+				if (mActiveInterface->mClient[lClient].mSocketConnected && !mActiveInterface->mClient[lClient].mSteamOnly) {
 					lBuffer = mActiveInterface->mClient[lClient].Poll(0, FALSE);
 				} else {
-					TRACE(" --- ListCallBack --- \n");
+					// TRACE(" --- ListCallBack --- \n");
 					lBuffer = sBuffer;
-					TRACE("FD_READ type %d from client %d \n", lBuffer->mMessageType, lBuffer->mClient);
+					// TRACE("FD_READ type %d from client %d \n", lBuffer->mMessageType, lBuffer->mClient);
 				}
 
 				if(lBuffer != NULL) {
@@ -1519,7 +1545,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									// now send the client list
 									lAnswer.mMessageType = MRNM_CLIENT_ADDR;
 									lAnswer.mClient = 0;
-									lAnswer.mDataLen = 12;
+									lAnswer.mDataLen = 21;
 	
 									// Send the actual client list
 									for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
@@ -1529,6 +1555,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 											*(int *) &(lAnswer.mData[0]) = mActiveInterface->mClientAddr[lCounter];
 											*(int *) &(lAnswer.mData[4]) = mActiveInterface->mClientBkAddr[lCounter];
 											*(int *) &(lAnswer.mData[8]) = mActiveInterface->mClientPort[lCounter];
+											*(uint64 *) &(lAnswer.mData[12]) = mActiveInterface->mClient[lCounter].GetSteamId().ConvertToUint64();
+											*(BOOL *) &(lAnswer.mData[20]) = mActiveInterface->mClient[lCounter].mSteamOnly;
 	
 											mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
 	
@@ -1632,7 +1660,9 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 									TRACE("MORE_CLIENTS lSlot %d ", lSlot);
 
-									mActiveInterface->mClient[lSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID);
+									CSteamID lSteamID = CSteamID(*(uint64 *) &(lBuffer->mData[12]));
+
+									mActiveInterface->mClient[lSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, lSteamID, *(BOOL *) &(lBuffer->mData[20]));
 									mActiveInterface->mPreLoguedClient[lSlot] = TRUE;
 
 									lAddr.sin_family = AF_INET;
@@ -1650,7 +1680,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									WSAAsyncSelect(mActiveInterface->mClient[lSlot].GetUDPSocket(), pWindow, MRM_CLIENT + lSlot, FD_READ | FD_CLOSE);
 
 									// connect to the new client
-									int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+									int lCode = mActiveInterface->Connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr), lSteamID, STM_NEW_CLIENT, FD_CONNECT | FD_READ | FD_CLOSE);
 
 									// set timeout timer
 									SetTimer(pWindow, lSlot + 20, MR_CLIENT_RETRY_TIME, NULL);
@@ -1799,6 +1829,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							break;
 
 						case MRNM_SET_PLAYER_ID:
+							TRACE("MRNM_SET_PLAYER_ID ");
+
 							// set mId
 							mActiveInterface->mId = lBuffer->mData[0];
 							break;
@@ -1813,6 +1845,9 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 			case FD_CONNECT: // we have successfully connected to the server or another client
 				TRACE("\n%s: [ListCallBack] FD_CONNECT ", mActiveInterface->GetPlayerName());
 				KillTimer(pWindow, lClient + 20); // kill timeout timer
+
+				int param = mActiveInterface->mClient[lClient].mSocketConnected && !mActiveInterface->mClient[lClient].mSteamOnly ? WSAGETSELECTEVENT(pLParam) : pLParam;
+
 				if(WSAGETSELECTERROR(pLParam)) {
 					// Connection error with a client
 					//ASSERT(FALSE);
@@ -1850,7 +1885,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								SOCKADDR_IN lAddr;
 								lAddr.sin_family = AF_INET;
 
-								mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID);
+								mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket, sSteamID, mActiveInterface->mSteamOnly);
 
 								if(((mActiveInterface->mClientAddr[lClient] & 0x0000FFFF) == 0x0000A8C0) ||
 								   ((mActiveInterface->mClientAddr[lClient] & 0x000000FF) == 0x0000000A)) {
@@ -1888,7 +1923,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								WSAAsyncSelect(mActiveInterface->mClient[lClient].GetUDPSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
 
 								// connect to the new client
-								int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+								int lCode = mActiveInterface->Connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr), sSteamID, MRM_CLIENT + lClient, FD_CONNECT | FD_READ | FD_CLOSE);
 							} else {
 								char *lErrorString = new char[120]; // max player length is 40
 								sprintf(lErrorString, "%s%s%s",
@@ -1972,7 +2007,7 @@ MR_NetworkPort::MR_NetworkPort()
 	mSocket = INVALID_SOCKET;
 	mUDPRecvSocket = INVALID_SOCKET;
 	mTriedBackupIP = FALSE;
-	mSocketConnected = FALSE;
+	mSocketConnected = TRUE;
 
 	Disconnect();
 }
@@ -1991,28 +2026,13 @@ MR_NetworkPort::~MR_NetworkPort()
  *
  * @param pSocket An already-connected socket.
  */
-void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID)
+void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID, BOOL pSteamOnly)
 {
 	Disconnect();
 	mSocket = pSocket;
 	mSteamID = pSteamID;
 	mWatchdog = timeGetTime();
-
-	mSocketConnected = TRUE;
-
-	// Check socket is connected
-	int r = recv(pSocket, NULL, 0, 0);
-	if(r == SOCKET_ERROR){
-		mSocketConnected = FALSE;
-	}
-
-	int s = send(pSocket, NULL, 0, 0);
-	if(s == SOCKET_ERROR){
-		mSocketConnected = FALSE;
-	}
-
-	// Just go with it off for now
-	mSocketConnected = FALSE;
+	mSteamOnly = pSteamOnly;
 
 	mUDPRecvSocket = pUDPRecvSocket;
 
@@ -2048,7 +2068,10 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 	// Determine remote address and port based on the TCP port
 	int lSize = sizeof(mUDPRemoteAddr);
 	int lCode = getpeername(mSocket, (LPSOCKADDR) &mUDPRemoteAddr, &lSize);
-	ASSERT(lCode != SOCKET_ERROR);
+
+	if (!mSteamOnly) {
+		ASSERT(lCode != SOCKET_ERROR);
+	}
 
 	mUDPRemoteAddr.sin_port = pPort;
 }
@@ -2076,7 +2099,9 @@ void MR_NetworkPort::Disconnect()
 		SteamNetworking()->CloseP2PSessionWithUser(mSteamID);
 	}
 
-	mSteamID = CSteamID();
+	// Keep the Steam ID too!
+
+	// mSteamID = CSteamID();
 
 	mLastSendedDatagramNumber[0] = 0;
 	mLastSendedDatagramNumber[1] = 0;
@@ -2102,7 +2127,7 @@ void MR_NetworkPort::Disconnect()
 	mInputMessageBufferIndex = 0;
 
 	mTriedBackupIP = FALSE;
-	mSocketConnected = FALSE;
+	mSocketConnected = TRUE;
 }
 
 /**
@@ -2110,7 +2135,7 @@ void MR_NetworkPort::Disconnect()
  */
 BOOL MR_NetworkPort::IsConnected() const
 {
-	return (mSocket != INVALID_SOCKET);
+	return (mSocket != INVALID_SOCKET || mSteamID.IsValid());
 }
 
 /**
@@ -2252,7 +2277,7 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
  * @param pQueueId The queue ID of the message
  * @param pResendLast TRUE if this is a re-send of the last packet
  */
-BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast)
+BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast, int pClient)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -2264,7 +2289,7 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
 	   }
 	 */
 
-	if(mUDPRecvSocket != INVALID_SOCKET) {
+	if(mUDPRecvSocket != INVALID_SOCKET || mSteamID.IsValid()) {
 		int lToSend = MR_NET_HEADER_LEN + pMessage->mDataLen;
 
 		if(!pResendLast) {
@@ -2274,7 +2299,15 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
 		pMessage->mDatagramQueue = pQueueId;
 		pMessage->mDatagramNumber = mLastSendedDatagramNumber[pQueueId];
 
-		int lSent = sendto(pSocket, ((const char *) pMessage), lToSend, 0, (LPSOCKADDR) & mUDPRemoteAddr, sizeof(mUDPRemoteAddr));
+		int lSent = 0;
+
+		if(!mSteamOnly) {
+			int lSent = sendto(pSocket, ((const char *) pMessage), lToSend, 0, (LPSOCKADDR) & mUDPRemoteAddr, sizeof(mUDPRemoteAddr));
+		} else {
+			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliableNoDelay, pClient);
+
+			TRACE("UDPSend: sending to %d\n", mSteamID.GetAccountID());
+		}
 
 		lReturnValue = (lSent != SOCKET_ERROR);
 	}
@@ -2287,7 +2320,7 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
  * @param pMessage The message to be sent
  * @param pReqLevel Should be set to MR_NET_REQUIRED
  */
-void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
+void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, int pClient)
 {
 	// First try to send buffered data
 	if(mSocket != INVALID_SOCKET || mSteamID.IsValid()) {
@@ -2307,12 +2340,12 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
 
 			int lReturnValue = 0;
 
-			if(mSocket != INVALID_SOCKET && mSocketConnected) {
+			if(mSocket != INVALID_SOCKET && mSocketConnected && !mSteamOnly) {
 				lReturnValue = send(mSocket, (const char *) (mOutQueue + mOutQueueHead), lToSend, 0);
 			} else {
-				TRACE(" --- MR_NetworkPort::Send  --- \n");
-				TRACE("Queue Message to %d of type %d\n", mSteamID.GetAccountID(), int(((MR_NetMessageBuffer *) (mOutQueue + mOutQueueHead))->mMessageType));
-				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, (const char *) (mOutQueue + mOutQueueHead), lToSend, k_EP2PSendReliable) ? lToSend : SOCKET_ERROR;
+				// TRACE(" --- MR_NetworkPort::Send  --- \n");
+				// TRACE("Queue Message to %d of type %d\n", mSteamID.GetAccountID(), int(((MR_NetMessageBuffer *) (mOutQueue + mOutQueueHead))->mMessageType));
+				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, (const char *) (mOutQueue + mOutQueueHead), lToSend, k_EP2PSendReliable, pClient) ? lToSend : SOCKET_ERROR;
 			}
 
 			if(lReturnValue >= 0) {
@@ -2338,7 +2371,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
 		}
 	}
 
-	if(mSocket != INVALID_SOCKET) {
+	if(mSocket != INVALID_SOCKET || mSteamID.IsValid()) {
 		int lToSend = MR_NET_HEADER_LEN + pMessage->mDataLen;
 
 		int lReturnValue;						  // send return value
@@ -2347,12 +2380,12 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
 			lReturnValue = 0;
 		}
 		else {
-			if(mSocket != INVALID_SOCKET && mSocketConnected) {
+			if(mSocket != INVALID_SOCKET && mSocketConnected && !mSteamOnly) {
 				lReturnValue = send(mSocket, ((const char *) pMessage), lToSend, 0);
 			} else {
-				TRACE(" --- MR_NetworkPort::Send  --- \n");
-				TRACE("Message to %d of type %d and client %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient);
-				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendReliable) ? lToSend : SOCKET_ERROR;
+				// TRACE(" --- MR_NetworkPort::Send  --- \n");
+				// TRACE("Message to %d of type %d and client %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient);
+				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendReliable, pClient) ? lToSend : SOCKET_ERROR;
 			}
 
 			// TRACE( "Send %d %d %d\n", lToSend, lToSend-lSent, lReturnValue );
@@ -2554,10 +2587,14 @@ static BOOL CALLBACK DialogProc(HWND pWindow, UINT uMsg, WPARAM wParam, LPARAM l
 void MR_NetworkInterface::OnP2PSessionRequest(P2PSessionRequest_t *pParam)
 {
      SteamNetworking()->AcceptP2PSessionWithUser(pParam->m_steamIDRemote);
+
+	 TRACE("AcceptP2PSessionWithUser with %d\n", pParam->m_steamIDRemote.GetAccountID());
 }
 
 void MR_NetworkInterface::CheckP2PAvailability() const 
 {
+	// TRACE("CheckP2PAvailability()\n");
+
 	uint32 msgSize = 0;
 	while ( SteamNetworking()->IsP2PPacketAvailable( &msgSize ) )
 	{
@@ -2568,55 +2605,71 @@ void MR_NetworkInterface::CheckP2PAvailability() const
 		{
 			sBuffer = (MR_NetMessageBuffer*) msg;
 			sSteamID = steamIDRemote;
-			int lNewSlot = -1;
 			
-			TRACE(" --- ReadP2PPacket --- \n");
-			switch (sBuffer->mMessageType) {
-				case STNM_P2P_ESTABLISH: 
-					// Emulate a MRM_NEW_CLIENT and then get the slot we have been given based on Steam Id
-					MR_NetworkInterface::ListCallBack(GetActiveWindow(), MRM_NEW_CLIENT, 0, FD_READ);
-	
-					// figure out what slot we're going to put them in
-					for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
-						if(mActiveInterface->mClient[lCounter].GetSteamId() == steamIDRemote) {
-							lNewSlot = lCounter;
-							break;
-						}
-					}
+			// TRACE(" ----- ReadP2PPacket ----- \n");
+			// TRACE(" -- Type %d / Client %d\n", sBuffer->mMessageType, sBuffer->mClient);
 
-					// Reply to the Establish with a STNM_P2P_ACCEPT to prompt a request for game name
-					MR_NetMessageBuffer lOutputBuffer;
-					lOutputBuffer.mClient = lNewSlot; // Hacky way to send their id
-					lOutputBuffer.mMessageType = STNM_P2P_ACCEPT;
+			int lClient = MR_ID_NOT_SET;
 
-					TRACE("STNM_P2P_ESTABLISH from %d / passing slot id %d\n", steamIDRemote.GetAccountID(), lOutputBuffer.mClient);
+			// find if the sender has a client id for MRM_CLIENT use
+			for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
+				if(mActiveInterface->mClient[lCounter].GetSteamId() == steamIDRemote) {
 
-					SteamNetworking()->SendP2PPacket(steamIDRemote, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
-
+					lClient = lCounter;
 					break;
-				case STNM_P2P_ACCEPT:
-					TRACE("STNM_P2P_ACCEPT from %d / setting mId to %d\n", steamIDRemote.GetAccountID(), sBuffer->mClient);
+				}
+			}
 
-					mActiveInterface->SetId(sBuffer->mClient);
-
-					// Emulate MRM_SERVER_CONNECT to start communication with the server
-					MR_NetworkInterface::WaitGameNameCallBack(GetActiveWindow(), MRM_SERVER_CONNECT, 0, 0);
-					break;
-				case MRNM_GAME_NAME:
-					TRACE("MRNM_GAME_NAME from %d / mClient %d\n", steamIDRemote.GetAccountID(), sBuffer->mClient);
-
-					MR_NetworkInterface::WaitGameNameCallBack(GetActiveWindow(), MRM_CLIENT, 0, FD_READ);
-					break;
-				default:
-					int lMsgId = MRM_CLIENT + sBuffer->mClient;
-
-					TRACE("Received message from %d of type %d\n", steamIDRemote.GetAccountID(), sBuffer->mMessageType);
-					TRACE("MRM_CLIENT %d + mClient %d = %d\n", MRM_CLIENT, sBuffer->mClient, lMsgId);
-
-					MR_NetworkInterface::ListCallBack(GetActiveWindow(), lMsgId, 0, FD_READ);
-					break;
+			if (sBuffer->mMessageType == STM_SERVER_CONNECT) {
+				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_SERVER_CONNECT, 0, 0);
+			} else if (sBuffer->mMessageType == STM_NEW_CLIENT) {		
+				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_NEW_CLIENT, 0, 0);
+			} else if (sBuffer->mMessageType == STM_CLIENT_CONNECT) {		
+				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CONNECT);
+			} else if (sBuffer->mMessageType == MRNM_GAME_NAME) {
+				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_CLIENT + lClient, 0, FD_READ);
+			} else {
+				TRACE(" Message type received %d from client %d\n", sBuffer->mMessageType, lClient);
+				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_READ);
+				break;
 			}
 		}
 		free( msg );
 	}
+}
+
+int MR_NetworkInterface::Connect(SOCKET pS, const sockaddr *pName, int pNamelen, CSteamID pSteamID, UINT lMsg, long lEvent)
+{
+	if (mSteamOnly) {
+		TRACE("::CONNECT From SteamID %d To SteamID %d / Msg %d / Event %d\n", SteamUser()->GetSteamID().GetAccountID(), pSteamID.GetAccountID(), lMsg, lEvent);
+
+		MR_NetMessageBuffer lOutputBuffer;
+		lOutputBuffer.mMessageType = lMsg;
+		lOutputBuffer.mClient = mActiveInterface->mId;
+
+		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
+
+		return 0;
+	}
+
+	return connect(pS, pName, pNamelen);
+}
+
+SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CSteamID pSteamID, UINT lMsg, long lEvent, int lClient)
+{
+	if (mSteamOnly) {
+		TRACE("::ACCEPT From SteamID %d To SteamID %d / Msg %d / Event %d\n", SteamUser()->GetSteamID().GetAccountID(), pSteamID.GetAccountID(), lMsg, lEvent);
+
+		MR_NetMessageBuffer lOutputBuffer;
+		lOutputBuffer.mMessageType = lMsg;
+		lOutputBuffer.mClient = mActiveInterface->mId;
+
+		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
+
+		// MR_NetworkInterface::ListCallBack(GetActiveWindow(), MRM_CLIENT + lClient, 0, FD_CONNECT);
+
+		return INVALID_SOCKET;
+	}
+
+	return accept(pS, pAddr, pAddrlen);
 }

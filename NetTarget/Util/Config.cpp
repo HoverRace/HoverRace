@@ -221,7 +221,8 @@ void MR_Config::ResetToDefaults()
 
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
-   misc.mainLoopSleepLength = 0;
+	misc.mainLoopSleepLength = 0;
+	misc.directConnect = false;
 
 	// Get current user name as default nickname.
 #ifdef _WIN32
@@ -448,7 +449,8 @@ void MR_Config::cfg_misc_t::Load(yaml::MapNode *root)
 
 	READ_BOOL(root, displayFirstScreen);
 	READ_BOOL(root, introMovie);
-   READ_INT(root, mainLoopSleepLength, 0, 30);
+	READ_INT(root, mainLoopSleepLength, 0, 30);
+	READ_BOOL(root, directConnect);
 }
 
 void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
@@ -458,7 +460,8 @@ void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, displayFirstScreen);
 	EMIT_VAR(emitter, introMovie);
-   EMIT_VAR(emitter, mainLoopSleepLength);
+	EMIT_VAR(emitter, mainLoopSleepLength);
+	EMIT_VAR(emitter, directConnect);
 
 	emitter->EndMap();
 }

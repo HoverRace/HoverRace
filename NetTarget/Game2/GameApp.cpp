@@ -429,8 +429,6 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	while(true) {
 		Sleep(sleepLength);
 
-		lThis->mNetInterface.CheckP2PAvailability();
-
 		EnterCriticalSection(&lThis->mMutex);
 
 		if(lThis->mTerminate)
@@ -2640,6 +2638,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, !cfg->misc.introMovie, 0);
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, !cfg->misc.displayFirstScreen, 0);
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, cfg->video.nativeBppFullscreen, 0);
+			SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_SETCHECK, cfg->misc.directConnect, 0);
 
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
 			{
@@ -2662,6 +2661,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					cfg->misc.introMovie = !SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
 					cfg->misc.displayFirstScreen = !SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
 					cfg->video.nativeBppFullscreen = (SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0) != FALSE);
+					cfg->misc.directConnect = (SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_GETCHECK, 0, 0) != FALSE);
 
 					{
 						char lBuffer[80];

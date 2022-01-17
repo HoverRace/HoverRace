@@ -101,7 +101,7 @@ class MR_NetworkPort
 		MR_NetworkPort();
 		~MR_NetworkPort();
 
-		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID);
+		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID, BOOL pSteamOnly);
 		void SetRemoteUDPPort(unsigned int pPort);
 		void Disconnect();
 		BOOL IsConnected() const;
@@ -111,8 +111,8 @@ class MR_NetworkPort
 		CSteamID GetSteamId() const;
 
 		const MR_NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
-		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel);
-		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast);
+		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, int pClient = 0);
+		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast, int pClient = 0);
 
 		// Time related stuff
 		BOOL AddLagSample(int pLag);
@@ -125,6 +125,7 @@ class MR_NetworkPort
 		BOOL mTriedBackupIP;	/// if the first connection attempt fails we must try another
 
 		BOOL mSocketConnected;  // Using Steam otherwise
+		BOOL mSteamOnly;
 };
 
 /**
@@ -164,6 +165,7 @@ class MR_NetworkInterface
 
 		// Static CSteamID
 		static CSteamID sSteamID;
+		BOOL mSteamOnly;
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
@@ -178,6 +180,10 @@ class MR_NetworkInterface
 		CSteamID mClientSteamID[eMaxClient];
 
 		int mReturnMessage;						  /// Message to return to the parent window in modeless mode
+
+		// Game Modal
+		HWND mGameModal;
+		HWND mConnectModal;
 
 		// Dialog functions
 		static MR_NetworkInterface *mActiveInterface;
@@ -204,11 +210,15 @@ class MR_NetworkInterface
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
 		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
+		int Connect(SOCKET pS, const sockaddr *pName, int pNamelen, CSteamID pSteamID, UINT lMsg, long lEvent);
+		SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CSteamID pSteamID, UINT lMsg, long lEvent, int lClient);
+
 		void Disconnect();
 
 		int GetClientCount() const;
 		int GetId() const;
 		CSteamID GetSteamId() const;
+		BOOL GetSteamOnly() const;
 
 		int GetLagFromServer() const;
 		int GetAvgLag(int pClient) const;

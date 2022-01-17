@@ -43,12 +43,14 @@
 #define FAST_OP_TIMEOUT     6000
 #define CHAT_TIMEOUT       18000
 #define SCORE_OP_TIMEOUT   12000
+#define STEAM_MESSAGE_DELAY   10
 
 #define IMMEDIATE                 1
 #define REFRESH_EVENT             1
 #define REFRESH_TIMEOUT_EVENT     2
 #define CHAT_TIMEOUT_EVENT        3
 #define OP_TIMEOUT_EVENT          4
+#define STEAM_MESSAGE_CHECK		  5
 
 #define LOAD_BANNER_TIMEOUT_EVENT     8
 #define ANIM_BANNER_TIMEOUT_EVENT     9
@@ -1346,8 +1348,9 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						EndDialog(pWindow, IDCANCEL);
 					}
 					else {
-						// Start the automatic refresh sequence
+						// Start the automatic refresh sequences
 						SetTimer(pWindow, REFRESH_EVENT, 2 * REFRESH_DELAY, NULL);
+						SetTimer(pWindow, STEAM_MESSAGE_CHECK, STEAM_MESSAGE_DELAY, NULL);
 	
 						// Init dialog lists
 						mThis->RefreshGameList(pWindow);
@@ -1469,12 +1472,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 							mThis->roomList->GetSelectedRoom()->port,
 							//gServerList[gCurrentServerEntry].mPort,
 							lRequest.c_str());
-
-						// Run Steam Callbacks
-						SteamAPI_RunCallbacks();
-
-						// Check for Steam data
-						mThis->mNetInterface.CheckP2PAvailability();
 	
 						// Activate timeout
 						SetTimer(pWindow, REFRESH_TIMEOUT_EVENT, REFRESH_TIMEOUT, NULL);
@@ -1529,6 +1526,17 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 					}
 					break;
 
+				case STEAM_MESSAGE_CHECK:
+					{
+						// Run Steam Callbacks
+						SteamAPI_RunCallbacks();
+
+						// Check for Steam data
+						mThis->mNetInterface.CheckP2PAvailability();
+
+						SetTimer(pWindow, STEAM_MESSAGE_CHECK, STEAM_MESSAGE_DELAY, NULL);
+					}
+					break;
 			}
 			break;
 
@@ -2462,7 +2470,7 @@ CString MR_Pad(const char *pStr)
 		else {
 			switch (*(const unsigned char *) pStr) {
 				case 187:
-					// Reserved character for prompt »
+					// Reserved character for prompt ï¿½
 					break;
 
 				case '$':

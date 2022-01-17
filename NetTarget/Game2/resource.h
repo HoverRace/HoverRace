@@ -142,6 +142,7 @@
 #define IDC_LOOKBACK3                   1078
 #define IDC_LOOKBACK4                   1079
 #define IDC_NATIVE_BPP_FULLSCREEN       1079
+#define IDC_DIRECT_CONNECT				1080
 #define IDC_EDIT1                       1081
 #define IDC_MAINSERVER                  1081
 #define IDC_BRIGHTNESS_TXT              1081
