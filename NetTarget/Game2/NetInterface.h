@@ -39,6 +39,8 @@
 #define MR_NOT_REQUIRED				0
 #define MR_NET_DATAGRAM				-1
 
+#define STM_IMR_CHANNEL				100
+
 class ISteamUser;
 class ISteamNetworking;
 
@@ -104,6 +106,7 @@ class MR_NetworkPort
 		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket, CSteamID pSteamID, BOOL pSteamOnly);
 		void SetRemoteUDPPort(unsigned int pPort);
 		void Disconnect();
+		void DisconnectSteam(BOOL pDisconnectSteam = TRUE);
 		BOOL IsConnected() const;
 
 		SOCKET GetSocket() const;
@@ -111,8 +114,8 @@ class MR_NetworkPort
 		CSteamID GetSteamId() const;
 
 		const MR_NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
-		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, int pClient = 0);
-		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast, int pClient = 0);
+		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, int pClient = STM_IMR_CHANNEL);
+		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast, int pClient = STM_IMR_CHANNEL);
 
 		// Time related stuff
 		BOOL AddLagSample(int pLag);
@@ -121,6 +124,9 @@ class MR_NetworkPort
 		int GetAvgLag() const;
 		int GetMinLag() const;
 		void SetLag(int pAvgLag, int pMinLag);
+
+		void SetInputMessageBuffer(MR_NetMessageBuffer* pInputMessageBuffer);
+		MR_NetMessageBuffer GetInputMessageBuffer();
 
 		BOOL mTriedBackupIP;	/// if the first connection attempt fails we must try another
 
@@ -196,6 +202,7 @@ class MR_NetworkInterface
 		void SendConnectionDoneIfNeeded();
 
 		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionRequest, P2PSessionRequest_t ); // REQUIRED
+		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionFailed, P2PSessionConnectFail_t ); // REQUIRED
 
 	public:
 		// Creation and destruction
@@ -213,7 +220,7 @@ class MR_NetworkInterface
 		int Connect(SOCKET pS, const sockaddr *pName, int pNamelen, CSteamID pSteamID, UINT lMsg, long lEvent);
 		SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CSteamID pSteamID, UINT lMsg, long lEvent, int lClient);
 
-		void Disconnect();
+		void Disconnect(BOOL pDisconnectSteam = TRUE);
 
 		int GetClientCount() const;
 		int GetId() const;

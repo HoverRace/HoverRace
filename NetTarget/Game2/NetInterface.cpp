@@ -50,6 +50,7 @@
 #define STM_SERVER_CONNECT		54
 #define STM_NEW_CLIENT			55
 #define STM_CLIENT_CONNECT		56
+#define STM_CLIENT_CLOSE		57
 
 #define MR_CONNECTION_TIMEOUT   21000			  // 21 sec
 
@@ -191,7 +192,7 @@ BOOL MR_NetworkInterface::IsConnected(int pIndex) const
 /**
  * Close the registry socket and reset all variables to their "disconnected" state.
  */
-void MR_NetworkInterface::Disconnect()
+void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 {
 	if(mRegistrySocket != INVALID_SOCKET) {
 		closesocket(mRegistrySocket);
@@ -209,6 +210,7 @@ void MR_NetworkInterface::Disconnect()
 	mAllPreLoguedRecv = FALSE;
 
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
+		mClient[lCounter].DisconnectSteam(pDisconnectSteam);
 		mClient[lCounter].Disconnect();
 		mPreLoguedClient[lCounter] = FALSE;
 		mConnected[lCounter] = FALSE;
@@ -345,7 +347,7 @@ BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BO
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	pMessage->mClient = mId;
-	return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast, pClient);
+	return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast, mId);
 }
 
 /**
@@ -359,9 +361,9 @@ BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pR
 	pMessage->mClient = mId; // must ensure this
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		if(pReqLevel == MR_NET_DATAGRAM)
-			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE, lCounter);
+			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE, mId);
 		else
-			mClient[lCounter].Send(pMessage, pReqLevel, lCounter);
+			mClient[lCounter].Send(pMessage, pReqLevel, mId + eMaxClient);
 	}
 	return TRUE;
 }
@@ -403,21 +405,8 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 		int lClient = (lCounter + sLastClient + 1) % eMaxClient;
 		const MR_NetMessageBuffer *lMessage;
 
-		// Check for Steam messages 
-		uint32 msgSize = 0;
-		if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, lClient ) )
-		{
-			void *msg = malloc( msgSize );
-			CSteamID steamIDRemote;
-			uint32 bytesRead = 0;
-			if ( SteamNetworking()->ReadP2PPacket( msg, msgSize, &bytesRead, &steamIDRemote, lClient ) )
-			{
-				lMessage = (MR_NetMessageBuffer*) msg;
-			}
-		} else {
-			//TRACE("Polling client %d\n", lClient);
-			lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
-		}
+		//TRACE("Polling client %d\n", lClient);
+		lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
 
 		if(lMessage != NULL) {
 			lReturnValue = TRUE;
@@ -1199,15 +1188,11 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				case IDCANCEL:
 					TRACE("IDCANCEL\n");
 
-					// if we are the server we must tell the other clients to disconnect
-					if(mActiveInterface->mServerMode) {
-						// technically this is not an answer but lAnswer is already declared so I will use it
-						lAnswer.mMessageType = MRNM_CANCEL_GAME;
-						lAnswer.mDataLen = 1;
-						mActiveInterface->BroadcastMessage(&lAnswer, MR_NET_REQUIRED); // tell everyone
-					}
+					lAnswer.mMessageType = mActiveInterface->mServerMode ? MRNM_CANCEL_GAME : STM_CLIENT_CLOSE;
+					lAnswer.mDataLen = 1;
+					mActiveInterface->BroadcastMessage(&lAnswer, MR_NET_REQUIRED); // tell everyone
 
-					mActiveInterface->Disconnect();
+					mActiveInterface->Disconnect(FALSE);
 					lReturnValue = TRUE;
 
 					if(mActiveInterface->mReturnMessage == 0) {
@@ -1428,6 +1413,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				// client quit this game
 				TRACE("Client %d disconnected\n", lClient);
 				mActiveInterface->mClient[lClient].Disconnect();
+				mActiveInterface->mClient[lClient].DisconnectSteam();
 				mActiveInterface->mCanBePreLogued[lClient] = FALSE;
 				mActiveInterface->mPreLoguedClient[lClient] = FALSE;
 				mActiveInterface->mConnected[lClient] = FALSE;
@@ -2076,6 +2062,14 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 	mUDPRemoteAddr.sin_port = pPort;
 }
 
+void MR_NetworkPort::DisconnectSteam(BOOL pDisconnectSteam)
+{
+	if(mSteamID.IsValid() && pDisconnectSteam) {
+		SteamNetworking()->CloseP2PSessionWithUser(mSteamID);
+		mSteamID = CSteamID();
+	}	
+}
+
 /**
  * Close the main socket and UDP receive socket, and reset variables.  Default lag is 300.  Not sure why.
  */
@@ -2094,10 +2088,6 @@ void MR_NetworkPort::Disconnect()
 	mSocket = INVALID_SOCKET;
 
 	mUDPRecvSocket = INVALID_SOCKET;
-
-	if (mSteamID.IsValid()) {
-		SteamNetworking()->CloseP2PSessionWithUser(mSteamID);
-	}
 
 	// Keep the Steam ID too!
 
@@ -2174,13 +2164,14 @@ CSteamID MR_NetworkPort::GetSteamId() const
 const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClientId)
 {
 	// Socket is assumed to be non-blocking, but it damn well better be because we set it that way
-	if((mInputMessageBufferIndex == 0) && (mUDPRecvSocket != INVALID_SOCKET)) {
+	if((mInputMessageBufferIndex == 0) && (mUDPRecvSocket != INVALID_SOCKET || mSteamOnly)) {
 		while(1) {
 			// see if there is a UDP packet addressed to us
 			// this is a dirty hack
 			int lLen = 0;
+			uint32 msgSize = 0;
 			BOOL lPassCheck = TRUE;
-			if(pCheckClientId == TRUE) {
+			if(pCheckClientId == TRUE && !mSteamOnly) {
 				lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), MSG_PEEK);
 				if((mInputMessageBuffer.mClient != pClientId) && (mInputMessageBuffer.mClient != MR_ID_NOT_SET)) {
 					/* disable this for intensive testing
@@ -2195,7 +2186,15 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 					lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), 0);
 			}
 			else {
-				lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), 0);
+				if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, pClientId ) )
+				{
+					CSteamID steamIDRemote;
+					uint32 bytesRead = 0;
+					lLen = (int) msgSize;
+					SteamNetworking()->ReadP2PPacket( &mInputMessageBuffer, msgSize, &bytesRead, &steamIDRemote, pClientId );
+				} else {
+					lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), 0);
+				}
 			}
 
 			if(lLen > 0 && lPassCheck == TRUE) {
@@ -2204,7 +2203,7 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 				ASSERT(lLen == mInputMessageBuffer.mDataLen + MR_NET_HEADER_LEN);
 
 				// Eliminate duplicate and late datagrams
-				if(((MR_Int8) ((MR_Int8) (MR_UInt8) mInputMessageBuffer.mDatagramNumber - (MR_Int8) mLastReceivedDatagramNumber[lQueueId]) > 0)
+				if(lLen == mInputMessageBuffer.mDataLen + MR_NET_HEADER_LEN && ((MR_Int8) ((MR_Int8) (MR_UInt8) mInputMessageBuffer.mDatagramNumber - (MR_Int8) mLastReceivedDatagramNumber[lQueueId]) > 0)
 					|| (mInputMessageBuffer.mClient != mLastClient[lQueueId])) {
 					// TRACE( "UDP recv\n" );
 					mLastReceivedDatagramNumber[lQueueId] = mInputMessageBuffer.mDatagramNumber;
@@ -2226,31 +2225,44 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 	}
 
 	// check for TCP packets
-	if(mSocket != INVALID_SOCKET) {
-		if(mInputMessageBufferIndex < MR_NET_HEADER_LEN) {
-			// Try to read message header
-			int lLen = recv(mSocket, ((char *) &mInputMessageBuffer) + mInputMessageBufferIndex, MR_NET_HEADER_LEN - mInputMessageBufferIndex, 0);
-
-			if(lLen > 0) {
-				mInputMessageBufferIndex += lLen;
-				// TRACE("Begin recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+	if(mSocket != INVALID_SOCKET || mSteamOnly) {
+		if (mSteamOnly) {
+			uint32 msgSize = 0;
+			if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, pClientId + MR_NetworkInterface::eMaxClient ) )
+			{
+				CSteamID steamIDRemote;
+				uint32 bytesRead = 0;
+				mInputMessageBufferIndex = 0;
+				mWatchdog = timeGetTime();
+				SteamNetworking()->ReadP2PPacket( &mInputMessageBuffer, msgSize, &bytesRead, &steamIDRemote, pClientId + MR_NetworkInterface::eMaxClient );
+				return &mInputMessageBuffer;
 			}
-		}
+		} else {
+			if(mInputMessageBufferIndex < MR_NET_HEADER_LEN) {
+				// Try to read message header
+				int lLen = recv(mSocket, ((char *) &mInputMessageBuffer) + mInputMessageBufferIndex, MR_NET_HEADER_LEN - mInputMessageBufferIndex, 0);
 
-		if(mInputMessageBufferIndex >= MR_NET_HEADER_LEN && (mInputMessageBuffer.mDataLen > 0)) {
-			int lLen = recv(mSocket, ((char *) &mInputMessageBuffer) + mInputMessageBufferIndex, mInputMessageBuffer.mDataLen - (mInputMessageBufferIndex - MR_NET_HEADER_LEN), 0);
-
-			if(lLen > 0) {
-				mInputMessageBufferIndex += lLen;
-				// TRACE("Continue recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				if(lLen > 0) {
+					mInputMessageBufferIndex += lLen;
+					// TRACE("Begin recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				}
 			}
-		}
 
-		if((mInputMessageBufferIndex >= MR_NET_HEADER_LEN) && (mInputMessageBufferIndex == (MR_NET_HEADER_LEN + mInputMessageBuffer.mDataLen))) {
-			mInputMessageBufferIndex = 0;
-			mWatchdog = timeGetTime();
-			// TRACE("Done receiving packet from client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
-			return &mInputMessageBuffer;
+			if(mInputMessageBufferIndex >= MR_NET_HEADER_LEN && (mInputMessageBuffer.mDataLen > 0)) {
+				int lLen = recv(mSocket, ((char *) &mInputMessageBuffer) + mInputMessageBufferIndex, mInputMessageBuffer.mDataLen - (mInputMessageBufferIndex - MR_NET_HEADER_LEN), 0);
+
+				if(lLen > 0) {
+					mInputMessageBufferIndex += lLen;
+					// TRACE("Continue recv, client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				}
+			}
+
+			if((mInputMessageBufferIndex >= MR_NET_HEADER_LEN) && (mInputMessageBufferIndex == (MR_NET_HEADER_LEN + mInputMessageBuffer.mDataLen))) {
+				mInputMessageBufferIndex = 0;
+				mWatchdog = timeGetTime();
+				// TRACE("Done receiving packet from client %d, message %d, number %d\n", mInputMessageBuffer.mClient, mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDatagramNumber);
+				return &mInputMessageBuffer;
+			}
 		}
 
 		if((mLastSendedDatagramNumber[1] > 16) && (timeGetTime() - mWatchdog) > MR_CONNECTION_TIMEOUT) {
@@ -2304,9 +2316,9 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
 		if(!mSteamOnly) {
 			int lSent = sendto(pSocket, ((const char *) pMessage), lToSend, 0, (LPSOCKADDR) & mUDPRemoteAddr, sizeof(mUDPRemoteAddr));
 		} else {
-			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliableNoDelay, pClient);
+			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliableNoDelay, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
 
-			TRACE("UDPSend: sending to %d\n", mSteamID.GetAccountID());
+			TRACE("UDPSend: sending to %d of type %d and queue id %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mDatagramQueue);
 		}
 
 		lReturnValue = (lSent != SOCKET_ERROR);
@@ -2345,7 +2357,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, in
 			} else {
 				// TRACE(" --- MR_NetworkPort::Send  --- \n");
 				// TRACE("Queue Message to %d of type %d\n", mSteamID.GetAccountID(), int(((MR_NetMessageBuffer *) (mOutQueue + mOutQueueHead))->mMessageType));
-				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, (const char *) (mOutQueue + mOutQueueHead), lToSend, k_EP2PSendReliable, pClient) ? lToSend : SOCKET_ERROR;
+				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, (const char *) (mOutQueue + mOutQueueHead), lToSend, k_EP2PSendReliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient)) ? lToSend : SOCKET_ERROR;
 			}
 
 			if(lReturnValue >= 0) {
@@ -2384,8 +2396,8 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, in
 				lReturnValue = send(mSocket, ((const char *) pMessage), lToSend, 0);
 			} else {
 				// TRACE(" --- MR_NetworkPort::Send  --- \n");
-				// TRACE("Message to %d of type %d and client %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient);
-				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendReliable, pClient) ? lToSend : SOCKET_ERROR;
+				// TRACE("Message to %d of type %d and client %d on channel %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
+				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendReliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient)) ? lToSend : SOCKET_ERROR;
 			}
 
 			// TRACE( "Send %d %d %d\n", lToSend, lToSend-lSent, lReturnValue );
@@ -2489,6 +2501,16 @@ void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
 
 }
 
+void MR_NetworkPort::SetInputMessageBuffer(MR_NetMessageBuffer* pInputMessageBuffer) 
+{
+	mInputMessageBuffer = *pInputMessageBuffer;
+}
+
+MR_NetMessageBuffer MR_NetworkPort::GetInputMessageBuffer()
+{
+	return mInputMessageBuffer;
+}
+
 // Helper functions
 
 /**
@@ -2586,9 +2608,32 @@ static BOOL CALLBACK DialogProc(HWND pWindow, UINT uMsg, WPARAM wParam, LPARAM l
 
 void MR_NetworkInterface::OnP2PSessionRequest(P2PSessionRequest_t *pParam)
 {
-     SteamNetworking()->AcceptP2PSessionWithUser(pParam->m_steamIDRemote);
+	if(mGameName != "")
+	{
+		SteamNetworking()->AcceptP2PSessionWithUser(pParam->m_steamIDRemote);
 
-	 TRACE("AcceptP2PSessionWithUser with %d\n", pParam->m_steamIDRemote.GetAccountID());
+		TRACE("AcceptP2PSessionWithUser with %d\n", pParam->m_steamIDRemote.GetAccountID());
+	}
+}
+
+void MR_NetworkInterface::OnP2PSessionFailed(P2PSessionConnectFail_t *pParam)
+{
+	int lClient = MR_ID_NOT_SET;
+
+	// find if the sender has a client id for MRM_CLIENT use
+	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
+		if(mClient[lCounter].GetSteamId() == pParam->m_steamIDRemote) {
+
+			lClient = lCounter;
+			break;
+		}
+	}
+
+	if (lClient != MR_ID_NOT_SET)
+	{
+		mClient[lClient].DisconnectSteam();
+		mClient[lClient].Disconnect();
+	}
 }
 
 void MR_NetworkInterface::CheckP2PAvailability() const 
@@ -2596,12 +2641,12 @@ void MR_NetworkInterface::CheckP2PAvailability() const
 	// TRACE("CheckP2PAvailability()\n");
 
 	uint32 msgSize = 0;
-	while ( SteamNetworking()->IsP2PPacketAvailable( &msgSize ) )
+	while ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, STM_IMR_CHANNEL ) )
 	{
 		void *msg = malloc( msgSize );
 		CSteamID steamIDRemote;
 		uint32 bytesRead = 0;
-		if ( SteamNetworking()->ReadP2PPacket( msg, msgSize, &bytesRead, &steamIDRemote ) )
+		if ( SteamNetworking()->ReadP2PPacket( msg, msgSize, &bytesRead, &steamIDRemote, STM_IMR_CHANNEL ) )
 		{
 			sBuffer = (MR_NetMessageBuffer*) msg;
 			sSteamID = steamIDRemote;
@@ -2626,6 +2671,8 @@ void MR_NetworkInterface::CheckP2PAvailability() const
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_NEW_CLIENT, 0, 0);
 			} else if (sBuffer->mMessageType == STM_CLIENT_CONNECT) {		
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CONNECT);
+			} else if (sBuffer->mMessageType == STM_CLIENT_CLOSE) {		
+				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CLOSE);
 			} else if (sBuffer->mMessageType == MRNM_GAME_NAME) {
 				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_CLIENT + lClient, 0, FD_READ);
 			} else {
@@ -2647,7 +2694,7 @@ int MR_NetworkInterface::Connect(SOCKET pS, const sockaddr *pName, int pNamelen,
 		lOutputBuffer.mMessageType = lMsg;
 		lOutputBuffer.mClient = mActiveInterface->mId;
 
-		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
+		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable, STM_IMR_CHANNEL);
 
 		return 0;
 	}
@@ -2664,7 +2711,7 @@ SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CS
 		lOutputBuffer.mMessageType = lMsg;
 		lOutputBuffer.mClient = mActiveInterface->mId;
 
-		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable);
+		SteamNetworking()->SendP2PPacket(pSteamID, &lOutputBuffer, sizeof(lOutputBuffer), k_EP2PSendReliable, STM_IMR_CHANNEL);
 
 		// MR_NetworkInterface::ListCallBack(GetActiveWindow(), MRM_CLIENT + lClient, 0, FD_CONNECT);
 

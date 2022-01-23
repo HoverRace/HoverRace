@@ -345,6 +345,7 @@ int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
  */
 void MR_NetworkSession::Process(int pSpeedFactor)
 {
+	SteamAPI_RunCallbacks();
 	ReadNet();
 	MR_ClientSession::Process(pSpeedFactor);
 	WriteNet();

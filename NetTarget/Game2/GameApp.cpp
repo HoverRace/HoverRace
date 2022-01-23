@@ -429,6 +429,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	while(true) {
 		Sleep(sleepLength);
 
+		lThis->mNetInterface.CheckP2PAvailability();
+
 		EnterCriticalSection(&lThis->mMutex);
 
 		if(lThis->mTerminate)
