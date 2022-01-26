@@ -46,7 +46,7 @@ class MR_PlayerStats
 
 		MR_SimulationTime mFinishTime;
 		MR_SimulationTime mBestLap;
-		MR_Int8 mCompletedLaps;
+		MR_Int16 mCompletedLaps;
 
 };
 
