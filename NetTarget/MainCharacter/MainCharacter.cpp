@@ -42,13 +42,13 @@ class MR_MainCharacterState:private MR_BitPack
 #define  MC_POSZ          64,   27,     0
 #define  MC_ROOM          91,   11,     0
 #define  MC_ORIENTATION  102,    9,     3
-#define  MC_SPEED_X_256  111,   13,     2
-#define  MC_SPEED_Y_256  124,   13,     2
-#define  MC_SPEED_Z_256  137,    9,     2
-#define  MC_CONTROL_ST   146,   15,     0
-#define  MC_ON_FLOOR     161,    1,     0
-#define  MC_HOVER_MODEL  162,    3,     0
-#define  MC_PADDING      165,   11,     0
+#define  MC_SPEED_X_256  111,   14,     2
+#define  MC_SPEED_Y_256  125,   14,     2
+#define  MC_SPEED_Z_256  139,    9,     2
+#define  MC_CONTROL_ST   148,   15,     0
+#define  MC_ON_FLOOR     163,    1,     0
+#define  MC_HOVER_MODEL  164,    3,     0
+#define  MC_PADDING      167,   9,     0
 	//   #define  MC_SOUNDFX      141,    5,     0
 
 	// Total                 176  = 22 bytes

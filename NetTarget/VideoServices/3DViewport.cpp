@@ -57,7 +57,10 @@ void MR_3DViewPort::OnMetricsChange(int pMetrics)
 
 		ASSERT(MR_Sin[mVAngle] != 0);
 		mPlanHW = (mPlanDist * MR_Sin[mVAngle / 2]) / MR_Int32(MR_Cos[mVAngle / 2]);
-		mPlanVW = (mPlanHW * mYRes * mVideoBuffer->GetXPixelMeter()) / (mXRes * mVideoBuffer->GetYPixelMeter());
+
+		long long lPlanVW = (long long(mPlanHW) * long long(mYRes) * long long(mVideoBuffer->GetXPixelMeter())) / (long long(mXRes) * long long(mVideoBuffer->GetYPixelMeter()));
+		mPlanVW = (MR_Int32) lPlanVW;
+
 		mHVarPerDInc_16384 = -(mPlanHW * 2 * 16384 + 1) / (mPlanDist * mXRes);
 		mVVarPerDInc_16384 = -(mPlanVW * 2 * 16384 + 1) / (mPlanDist * mYRes);
 
