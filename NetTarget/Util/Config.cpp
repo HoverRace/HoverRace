@@ -215,7 +215,7 @@ void MR_Config::ResetToDefaults()
 	video.gamma = 1.2;
 	video.contrast = 0.95;
 	video.brightness = 0.95;
-	video.nativeBppFullscreen = false;
+	video.nativeBppFullscreen = true;
 
 	audio.sfxVolume = 0.2;
 
