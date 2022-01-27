@@ -2316,7 +2316,7 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
 		if(!mSteamOnly) {
 			int lSent = sendto(pSocket, ((const char *) pMessage), lToSend, 0, (LPSOCKADDR) & mUDPRemoteAddr, sizeof(mUDPRemoteAddr));
 		} else {
-			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliableNoDelay, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
+			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
 
 			TRACE("UDPSend: sending to %d of type %d and queue id %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mDatagramQueue);
 		}
