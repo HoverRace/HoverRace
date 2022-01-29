@@ -1056,7 +1056,9 @@ BOOL MR_GameApp::InitGame()
 		mMovieWnd = MCIWndCreate(
 			mMainWindow, mInstance, 
 			WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
-			cfg->GetMediaPath("Intro.avi").c_str());
+			cfg->GetMediaPath("Intro.wmv").c_str());
+
+		MCIWndSetVolume(mMovieWnd, cfg->audio.sfxVolume * 1000);
 
 		// Fill the client area.
 		RECT clientRect;
