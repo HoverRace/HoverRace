@@ -420,6 +420,7 @@
 #define IDS_SAMEADDRPORT1               40232
 #define IDS_SAMEADDRPORT2               40233
 #define IDS_CONN_ERROR                  40234
+#define ID_LEVEL_EDITOR					40235
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103

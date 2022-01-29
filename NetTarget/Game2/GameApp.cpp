@@ -965,10 +965,12 @@ BOOL MR_GameApp::InitApplication()
 
 BOOL MR_GameApp::CreateMainWindow()
 {
+	MR_Config *cfg = MR_Config::GetInstance();
+
 	BOOL lReturnValue = TRUE;
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 480, 320, NULL, NULL, mInstance, NULL);
+	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, cfg->video.windowPosX, cfg->video.windowPosY, cfg->video.windowSizeX, cfg->video.windowSizeY, NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
@@ -1806,9 +1808,9 @@ void MR_GameApp::UpdateMenuItems()
 	POINT lRes;
 	if (GetDesktopResolution(&lRes)) {
 		char s[256] = {0};
-		int lLen = _snprintf(s, 255, "&0 Desktop (%dx%d)", lRes.x, lRes.y);
+		int lLen = _snprintf(s, 255, "&0 Desktop (%dx%d)\tF11", lRes.x, lRes.y);
 		if (lLen < 0) {
-			strcpy(s, "&0 Desktop");
+			strcpy(s, "&0 Desktop\tF11");
 		}
 
 		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
@@ -2012,6 +2014,33 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					This->SetVideoMode(0, 0);
 					// Registration key code checking removed, no longer necessary
 					This->NewInternetSession();
+					return 0;
+
+				case ID_LEVEL_EDITOR:
+					STARTUPINFO si;
+					PROCESS_INFORMATION pi;
+
+					ZeroMemory( &si, sizeof(si) );
+					si.cb = sizeof(si);
+					ZeroMemory( &pi, sizeof(pi) );
+
+					// Start the child process. 
+					if( !CreateProcess( NULL,   // No module name (use command line)
+						"HoverCAD.exe",		// Command line
+						NULL,		   // Process handle not inheritable
+						NULL,		   // Thread handle not inheritable
+						FALSE,		  // Set handle inheritance to FALSE
+						0,			  // No creation flags
+						NULL,		   // Use parent's environment block
+						NULL,		   // Use parent's starting directory 
+						&si,			// Pointer to STARTUPINFO structure
+						&pi )		   // Pointer to PROCESS_INFORMATION structure
+					) 
+					{
+						printf( "CreateProcess failed (%d)\n", GetLastError() );
+						return 0;
+					}
+
 					return 0;
 
 				case ID_SETTING_REFRESHCOLORS:
@@ -2346,6 +2375,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			return 0;
 
 		case WM_CLOSE:
+		{
 			if(This->IsGameRunning()) {
 				This->SetVideoMode(0, 0);
 				if(This->AskUserToAbortGame() != IDOK) {
@@ -2355,9 +2385,22 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->Clean();
 			delete This->mVideoBuffer;
 			This->mVideoBuffer = NULL;
+
+			RECT rect;
+			GetWindowRect(This->mMainWindow, &rect);
+
+			MR_Config *cfg = MR_Config::GetInstance();
+
+			cfg->video.windowPosX = rect.left;
+			cfg->video.windowPosY = rect.top;
+			cfg->video.windowSizeX = rect.right - rect.left;
+			cfg->video.windowSizeY = rect.bottom - rect.top;
+
+			cfg->Save();
+
 			DestroyWindow(This->mMainWindow);
 			return 0;
-
+		}
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;

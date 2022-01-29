@@ -217,6 +217,11 @@ void MR_Config::ResetToDefaults()
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = true;
 
+	video.windowPosX = CW_USEDEFAULT;
+	video.windowPosY = CW_USEDEFAULT;
+	video.windowSizeX = GetSystemMetrics(SM_CXSCREEN) / 2;
+	video.windowSizeY = GetSystemMetrics(SM_CYSCREEN) / 2;
+
 	audio.sfxVolume = 0.2;
 
 	misc.displayFirstScreen = true;
@@ -406,6 +411,12 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, brightness, 0.0, 1.0);
 
 	READ_BOOL(root, nativeBppFullscreen);
+
+	READ_INT(root, windowPosX, 1, GetSystemMetrics(SM_CXSCREEN));
+	READ_INT(root, windowPosY, 1, GetSystemMetrics(SM_CYSCREEN));
+
+	READ_INT(root, windowSizeX, 320, GetSystemMetrics(SM_CXSCREEN));
+	READ_INT(root, windowSizeY, 240, GetSystemMetrics(SM_CYSCREEN));
 }
 
 void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
@@ -418,6 +429,12 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, brightness);
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
+
+	EMIT_VAR(emitter, windowPosX);
+	EMIT_VAR(emitter, windowPosY);
+
+	EMIT_VAR(emitter, windowSizeX);
+	EMIT_VAR(emitter, windowSizeY);
 
 	emitter->EndMap();
 }
