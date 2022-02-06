@@ -161,6 +161,7 @@
 #define IDC_ABOUT_RTF                   1088
 #define IDC_TCP_SERV_PORT               1089
 #define IDC_MSG_LBL                     1089
+#define IDC_USE_ORIGINAL_CAMERA_PARAMS  1090
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -421,6 +422,8 @@
 #define IDS_SAMEADDRPORT2               40233
 #define IDS_CONN_ERROR                  40234
 #define ID_LEVEL_EDITOR					40235
+#define IDS_FIRST_SPLIT					40236
+#define IDS_SECOND_SPLIT				40237
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103

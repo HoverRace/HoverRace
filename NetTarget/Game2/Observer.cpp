@@ -47,6 +47,8 @@ CString gBestLapStr = MR_LoadString(IDS_BEST_LAP);
 CString gHeaderStr = MR_LoadString(IDS_HEADER);
 CString gLastLapStr = MR_LoadString(IDS_LAST_LAP);
 CString gCurLapStr = MR_LoadString(IDS_CUR_LAP);
+CString gFirstSplitStr = MR_LoadString(IDS_FIRST_SPLIT);
+CString gSecondSplitStr = MR_LoadString(IDS_SECOND_SPLIT);
 
 MR_Observer::MR_Observer()
 {
@@ -624,8 +626,8 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 		}
 		lYMargin -= lLineSpacing;
 
-		int lMaxDepth = (mMoreMessages && (mDispPlayers == 0)) ? 10 : 6;
-		int lMessageLife = (mMoreMessages && (mDispPlayers == 0)) ? MR_CHAT_EXPIRATION * 4 : MR_CHAT_EXPIRATION;
+		int lMaxDepth = (mMoreMessages && (mDispPlayers == 0)) ? MR_CHAT_MESSAGE_STACK : 6;
+		int lMessageLife = (mMoreMessages && (mDispPlayers == 0)) ? MR_CHAT_EXPIRATION * 30 : MR_CHAT_EXPIRATION;
 
 		int lStackLevel = 0;
 		int lLineLevel = 0;
@@ -754,6 +756,24 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, 1, pViewingCharacter->GetTotalLap());
 			// sprintf( lLapLineBuffer, "Current lap %d.%02d.%02d", pTime/60000, (pTime%60000)/1000, (pTime%1000) );
 
+		}
+		else if(pViewingCharacter->GetSecondSplitCompletion() > (pTime - 5000)) {
+			// Split terminated less than 3 sec ago
+			MR_SimulationTime lBestLap = pViewingCharacter->GetBestLapDuration();
+			MR_SimulationTime lSecondSplit = pViewingCharacter->GetSecondSplitDifference();
+
+			// More than one lap completed
+			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
+			sprintf(lLapLineBuffer, gSecondSplitStr, (lSecondSplit >= 0 ? "+" : "-"), abs(lSecondSplit / 1000), abs(lSecondSplit % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
+		}
+		else if(pViewingCharacter->GetFirstSplitCompletion() > (pTime - 5000)) {
+			// Split terminated less than 3 sec ago
+			MR_SimulationTime lBestLap = pViewingCharacter->GetBestLapDuration();
+			MR_SimulationTime lFirstSplit = pViewingCharacter->GetFirstSplitDifference();
+
+			// More than one lap completed
+			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
+			sprintf(lLapLineBuffer, gFirstSplitStr, (lFirstSplit >= 0 ? "+" : "-"), abs(lFirstSplit / 1000), abs(lFirstSplit % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
 		}
 		else if(pViewingCharacter->GetLastLapCompletion() > (pTime - 8000)) {
 			// Lap terminated less than 8 sec ago

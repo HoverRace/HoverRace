@@ -63,6 +63,7 @@ class MR_Config
 			double brightness;
 
 			bool nativeBppFullscreen;
+			bool useOriginalCameraParams;
 
 			int windowPosX;
 			int windowPosY;

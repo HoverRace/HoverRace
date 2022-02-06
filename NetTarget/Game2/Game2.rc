@@ -194,9 +194,6 @@ BEGIN
     CONTROL         "",IDC_SFX_VOLUME_SLIDER,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,57,62,100,15
     LTEXT           "Volume",IDC_STATIC,14,62,36,8
     EDITTEXT        IDC_SFX_VOLUME_TXT,158,65,40,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
-    CONTROL         "",IDC_SLEEP_LENGTH,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,57,79,100,15
-    LTEXT           "Main Loop\nSleep Length",IDC_STATIC,14,79,44,22
-    EDITTEXT        IDC_SLEEP_TXT,158,82,40,12,ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER
 END
 
 IDD_TRACK_SELECT DIALOGEX 0, 0, 244, 190
@@ -603,18 +600,16 @@ BEGIN
     CONTROL         "Disable Intro Movie",IDC_INTRO_MOVIE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,77,8
     CONTROL         "Disable the prompt to connect to the Internet each time HoverRace starts",IDC_SHOW_INTERNET,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,250,10
-    CONTROL         "Use desktop &color depth when switching to fullscreen",IDC_NATIVE_BPP_FULLSCREEN,
+    CONTROL         "Use original camera parameters",IDC_USE_ORIGINAL_CAMERA_PARAMS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,185,10
-    CONTROL         "Try direct connection before falling back to Steam",IDC_DIRECT_CONNECT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,185,10
-    LTEXT           "Address of Server Roomlist:",IDC_STATIC,7,64,169,8
-    EDITTEXT        IDC_MAINSERVER,7,74,218,12,ES_AUTOHSCROLL
-    LTEXT           "UDP Receive Port:",IDC_STATIC,7,120,63,10
-    EDITTEXT        IDC_UDP_RECV_PORT,69,119,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "TCP Receive Port:",IDC_STATIC,7,107,63,10
-    EDITTEXT        IDC_TCP_RECV_PORT,69,106,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_TCP_SERV_PORT,69,93,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "TCP Server Port:",IDC_STATIC,7,94,59,10
+    LTEXT           "Address of Server Roomlist:",IDC_STATIC,7,51,169,8
+    EDITTEXT        IDC_MAINSERVER,7,61,218,12,ES_AUTOHSCROLL
+    LTEXT           "UDP Receive Port:",IDC_STATIC,7,107,63,10
+    EDITTEXT        IDC_UDP_RECV_PORT,69,106,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "TCP Receive Port:",IDC_STATIC,7,94,63,10
+    EDITTEXT        IDC_TCP_RECV_PORT,69,93,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_TCP_SERV_PORT,69,80,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "TCP Server Port:",IDC_STATIC,7,81,59,10
 END
 
 
@@ -1119,6 +1114,8 @@ BEGIN
     IDS_BEST_LAP            "Best lap %d.%02d.%03d  "
     IDS_HEADER              "%d.%02d.%02d  Lap:%d/%d"
     IDS_LAST_LAP            "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
+	IDS_FIRST_SPLIT         "First split %s%d.%03d  Best %d.%02d.%03d"
+	IDS_SECOND_SPLIT        "Second split %s%d.%03d  Best %d.%02d.%03d"
     IDS_CUR_LAP             "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
     IDS_HIT_TITLE           "Rank                 For   Against"
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"

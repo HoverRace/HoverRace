@@ -129,7 +129,13 @@ class MR_MainCharacter:public MR_FreeElement
 		int mNbLapForRace;
 		int mLapCount;
 		MR_SimulationTime mLastLapCompletion;
+
+		MR_SimulationTime mLastFirstSplitDuration;
+		MR_SimulationTime mLastSecondSplitDuration;
 		MR_SimulationTime mLastLapDuration;
+
+		MR_SimulationTime mBestFirstSplitDuration;
+		MR_SimulationTime mBestSecondSplitDuration;
 		MR_SimulationTime mBestLapDuration;
 
 		BOOL mCheckPoint1;
@@ -194,6 +200,10 @@ class MR_MainCharacter:public MR_FreeElement
 		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapCompletion() const;
+		MR_DllDeclare MR_SimulationTime GetFirstSplitCompletion() const;
+		MR_DllDeclare MR_SimulationTime GetSecondSplitCompletion() const;
+		MR_DllDeclare MR_SimulationTime GetFirstSplitDifference() const;
+		MR_DllDeclare MR_SimulationTime GetSecondSplitDifference() const;
 		MR_DllDeclare BOOL HasFinish() const;
 
 		MR_DllDeclare int HitQueueCount() const;

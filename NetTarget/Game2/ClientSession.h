@@ -28,7 +28,7 @@
 #include "../MainCharacter/MainCharacter.h"
 #include "../VideoServices/Sprite.h"
 
-#define MR_CHAT_MESSAGE_STACK   8
+#define MR_CHAT_MESSAGE_STACK   12
 
 class MR_ClientSession
 {

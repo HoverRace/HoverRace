@@ -216,6 +216,7 @@ void MR_Config::ResetToDefaults()
 	video.contrast = 0.95;
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = true;
+	video.useOriginalCameraParams = false;
 
 	video.windowPosX = CW_USEDEFAULT;
 	video.windowPosY = CW_USEDEFAULT;
@@ -411,6 +412,7 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, brightness, 0.0, 1.0);
 
 	READ_BOOL(root, nativeBppFullscreen);
+	READ_BOOL(root, useOriginalCameraParams);
 
 	READ_INT(root, windowPosX, 1, GetSystemMetrics(SM_CXSCREEN));
 	READ_INT(root, windowPosY, 1, GetSystemMetrics(SM_CYSCREEN));
@@ -429,6 +431,7 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, brightness);
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
+	EMIT_VAR(emitter, useOriginalCameraParams);
 
 	EMIT_VAR(emitter, windowPosX);
 	EMIT_VAR(emitter, windowPosY);
@@ -466,7 +469,7 @@ void MR_Config::cfg_misc_t::Load(yaml::MapNode *root)
 
 	READ_BOOL(root, displayFirstScreen);
 	READ_BOOL(root, introMovie);
-	READ_INT(root, mainLoopSleepLength, 0, 30);
+	READ_INT(root, mainLoopSleepLength, 0, 0);
 	READ_BOOL(root, directConnect);
 }
 

@@ -119,7 +119,9 @@ MR_SimulationTime MR_GameSession::GetSimulationTime() const
 	lTimeToSimulate = lSimulateCallTime - mLastSimulateCallTime;
 
 	if(lTimeToSimulate < 0)
+	{
 		lTimeToSimulate = 0;
+	}
 
 	/*
 	   if( (lTimeToSimulate < 0 )||(lTimeToSimulate>500) )
@@ -139,11 +141,13 @@ MR_SimulationTime MR_GameSession::GetSimulationTime() const
 		mSimulationTime += MR_SIMULATION_SLICE;
 	}
 
+	/*
 	if(lTimeToSimulate >= MR_MINIMUM_SIMULATION_SLICE) {
 		SimulateFreeElems(mSimulationTime < 0 ? 0 : lTimeToSimulate);
 		mSimulationTime += lTimeToSimulate;
 		lTimeToSimulate = 0;
 	}
+	*/
 
 	SimulateSurfaceElems(lSimulateCallTime - lTimeToSimulate - mLastSimulateCallTime);
 
@@ -174,10 +178,12 @@ void MR_GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_Simul
 		mSimulationTime += MR_SIMULATION_SLICE;
 	}
 
+	/*
 	if((pRoom >= 0) && (lTimeToSimulate >= MR_MINIMUM_SIMULATION_SLICE)) {
 		pRoom = SimulateOneFreeElem(lTimeToSimulate, pElement, pRoom);
 		SimulateFreeElems(mSimulationTime < 0 ? 0 : lTimeToSimulate);
 	}
+	*/
 	// return to good time
 	mSimulationTime = lOriginalTime;
 }

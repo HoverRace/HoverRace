@@ -24,6 +24,7 @@
 
 #include "3DViewport.h"
 #include "../Util/FastMemManip.h"
+#include "../Util/Config.h"
 
 #include <math.h>
 
@@ -53,13 +54,27 @@ void MR_3DViewPort::OnMetricsChange(int pMetrics)
 	if((pMetrics & ~eBuffer) != eNone) {
 		// Recompute camera parameters
 
-		mPlanDist = 200;						  // 20cm Fixed distance projection plan, good in most cases
+		MR_Config *cfg = MR_Config::GetInstance();
 
-		ASSERT(MR_Sin[mVAngle] != 0);
-		mPlanHW = (mPlanDist * MR_Sin[mVAngle / 2]) / MR_Int32(MR_Cos[mVAngle / 2]);
+		if(cfg->video.useOriginalCameraParams) {
+			mPlanDist = 200;						  // 20cm Fixed distance projection plan, good in most cases
 
-		long long lPlanVW = (long long(mPlanHW) * long long(mYRes) * long long(mVideoBuffer->GetXPixelMeter())) / (long long(mXRes) * long long(mVideoBuffer->GetYPixelMeter()));
-		mPlanVW = (MR_Int32) lPlanVW;
+			ASSERT(MR_Sin[mVAngle] != 0);
+			mPlanHW = (mPlanDist * MR_Sin[mVAngle / 2]) / MR_Int32(MR_Cos[mVAngle / 2]);
+
+			long long lPlanVW = (long long(mPlanHW) * long long(mYRes) * long long(mVideoBuffer->GetXPixelMeter())) / (long long(mXRes) * long long(mVideoBuffer->GetYPixelMeter()));
+			mPlanVW = (MR_Int32) lPlanVW;
+		} else {
+			ASSERT(MR_Sin[mVAngle] != 0);
+			mPlanHW = (200 * MR_Sin[mVAngle / 2]) / MR_Int32(MR_Cos[mVAngle / 2]);
+
+			long long lPlanVW = (long long(mPlanHW) * long long(mYRes)) / (long long(mXRes));
+			mPlanVW = (MR_Int32) lPlanVW;
+
+			// Simple calculation but pretty good!
+			// 200 / mPlanHW is to compensate for zoom changes
+			mPlanDist = (float) lPlanVW * 4.0 / 3.0 * (200.0 / (float) mPlanHW);
+		}
 
 		mHVarPerDInc_16384 = -(mPlanHW * 2 * 16384 + 1) / (mPlanDist * mXRes);
 		mVVarPerDInc_16384 = -(mPlanVW * 2 * 16384 + 1) / (mPlanDist * mYRes);

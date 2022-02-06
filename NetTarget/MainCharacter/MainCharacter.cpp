@@ -855,12 +855,18 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		if((lLapCompleted != NULL) && mMasterMode && (mLapCount < mNbLapForRace)) {
 			switch (lLapCompleted->mType) {
 				case MR_CheckPoint::eCheck1:
-					mCheckPoint1 = TRUE;
-					mCheckPoint2 = FALSE;
+					if(!mCheckPoint1) {
+						mCheckPoint1 = TRUE;
+						mCheckPoint2 = FALSE;
+						mLastFirstSplitDuration = pTime - mLastLapCompletion;
+					}
 					break;
 				case MR_CheckPoint::eCheck2:
-					if(mCheckPoint1)
+					if(mCheckPoint1 && !mCheckPoint2)
+					{
 						mCheckPoint2 = TRUE;
+						mLastSecondSplitDuration = pTime - mLastLapCompletion;
+					}
 					break;
 				case MR_CheckPoint::eFinishLine:
 					if(mCheckPoint2) {
@@ -872,7 +878,15 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 						mLastLapCompletion = pTime;
 
 						if((mLastLapDuration < mBestLapDuration) || (mLapCount == 1))
+						{
 							mBestLapDuration = mLastLapDuration;
+							mBestFirstSplitDuration = mLastFirstSplitDuration;
+							mBestSecondSplitDuration = mLastSecondSplitDuration;
+						}
+
+						// Just to put them out of range
+						mLastFirstSplitDuration = -10000;
+						mLastSecondSplitDuration = -10000;
 
 						if(mRenderer != NULL) {
 							if(mLapCount == mNbLapForRace) {
@@ -1030,6 +1044,26 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const
 	{
 		return mLastLapCompletion;
+	}
+
+	MR_SimulationTime MR_MainCharacter::GetFirstSplitCompletion() const
+	{
+		return mLastLapCompletion + mLastFirstSplitDuration;
+	}
+
+	MR_SimulationTime MR_MainCharacter::GetSecondSplitCompletion() const
+	{
+		return mLastLapCompletion + mLastSecondSplitDuration;
+	}
+
+	MR_SimulationTime MR_MainCharacter::GetFirstSplitDifference() const
+	{
+		return mLastFirstSplitDuration - mBestFirstSplitDuration;
+	}
+
+	MR_SimulationTime MR_MainCharacter::GetSecondSplitDifference() const
+	{
+		return mLastSecondSplitDuration - mBestSecondSplitDuration;
 	}
 
 	BOOL MR_MainCharacter::HasFinish() const
