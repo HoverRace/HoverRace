@@ -58,7 +58,7 @@
 #define MR_CLIENT_RETRY_TIME	5000
 
 // Local prototypes
-static CString GetLocalAddrStr();
+static CString GetLocalAddrStr(BOOL lSteamOnly);
 static MR_UInt32 GetAddrFromStr(const char *pName);
 static BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -530,7 +530,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 
 			if(lReturnValue) {
 				// Determine server addr
-				mServerAddr = GetLocalAddrStr();
+				mServerAddr = GetLocalAddrStr(false);
 
 				// Pop the Bit dialog
 				if(pModalessDlg == NULL) {
@@ -542,6 +542,8 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 					}
 				}
 				else {
+					mServerAddr = GetLocalAddrStr(mSteamOnly);
+
 					ASSERT(pReturnMessage != 0);
 
 					mReturnMessage = pReturnMessage;
@@ -2516,7 +2518,7 @@ MR_NetMessageBuffer MR_NetworkPort::GetInputMessageBuffer()
 /**
  * Returns the local IP in a CString.
  */
-CString GetLocalAddrStr()
+CString GetLocalAddrStr(BOOL lSteamOnly)
 {
 	CString lReturnValue;
 
@@ -2544,6 +2546,10 @@ CString GetLocalAddrStr()
 	if(lAdapter == 0) {
 		lReturnValue += " ";
 		lReturnValue += MR_LoadString(IDS_NO_NET_CONNECT);
+	}
+
+	if(lSteamOnly) {
+		lReturnValue = "Peer to Peer via Steam";
 	}
 
 	return lReturnValue;
