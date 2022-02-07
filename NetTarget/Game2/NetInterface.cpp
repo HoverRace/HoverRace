@@ -645,6 +645,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 		ASSERT(!mServerMode);
 
 		mRegistrySocket = socket(PF_INET, SOCK_STREAM, 0);
+		mSteamID = CSteamID(pSteamID);
 
 		if(mRegistrySocket == INVALID_SOCKET && !mSteamID.IsValid()) {
 			MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -652,7 +653,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 		}
 		else {
 			// There was no pre-connect phase, do the preconnection now
-			mServerAddr = pServerIP;
+			mServerAddr = mSteamID.IsValid() ? "Peer to Peer via Steam" : pServerIP;
 			mServerPort = pDefaultPort;
 			mSteamID = CSteamID(pSteamID);
 			mActiveInterface = this;
