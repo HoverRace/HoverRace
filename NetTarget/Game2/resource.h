@@ -364,6 +364,7 @@
 #define IDS_FLAP_STR                    40177
 #define IDS_CHART_FINISH                40178
 #define IDS_CHART                       40179
+#define IDS_CHART_SPLIT                 40238
 #define IDS_COUNTDOWN                   40180
 #define IDS_FINISH                      40181
 #define IDS_FINISH_SINGLE               40182

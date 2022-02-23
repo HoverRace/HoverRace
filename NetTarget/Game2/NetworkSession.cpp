@@ -48,6 +48,13 @@ class MR_PlayerStats
 		MR_SimulationTime mBestLap;
 		MR_Int16 mCompletedLaps;
 
+		MR_Int8 mCompletedSplits;
+
+		MR_SimulationTime mFinishFirstSplit;
+		MR_SimulationTime mFirstSplitDifference;
+
+		MR_SimulationTime mFinishSecondSplit;
+		MR_SimulationTime mSecondSplitDifference;
 };
 
 /**
@@ -72,6 +79,7 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 	mResultList = NULL;
 	mHitList = NULL;
 	mSendedPlayerStats = 0;
+	mSendedCheckpointStats = 1;
 
 	mChatEditBuffer[0] = 0;
 
@@ -185,7 +193,7 @@ int MR_NetworkSession::ResultAvaillable() const
  * @param pFinishTime Variable we will write the player's finish time into
  * @param pBestLap Variable we will write the player's best lap time into
  */
-void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap) const
+void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap, int &pNbSplit, MR_SimulationTime & pFinishFirstSplit, MR_SimulationTime &pFirstSplitDifference, MR_SimulationTime &pFinishSecondSplit, MR_SimulationTime &pSecondSplitDifference) const
 {
 	// The PlayerResult is a linked list, we have to step through it starting at
 	// the head to find the position we are looking for.  Why the hell is it a
@@ -207,6 +215,11 @@ void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &
 				pNbLap = lCurrent->mNbCompletedLap;
 				pFinishTime = lCurrent->mFinishTime;
 				pBestLap = lCurrent->mBestLap;
+				pNbSplit = lCurrent->mNbCompletedSplit;
+				pFinishFirstSplit = lCurrent->mFinishFirstSplit;
+				pFirstSplitDifference = lCurrent->mFirstSplitDifference;
+				pFinishSecondSplit = lCurrent->mFinishSecondSplit;
+				pSecondSplitDifference = lCurrent->mSecondSplitDifference;
 			}
 			else {
 				lCurrent = lCurrent->mNext;
@@ -405,9 +418,9 @@ void MR_NetworkSession::ReadNet()
 
 	while(mNetInterface.FetchMessage(lTimeStamp, lMessageType, lMessageLen, lMessage, lClientId)) {
 		{
-			char lBuffer[100];
-			sprintf(lBuffer, "Got message from client %d, message %d\n", lClientId, lMessageType);
-			OutputDebugString((LPCTSTR) lBuffer);
+			// char lBuffer[100];
+			// sprintf(lBuffer, "Got message from client %d, message %d\n", lClientId, lMessageType);
+			// OutputDebugString((LPCTSTR) lBuffer);
 		}
 
 		switch(lMessageType) {
@@ -565,7 +578,8 @@ void MR_NetworkSession::ReadNet()
 			case MRNM_PLAYER_STATS:
 				{
 					MR_PlayerStats *lStats = (MR_PlayerStats *) lMessage;
-					AddResultEntry(lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps);
+					TRACE("Received BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d, %d\n", lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
+					AddResultEntry(lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
 				}
 				break;
 
@@ -628,24 +642,40 @@ void MR_NetworkSession::WriteNet()
 		BroadcastMainElementState(mMainCharacter1->GetNetState()); // send state
 
 		if(mSendedPlayerStats != -1) { // send statistics if necessary
-			if(mMainCharacter1->GetLap() >= mSendedPlayerStats) {
+			if(mMainCharacter1->GetLap() >= mSendedPlayerStats || mMainCharacter1->GetCurrentCheckpoint() >= mSendedCheckpointStats) {
+				TRACE("- Send Lap Data\n");
+				
+				if(mMainCharacter1->GetCurrentCheckpoint() >= mSendedCheckpointStats)
+				{
+					mSendedCheckpointStats = mMainCharacter1->GetCurrentCheckpoint();
+					TRACE("--- CHECKPOINT COMPLETE %d\n", mSendedCheckpointStats);
+					mSendedCheckpointStats++;
+				}
+
 				if(mMainCharacter1->HasFinish()) { // race is finished
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), -1);
+					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), -1, mMainCharacter1->GetCurrentCheckpoint(), mMainCharacter1->GetFirstSplitCompletion(), mMainCharacter1->GetFirstSplitDifference(), mMainCharacter1->GetSecondSplitCompletion(), mMainCharacter1->GetSecondSplitDifference());
 					mSendedPlayerStats = -1;
 
 					if(mInternetGame) {
 						AddMessage(MR_LoadString(IDS_F2_TORETURN));
 					}
 
+					TRACE("--- FINISHED\n");
 				}
-				else if(mMainCharacter1->GetLap() == 0) { // race has not yet started
-					BroadcastMainElementStats(mMainCharacter1->GetHoverId(), -1, 0);
+				else if(mMainCharacter1->GetLap() == 0 && mSendedCheckpointStats == 1) { // race has not yet started
+					BroadcastMainElementStats(mMainCharacter1->GetHoverId(), -1, 0, 0, 0, 0, 0, 0);
 					mSendedPlayerStats = 1;
+					TRACE("--- FIRST LAP REPORT\n");
 				}
 				else { // send statistics (lap number, total time, best lap)
-					mSendedPlayerStats = mMainCharacter1->GetLap();
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), mSendedPlayerStats);
-					mSendedPlayerStats++;
+					if(mMainCharacter1->GetLap() >= mSendedPlayerStats) {
+						mSendedPlayerStats = mMainCharacter1->GetLap();
+						mSendedPlayerStats++;
+						mSendedCheckpointStats = 1;
+						TRACE("--- LAP COMPLETE\n");
+					}
+
+					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), mMainCharacter1->GetLap(), mMainCharacter1->GetCurrentCheckpoint(), mMainCharacter1->GetFirstSplitCompletion(), mMainCharacter1->GetFirstSplitDifference(), mMainCharacter1->GetSecondSplitCompletion(), mMainCharacter1->GetSecondSplitDifference());
 				}
 			}
 		}
@@ -1169,7 +1199,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 			}
 
 			if(mNetInterface.UDPSend(lSelectedClient, &lMessage, FALSE)) {
-				TRACE("SendUDP:%d %d\n", lSelectedClient, lBestPriority);
+				// TRACE("SendUDP:%d %d\n", lSelectedClient, lBestPriority);
 
 				lPriorityLevel[lSelectedClient] = 0;
 				mLastSendElemStateTime[lSelectedClient] = lCurrentTime;
@@ -1195,7 +1225,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
  * @param pBestLap Time of best lap
  * @param pNbLaps Lap we are currently on; -1 denotes that we have finished
  */
-void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps)
+void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
 {
 	MR_NetMessageBuffer lMessage;
 
@@ -1208,11 +1238,18 @@ void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime,
 	lStats->mFinishTime = pFinishTime;
 	lStats->mBestLap = pBestLap;
 	lStats->mCompletedLaps = pNbLaps;
+	lStats->mCompletedSplits = pNbSplits;
+	lStats->mFinishFirstSplit = pFinishFirstSplit;
+	lStats->mFirstSplitDifference = pFirstSplitDifference;
+	lStats->mFinishSecondSplit = pFinishSecondSplit;
+	lStats->mSecondSplitDifference = pSecondSplitDifference;
 
 	mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
 
+	TRACE("Sending BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d\n", pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
+
 	// Add local time
-	AddResultEntry(-1, pFinishTime, pBestLap, pNbLaps);
+	AddResultEntry(-1, pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
 }
 
 /**
@@ -1335,7 +1372,7 @@ void MR_NetworkSession::InsertHitEntry(PlayerResult *pEntry)
  * @param pBestLap Best lap time of the player
  * @param pNbLap Lap number that the player is on (-1 means they have finished the race)
  */
-void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap)
+void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
 {
 	// If nbLap == -1 that mean that the race is completed
 	PlayerResult *lEntry;
@@ -1398,13 +1435,26 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 	lEntry->mNbCompletedLap = pNbLap;
 	lEntry->mFinishTime = pFinishTime;			  // finish time of the last lap
 	lEntry->mBestLap = pBestLap;
+	lEntry->mNbCompletedSplit = pNbSplits;
+	lEntry->mFinishFirstSplit = pFinishFirstSplit;
+	lEntry->mFirstSplitDifference = pFirstSplitDifference;
+	lEntry->mFinishSecondSplit = pFinishSecondSplit;
+	lEntry->mSecondSplitDifference = pSecondSplitDifference;
 
 	// Insert the entry in the list
 	lPtr = &mResultList;
 
 	while(*lPtr != NULL) {
 		if(((unsigned) pNbLap) == ((unsigned) (*lPtr)->mNbCompletedLap)) {
-			if(pFinishTime < (*lPtr)->mFinishTime) {
+			if(((unsigned) pNbSplits) == ((unsigned) (*lPtr)->mNbCompletedSplit)) {
+				if(pNbSplits == 0 && pFinishTime < (*lPtr)->mFinishTime) {
+					break;
+				} else if(pNbSplits == 1 && pFinishFirstSplit < (*lPtr)->mFinishFirstSplit) {
+					break;
+				} else if(pNbSplits == 2 && pFinishSecondSplit < (*lPtr)->mFinishSecondSplit) {
+					break;
+				}
+			} else if(((unsigned) pNbSplits) > ((unsigned) (*lPtr)->mNbCompletedSplit)) {
 				break;
 			}
 		}

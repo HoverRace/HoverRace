@@ -204,6 +204,7 @@ class MR_MainCharacter:public MR_FreeElement
 		MR_DllDeclare MR_SimulationTime GetSecondSplitCompletion() const;
 		MR_DllDeclare MR_SimulationTime GetFirstSplitDifference() const;
 		MR_DllDeclare MR_SimulationTime GetSecondSplitDifference() const;
+		MR_DllDeclare int GetCurrentCheckpoint() const;
 		MR_DllDeclare BOOL HasFinish() const;
 
 		MR_DllDeclare int HitQueueCount() const;

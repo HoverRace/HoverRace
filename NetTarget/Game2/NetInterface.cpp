@@ -363,7 +363,7 @@ BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pR
 		if(pReqLevel == MR_NET_DATAGRAM)
 			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE, mId);
 		else
-			mClient[lCounter].Send(pMessage, pReqLevel, mId + eMaxClient);
+			mClient[lCounter].Send(pMessage, pReqLevel, mId + eMaxClient + 1);
 	}
 	return TRUE;
 }
@@ -405,7 +405,6 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 		int lClient = (lCounter + sLastClient + 1) % eMaxClient;
 		const MR_NetMessageBuffer *lMessage;
 
-		//TRACE("Polling client %d\n", lClient);
 		lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
 
 		if(lMessage != NULL) {
@@ -2231,13 +2230,14 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 	if(mSocket != INVALID_SOCKET || mSteamOnly) {
 		if (mSteamOnly) {
 			uint32 msgSize = 0;
-			if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, pClientId + MR_NetworkInterface::eMaxClient ) )
+			if ( SteamNetworking()->IsP2PPacketAvailable( &msgSize, pClientId + MR_NetworkInterface::eMaxClient + 1 ) )
 			{
+				TRACE("Found TCP packet from client %d\n", pClientId + MR_NetworkInterface::eMaxClient);
 				CSteamID steamIDRemote;
 				uint32 bytesRead = 0;
 				mInputMessageBufferIndex = 0;
 				mWatchdog = timeGetTime();
-				SteamNetworking()->ReadP2PPacket( &mInputMessageBuffer, msgSize, &bytesRead, &steamIDRemote, pClientId + MR_NetworkInterface::eMaxClient );
+				SteamNetworking()->ReadP2PPacket( &mInputMessageBuffer, msgSize, &bytesRead, &steamIDRemote, pClientId + MR_NetworkInterface::eMaxClient + 1 );
 				return &mInputMessageBuffer;
 			}
 		} else {
@@ -2321,7 +2321,7 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
 		} else {
 			SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendUnreliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
 
-			TRACE("UDPSend: sending to %d of type %d and queue id %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mDatagramQueue);
+			// TRACE("UDPSend: sending to %d of type %d and queue id %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mDatagramQueue);
 		}
 
 		lReturnValue = (lSent != SOCKET_ERROR);
@@ -2361,6 +2361,8 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, in
 				// TRACE(" --- MR_NetworkPort::Send  --- \n");
 				// TRACE("Queue Message to %d of type %d\n", mSteamID.GetAccountID(), int(((MR_NetMessageBuffer *) (mOutQueue + mOutQueueHead))->mMessageType));
 				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, (const char *) (mOutQueue + mOutQueueHead), lToSend, k_EP2PSendReliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient)) ? lToSend : SOCKET_ERROR;
+
+				TRACE("Send: sending to %d of type %d and queued\n", mSteamID.GetAccountID(), pMessage->mMessageType);
 			}
 
 			if(lReturnValue >= 0) {
@@ -2399,7 +2401,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel, in
 				lReturnValue = send(mSocket, ((const char *) pMessage), lToSend, 0);
 			} else {
 				// TRACE(" --- MR_NetworkPort::Send  --- \n");
-				// TRACE("Message to %d of type %d and client %d on channel %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
+				TRACE("Send: Message to %d of type %d and client %d on channel %d\n", mSteamID.GetAccountID(), pMessage->mMessageType, pMessage->mClient, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient));
 				lReturnValue = SteamNetworking()->SendP2PPacket(mSteamID, ((const char *) pMessage), lToSend, k_EP2PSendReliable, (pMessage->mMessageType >= 40 ? STM_IMR_CHANNEL : pClient)) ? lToSend : SOCKET_ERROR;
 			}
 

@@ -304,7 +304,7 @@ int MR_ClientSession::ResultAvaillable() const
 	return 0;
 }
 
-void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const
+void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &, int &, MR_SimulationTime &, MR_SimulationTime &, MR_SimulationTime &, MR_SimulationTime &) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);

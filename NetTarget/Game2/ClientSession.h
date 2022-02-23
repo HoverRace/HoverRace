@@ -96,7 +96,7 @@ class MR_ClientSession
 		void ConvertMapCoordinate(int &pX, int &pY, int pRatio) const;
 
 		virtual int ResultAvaillable() const;	  // Return the number of players desc avail
-		virtual void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
+		virtual void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap, int &pNbSplit, MR_SimulationTime & pFinishFirstSplit, MR_SimulationTime & pFirstSplitDifference, MR_SimulationTime & pFinishSecondSplit, MR_SimulationTime & pSecondSplitDifference) const;
 		virtual void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		virtual int GetNbPlayers() const;

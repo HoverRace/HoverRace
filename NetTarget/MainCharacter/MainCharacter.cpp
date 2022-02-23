@@ -1066,6 +1066,11 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		return mLastSecondSplitDuration - mBestSecondSplitDuration;
 	}
 
+	int MR_MainCharacter::GetCurrentCheckpoint() const
+	{
+		return (mCheckPoint1 ? 1 : 0) + (mCheckPoint2 ? 1 : 0);
+	}
+
 	BOOL MR_MainCharacter::HasFinish() const
 	{
 		return (mLapCount >= mNbLapForRace);

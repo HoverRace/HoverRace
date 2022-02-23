@@ -47,6 +47,11 @@ class MR_NetworkSession : public MR_ClientSession
 				int mNbCompletedLap;
 				MR_SimulationTime mFinishTime;
 				MR_SimulationTime mBestLap;
+				int mNbCompletedSplit;
+				MR_SimulationTime mFinishFirstSplit;
+				MR_SimulationTime mFirstSplitDifference;
+				MR_SimulationTime mFinishSecondSplit;
+				MR_SimulationTime mSecondSplitDifference;
 
 				PlayerResult *mNext;
 
@@ -68,6 +73,7 @@ class MR_NetworkSession : public MR_ClientSession
 		HoverRace::Client::RoomListPtr roomList;
 
 		int mSendedPlayerStats;
+		int mSendedCheckpointStats;
 		MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
 		MR_MainCharacter *mClientCharacter[MR_NetworkInterface::eMaxClient];
 
@@ -93,13 +99,13 @@ class MR_NetworkSession : public MR_ClientSession
 		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom);
 		void BroadcastPermElementState(int pPermId, const MR_ElementNetState & pState, int pRoom);
 		void BroadcastMainElementState(const MR_ElementNetState & pState);
-		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
+		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
 		void BroadcastChatMessage(const char *pMessage);
 		void BroadcastTime();
 		void BroadcastHit(int pHoverIdSrc);
 
 		void AddChatMessage(int pPlayerIndex, const char *Message, int pMessageLen);
-		void AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
+		void AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
 		void AddHitEntry(int pPlayerIndex, int pPlayerFromID);
 												  // helper
 		void InsertHitEntry(PlayerResult * pEntry);
@@ -132,7 +138,7 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
-		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
+		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap, int &pNbSplit, MR_SimulationTime & pFinishFirstSplit, MR_SimulationTime & pFirstSplitDifference, MR_SimulationTime & pFinishSecondSplit, MR_SimulationTime & pSecondSplitDifference) const;
 		void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		int GetNbPlayers() const;

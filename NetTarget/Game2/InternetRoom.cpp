@@ -196,7 +196,7 @@ BOOL MR_InternetRequest::Send(HWND pWindow, const std::string pIP, unsigned pPor
 				"Host: %s\r\n"
 			// "Connection: Keep-Alive\r\n"
 				"Accept: */*\r\n"
-				"User-Agent: HoverRace/1.23.5\r\n"
+				"User-Agent: HoverRace/1.23.6\r\n"
 			// "User-Agent: Mozilla/3.0 (Win95; I)\r\n\r\n"
 			// "Host: 205.181.206.67:80\r\n\r\n"
 			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\r\n\r\n"

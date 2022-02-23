@@ -39,6 +39,7 @@ CString gFirstLapStr = MR_LoadString(IDS_FLAP_STR);
 
 CString gChartFinish = MR_LoadString(IDS_CHART_FINISH);
 CString gChart = MR_LoadString(IDS_CHART);
+CString gChartSplit = MR_LoadString(IDS_CHART_SPLIT);
 CString gHitChart = MR_LoadString(IDS_HIT_CHART);
 CString gCountdownStr = MR_LoadString(IDS_COUNTDOWN);
 CString gFinishStr = MR_LoadString(IDS_FINISH);
@@ -690,6 +691,11 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 				int lNbLap;
 				MR_SimulationTime lFinishTime;
 				MR_SimulationTime lBestLap;
+				int lNbSplits;
+				MR_SimulationTime lFinishFirstSplit;
+				MR_SimulationTime lFirstSplitDifference;
+				MR_SimulationTime lFinishSecondSplit;
+				MR_SimulationTime lSecondSplitDifference;
 				int lNbFor;
 				int lNbAgain;
 
@@ -697,7 +703,7 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 					pSession->GetHitResult(lCounter, lPlayerName, lHoverId, lConnected, lNbFor, lNbAgain);
 				}
 				else {
-					pSession->GetResult(lCounter, lPlayerName, lHoverId, lConnected, lNbLap, lFinishTime, lBestLap);
+					pSession->GetResult(lCounter, lPlayerName, lHoverId, lConnected, lNbLap, lFinishTime, lBestLap, lNbSplits, lFinishFirstSplit, lFirstSplitDifference, lFinishSecondSplit, lSecondSplitDifference);
 				}
 
 				int lPlayerNameLen = min(strlen(lPlayerName), 10);
@@ -713,6 +719,14 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 				else if(lNbLap == -1) {
 					sprintf(lBuffer, gChartFinish, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lFinishTime / 60000, (lFinishTime % 60000) / 1000, (lFinishTime % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
 
+				}
+				else if(lNbSplits == 1 && lFinishFirstSplit > (pTime - 5000) && lFinishFirstSplit - lFinishTime < lBestLap)
+				{
+					sprintf(lBuffer, gChartSplit, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, (lFirstSplitDifference >= 0 ? '+' : '-'), abs(lFirstSplitDifference / 1000), abs(lFirstSplitDifference % 1000), lConnected ? '*' : '-');
+				}
+				else if(lNbSplits == 2 && lFinishSecondSplit > (pTime - 5000) && lFinishSecondSplit - lFinishTime < lBestLap)
+				{
+					sprintf(lBuffer, gChartSplit, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, (lSecondSplitDifference >= 0 ? '+' : '-'), abs(lSecondSplitDifference / 1000), abs(lSecondSplitDifference % 1000), lConnected ? '*' : '-');
 				}
 				else {
 					sprintf(lBuffer, gChart, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
