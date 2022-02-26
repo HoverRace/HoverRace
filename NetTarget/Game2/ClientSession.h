@@ -70,7 +70,7 @@ class MR_ClientSession
 
 		// Simulation control
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
-		virtual void Process(int pSpeedFactor = 1);
+		virtual BOOL Process(int pSpeedFactor = 1);
 
 		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
 

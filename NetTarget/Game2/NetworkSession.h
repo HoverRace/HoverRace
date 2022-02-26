@@ -122,7 +122,7 @@ class MR_NetworkSession : public MR_ClientSession
 		~MR_NetworkSession();
 
 		// Simulation control
-		void Process(int pSpeedFactor = 1);		  // Simulation, speed factor can be used to reduce processing speed to create AVI files
+		BOOL Process(int pSpeedFactor = 1);		  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 
 		BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
 

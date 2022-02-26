@@ -47,9 +47,9 @@ MR_ClientSession::~MR_ClientSession()
 	DeleteCriticalSection(&mChatMutex);
 }
 
-void MR_ClientSession::Process(int pSpeedFactor)
+BOOL MR_ClientSession::Process(int pSpeedFactor)
 {
-	mSession.Simulate();
+	return mSession.Simulate();
 }
 
 void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuffer * pVideo)

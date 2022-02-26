@@ -108,12 +108,15 @@ void MR_GameSession::SetSimulationTime(MR_SimulationTime pTime)
 MR_SimulationTime MR_GameSession::GetSimulationTime() const
 {
 	return mSimulationTime;
-} void MR_GameSession::Simulate()
+} 
+
+BOOL MR_GameSession::Simulate()
 {
 	ASSERT(mCurrentLevel != NULL);
 
 	DWORD lSimulateCallTime = timeGetTime();
 	MR_SimulationTime lTimeToSimulate;
+	BOOL lReturnValue = FALSE;
 
 	// Determine the duration of the simulation step
 	lTimeToSimulate = lSimulateCallTime - mLastSimulateCallTime;
@@ -139,6 +142,8 @@ MR_SimulationTime MR_GameSession::GetSimulationTime() const
 		SimulateFreeElems(mSimulationTime < 0 ? 0 : MR_SIMULATION_SLICE);
 		lTimeToSimulate -= MR_SIMULATION_SLICE;
 		mSimulationTime += MR_SIMULATION_SLICE;
+
+		lReturnValue = TRUE;
 	}
 
 	/*
@@ -152,6 +157,8 @@ MR_SimulationTime MR_GameSession::GetSimulationTime() const
 	SimulateSurfaceElems(lSimulateCallTime - lTimeToSimulate - mLastSimulateCallTime);
 
 	mLastSimulateCallTime = lSimulateCallTime - lTimeToSimulate;
+
+	return lReturnValue;
 }
 
 void MR_GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom)

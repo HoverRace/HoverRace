@@ -66,7 +66,7 @@ class MR_GameSession
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
-		MR_DllDeclare void Simulate();
+		MR_DllDeclare BOOL Simulate();
 		MR_DllDeclare void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
 
 		MR_DllDeclare MR_Level *GetCurrentLevel();

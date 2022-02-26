@@ -356,13 +356,15 @@ int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 /**
  * The main game loop.  Read, process, write, read.  I wonder why we read twice.
  */
-void MR_NetworkSession::Process(int pSpeedFactor)
+BOOL MR_NetworkSession::Process(int pSpeedFactor)
 {
 	SteamAPI_RunCallbacks();
 	ReadNet();
-	MR_ClientSession::Process(pSpeedFactor);
+	BOOL lReturnValue = MR_ClientSession::Process(pSpeedFactor);
 	WriteNet();
 	ReadNet();
+
+	return lReturnValue;
 }
 
 /**
@@ -1479,9 +1481,13 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
  */
 void MR_NetworkSession::AddMessageKey(char pKey)
 {
+	int st = time( NULL );
+	TRACE("AddMessageKey pKey %c %dms ", pKey, time( NULL ) - st);
 	EnterCriticalSection(&mChatMutex);
+	TRACE("EnterCriticalSection %dms ", time( NULL ) - st);
 
 	int lStrLen = strlen(mChatEditBuffer);
+	TRACE("strlen(mChatEditBuffer) %dms ", time( NULL ) - st);
 
 	if((pKey == '\n') || (pKey == '\r')) {
 		BroadcastChatMessage(mChatEditBuffer);
@@ -1503,7 +1509,10 @@ void MR_NetworkSession::AddMessageKey(char pKey)
 		}
 	}
 
+	TRACE("After processing %dms ", time( NULL ) - st);
+
 	LeaveCriticalSection(&mChatMutex);
+	TRACE("LeaveCriticalSection %dms\n", time( NULL ) - st);
 }
 
 /**

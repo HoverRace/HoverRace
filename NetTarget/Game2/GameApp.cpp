@@ -444,17 +444,22 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 		MR_SAMPLE_END(ReadInputs);
 		MR_SAMPLE_START(Process, "Process");
 
+		BOOL lRefreshView = FALSE;
+
 #ifdef MR_AVI_CAPTURE
-		lThis->mGameApp->mCurrentSession->Process(1000 / gCaptureFrameRate);
+		lRefreshView = lThis->mGameApp->mCurrentSession->Process(1000 / gCaptureFrameRate);
 #else
-		lThis->mGameApp->mCurrentSession->Process();
+		lRefreshView = lThis->mGameApp->mCurrentSession->Process();
 #endif
 
 		MR_SAMPLE_END(Process);
-		MR_SAMPLE_START(Refresh, "Refresh");
-		lThis->mGameApp->RefreshView();
-		lThis->mGameApp->mNbFrames++;
-		MR_SAMPLE_END(Refresh);
+
+		if(lRefreshView) {
+			MR_SAMPLE_START(Refresh, "Refresh");
+			lThis->mGameApp->RefreshView();
+			lThis->mGameApp->mNbFrames++;
+			MR_SAMPLE_END(Refresh);
+		}
 
 		MR_PRINT_STATS(10);						  // Print and reset profiling statistics every 5 seconds
 
