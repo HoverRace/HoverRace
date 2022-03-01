@@ -833,6 +833,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 	MR_Config *cfg = MR_Config::GetInstance();
 
 	DWORD lReqBpp = cfg->video.nativeBppFullscreen ? mNativeBpp : 8;
+	lReqBpp = mNativeBpp ? mNativeBpp : 8;
 
 	ASSERT(!mModeSettingInProgress);
 
