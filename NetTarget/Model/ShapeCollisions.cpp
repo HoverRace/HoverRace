@@ -180,8 +180,8 @@ BOOL MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_Poly
 	for(int lCounter = 0; lCounter < lVertexCount; lCounter++) {
 		int lP1 = (lCounter + 1) % lVertexCount;
 
-		MR_Int32 lLeftDistance = -(pFeature->Y(lP1) - pFeature->Y(lCounter)) * (lXMassCenter - pFeature->X(lCounter))
-			+ (pFeature->X(lP1) - pFeature->X(lCounter)) * (lYMassCenter - pFeature->Y(lCounter));
+		MR_Int64 lLeftDistance = -((double) pFeature->Y(lP1) - (double) pFeature->Y(lCounter)) * ((double) lXMassCenter - (double) pFeature->X(lCounter))
+			+ ((double) pFeature->X(lP1) - (double) pFeature->X(lCounter)) * ((double) lYMassCenter - (double) pFeature->Y(lCounter));
 
 		if(lLeftDistance > 0) {
 			lLeftDistance /= pFeature->SideLen(lCounter);
@@ -351,8 +351,8 @@ BOOL MR_CylinderPolygonContact(const MR_CylinderShape * pActor0, const MR_Polygo
 		for(int lCounter = 0; lReturnValue && (lCounter < lVertexCount); lCounter++) {
 			int lP1 = (lCounter + 1) % lVertexCount;
 
-			MR_Int32 lLeftDistance = -(pActor1->Y(lP1) - pActor1->Y(lCounter)) * (pActor0->AxisX() - pActor1->X(lCounter))
-				+ (pActor1->X(lP1) - pActor1->X(lCounter)) * (pActor0->AxisY() - pActor1->Y(lCounter));
+			MR_Int64 lLeftDistance = -((double) pActor1->Y(lP1) - (double) pActor1->Y(lCounter)) * ((double) pActor0->AxisX() - (double) pActor1->X(lCounter))
+				+ ((double) pActor1->X(lP1) - (double) pActor1->X(lCounter)) * ((double) pActor0->AxisY() - (double) pActor1->Y(lCounter));
 
 			if(lLeftDistance > 0) {
 				lLeftDistance /= pActor1->SideLen(lCounter);
@@ -460,8 +460,8 @@ void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonSha
 	for(int lCounter = 0; pAnswer.mTouchingRoom && (lCounter < lVertexCount); lCounter++) {
 		int lP1 = (lCounter + 1) % lVertexCount;
 
-		MR_Int32 lLeftDistance = -(pRoom->Y(lP1) - pRoom->Y(lCounter)) * (pActor->AxisX() - pRoom->X(lCounter))
-			+ (pRoom->X(lP1) - pRoom->X(lCounter)) * (pActor->AxisY() - pRoom->Y(lCounter));
+		MR_Int64 lLeftDistance = (double) -(pRoom->Y(lP1) - (double) pRoom->Y(lCounter)) * ((double) pActor->AxisX() - (double) pRoom->X(lCounter))
+			+ ((double) pRoom->X(lP1) - (double) pRoom->X(lCounter)) * ((double) pActor->AxisY() - (double) pRoom->Y(lCounter));
 
 		lLeftDistance /= pRoom->SideLen(lCounter);
 
@@ -481,8 +481,8 @@ void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonSha
 				   lOldLenDistance /= pRoom->SideLen( lCounter );
 				 */
 
-				MR_Int32 lLenDistance = ((pRoom->X(lP1) - pRoom->X(lCounter)) / 2) * ((pActor->AxisX() - pRoom->X(lCounter)) / 2)
-					+ ((pRoom->Y(lP1) - pRoom->Y(lCounter)) / 2) * ((pActor->AxisY() - pRoom->Y(lCounter)) / 2);
+				MR_Int64 lLenDistance = (((double) pRoom->X(lP1) - (double) pRoom->X(lCounter)) / 2) * (((double) pActor->AxisX() - (double) pRoom->X(lCounter)) / 2)
+					+ (((double) pRoom->Y(lP1) - (double) pRoom->Y(lCounter)) / 2) * (((double) pActor->AxisY() - (double) pRoom->Y(lCounter)) / 2);
 
 				lLenDistance /= pRoom->SideLen(lCounter) / 4;
 
@@ -494,16 +494,16 @@ void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonSha
 
 				if(lLenDistance < 0) {
 					if(lLenDistance >= -pActor->RayLen()) {
-						if((pRoom->X(lCounter) - pActor->AxisX()) * (pRoom->X(lCounter) - pActor->AxisX())
-						+ (pRoom->Y(lCounter) - pActor->AxisY()) * (pRoom->Y(lCounter) - pActor->AxisY()) <= pActor->RayLen() * pActor->RayLen()) {
+						if(((double) pRoom->X(lCounter) - (double) pActor->AxisX()) * ((double) pRoom->X(lCounter) - (double) pActor->AxisX())
+						+ ((double) pRoom->Y(lCounter) - (double) pActor->AxisY()) * ((double) pRoom->Y(lCounter) - (double) pActor->AxisY()) <= (double) pActor->RayLen() * (double) pActor->RayLen()) {
 							MR_AddContactWall(lCounter, pAnswer);
 						}
 					}
 				}
 				else if(lLenDistance > pRoom->SideLen(lCounter)) {
 					if(lLenDistance <= pActor->RayLen() + pRoom->SideLen(lCounter)) {
-						if((pRoom->X(lP1) - pActor->AxisX()) * (pRoom->X(lP1) - pActor->AxisX())
-						+ (pRoom->Y(lP1) - pActor->AxisY()) * (pRoom->Y(lP1) - pActor->AxisY()) <= pActor->RayLen() * pActor->RayLen()) {
+						if(((double) pRoom->X(lP1) - (double) pActor->AxisX()) * ((double) pRoom->X(lP1) - (double) pActor->AxisX())
+						+ ((double) pRoom->Y(lP1) - (double) pActor->AxisY()) * ((double) pRoom->Y(lP1) - (double) pActor->AxisY()) <= (double) pActor->RayLen() * (double) pActor->RayLen()) {
 							MR_AddContactWall(lCounter, pAnswer);
 						}
 					}
@@ -665,18 +665,18 @@ BOOL MR_AreLineCrossing(MR_Int32 pAX0, MR_Int32 pAY0, MR_Int32 pAX1, MR_Int32 pA
 		if((min(pBY0, pBY1) <= max(pAY0, pAY1))
 		&& (max(pBY0, pBY1) >= min(pAX0, pAY1))) {
 			// Now verify that the two points of B are on each side of A
-			int lDist0 = (pAY1 - pAY0 * pBX0 - pAX0)
-				- (pAX1 - pAX0 * pBY0 - pAY0);
+			MR_Int64 lDist0 = ((double) pAY1 - (double) pAY0 * (double) pBX0 - (double) pAX0)
+				- ((double) pAX1 - (double) pAX0 * (double) pBY0 - (double) pAY0);
 
-			int lDist1 = (pAY1 - pAY0 * pBX1 - pAX0)
-				- (pAX1 - pAX0 * pBY1 - pAY0);
+			MR_Int64 lDist1 = ((double) pAY1 - (double) pAY0 * (double) pBX1 - (double) pAX0)
+				- ((double) pAX1 - (double) pAX0 * (double) pBY1 - (double) pAY0);
 
 			if(((lDist0 < 0) && (lDist1 >= 0)) || ((lDist0 >= 0) && (lDist1 < 0))) {
-				int lDist2 = (pBY1 - pBY0 * pAX0 - pBX0)
-					- (pBX1 - pBX0 * pAY0 - pBY0);
+				MR_Int64 lDist2 = ((double) pBY1 - (double) pBY0 * (double) pAX0 - (double) pBX0)
+					- ((double) pBX1 - (double) pBX0 * (double) pAY0 - (double) pBY0);
 
-				int lDist3 = (pBY1 - pBY0 * pAX1 - pBX0)
-					- (pBX1 - pBX0 * pAY1 - pBY0);
+				MR_Int64 lDist3 = ((double) pBY1 - (double) pBY0 * (double) pAX1 - (double) pBX0)
+					- ((double) pBX1 - (double) pBX0 * (double) pAY1 - (double) pBY0);
 
 				if(((lDist2 < 0) && (lDist3 >= 0)) || ((lDist2 >= 0) && (lDist3 < 0))) {
 					lReturnValue = TRUE;
