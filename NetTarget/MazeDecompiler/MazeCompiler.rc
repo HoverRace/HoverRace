@@ -1,0 +1,116 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MISS_SEC_ID         "Section Id missing on line %d\n"
+    IDS_DUP_SEC_ID          "Duplicate section Id(%d) on line %d\n"
+    IDS_MISS_CONNECT_LIST   "Connection_List not found!\n"
+    IDS_BAD_CONNECT1        "Connection to a non existing section %d\n"
+    IDS_BAD_CONNECT2        "Connection between sections %d and %d do not match\n"
+    IDS_SMALL_ROOM          "Warning: Room %d seem to be very small\n"
+    IDS_LARGE_ROOM          "Warning: Room %d seem to be very large\n"
+    IDS_SMALL_FEATURE       "Warning: Feature %d seem to be very small\n"
+    IDS_LARGE_FEATURE       "Warning: Feature %d seem to be very large\n"
+    IDS_BAD_STARTPOS        "Invalid starting position room %d\n"
+    IDS_NO_STARTPOS         "Initial_Position not found\n"
+    IDS_INVALID_INDEX       "Invalid room index on line %d\n"
+    IDS_RESUME              "   This levels contains: \n          %6d rooms\n          %6d features\n          %6d connections\n          %6d free elements\n          %6d starting positions\n"
+    IDS_COMP_VISZONES       "Computing visibles zones... be patient\n"
+    IDS_SAME_POS            "Two node with same position\n"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_USAGE               "Usage: MazeCompiler outputfile inputfile\n\n"
+    IDS_INTRO               "HoverRace Track Compiler                     (c)1996-1997 GrokkSoft inc.\n\n"
+    IDS_BAD_PARAM_COUNT     "Wrong parameter count\n"
+    IDS_NO_REGINFO          "ERROR: Unable to retrieve registration informations\n       You must be a registred user to use the compiler \n "
+    IDS_NO_REGID            "ERROR: Track name must contain your registraction number ID\n"
+    IDS_CANT_CREATE_OUT     "Unable to create the output file\n"
+    IDS_COMP_TRACK          "Compiling track(%s)\n"
+    IDS_CANT_OPEN_IN        "Unable to open the input file\n"
+    IDS_CANT_WRITE_HEADER   "Unable to add a header to the output file\n"
+    IDS_TRACK_CREATION_ERROR "Track creation error\n"
+    IDS_CANT_ADD_TRACK      "Unable to add the track to the output file\n"
+    IDS_CANT_ADD_IMAGE      """Unable to add a background image record\n"""
+    IDS_CANT_ADD_MAP        "Unable to add a map record\n"
+    IDS_REC_COUNT           "The ouput file now contains %d records\n"
+    IDS_BAD_CMDLN           "Command line error!\n\n"
+    IDS_NO_DESC             "Unable to find description\n"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_NO_HEADER           "Unable to find [HEADER] section\n"
+    IDS_NO_BACKGROUND       "Unable to find Background label\n"
+    IDS_BAD_PAL             "ERROR Bad palette format for background file\n"
+    IDS_BAD_RES             "ERROR: Bad background resolution\n"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
