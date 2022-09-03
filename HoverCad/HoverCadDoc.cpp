@@ -429,8 +429,8 @@ void CHoverCadDoc::AddPolygon(BOOL pFeature, HCNodeList & pNodeList, int pFloorL
 			   -atan2( lSecondPoint.y-lFirstPoint.y, lSecondPoint.x-lFirstPoint.x );
 			 */
 
-			lSum = (lCurrentPoint.y - lSecondPoint.y) * (lSecondPoint.x - lFirstPoint.x)
-				- (lCurrentPoint.x - lSecondPoint.x) * (lSecondPoint.y - lFirstPoint.y);
+			lSum = ((double) lCurrentPoint.y - (double) lSecondPoint.y) * ((double) lSecondPoint.x - (double) lFirstPoint.x)
+				- ((double) lCurrentPoint.x - (double) lSecondPoint.x) * ((double) lSecondPoint.y - (double) lFirstPoint.y);
 
 			lFirstPoint = lSecondPoint;
 			lSecondPoint = lCurrentPoint;
