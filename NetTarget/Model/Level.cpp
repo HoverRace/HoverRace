@@ -25,6 +25,8 @@
 
 #define new DEBUG_NEW
 
+typedef std::vector<bool> mRoomChecked;
+
 // MR_Level implementation
 MR_Level::MR_Level(BOOL pAllowRendering)
 {
@@ -66,6 +68,7 @@ MR_Level::~MR_Level()
 
 	// Delete structure
 	delete[]mRoomList;
+	delete[]mRoomChecked;
 	delete[]mFeatureList;
 
 }
@@ -134,6 +137,12 @@ void MR_Level::Serialize(CArchive & pArchive)
 
 	for(lCounter = 0; lCounter < mNbFeature; lCounter++) {
 		mFeatureList[lCounter].SerializeStructure(pArchive);
+	}
+
+	mRoomChecked = new bool[mNbRoom];
+
+	for (int i = 0; i < mNbRoom; ++i) {
+		mRoomChecked[i] = false;
 	}
 
 	// Serialise the actors
@@ -582,17 +591,16 @@ int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingR
 		lReturnValue = pStartingRoom;
 	}
 	else {
-		// Verify neighbor rooms
-		for(int lCounter = 0; lCounter < mRoomList[pStartingRoom].mNbVertex; lCounter++) {
-			int lNeighbor = mRoomList[pStartingRoom].mNeighborList[lCounter];
-
-			if(lNeighbor != -1) {
-				if(MR_GetPolygonInclusion(SectionShape(&mRoomList[lNeighbor]), pPosition)) {
-					lReturnValue = lNeighbor;
-					break;
-				}
-			}
+		for (int i = 0; i < mNbRoom; ++i) {
+			mRoomChecked[i] = false;
 		}
+
+		mRoomChecked[pStartingRoom] = true;
+
+		std::vector<int> lNewRooms;
+		lNewRooms.push_back(pStartingRoom);
+
+		lReturnValue = FindNeighborRoomForPoints(pPosition, lNewRooms);
 	}
 
 	/*
@@ -604,6 +612,37 @@ int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingR
 
 	return lReturnValue;
 
+}
+
+int MR_Level::FindNeighborRoomForPoints(const MR_2DCoordinate & pPosition, std::vector<int>& pRooms) const
+{
+	int lReturnValue = -1;
+	std::vector<int> lNewRooms;
+
+	// Verify neighbor rooms
+	for (int lRoomCount = 0; lRoomCount < pRooms.size(); lRoomCount++) {
+		for (int lCounter = 0; lCounter < mRoomList[pRooms[lRoomCount]].mNbVertex; lCounter++) {
+			int lNeighbor = mRoomList[pRooms[lRoomCount]].mNeighborList[lCounter];
+
+			if (lNeighbor != -1 && mRoomChecked[lNeighbor] == false) {
+				lNewRooms.push_back(lNeighbor);
+				mRoomChecked[lNeighbor] = true;
+
+				if (MR_GetPolygonInclusion(SectionShape(&mRoomList[lNeighbor]), pPosition)) {
+					lReturnValue = lNeighbor;
+					goto foundRoom;
+				}
+			}
+		}
+	}
+
+	if (lNewRooms.size() > 0) {
+		lReturnValue = FindNeighborRoomForPoints(pPosition, lNewRooms);
+	}
+
+	foundRoom:
+
+	return lReturnValue;
 }
 
 // class MR_Level::Section

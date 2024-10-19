@@ -1093,8 +1093,11 @@ BOOL MR_GameApp::InitGame()
 
 	// show "click OK to play on the internet" dialog
 	if(lReturnValue && cfg->misc.displayFirstScreen) {
-		if(DialogBox(mInstance, MAKEINTRESOURCE(IDD_FIRST_CHOICE), mMainWindow, FirstChoiceDialogFunc) == IDOK)
+		int result = DialogBoxParam(mInstance, MAKEINTRESOURCE(IDD_FIRST_CHOICE), mMainWindow, FirstChoiceDialogFunc, (LPARAM)IDOK);
+
+		if (result == IDOK) {
 			SendMessage(mMainWindow, WM_COMMAND, ID_GAME_NETWORK_INTERNET, 0);
+		}
 	}
 
 	return lReturnValue;
@@ -1623,7 +1626,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	if(lSuccess) {
 												  // start in 13 seconds
-		lCurrentSession->SetSimulationTime(-13000);
+		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 0 ? -6000 : -13000);
 		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 	}
 
@@ -1702,7 +1705,7 @@ void MR_GameApp::NewInternetSession()
 
 	if(lSuccess) {
 												  // start in 20 seconds (this time may be readjusted by the server)
-		lCurrentSession->SetSimulationTime(-20000);
+		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 0 ? -6000 : -20000);
 	}
 
 	if(lSuccess) {
@@ -2783,11 +2786,20 @@ BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 	{
 		BOOL lReturnValue = FALSE;
+		HWND okButton;
 	
 		switch (pMsgId) {
 			// Catch environment modification events
 			case WM_INITDIALOG:
 				CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
+
+				okButton = GetDlgItem(pWindow, IDOK);
+
+				// Check if a custom LPARAM was passed (optional)
+				if (pLParam == (LPARAM)IDOK) {
+					SetFocus(okButton);  // Set focus to the OK button if IDOK was passed
+				}
+
 				lReturnValue = TRUE;
 				break;
 

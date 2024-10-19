@@ -108,6 +108,7 @@ void SelectRoomDialog::PopulateList(HWND hwnd)
 BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	BOOL retv = FALSE;
+	HWND okButton;
 
 	switch (message) {
 
@@ -120,7 +121,12 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 			SetDlgItemText(hwnd, IDCANCEL, "Cancel");
 			SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_RESETCONTENT, 0, 0);
 			SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_ADDSTRING, 0, (LPARAM)(const char *) "Connecting...");
+
+			okButton = GetDlgItem(hwnd, IDOK);
+			SetFocus(okButton);
+
 			retv = TRUE;
+
 			break;
 
 		case WM_COMMAND:

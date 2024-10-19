@@ -26,6 +26,8 @@
 #include "ShapeCollisions.h"
 #include "../Util/FastArray.h"
 
+#include <vector>
+
 #ifdef MR_MODEL
 #define MR_DllDeclare   __declspec( dllexport )
 #else
@@ -209,6 +211,7 @@ class MR_DllDeclare MR_Level
 
 		int mNbRoom;							  // Number of room in the level
 		Room *mRoomList;
+		bool* mRoomChecked;
 
 		int mNbFeature;							  // Number of features in the level
 		Feature *mFeatureList;
@@ -310,6 +313,7 @@ class MR_DllDeclare MR_Level
 
 		// Element movement functions
 		int FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const;
+		int FindNeighborRoomForPoints(const MR_2DCoordinate & pPosition, std::vector<int>& pRooms) const;
 
 		void GetRoomContact(int pRoom, const MR_ShapeInterface * pShape, MR_RoomContactSpec & pAnswer);
 
