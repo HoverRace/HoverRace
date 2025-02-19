@@ -310,8 +310,8 @@ BOOL MR_NetworkSession::ResultAvaillable()const
 int MR_NetworkSession::GetNbPlayers() const
 {
 	// Return the number of players still playing???
-	// return mNetInterface.GetClientCount()+1;
-	return ResultAvaillable(); // what an ugly hack, Richard
+	return mNetInterface.GetClientCount()+1;
+	// return ResultAvaillable(); // what an ugly hack, Richard
 }
 
 /**

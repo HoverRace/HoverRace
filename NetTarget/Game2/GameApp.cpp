@@ -1626,7 +1626,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	if(lSuccess) {
 												  // start in 13 seconds
-		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 0 ? -6000 : -13000);
+		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 1 ? -6000 : -13000);
 		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 	}
 
@@ -1705,7 +1705,7 @@ void MR_GameApp::NewInternetSession()
 
 	if(lSuccess) {
 												  // start in 20 seconds (this time may be readjusted by the server)
-		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 0 ? -6000 : -20000);
+		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 1 ? -6000 : -20000);
 	}
 
 	if(lSuccess) {
