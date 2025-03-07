@@ -427,7 +427,7 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	const int sleepLength = cfg->misc.mainLoopSleepLength;
    
 	while(true) {
-		Sleep(sleepLength);
+		// Sleep(sleepLength);
 
 		lThis->mNetInterface.CheckP2PAvailability();
 

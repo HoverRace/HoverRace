@@ -110,7 +110,9 @@ class MR_DllDeclare MR_SurfaceElement:public MR_Element
 class MR_DllDeclare MR_FreeElement:public MR_Element
 {
 	public:
+		MR_3DCoordinate mLastPosition;
 		MR_3DCoordinate mPosition;
+		MR_Angle mLastOrientation;
 		MR_Angle mOrientation;
 
 	public:

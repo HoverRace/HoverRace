@@ -384,7 +384,9 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	const MR_Level *lLevel = pSession->GetCurrentLevel();
 
 	MR_3DCoordinate lCameraPos;
+	MR_3DCoordinate lLastCameraPos;
 	MR_Angle lOrientation = pViewingCharacter->mOrientation;
+	MR_Angle lLastOrientation = pViewingCharacter->mLastOrientation;
 	int lRoom = pViewingCharacter->mRoom;
 	double lAbsSpeedRatio = pViewingCharacter->GetAbsoluteSpeed();
 
@@ -392,16 +394,18 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 		lOrientation = pViewingCharacter->GetCabinOrientation();
 		lCameraPos.mX = pViewingCharacter->mPosition.mX - 256 * MR_Cos[lOrientation] / MR_TRIGO_FRACT;
 		lCameraPos.mY = pViewingCharacter->mPosition.mY - 256 * MR_Sin[lOrientation] / MR_TRIGO_FRACT;
-		lCameraPos.mZ = pViewingCharacter->mPosition.mZ + 1050;
+		lCameraPos.mZ = pViewingCharacter->mPosition.mZ + 1025;
 	}
 	else {
 		int lDist = 3400;
 
 		lOrientation = pViewingCharacter->mOrientation;
+		lLastOrientation = pViewingCharacter->mLastOrientation;
 
 		if(pTime < -3000) {
 			int lFactor = (-pTime - 3000) * 2 / 3;
 			lOrientation = MR_NORMALIZE_ANGLE(lOrientation + lFactor * 4096 / 11000);
+			lLastOrientation = MR_NORMALIZE_ANGLE(lLastOrientation + lFactor * 4096 / 11000);
 			lDist += lFactor;
 		}
 
@@ -409,14 +413,17 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 		lCameraPos.mY = pViewingCharacter->mPosition.mY - lDist * MR_Sin[lOrientation] / MR_TRIGO_FRACT;
 		lCameraPos.mZ = pViewingCharacter->mPosition.mZ + 1700;
 
+		lLastCameraPos.mX = pViewingCharacter->mLastPosition.mX - lDist * MR_Cos[lLastOrientation] / MR_TRIGO_FRACT;
+		lLastCameraPos.mY = pViewingCharacter->mLastPosition.mY - lDist * MR_Sin[lLastOrientation] / MR_TRIGO_FRACT;
+		lLastCameraPos.mZ = pViewingCharacter->mLastPosition.mZ + 1700;
+
 		if(mLastCameraPosValid) {
-			lCameraPos.mX = (3 * lCameraPos.mX + mLastCameraPos.mX) / 4;
-			lCameraPos.mY = (3 * lCameraPos.mY + mLastCameraPos.mY) / 4;
-			lCameraPos.mZ = (2 * lCameraPos.mZ + mLastCameraPos.mZ) / 3;
+			lCameraPos.mX = (3 * lCameraPos.mX + lLastCameraPos.mX) / 4;
+			lCameraPos.mY = (3 * lCameraPos.mY + lLastCameraPos.mY) / 4;
+			lCameraPos.mZ = (2 * lCameraPos.mZ + lLastCameraPos.mZ) / 3;
 		}
 	}
 
-	mLastCameraPos = lCameraPos;
 	mLastCameraPosValid = TRUE;
 
 	m3DView.SetupCameraPosition(lCameraPos, lOrientation, mScroll);

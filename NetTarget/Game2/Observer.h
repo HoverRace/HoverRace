@@ -44,7 +44,6 @@ class MR_Observer
 		};
 
 	private:
-		MR_3DCoordinate mLastCameraPos;
 		BOOL mLastCameraPosValid;
 		BOOL mCockpitView;
 

@@ -479,6 +479,9 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		if(mMasterMode) {
 			MR_SimulationTime lDuration = pDuration;
 
+			mLastPosition = mPosition;
+			mLastOrientation = mOrientation;
+
 			while(lDuration > 0) {
 				if(lDuration > TIME_SLICE)
 					pRoom = InternalSimulate(TIME_SLICE, pLevel, pRoom);
