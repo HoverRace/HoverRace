@@ -19,6 +19,9 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <luabind/class.hpp>
+#include <luabind/scope.hpp>
+
 #include "../../../engine/Model/MazeElement.h"
 #include "../../../engine/ObjFac1/BallElement.h"
 #include "../../../engine/ObjFac1/BumperGate.h"

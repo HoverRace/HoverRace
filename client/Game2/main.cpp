@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include <iostream>
+#include <sstream>
 #include <boost/format.hpp>
 
 #ifdef _WIN32
@@ -34,6 +35,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/Engine.h"
+#include "../../include/util/i18n.h"
 #include "ClientApp.h"
 
 #include <hoverrace/hr-version.h>

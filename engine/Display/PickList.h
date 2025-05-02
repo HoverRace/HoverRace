@@ -366,10 +366,10 @@ public:
 	 * Get the value of the selected item.
 	 * @return The value.
 	 */
-	boost::optional<const T&> GetValue() const
+	boost::optional<T> GetValue() const
 	{
 		return selItem ?
-			boost::make_optional<const T&>(items[*selItem].item.GetValue()) :
+			boost::make_optional(items[*selItem].item.GetValue()) :
 			boost::none;
 	}
 

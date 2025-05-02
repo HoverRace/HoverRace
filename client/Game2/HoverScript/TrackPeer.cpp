@@ -19,7 +19,9 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <luabind/class.hpp>
 #include <luabind/operator.hpp>
+#include <luabind/scope.hpp>
 
 #include "../../engine/Model/Track.h"
 #include "../../engine/Script/Core.h"
