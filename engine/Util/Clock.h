@@ -21,6 +21,9 @@
 
 #pragma once
 
+#include <memory>
+#include <boost/signals2.hpp>
+
 #include "Duration.h"
 #include "OS.h"
 

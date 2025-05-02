@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "../../include/util/util.h"
 #include "../Util/DllObjectFactory.h"
 #include "../VideoServices/Viewport3D.h"
 #include "ContactEffect.h"

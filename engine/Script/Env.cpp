@@ -21,6 +21,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
 
 #include "../Util/Log.h"
 #include "../Util/Str.h"

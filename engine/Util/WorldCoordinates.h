@@ -23,6 +23,8 @@
 #ifndef WORLD_COORDINATES_H
 #define WORLD_COORDINATES_H
 
+#include <ostream>
+
 #include "MR_Types.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

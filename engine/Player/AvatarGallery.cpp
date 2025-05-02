@@ -19,7 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem.hpp>
 
 #include "../Display/MediaRes.h"
 #include "../Display/Texture.h"

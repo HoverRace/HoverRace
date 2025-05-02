@@ -59,16 +59,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
 		" -Wno-deprecated-declarations ")
 endif()
 
-# Enable precompiled headers.
-# Note: Explicitly setting the language to fix misdetection in some cases.
-set_target_properties(hoverrace PROPERTIES
-	COTIRE_ADD_UNITY_BUILD FALSE)
-set_target_properties(hoverrace PROPERTIES
-	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
-set_target_properties(hoverrace PROPERTIES
-	COTIRE_PCH_MEMORY_SCALING_FACTOR 300)
-cotire(hoverrace LANGUAGES CXX)
-
 # Install convenience wrapper scripts.
 if(UNIX)
 	include(CopyWrapperScript)

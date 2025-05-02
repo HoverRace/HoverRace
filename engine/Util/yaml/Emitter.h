@@ -25,6 +25,7 @@
 #include <string>
 
 #include <yaml.h>
+#include <boost/lexical_cast.hpp>
 
 #include "../OS.h"
 #include "YamlExn.h"

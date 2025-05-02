@@ -22,6 +22,10 @@
 
 #pragma once
 
+#include <array>
+#include <memory>
+#include <boost/thread/mutex.hpp>
+
 #include "../../engine/Model/GameSession.h"
 #include "../../engine/VideoServices/Sprite.h"
 #include "../../engine/Util/OS.h"

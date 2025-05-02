@@ -28,6 +28,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
+#include "../../include/util/i18n.h"
 
 #include "MessageScene.h"
 

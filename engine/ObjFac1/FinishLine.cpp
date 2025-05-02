@@ -20,6 +20,8 @@
 // and limitations under the License.
 //
 
+#include <boost/lexical_cast.hpp>
+
 #include "FinishLine.h"
 
 namespace HoverRace {

@@ -21,6 +21,9 @@
 
 #pragma once
 
+#include <sstream>
+#include <boost/lexical_cast.hpp>
+
 #include "../Util/OS.h"
 #include "../Exception.h"
 #include "HudCell.h"

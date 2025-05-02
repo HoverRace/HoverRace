@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "../Util/MR_Types.h"
 #include "../Exception.h"
 

@@ -20,7 +20,10 @@
 // and limitations under the License.
 //
 
+#include "../../include/util/os.h"
 #include "ColorTools.h"
+
+#include <cmath>
 
 namespace HoverRace {
 

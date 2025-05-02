@@ -20,11 +20,13 @@
 // and limitations under the License.
 
 #include <iostream>
+#include <sstream>
 
 #include <boost/filesystem/fstream.hpp>
 
 #include <luabind/luabind.hpp>
 
+#include "../../include/util/os.h"
 #include "../Util/Config.h"
 #include "../Util/Log.h"
 #include "../Util/OS.h"

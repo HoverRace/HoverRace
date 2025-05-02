@@ -22,6 +22,7 @@
 #pragma once
 
 #include <limits.h>
+#include <map>
 
 #include "../OS.h"
 

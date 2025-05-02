@@ -23,6 +23,7 @@
 
 #include "Node.h"
 
+#include <memory>
 #include <vector>
 
 namespace HoverRace {

@@ -5,7 +5,7 @@
 # Please note that the package source code is licensed under its own license.
 
 project ( lua C )
-cmake_minimum_required ( VERSION 2.8 )
+cmake_minimum_required ( VERSION 3.10 )
 if(FALSE)  # HoverRace: Handling packaging in parent project.
 include ( cmake/dist.cmake )
 endif()  # HoverRace
@@ -19,7 +19,7 @@ set ( LUA_INIT "LUA_INIT" CACHE STRING "Environment variable for initial script.
 option ( LUA_ANSI "Use only ansi features." OFF )
 option ( LUA_USE_RELATIVE_LOADLIB "Use modified loadlib.c with support for relative paths on posix systems." ON )
 option ( LUA_COMPAT_ALL "Enable backwards compatibility options." ON )
-set ( LUA_IDSIZE 60 CACHE NUMBER "gives the maximum size for the description of the source." )
+set ( LUA_IDSIZE 60 CACHE STRING "gives the maximum size for the description of the source." )
 
 #2DO: LUAI_* and LUAL_* settings, for now defaults are used.
 set ( LUA_DIRSEP "/" )

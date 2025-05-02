@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "Method.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

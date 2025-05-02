@@ -19,10 +19,14 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/format.hpp>
+
 #include "../../../engine/Script/Help/HelpHandler.h"
 #include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
+#include "../../../include/util/i18n.h"
+#include "../../../include/util/os.h"
 #include "../GameDirector.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"

@@ -25,6 +25,7 @@
 #include "../../engine/Display/Texture.h"
 #include "../../engine/Display/Wallpaper.h"
 #include "../../engine/Util/Config.h"
+#include "../../include/util/i18n.h"
 
 #include "GameSelectScene.h"
 #include "SessionLoadingScene.h"

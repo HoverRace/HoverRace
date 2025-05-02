@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../include/util/os.h"
 #include "../Util/Inspectable.h"
 #include "../Util/OS.h"
 

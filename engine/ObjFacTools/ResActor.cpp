@@ -19,6 +19,9 @@
 // and limitations under the License.
 //
 
+#include <boost/format.hpp>
+
+#include "../../include/util/i18n.h"
 #include "../Parcel/ObjStream.h"
 #include "ResourceLib.h"
 

@@ -25,6 +25,7 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <system_error>
 
@@ -35,7 +36,10 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
+#include <boost/locale/info.hpp>
 #include <boost/locale/util.hpp>
+
+#include "../../include/util/i18n.h"
 
 #include "../Engine.h"
 #include "../Exception.h"

@@ -26,6 +26,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <sstream>
+
 #include "Parcel/ResBundle.h"
 #include "Util/Config.h"
 #include "Util/DllObjectFactory.h"

@@ -25,6 +25,7 @@
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
+#include "../../include/util/i18n.h"
 
 #include "DisplaySelectScene.h"
 #include "MessageScene.h"

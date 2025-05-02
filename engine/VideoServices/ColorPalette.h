@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <ostream>
 #include <SDL2/SDL.h>
 
 #include "../Util/MR_Types.h"

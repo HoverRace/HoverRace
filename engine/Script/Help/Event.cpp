@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/format.hpp>
+
 #include "../../Util/yaml/MapNode.h"
 #include "../../Util/yaml/ScalarNode.h"
 #include "../../Util/yaml/SeqNode.h"

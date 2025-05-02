@@ -32,6 +32,7 @@
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
+#include "../../include/util/i18n.h"
 
 #include "Rulebook.h"
 #include "Rules.h"

@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include <iostream>
+#include <boost/format.hpp>
 
 #ifdef _WIN32
 #	include <shellapi.h>

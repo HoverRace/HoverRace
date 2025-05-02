@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+
 #ifndef _WIN32
 	// Use XDG base directories on non-Win32.
 #	include <basedir.h>

@@ -20,8 +20,10 @@
 //
 
 #include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
 #include <boost/scoped_array.hpp>
 
+#include "../../include/util/i18n.h"
 #include "../Model/Track.h"
 #include "../Model/TrackFileCommon.h"
 #include "../Parcel/ClassicRecordFile.h"

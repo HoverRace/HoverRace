@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include "Profile.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

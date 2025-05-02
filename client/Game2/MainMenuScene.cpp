@@ -27,6 +27,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/VideoServices/SoundServer.h"
+#include "../../include/util/i18n.h"
 
 #include "MessageScene.h"
 #include "PracticeSetupScene.h"

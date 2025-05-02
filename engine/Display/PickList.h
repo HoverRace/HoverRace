@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <boost/lexical_cast.hpp>
+
 #include "../Exception.h"
 #include "BaseContainer.h"
 #include "StateButton.h"

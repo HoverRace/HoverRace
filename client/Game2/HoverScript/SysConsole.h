@@ -24,6 +24,7 @@
 #include <boost/circular_buffer.hpp>
 
 #include "../../../engine/Util/Log.h"
+#include "../../../include/util/util.h"
 
 #include "Console.h"
 

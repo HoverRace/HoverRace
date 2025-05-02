@@ -25,6 +25,7 @@
 
 #undef pgettext
 
+#include <iostream>
 #include <boost/locale.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>

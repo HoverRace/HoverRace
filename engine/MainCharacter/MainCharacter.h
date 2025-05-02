@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include "../Display/Color.h"
 #include "../Model/MazeElement.h"
 #include "../Model/PhysicalCollision.h"

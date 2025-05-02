@@ -19,6 +19,9 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <sstream>
+#include <boost/format.hpp>
+
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"
 #include "../../engine/Util/OS.h"

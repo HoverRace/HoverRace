@@ -19,6 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <memory>
 #include <SDL2/SDL.h>
 
 #include "../../engine/Exception.h"
@@ -40,6 +41,7 @@
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
+#include "../../include/util/i18n.h"
 
 #include "HoverScript/ClientScriptCore.h"
 #include "HoverScript/ConsoleScene.h"

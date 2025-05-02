@@ -19,6 +19,9 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <istream>
+#include <limits>
+
 #include "NodeFactory.h"
 
 #include "Parser.h"

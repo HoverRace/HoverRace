@@ -27,6 +27,9 @@
 #	include <AL/alut.h>
 #endif
 
+#include <cmath>
+
+#include "../../include/util/os.h"
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
 #include "../Util/Log.h"

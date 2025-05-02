@@ -38,9 +38,8 @@
 #endif
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/string_generator.hpp>
 
@@ -61,6 +60,7 @@
 #include "Log.h"
 #include "Str.h"
 
+#include "../../include/util/os.h"
 #include "Config.h"
 
 namespace fs = boost::filesystem;

@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/format.hpp>
+
 #include "../Control/Action.h"
 #include "../Util/Symbol.h"
 #include "SymbolIcon.h"

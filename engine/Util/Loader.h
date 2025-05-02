@@ -22,6 +22,7 @@
 #pragma once
 
 #include <queue>
+#include <sstream>
 
 #include "Log.h"
 

@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <sstream>
+
 #include "../Exception.h"
 #include "BaseContainer.h"
 #include "MPL.h"
