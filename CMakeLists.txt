@@ -1,11 +1,5 @@
 
-cmake_minimum_required(VERSION 2.8)
-if(POLICY CMP0054)
-	cmake_policy(SET CMP0054 OLD)
-endif()
-if(POLICY CMP0059)
-	cmake_policy(SET CMP0059 OLD)
-endif()
+cmake_minimum_required(VERSION 3.10)
 
 project(hoverrace CXX)
 
@@ -24,7 +18,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 include(CheckCXXSourceCompiles)
 include(CXX11)
 include(GNUInstallDirs)
-include(cotire)
 
 if(MSVC)
 	if(MSVC_VERSION LESS 1900)
@@ -59,7 +52,6 @@ set(WITH_CHRONO_TIMESTAMP TRUE)
 # Set up the Boost dependency.
 # We only need to list the libraries that have libraries;
 # we assume that header-only libraries are available without checking.
-include(FindBoost)
 if(WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
 else()
@@ -67,6 +59,7 @@ else()
 endif()
 set(Boost_USE_MULTITHREADED ON)
 set(BOOST_MIN_VER 1.54)
+cmake_policy(SET CMP0167 NEW)
 find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
 	filesystem locale log system thread)
 include_directories(${Boost_INCLUDE_DIRS})

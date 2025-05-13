@@ -21,6 +21,7 @@
 //
 
 #include <map>
+#include <boost/format.hpp>
 
 #include "../ObjFac1/ObjFac1.h"
 #include "../Parcel/ObjStream.h"

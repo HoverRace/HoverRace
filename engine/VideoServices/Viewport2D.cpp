@@ -20,6 +20,8 @@
 // and limitations under the License.
 //
 
+#include "../../include/util/os.h"
+
 #include "VideoBuffer.h"
 
 #include "Viewport2D.h"

@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <cmath>
+#include <boost/format.hpp>
 
 #include "ActiveText.h"
 #include "FillBox.h"

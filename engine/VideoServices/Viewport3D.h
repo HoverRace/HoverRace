@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../include/util/os.h"
+
 #include "Viewport2D.h"
 #include "ColorPalette.h"
 #include "Bitmap.h"

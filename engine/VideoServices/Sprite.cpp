@@ -20,6 +20,7 @@
 // and limitations under the License.
 //
 
+#include "../../include/util/os.h"
 #include "../Parcel/ObjStream.h"
 
 #include "Sprite.h"

@@ -24,6 +24,7 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Util/Locale.h"
+#include "../../include/util/i18n.h"
 
 #include "LocaleSelectScene.h"
 

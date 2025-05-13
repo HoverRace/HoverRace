@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include <memory>
+#include <boost/signals2.hpp>
+
 #include "../Util/MR_Types.h"
 #include "../Util/OS.h"
 #include "ColorPalette.h"

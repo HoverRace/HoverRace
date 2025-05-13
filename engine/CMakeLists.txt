@@ -91,13 +91,3 @@ if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
 	set_property(TARGET hrengine APPEND_STRING PROPERTY COMPILE_FLAGS
 		" -Wno-deprecated-declarations ")
 endif()
-
-# Enable precompiled headers.
-# Note: Explicitly setting the language to fix misdetection in some cases.
-set_target_properties(hrengine PROPERTIES
-	COTIRE_ADD_UNITY_BUILD FALSE)
-set_target_properties(hrengine PROPERTIES
-	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
-set_target_properties(hoverrace PROPERTIES
-	COTIRE_PCH_MEMORY_SCALING_FACTOR 170)
-cotire(hrengine LANGUAGES CXX)

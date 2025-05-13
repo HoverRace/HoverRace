@@ -26,6 +26,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/VideoServices/SoundServer.h"
+#include "../../include/util/i18n.h"
 
 #include "AudioSettingsScene.h"
 

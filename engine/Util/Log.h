@@ -21,7 +21,9 @@
 
 #pragma once
 
+#include <cstdarg>
 #include <boost/log/trivial.hpp>
+#include <boost/signals2.hpp>
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE

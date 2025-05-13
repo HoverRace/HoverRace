@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <boost/utility/compare_pointees.hpp>
+
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;

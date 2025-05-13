@@ -26,6 +26,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Util/Config.h"
+#include "../../include/util/i18n.h"
 
 #include "MessageScene.h"
 

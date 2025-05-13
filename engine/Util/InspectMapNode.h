@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+#include <vector>
 #include <boost/lexical_cast.hpp>
 
 #include "InspectNode.h"

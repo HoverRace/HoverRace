@@ -22,6 +22,9 @@
 #pragma once
 
 #include <locale>
+#include <map>
+#include <string>
+#include <boost/optional.hpp>
 
 #include "OS.h"
 

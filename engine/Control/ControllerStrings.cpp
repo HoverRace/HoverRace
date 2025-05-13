@@ -21,6 +21,9 @@
 // and limitations under the License.
 
 #include <unordered_map>
+#include <boost/signals2.hpp>
+
+#include "../../include/util/i18n.h"
 
 #include "Controller.h"
 

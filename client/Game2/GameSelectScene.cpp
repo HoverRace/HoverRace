@@ -27,6 +27,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
+#include "../../include/util/i18n.h"
 
 #include "Rulebook.h"
 #include "RulebookLibrary.h"

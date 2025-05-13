@@ -22,6 +22,8 @@
 
 #include "../Exception.h"
 
+#include <boost/format.hpp>
+
 #include "MapSprite.h"
 
 using std::min;

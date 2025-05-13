@@ -19,9 +19,13 @@
 // and limitations under the License.
 //
 
-#include <math.h>
+#include <cmath>
+#include <map>
 
 #include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
+
+#include "../../include/util/i18n.h"
 
 #include "TrackCompileExn.h"
 #include "TrackSpecParser.h"

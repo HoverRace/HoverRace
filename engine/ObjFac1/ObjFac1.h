@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+
 namespace HoverRace {
 	namespace ObjFacTools {
 		class ResourceLib;

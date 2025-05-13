@@ -19,6 +19,8 @@
 // and limitations under the License.
 //
 
+#include <boost/format.hpp>
+
 #include "../Parcel/ObjStream.h"
 
 #include "ResBitmap.h"

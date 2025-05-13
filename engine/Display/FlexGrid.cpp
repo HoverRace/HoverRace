@@ -20,6 +20,8 @@
 // and limitations under the License.
 
 #include <cmath>
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "../Util/Log.h"
 #include "../Exception.h"

@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace HoverRace {
 namespace Util {
 namespace yaml {

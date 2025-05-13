@@ -24,8 +24,11 @@
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/Player/Player.h"
 #include "../../engine/Util/Symbol.h"
+#include "../../include/util/i18n.h"
 
 #include "PlayerStatusAnnouncement.h"
+
+#include <boost/format.hpp>
 
 using namespace HoverRace::Util;
 

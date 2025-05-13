@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include "../Display/Res.h"
 #include "../Util/OS.h"
 

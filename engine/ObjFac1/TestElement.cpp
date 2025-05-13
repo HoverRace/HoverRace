@@ -20,6 +20,8 @@
 // and limitations under the License.
 //
 
+#include <boost/lexical_cast.hpp>
+
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Model/Track.h"
 #include "../ObjFacTools/ResourceLib.h"

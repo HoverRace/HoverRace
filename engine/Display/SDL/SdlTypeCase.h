@@ -21,6 +21,10 @@
 
 #pragma once
 
+#include <array>
+#include <memory>
+#include <boost/format.hpp>
+
 #include "../TypeCase.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

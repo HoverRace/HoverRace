@@ -21,6 +21,10 @@
 
 #pragma once
 
+#include <memory>
+#include <unordered_map>
+#include <boost/signals2.hpp>
+
 #include "../Vec.h"
 #include "Styles.h"
 #include "UiLayoutFlags.h"

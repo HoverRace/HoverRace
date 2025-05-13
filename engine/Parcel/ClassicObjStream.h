@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "../../include/util/i18n.h"
 #include "ObjStream.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

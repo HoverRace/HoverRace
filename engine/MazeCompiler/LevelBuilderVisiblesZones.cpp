@@ -21,8 +21,8 @@
 
 #include <math.h>
 
+#include "../../include/util/i18n.h"
 #include "TrackCompileExn.h"
-
 #include "LevelBuilder.h"
 
 #define MR_MAX_VISIBLE_ZONES   500

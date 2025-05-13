@@ -23,6 +23,7 @@
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Player/Player.h"
+#include "../../include/util/i18n.h"
 
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"

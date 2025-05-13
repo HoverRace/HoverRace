@@ -39,14 +39,3 @@ endif()
 # Bump the warning level.
 include(SetWarningLevel)
 set_full_warnings(TARGET hoverrace-resource-compiler)
-
-# Enable precompiled headers.
-# Note: Explicitly setting the language to fix misdetection in some cases.
-set_target_properties(hoverrace-resource-compiler PROPERTIES
-	COTIRE_ADD_UNITY_BUILD FALSE)
-set_target_properties(hoverrace-resource-compiler PROPERTIES
-	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
-set_target_properties(hoverrace PROPERTIES
-	COTIRE_PCH_MEMORY_SCALING_FACTOR 300)
-cotire(hoverrace-resource-compiler LANGUAGES CXX)
-

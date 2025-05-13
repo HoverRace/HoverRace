@@ -31,6 +31,7 @@
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Random.h"
+#include "../../include/util/i18n.h"
 #include "AvatarSelectScene.h"
 #include "TextEditScene.h"
 

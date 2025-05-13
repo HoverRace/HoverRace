@@ -25,8 +25,10 @@
 #include "../../engine/Model/Level.h"
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Config.h"
+#include "../../include/util/i18n.h"
 
-#include <math.h>
+#include <cmath>
+#include <boost/lexical_cast.hpp>
 
 #ifdef min
 #	undef min

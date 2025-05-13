@@ -21,8 +21,11 @@
 
 #pragma once
 
+#include <forward_list>
+
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Profiler.h"
+#include "../../include/util/util.h"
 
 namespace HoverRace {
 	namespace Control {
@@ -297,14 +300,14 @@ protected:
 	 * @param oldPhase The previous phase.
 	 * @see GetPhase()
 	 */
-	virtual void OnPhaseChanged(Phase oldPhase) { HR_UNUSED(oldPhase); }
+	virtual void OnPhaseChanged(Phase oldPhase) { ::HR_UNUSED(oldPhase); }
 
 	/**
 	 * Fired immediately after entering a new state.
 	 * @param oldState The previous state.
 	 * @see GetState()
 	 */
-	virtual void OnStateChanged(State oldState) { HR_UNUSED(oldState); }
+	virtual void OnStateChanged(State oldState) { ::HR_UNUSED(oldState); }
 
 	/**
 	 * Fired during the starting and stopping phases, if
@@ -313,7 +316,7 @@ protected:
 	 *                 this goes from 0.0 to 1.0, and in reverse for the
 	 *                 @c STOPPING phase).
 	 */
-	virtual void OnPhaseTransition(double progress) { HR_UNUSED(progress); }
+	virtual void OnPhaseTransition(double progress) { ::HR_UNUSED(progress); }
 
 	/**
 	 * Fired during the raising and lowering states, if
@@ -322,7 +325,7 @@ protected:
 	 *                 this goes from 0.0 to 1.0, and in reverse for the
 	 *                 @c LOWERING phase).
 	 */
-	virtual void OnStateTransition(double progress) { HR_UNUSED(progress); }
+	virtual void OnStateTransition(double progress) { ::HR_UNUSED(progress); }
 
 public:
 	void AdvanceScene(Util::OS::timestamp_t tick)

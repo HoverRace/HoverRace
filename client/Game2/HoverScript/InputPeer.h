@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include "../../../engine/Script/Handlers.h"
 #include "../../../engine/Script/Peer.h"
 

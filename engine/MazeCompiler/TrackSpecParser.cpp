@@ -19,6 +19,8 @@
 // and limitations under the License.
 //
 
+#include "../../include/util/os.h"
+
 #include "TrackSpecParser.h"
 
 #ifndef _WIN32

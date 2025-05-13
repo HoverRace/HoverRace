@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "../../include/util/os.h"
 #include "Shapes.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

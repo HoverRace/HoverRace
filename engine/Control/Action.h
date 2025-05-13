@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <sstream>
+#include <boost/signals2.hpp>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>
 

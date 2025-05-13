@@ -22,6 +22,7 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Label.h"
+#include "../../include/util/i18n.h"
 #include "MessageScene.h"
 
 #include "SettingsScene.h"

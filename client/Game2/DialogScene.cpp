@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Container.h"

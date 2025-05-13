@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <iostream>
+#include <sstream>
 
 #include <luabind/luabind.hpp>
 

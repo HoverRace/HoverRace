@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/format.hpp>
+
 #include "../Exception.h"
 
 #include "Container.h"
