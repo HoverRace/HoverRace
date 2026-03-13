@@ -33,6 +33,7 @@ class MR_HoverRender:public MR_MainCharacterRenderer
 		const MR_ResActor *mActor0;
 		const MR_ResActor *mActor1;
 		const MR_ResActor *mActor2;
+		const MR_ResActor *mActor3;
 
 		int mFrame;
 
@@ -50,6 +51,7 @@ class MR_HoverRender:public MR_MainCharacterRenderer
 
 		const MR_ResBitmap *mCockpitBitmap[10];
 		const MR_ResBitmap *mCockpitBitmap2[10];
+		const MR_ResBitmap *mEonCockpitBitmap[10];
 
 	public:
 		MR_HoverRender(const MR_ObjectFromFactoryId & pId);

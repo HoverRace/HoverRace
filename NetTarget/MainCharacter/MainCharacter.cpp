@@ -388,14 +388,25 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		int lState = pState;
 
 		// Set HoverType if race not started
-		if(pTime < 0) {
-			if(!(mControlState & (eRight | eLeft))) {
-				if(pState & eRight)
-					mHoverModel++;
-				if(pState & eLeft)
-					mHoverModel--;
+		if (pTime < 0) {
+			if (!(mControlState & (eRight | eLeft))) {
+				static const int lAllowedHoverModels[4] = { 0, 1, 2, 7 };
+				int lHoverModelIndex = 0;
 
-				mHoverModel = (mHoverModel + 3) % 3;
+				for (int i = 0; i < 4; i++) {
+					if (lAllowedHoverModels[i] == mHoverModel) {
+						lHoverModelIndex = i;
+						break;
+					}
+				}
+
+				if (pState & eRight)
+					lHoverModelIndex++;
+				if (pState & eLeft)
+					lHoverModelIndex--;
+
+				lHoverModelIndex = (lHoverModelIndex + 4) % 4;
+				mHoverModel = lAllowedHoverModels[lHoverModelIndex];
 			}
 		}
 		// First verify transition states

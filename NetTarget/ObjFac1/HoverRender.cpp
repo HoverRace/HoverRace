@@ -41,6 +41,7 @@ MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId & pId)
 	mActor0 = gObjectFactoryData->mResourceLib.GetActor(MR_ELECTRO_CAR);
 	mActor1 = gObjectFactoryData->mResourceLib.GetActor(MR_HITECH_CAR);
 	mActor2 = gObjectFactoryData->mResourceLib.GetActor(MR_BITURBO_CAR);
+	mActor3 = gObjectFactoryData->mResourceLib.GetActor(MR_EON_CRAFT);
 
 	mLineCrossingSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_LINE_CROSSING)->GetSound();
 	mStartSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_START)->GetSound();
@@ -57,6 +58,7 @@ MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId & pId)
 	for(int lCounter = 0; lCounter < 10; lCounter++) {
 		mCockpitBitmap[lCounter] = gObjectFactoryData->mResourceLib.GetBitmap(MR_CAR_COCKPIT1 + lCounter);
 		mCockpitBitmap2[lCounter] = gObjectFactoryData->mResourceLib.GetBitmap(MR_CAR_COCKPIT21 + lCounter);
+		mEonCockpitBitmap[lCounter] = gObjectFactoryData->mResourceLib.GetBitmap(MR_CAR_COCKPIT31 + lCounter);
 	}
 
 }
@@ -87,6 +89,9 @@ void MR_HoverRender::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosi
 	}
 	else if(pModel == 2) {
 		MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+	}
+	else if(pModel == 7) {
+		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
 	}
 	else {
 		MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
@@ -161,7 +166,7 @@ void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, 
 
 		int lBitmapResId = lPatch->mBitmap->GetResourceId();
 
-		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) /*||(lBitmapResId == MR_ECAR_COCKPIT) */ ) {
+		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) || (lBitmapResId == MR_EON_COCKPIT) ) {
 		pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
 	}
 	else {
