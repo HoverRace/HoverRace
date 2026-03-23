@@ -1606,7 +1606,8 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 //						gBannerList[lEntry].mLastCookie = "";
 
-						for(int lCounter = 0; lCounter < min(lBufferSize - 30, 400); lCounter++) {
+						int lHeaderSearchLimit = max(0, lBufferSize - 4);
+						for(int lCounter = 0; lCounter < lHeaderSearchLimit; lCounter++) {
 							if(lBuffer[lCounter] == 'S') {
 								if(!strncmp(lBuffer + lCounter, "Set-Cookie:", 11)) {
 									// of we found a cookie
