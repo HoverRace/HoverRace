@@ -189,6 +189,47 @@ BOOL MR_NetworkInterface::IsConnected(int pIndex) const
 		return mClient[pIndex].IsConnected();
 }
 
+void MR_NetworkInterface::CleanupClientState(int pClient, HWND pWindow)
+{
+	if((pClient < 0) || (pClient >= eMaxClient)) {
+		return;
+	}
+
+	mClient[pClient].DisconnectSteam();
+	mClient[pClient].Disconnect();
+	mCanBePreLogued[pClient] = FALSE;
+	mPreLoguedClient[pClient] = FALSE;
+	mConnected[pClient] = FALSE;
+
+	if((pWindow != NULL) && IsWindow(pWindow)) {
+		HWND lListHandle = GetDlgItem(pWindow, IDC_LIST);
+
+		if(lListHandle != NULL) {
+			ListView_SetItemText(lListHandle, pClient + 1, 1, "");
+			ListView_SetItemText(lListHandle, pClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_DISCONNECTED));
+		}
+	}
+}
+
+void MR_NetworkInterface::NotifyClientRemoved(int pClient)
+{
+	if(!mServerMode || (pClient < 0) || (pClient >= eMaxClient)) {
+		return;
+	}
+
+	MR_NetMessageBuffer lAnswer;
+	lAnswer.mMessageType = MRNM_REMOVE_ENTRY;
+	lAnswer.mClient = mId;
+	lAnswer.mDataLen = 1;
+	lAnswer.mData[0] = pClient + 1;
+
+	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
+		if((lCounter != pClient) && mClient[lCounter].IsConnected()) {
+			mClient[lCounter].Send(&lAnswer, MR_NET_REQUIRED);
+		}
+	}
+}
+
 /**
  * Close the registry socket and reset all variables to their "disconnected" state.
  */
@@ -1018,7 +1059,23 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 					lReturnValue = TRUE;
 					closesocket(sNewSocket);
-					mActiveInterface->mClient[0].Disconnect();
+
+					if(mActiveInterface->mSteamOnly && mActiveInterface->mSteamID.IsValid()) {
+						MR_NetMessageBuffer lCancel;
+						lCancel.mMessageType = STM_CLIENT_CLOSE;
+						lCancel.mClient = mActiveInterface->mId;
+						lCancel.mDataLen = 0;
+
+						if(mActiveInterface->mClient[0].GetSteamId().IsValid()) {
+							mActiveInterface->mClient[0].Send(&lCancel, MR_NET_REQUIRED);
+						}
+						else {
+							SteamNetworking()->SendP2PPacket(mActiveInterface->mSteamID, &lCancel, MR_NET_HEADER_LEN, k_EP2PSendReliable, STM_IMR_CHANNEL);
+						}
+					}
+
+					mActiveInterface->CleanupClientState(0);
+
 					EndDialog(pWindow, IDCANCEL);
 					break;
 			}
@@ -1414,14 +1471,14 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 				// client quit this game
 				TRACE("Client %d disconnected\n", lClient);
-				mActiveInterface->mClient[lClient].Disconnect();
-				mActiveInterface->mClient[lClient].DisconnectSteam();
-				mActiveInterface->mCanBePreLogued[lClient] = FALSE;
-				mActiveInterface->mPreLoguedClient[lClient] = FALSE;
-				mActiveInterface->mConnected[lClient] = FALSE;
+				{
+					const BOOL lWasPreLogued = mActiveInterface->mCanBePreLogued[lClient];
+					mActiveInterface->CleanupClientState(lClient, pWindow);
 
-				ListView_SetItemText(lListHandle, lClient + 1, 1, "");
-				ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_DISCONNECTED));
+					if(lWasPreLogued) {
+						mActiveInterface->NotifyClientRemoved(lClient);
+					}
+				}
 
 				break;
 
@@ -1602,12 +1659,22 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case MRNM_REMOVE_ENTRY:
 							TRACE("MRNM_REMOVE_ENTRY ");
 
-							ASSERT(FALSE);		  // Bad code
+							if(lBuffer->mDataLen >= 1) {
+								int lRemovedClient = lBuffer->mData[0];
+								int lRemovedSlot;
 
-							/*
-							   mActiveInterface->mClient[lClient].Disconnect();
-							   ListView_DeleteItem( lListHandle, lClient+1 );
-							 */
+								if(lRemovedClient > mActiveInterface->mId) {
+									lRemovedSlot = lRemovedClient - 1;
+								}
+								else {
+									lRemovedSlot = lRemovedClient;
+								}
+
+								if((lRemovedSlot >= 0) && (lRemovedSlot < eMaxClient)) {
+									mActiveInterface->CleanupClientState(lRemovedSlot, pWindow);
+									mActiveInterface->SendConnectionDoneIfNeeded();
+								}
+							}
 							break;
 
 						case MRNM_CLIENT_ADDR: // server sent us a list of other clients and addresses
@@ -1825,8 +1892,10 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					}
 				}
 
-				WSAAsyncSelect(mActiveInterface->mClient[lClient].GetSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
-				WSAAsyncSelect(mActiveInterface->mClient[lClient].GetUDPSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
+				if(mActiveInterface->mClient[lClient].IsConnected()) {
+					WSAAsyncSelect(mActiveInterface->mClient[lClient].GetSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
+					WSAAsyncSelect(mActiveInterface->mClient[lClient].GetUDPSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
+				}
 
 				break;
 
@@ -2640,8 +2709,12 @@ void MR_NetworkInterface::OnP2PSessionFailed(P2PSessionConnectFail_t *pParam)
 
 	if (lClient != MR_ID_NOT_SET)
 	{
-		mClient[lClient].DisconnectSteam();
-		mClient[lClient].Disconnect();
+		const BOOL lWasPreLogued = mCanBePreLogued[lClient];
+		CleanupClientState(lClient, mGameModal);
+
+		if(lWasPreLogued) {
+			NotifyClientRemoved(lClient);
+		}
 	}
 }
 
@@ -2678,16 +2751,17 @@ void MR_NetworkInterface::CheckP2PAvailability() const
 				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_SERVER_CONNECT, 0, 0);
 			} else if (sBuffer->mMessageType == STM_NEW_CLIENT) {		
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_NEW_CLIENT, 0, 0);
-			} else if (sBuffer->mMessageType == STM_CLIENT_CONNECT) {		
+			} else if ((sBuffer->mMessageType == STM_CLIENT_CONNECT) && (lClient != MR_ID_NOT_SET)) {		
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CONNECT);
-			} else if (sBuffer->mMessageType == STM_CLIENT_CLOSE) {		
+			} else if ((sBuffer->mMessageType == STM_CLIENT_CLOSE) && (lClient != MR_ID_NOT_SET)) {		
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CLOSE);
-			} else if (sBuffer->mMessageType == MRNM_GAME_NAME) {
+			} else if ((sBuffer->mMessageType == MRNM_GAME_NAME) && (lClient != MR_ID_NOT_SET)) {
 				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_CLIENT + lClient, 0, FD_READ);
+			} else if (lClient == MR_ID_NOT_SET) {
+				TRACE(" Ignoring Steam message type %d from unknown client\n", sBuffer->mMessageType);
 			} else {
 				TRACE(" Message type received %d from client %d\n", sBuffer->mMessageType, lClient);
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_READ);
-				break;
 			}
 		}
 		free( msg );

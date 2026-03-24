@@ -199,6 +199,8 @@ class MR_NetworkInterface
 		static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		// Helper function
+		void CleanupClientState(int pClient, HWND pWindow = NULL);
+		void NotifyClientRemoved(int pClient);
 		void SendConnectionDoneIfNeeded();
 
 		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionRequest, P2PSessionRequest_t ); // REQUIRED
