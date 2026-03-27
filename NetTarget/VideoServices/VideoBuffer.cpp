@@ -246,6 +246,40 @@ void PrintLog(const char *pFormat, ...);
 #define DD_CALL( pFunc )   pFunc
 #endif
 
+namespace {
+	struct DDAdapterSearchContext
+	{
+		HMONITOR monitor;
+		BOOL hasGuid;
+		GUID guid;
+
+		DDAdapterSearchContext(HMONITOR pMonitor) :
+			monitor(pMonitor), hasGuid(FALSE)
+		{
+			memset(&guid, 0, sizeof(guid));
+		}
+	};
+
+	BOOL CALLBACK FindMonitorAdapterCallback(GUID FAR *lpGUID, LPSTR lpDriverDescription,
+		LPSTR lpDriverName, LPVOID lpContext, HMONITOR hMonitor)
+	{
+		DDAdapterSearchContext *ctx =
+			reinterpret_cast<DDAdapterSearchContext*>(lpContext);
+		(void) lpDriverDescription;
+		(void) lpDriverName;
+
+		if(ctx->monitor == hMonitor) {
+			if(lpGUID != NULL) {
+				ctx->guid = *lpGUID;
+				ctx->hasGuid = TRUE;
+			}
+			return DDENUMRET_CANCEL;
+		}
+
+		return DDENUMRET_OK;
+	}
+}
+
 // Computes the run length and shift of the block of ones in a bitmask.
 // Example: If the mask is "00011100" then mSize=3 and mShift=2.
 void MR_VideoBuffer::Channel::SetMask(DWORD mask)
@@ -305,6 +339,11 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	mBrightness = pBrightness;
 
 	mSpecialWindowMode = FALSE;
+	SetRect(&mFullscreenRect, 0, 0,
+		GetSystemMetrics(SM_CXSCREEN),
+		GetSystemMetrics(SM_CYSCREEN));
+	mRequestedAdapterGuidValid = FALSE;
+	mCurrentAdapterGuidValid = FALSE;
 
 	// backported from newer VideoBuffer.cpp
 	// Load DirectDraw.
@@ -325,15 +364,7 @@ MR_VideoBuffer::~MR_VideoBuffer()
 	//   mFullScreen        = TRUE;
 	//   mSpecialWindowMode = FALSE;   // force real windows resolution
 	ReturnToWindowsResolution();
-
-	if(mPalette != NULL) {
-		mPalette->Release();
-		mPalette = NULL;
-	}
-
-	if(mDirectDraw != NULL) {
-		mDirectDraw->Release();
-	}
+	ReleaseDirectDraw();
 
 	delete[]mBackPalette;
 	delete[]mPackedPalette;
@@ -354,6 +385,16 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 
 	BOOL lReturnValue = TRUE;
 
+	if(mDirectDraw != NULL) {
+		BOOL adapterChanged =
+			(mCurrentAdapterGuidValid != mRequestedAdapterGuidValid) ||
+			(mCurrentAdapterGuidValid &&
+			 memcmp(&mCurrentAdapterGuid, &mRequestedAdapterGuid, sizeof(GUID)) != 0);
+		if(adapterChanged) {
+			ReleaseDirectDraw();
+		}
+	}
+
 	if(mDirectDraw == NULL) {
 		typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 		LPDIRECTDRAWCREATE directDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(directDrawInst, "DirectDrawCreate");
@@ -361,14 +402,21 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 			return false;
 		}
 
-		if(DD_CALL(directDrawCreate(NULL, &mDirectDraw, NULL)) != DD_OK) {
+		GUID *adapterGuid = mRequestedAdapterGuidValid ? &mRequestedAdapterGuid : NULL;
+		if(DD_CALL(directDrawCreate(adapterGuid, &mDirectDraw, NULL)) != DD_OK) {
 			ASSERT(FALSE);
 			lReturnValue = false;
 		}
 		else {
+			mCurrentAdapterGuidValid = mRequestedAdapterGuidValid;
+			if(mRequestedAdapterGuidValid) {
+				mCurrentAdapterGuid = mRequestedAdapterGuid;
+			}
+
 			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
 				ASSERT(FALSE);
 				lReturnValue = false;
+				ReleaseDirectDraw();
 			}
 		}
 	}
@@ -399,6 +447,23 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 	}
 
 	return lReturnValue;
+}
+
+void MR_VideoBuffer::ReleaseDirectDraw()
+{
+	DeleteInternalSurfaces();
+
+	if(mPalette != NULL) {
+		mPalette->Release();
+		mPalette = NULL;
+	}
+
+	if(mDirectDraw != NULL) {
+		mDirectDraw->Release();
+		mDirectDraw = NULL;
+	}
+
+	mCurrentAdapterGuidValid = FALSE;
 }
 
 BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
@@ -694,6 +759,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
+	mRequestedAdapterGuidValid = FALSE;
 
 	lReturnValue = InitDirectDraw();
 
@@ -880,7 +946,11 @@ if(lReturnValue) {
 
 if(lReturnValue) {
 	// Resize to full screen
-	ShowWindow(mWindow, SW_MAXIMIZE);
+	SetWindowPos(mWindow, HWND_TOPMOST,
+		mFullscreenRect.left, mFullscreenRect.top,
+		mFullscreenRect.right - mFullscreenRect.left,
+		mFullscreenRect.bottom - mFullscreenRect.top,
+		SWP_SHOWWINDOW);
 
 }
 
@@ -938,6 +1008,52 @@ if(!lReturnValue) {
 mModeSettingInProgress = FALSE;
 
 return lReturnValue;
+}
+
+BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
+{
+	HMONITOR monitor = MonitorFromWindow(mWindow, MONITOR_DEFAULTTONEAREST);
+	if(monitor == NULL) {
+		return FALSE;
+	}
+
+	MONITORINFOEX monitorInfo;
+	memset(&monitorInfo, 0, sizeof(monitorInfo));
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if(!GetMonitorInfo(monitor, &monitorInfo)) {
+		return FALSE;
+	}
+
+	DEVMODE displayMode;
+	memset(&displayMode, 0, sizeof(displayMode));
+	displayMode.dmSize = sizeof(displayMode);
+	if(!EnumDisplaySettings(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, &displayMode)) {
+		return FALSE;
+	}
+
+	if(pResolution != NULL) {
+		pResolution->x = displayMode.dmPelsWidth;
+		pResolution->y = displayMode.dmPelsHeight;
+	}
+
+	mFullscreenRect = monitorInfo.rcMonitor;
+	mRequestedAdapterGuidValid = FALSE;
+
+	if(directDrawInst != NULL) {
+		LPDIRECTDRAWENUMERATEEX enumerateEx =
+			(LPDIRECTDRAWENUMERATEEX)GetProcAddress(directDrawInst, "DirectDrawEnumerateExA");
+		if(enumerateEx != NULL) {
+			DDAdapterSearchContext ctx(monitor);
+			if(enumerateEx(FindMonitorAdapterCallback, &ctx,
+				DDENUM_ATTACHEDSECONDARYDEVICES) == DD_OK && ctx.hasGuid)
+			{
+				mRequestedAdapterGuid = ctx.guid;
+				mRequestedAdapterGuidValid = TRUE;
+			}
+		}
+	}
+
+	return TRUE;
 }
 
 BOOL MR_VideoBuffer::IsWindowMode() const

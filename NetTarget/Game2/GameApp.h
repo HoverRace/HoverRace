@@ -126,7 +126,6 @@ class MR_GameApp
 
 		void OnDisplayChange();
 		void AssignPalette();
-		BOOL GetDesktopResolution(POINT* lpPoint);
 
 		void PauseGameThread();
 		void RestartGameThread();

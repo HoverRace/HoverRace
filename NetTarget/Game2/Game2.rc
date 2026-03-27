@@ -77,16 +77,7 @@ BEGIN
     END
     POPUP "&Setting"
     BEGIN
-        MENUITEM "&1 320x240\tShift+F8",        ID_SETTING_320X240
-        MENUITEM "&2 640x480\tF8",              ID_SETTING_640X480
-        MENUITEM "&3 800x600\tAlt+F8",          ID_SETTING_800X600
-        MENUITEM "&4 1024x768\tF9",             ID_SETTING_1024X768
-        MENUITEM "&5 1280x768\tShift+F9",       ID_SETTING_1280X768
-        MENUITEM "&6 1280x800\tAlt+F9",         ID_SETTING_1280X800
-        MENUITEM "&7 1280x1024\tF10",           ID_SETTING_1280X1024
-        MENUITEM "&8 1400x1050\tShift+F10",     ID_SETTING_1400X1050
-        MENUITEM "&9 1600x1200\tAlt+F10",       ID_SETTING_1600X1200
-        MENUITEM "&0 Desktop\tF11",             ID_SETTING_DESKTOP
+        MENUITEM "&Fullscreen\tF11",            ID_SETTING_DESKTOP
         MENUITEM "&Window\tAlt+Enter",          ID_SETTING_WINDOW
         MENUITEM SEPARATOR
         MENUITEM "&Properties...",              ID_SETTING_PROPERTIES
@@ -112,15 +103,6 @@ BEGIN
     VK_F2,          ID_GAME_NETWORK_INTERNET, VIRTKEY, NOINVERT
     "N",            ID_GAME_NEW,            VIRTKEY, CONTROL, NOINVERT
     VK_ESCAPE,      ID_GAME_PAUSE,          VIRTKEY, NOINVERT
-    VK_F9,          ID_SETTING_1024X768,    VIRTKEY, NOINVERT
-    VK_F10,         ID_SETTING_1280X1024,   VIRTKEY, NOINVERT
-    VK_F9,          ID_SETTING_1280X768,    VIRTKEY, SHIFT, NOINVERT
-    VK_F9,          ID_SETTING_1280X800,    VIRTKEY, ALT, NOINVERT
-    VK_F10,         ID_SETTING_1400X1050,   VIRTKEY, SHIFT, NOINVERT
-    VK_F10,         ID_SETTING_1600X1200,   VIRTKEY, ALT, NOINVERT
-    VK_F8,          ID_SETTING_320X240,     VIRTKEY, SHIFT, NOINVERT
-    VK_F8,          ID_SETTING_640X480,     VIRTKEY, NOINVERT
-    VK_F8,          ID_SETTING_800X600,     VIRTKEY, ALT, NOINVERT
     VK_F12,         ID_SETTING_REFRESHCOLORS, VIRTKEY, NOINVERT
     VK_RETURN,      ID_SETTING_WINDOW,      VIRTKEY, ALT, NOINVERT
     VK_F3,          ID_VIEW_3DACTION,       VIRTKEY, NOINVERT
@@ -158,7 +140,7 @@ BEGIN
             VALUE "FileDescription", "Online Racing Game"
             VALUE "FileVersion", "1.23.6.0"
             VALUE "InternalName", "HoverRace"
-            VALUE "LegalCopyright", "Copyright © 2008"
+            VALUE "LegalCopyright", "Copyright ï¿½ 2008"
             VALUE "OriginalFilename", "HRace.exe"
             VALUE "ProductName", "HoverRace"
             VALUE "ProductVersion", "1.23.6.0"

@@ -50,6 +50,11 @@ class MR_VideoBuffer
 		BOOL mSpecialWindowMode;				  // Use a 256 color mode when switching to window mode
 		int mSpecialModeXRes;
 		int mSpecialModeYRes;
+		RECT mFullscreenRect;
+		BOOL mRequestedAdapterGuidValid;
+		GUID mRequestedAdapterGuid;
+		BOOL mCurrentAdapterGuidValid;
+		GUID mCurrentAdapterGuid;
 
 		LONG mOriginalExStyle;					  // Only valid if mFullScreen
 		LONG mOriginalStyle;					  // Only valid if mFullScreen
@@ -96,6 +101,7 @@ class MR_VideoBuffer
 		BOOL InitDirectDraw();
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();
+		void ReleaseDirectDraw();
 		void ReturnToWindowsResolution();		  //Automaticly call DeleteInternalSurfaces
 
 		void Flip();
@@ -109,6 +115,7 @@ class MR_VideoBuffer
 		MR_DllDeclare BOOL SetVideoMode();		  // In a window mode
 												  // Full screen mode
 		MR_DllDeclare BOOL SetVideoMode(int pXRes, int pYRes);
+		MR_DllDeclare BOOL PrepareDesktopFullscreen(POINT *pResolution);
 		MR_DllDeclare BOOL SetMenuVideoMode();	  // slow full screen mode for menus
 		MR_DllDeclare void EnterIconMode();
 		MR_DllDeclare void ExitIconMode();

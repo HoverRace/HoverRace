@@ -414,11 +414,23 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, nativeBppFullscreen);
 	READ_BOOL(root, useOriginalCameraParams);
 
-	READ_INT(root, windowPosX, 1, GetSystemMetrics(SM_CXSCREEN));
-	READ_INT(root, windowPosY, 1, GetSystemMetrics(SM_CYSCREEN));
+	{
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowPosX"));
+		if (_scalar != NULL) windowPosX = _scalar->AsInt(windowPosX);
+	}
+	{
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowPosY"));
+		if (_scalar != NULL) windowPosY = _scalar->AsInt(windowPosY);
+	}
 
-	READ_INT(root, windowSizeX, 320, GetSystemMetrics(SM_CXSCREEN));
-	READ_INT(root, windowSizeY, 240, GetSystemMetrics(SM_CYSCREEN));
+	{
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowSizeX"));
+		if (_scalar != NULL) windowSizeX = _scalar->AsInt(windowSizeX, 320, INT_MAX);
+	}
+	{
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowSizeY"));
+		if (_scalar != NULL) windowSizeY = _scalar->AsInt(windowSizeY, 240, INT_MAX);
+	}
 }
 
 void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)

@@ -1349,15 +1349,6 @@ void MR_GameApp::AssignPalette()
 	}
 }
 
-// Find the desktop resolution of the primary monitor.
-// Returns FALSE if the operation failed.
-BOOL MR_GameApp::GetDesktopResolution(POINT* lpPoint)
-{
-	lpPoint->x = GetSystemMetrics(SM_CXSCREEN);
-	lpPoint->y = GetSystemMetrics(SM_CYSCREEN);
-	return (lpPoint->x != 0 && lpPoint->y != 0);
-}
-
 void MR_GameApp::DeleteMovieWnd()
 {
 	if(mMovieWnd != NULL) {
@@ -1802,8 +1793,8 @@ void MR_GameApp::DrawBackground()
 // Attempt to switch fullscreen, using the current desktop resolution.
 void MR_GameApp::SwitchToDesktopFullscreen()
 {
-	POINT lRes;
-	if (GetDesktopResolution(&lRes)) {
+	POINT lRes = { 0, 0 };
+	if((mVideoBuffer != NULL) && mVideoBuffer->PrepareDesktopFullscreen(&lRes)) {
 		SetVideoMode(lRes.x, lRes.y);
 	}
 }
@@ -1814,24 +1805,10 @@ void MR_GameApp::UpdateMenuItems()
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
 
-	POINT lRes;
-	if (GetDesktopResolution(&lRes)) {
-		char s[256] = {0};
-		int lLen = _snprintf(s, 255, "&0 Desktop (%dx%d)\tF11", lRes.x, lRes.y);
-		if (lLen < 0) {
-			strcpy(s, "&0 Desktop\tF11");
-		}
-
-		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
-		lMenuInfo.fState = MFS_ENABLED;
-		lMenuInfo.dwTypeData = s;
-		lMenuInfo.cch = lLen;
-	} else {
-		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
-		lMenuInfo.fState = MFS_GRAYED;
-		lMenuInfo.dwTypeData = "&0 Desktop";
-		lMenuInfo.cch = strlen(lMenuInfo.dwTypeData);
-	}
+	lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
+	lMenuInfo.fState = MFS_ENABLED;
+	lMenuInfo.dwTypeData = "&Fullscreen\tF11";
+	lMenuInfo.cch = strlen(lMenuInfo.dwTypeData);
 
 	HMENU lMenu = GetMenu(mMainWindow);
 	SetMenuItemInfo(lMenu, ID_SETTING_DESKTOP, FALSE, &lMenuInfo);
