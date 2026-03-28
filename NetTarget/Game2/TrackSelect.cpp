@@ -30,10 +30,12 @@
 #include "../VideoServices/ColorPalette.h"
 
 #include <algorithm>
+#include <cctype>
 
 namespace {
 	const int TRACK_MAP_RECORD = 3;
 	const COLORREF TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
+	const DWORD TRACK_SEARCH_TIMEOUT = 1500;
 
 	struct TrackPreviewData
 	{
@@ -97,8 +99,10 @@ static void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem);
 static COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex);
 static void InitTrackPreviewPalette();
 static bool LoadTrackPreview(const TrackEntry &pEntry);
+static LRESULT CALLBACK TrackListProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static void SortList();
 static void UpdateSelectedTrackInfo(HWND pWindow);
+static int HandleTrackListChar(HWND pWindow, UINT pChar);
 static void ReadTrackList();
 static void ReadTrackListDir(const std::string &dir);
 static void CleanList();
@@ -119,6 +123,9 @@ static BOOL gsAllowWeapons = FALSE;
 static TrackPreviewData gsTrackPreview;
 static COLORREF gsTrackPreviewPalette[MR_NB_COLORS];
 static bool gsTrackPreviewPaletteInit = false;
+static std::string gsTrackSearchPrefix;
+static DWORD gsTrackSearchTick = 0;
+static WNDPROC gsTrackListWndProc = NULL;
 
 /**
  * Open a track file.
@@ -172,6 +179,8 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 {
 	bool lReturnValue = true;
 	gsSelectedEntry = -1;
+	gsTrackSearchPrefix.clear();
+	gsTrackSearchTick = 0;
 
 	// Load the entry list
 	MR_WAIT_CURSOR ReadTrackList();
@@ -192,6 +201,113 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 	return lReturnValue;
 }
 
+static bool StartsWithNoCase(const std::string &value, const std::string &prefix)
+{
+	if(prefix.length() > value.length()) {
+		return false;
+	}
+
+	for(size_t i = 0; i < prefix.length(); ++i) {
+		if(std::tolower((unsigned char) value[i]) != std::tolower((unsigned char) prefix[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static int FindTrackPrefixMatch(const std::string &prefix)
+{
+	if(prefix.empty()) {
+		return -1;
+	}
+
+	for(size_t i = 0; i < gsSortedTrackList.size(); ++i) {
+		if(StartsWithNoCase(gsSortedTrackList[i]->mFileName, prefix)) {
+			return (int) i;
+		}
+	}
+
+	return -1;
+}
+
+static void SelectTrackEntry(HWND pWindow, int entry)
+{
+	if((entry >= 0) && ((size_t) entry < gsSortedTrackList.size())) {
+		gsSelectedEntry = entry;
+		SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, entry, 0);
+		UpdateSelectedTrackInfo(pWindow);
+	}
+}
+
+static int HandleTrackListChar(HWND pWindow, UINT pChar)
+{
+	DWORD now = GetTickCount();
+	if(now - gsTrackSearchTick > TRACK_SEARCH_TIMEOUT) {
+		gsTrackSearchPrefix.clear();
+	}
+	gsTrackSearchTick = now;
+
+	if(pChar == '\b') {
+		if(!gsTrackSearchPrefix.empty()) {
+			gsTrackSearchPrefix.erase(gsTrackSearchPrefix.length() - 1);
+		}
+
+		int match = FindTrackPrefixMatch(gsTrackSearchPrefix);
+		if(match != -1) {
+			SelectTrackEntry(pWindow, match);
+		}
+		return -1;
+	}
+
+	if(pChar > 0xff) {
+		return -2;
+	}
+
+	unsigned char ch = (unsigned char) pChar;
+	if(!std::isprint(ch)) {
+		return -2;
+	}
+
+	std::string search = gsTrackSearchPrefix + (char) ch;
+	int match = FindTrackPrefixMatch(search);
+	if(match == -1) {
+		search.assign(1, (char) ch);
+		match = FindTrackPrefixMatch(search);
+	}
+
+	if(match != -1) {
+		gsTrackSearchPrefix = search;
+		SelectTrackEntry(pWindow, match);
+	}
+	else {
+		gsTrackSearchPrefix.clear();
+	}
+
+	return -1;
+}
+
+static LRESULT CALLBACK TrackListProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+{
+	switch(pMsgId) {
+		case WM_CHAR:
+		{
+			int result = HandleTrackListChar(GetParent(pWindow), (UINT) pWParam);
+			if(result == -1) {
+				return 0;
+			}
+			break;
+		}
+		case WM_NCDESTROY:
+			if(gsTrackListWndProc != NULL) {
+				SetWindowLongPtr(pWindow, GWLP_WNDPROC, (LONG_PTR) gsTrackListWndProc);
+			}
+			break;
+	}
+
+	return CallWindowProc(gsTrackListWndProc, pWindow, pMsgId, pWParam, pLParam);
+}
+
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
@@ -200,6 +316,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+		{
+			HWND listBox = GetDlgItem(pWindow, IDC_LIST);
+			if(listBox != NULL) {
+				gsTrackListWndProc = (WNDPROC) SetWindowLongPtr(listBox, GWLP_WNDPROC,
+					(LONG_PTR) TrackListProc);
+			}
+
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
 				iter != gsSortedTrackList.end(); ++iter)
@@ -220,14 +343,19 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				gsSelectedEntry = -1;
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
+			gsTrackSearchPrefix.clear();
+			gsTrackSearchTick = 0;
 			UpdateSelectedTrackInfo(pWindow);
 			lReturnValue = TRUE;
 			break;
+		}
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
 				case IDC_LIST:
 					switch (HIWORD(pWParam)) {
 						case LBN_SELCHANGE:
+							gsTrackSearchPrefix.clear();
+							gsTrackSearchTick = 0;
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
 							UpdateSelectedTrackInfo(pWindow);
 							break;
@@ -633,6 +761,8 @@ void CleanList()
 	ClearTrackPreview();
 	gsTrackList.clear();
 	gsSortedTrackList.clear();
+	gsTrackSearchPrefix.clear();
+	gsTrackSearchTick = 0;
 }
 
 void UpdateSelectedTrackInfo(HWND pWindow)
