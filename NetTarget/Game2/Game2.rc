@@ -302,12 +302,16 @@ BEGIN
     DEFPUSHBUTTON   "Start Game",IDOK,57,114,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,117,114,50,14
     LTEXT           "Unknown",IDC_GAME_NAME,62,27,155,8
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_NOSORTHEADER | WS_BORDER,8,41,209,66
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_NOSORTHEADER | WS_BORDER,8,57,209,50
     LTEXT           "Server addr. :",IDC_STATIC,8,7,48,8
     LTEXT           "Server port :",IDC_STATIC,8,17,44,8
     LTEXT           "Unknown",IDC_SERVER_ADDR,62,7,155,8
     LTEXT           "Unknown",IDC_SERVER_PORT,62,17,39,8
     LTEXT           "Game name :",IDC_STATIC,8,27,44,8
+    LTEXT           "Laps :",IDC_STATIC,8,37,31,8
+    LTEXT           "Unknown",IDC_TCP_LAPS,62,37,39,8
+    LTEXT           "Weapons :",IDC_STATIC,8,47,38,8
+    LTEXT           "Unknown",IDC_TCP_WEAPONS,62,47,155,8
 END
 
 IDD_TCP_CLIENT DIALOGEX 0, 0, 224, 129
@@ -315,7 +319,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSME
 CAPTION "TCP Connections"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,8,41,209,66
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,8,57,209,50
     PUSHBUTTON      "Cancel",IDCANCEL,167,110,50,14
     LTEXT           "Server addr. :",IDC_STATIC,8,7,48,8
     LTEXT           "Server port :",IDC_STATIC,8,17,44,8
@@ -323,6 +327,10 @@ BEGIN
     LTEXT           "Unknown",IDC_SERVER_PORT,62,17,39,8
     LTEXT           "Game name :",IDC_STATIC,8,27,44,8
     LTEXT           "Unknown",IDC_GAME_NAME,62,27,155,8
+    LTEXT           "Laps :",IDC_STATIC,8,37,31,8
+    LTEXT           "Unknown",IDC_TCP_LAPS,62,37,39,8
+    LTEXT           "Weapons :",IDC_STATIC,8,47,38,8
+    LTEXT           "Unknown",IDC_TCP_WEAPONS,62,47,155,8
     LTEXT           "Please wait...",IDC_STATIC,11,114,106,8
 END
 

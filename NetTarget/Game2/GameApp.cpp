@@ -2123,7 +2123,9 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer) != FALSE);
+			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer, TRUE,
+				MR_Config::GetInstance()->net.tcpServPort, NULL, 0,
+				lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();

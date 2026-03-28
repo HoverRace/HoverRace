@@ -751,13 +751,13 @@ void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
  * @param pDefaultPort The default port (MR_DEFAULT_NET_PORT)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
+BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
 {
 	mMasterMode = TRUE;
 	mSended12SecClockUpdate = FALSE;
 	mSended8SecClockUpdate = FALSE;
 
-	return mNetInterface.MasterConnect(pWindow, pTrackName, pPromptForPort, pDefaultPort, pModalessDlg, pReturnMessage);
+	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort, pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
 }
 
 /**
@@ -785,11 +785,11 @@ BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
  * @param pGameName String representing the name of the game (track name)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
+BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
 {
 	mMasterMode = FALSE;
 
-	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID, pGameName, pModalessDlg, pReturnMessage);
+	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID, pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
 }
 
 /**

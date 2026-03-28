@@ -133,9 +133,9 @@ class MR_NetworkSession : public MR_ClientSession
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
 		void SetRoomList(HoverRace::Client::RoomListPtr roomList);
-		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE);
 		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
-		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
 		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap, int &pNbSplit, MR_SimulationTime & pFinishFirstSplit, MR_SimulationTime & pFirstSplitDifference, MR_SimulationTime & pFinishSecondSplit, MR_SimulationTime & pSecondSplitDifference) const;

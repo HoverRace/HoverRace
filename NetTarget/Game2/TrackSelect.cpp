@@ -37,6 +37,68 @@ namespace {
 	const COLORREF TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
 	const DWORD TRACK_SEARCH_TIMEOUT = 1500;
 
+	bool IsInternetMeetingRoomWindow(HWND wnd)
+	{
+		return
+			(GetDlgItem(wnd, IDC_GAME_LIST) != NULL) &&
+			(GetDlgItem(wnd, IDC_USER_LIST) != NULL);
+	}
+
+	void PositionDialogToRightOfOwner(HWND dialog, int gap = 3)
+	{
+		const int MIN_SIDE_BY_SIDE_WIDTH = 1200;
+		const int RIGHT_POSITION_NUDGE = 4;
+
+		HWND owner = GetWindow(dialog, GW_OWNER);
+		if(owner == NULL) {
+			owner = GetParent(dialog);
+		}
+
+		if((owner == NULL) || !IsWindowVisible(owner) || !IsInternetMeetingRoomWindow(owner)) {
+			return;
+		}
+
+		RECT ownerRect;
+		RECT dialogRect;
+		if(!GetWindowRect(owner, &ownerRect) || !GetWindowRect(dialog, &dialogRect)) {
+			return;
+		}
+
+		HMONITOR monitor = MonitorFromRect(&ownerRect, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO monitorInfo;
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		if(!GetMonitorInfo(monitor, &monitorInfo)) {
+			SystemParametersInfo(SPI_GETWORKAREA, 0, &monitorInfo.rcWork, 0);
+		}
+
+		const int workAreaWidth = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+		if(workAreaWidth < MIN_SIDE_BY_SIDE_WIDTH) {
+			return;
+		}
+
+		const int dialogWidth = dialogRect.right - dialogRect.left;
+		const int dialogHeight = dialogRect.bottom - dialogRect.top;
+
+		int x = ownerRect.right + gap - RIGHT_POSITION_NUDGE;
+		int y = ownerRect.top;
+
+		if((x + dialogWidth) > monitorInfo.rcWork.right) {
+			x = ownerRect.right - dialogWidth - gap;
+		}
+		if(x < monitorInfo.rcWork.left) {
+			x = monitorInfo.rcWork.left;
+		}
+
+		if((y + dialogHeight) > monitorInfo.rcWork.bottom) {
+			y = monitorInfo.rcWork.bottom - dialogHeight;
+		}
+		if(y < monitorInfo.rcWork.top) {
+			y = monitorInfo.rcWork.top;
+		}
+
+		SetWindowPos(dialog, NULL, x, y, 0, 0, SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER);
+	}
+
 	struct TrackPreviewData
 	{
 		int mWidth;
@@ -401,6 +463,8 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		// Catch environment modification events
 		case WM_INITDIALOG:
 		{
+			PositionDialogToRightOfOwner(pWindow);
+
 			HWND listBox = GetDlgItem(pWindow, IDC_LIST);
 			if(listBox != NULL) {
 				gsTrackListWndProc = (WNDPROC) SetWindowLongPtr(listBox, GWLP_WNDPROC,

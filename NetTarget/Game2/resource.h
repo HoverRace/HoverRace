@@ -164,6 +164,9 @@
 #define IDC_USE_ORIGINAL_CAMERA_PARAMS  1090
 #define IDC_TRACK_PREVIEW               1091
 #define IDC_TRACK_FILTER                1092
+#define IDC_TCP_TRACK_PREVIEW           1093
+#define IDC_TCP_LAPS                    1094
+#define IDC_TCP_WEAPONS                 1095
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774

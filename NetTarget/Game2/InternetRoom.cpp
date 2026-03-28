@@ -59,6 +59,68 @@
 
 // #endif
 
+static bool IsInternetMeetingRoomWindow(HWND wnd)
+{
+	return
+		(GetDlgItem(wnd, IDC_GAME_LIST) != NULL) &&
+		(GetDlgItem(wnd, IDC_USER_LIST) != NULL);
+}
+
+static void PositionDialogToRightOfOwner(HWND dialog, int gap = 3)
+{
+	const int MIN_SIDE_BY_SIDE_WIDTH = 1200;
+	const int RIGHT_POSITION_NUDGE = 4;
+
+	HWND owner = GetWindow(dialog, GW_OWNER);
+	if(owner == NULL) {
+		owner = GetParent(dialog);
+	}
+
+	if((owner == NULL) || !IsWindowVisible(owner) || !IsInternetMeetingRoomWindow(owner)) {
+		return;
+	}
+
+	RECT ownerRect;
+	RECT dialogRect;
+	if(!GetWindowRect(owner, &ownerRect) || !GetWindowRect(dialog, &dialogRect)) {
+		return;
+	}
+
+	HMONITOR monitor = MonitorFromRect(&ownerRect, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo;
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if(!GetMonitorInfo(monitor, &monitorInfo)) {
+		SystemParametersInfo(SPI_GETWORKAREA, 0, &monitorInfo.rcWork, 0);
+	}
+
+	const int workAreaWidth = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+	if(workAreaWidth < MIN_SIDE_BY_SIDE_WIDTH) {
+		return;
+	}
+
+	const int dialogWidth = dialogRect.right - dialogRect.left;
+	const int dialogHeight = dialogRect.bottom - dialogRect.top;
+
+	int x = ownerRect.right + gap - RIGHT_POSITION_NUDGE;
+	int y = ownerRect.top;
+
+	if((x + dialogWidth) > monitorInfo.rcWork.right) {
+		x = ownerRect.right - dialogWidth - gap;
+	}
+	if(x < monitorInfo.rcWork.left) {
+		x = monitorInfo.rcWork.left;
+	}
+
+	if((y + dialogHeight) > monitorInfo.rcWork.bottom) {
+		y = monitorInfo.rcWork.bottom - dialogHeight;
+	}
+	if(y < monitorInfo.rcWork.top) {
+		y = monitorInfo.rcWork.top;
+	}
+
+	SetWindowPos(dialog, NULL, x, y, 0, 0, SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER);
+}
+
 #define MR_MAX_SERVER_ENTRIES  12
 #define MR_MAX_BANNER_ENTRIES  10
 
@@ -1778,11 +1840,19 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 								if(lSuccess) {
 									// connect to the game server
-									CString lCurrentTrack;
-
-									lCurrentTrack.Format("%s  %d laps", (const char *) mThis->mGameList[lFocus].mTrack, mThis->mGameList[lFocus].mNbLap);
+									CString lCurrentTrack = mThis->mGameList[lFocus].mTrack;
 									TRACE("ConnectToServer 1\n");
-									lSuccess = mThis->mSession->ConnectToServer(pWindow, mThis->mGameList[lFocus].mIPAddr, mThis->mGameList[lFocus].mPort, mThis->mGameList[lFocus].mSteamID.ConvertToUint64(), lCurrentTrack, &mThis->mModelessDlg, MRM_DLG_END_JOIN);
+									lSuccess = mThis->mSession->ConnectToServer(pWindow,
+										mThis->mGameList[lFocus].mIPAddr,
+										mThis->mGameList[lFocus].mPort,
+										mThis->mGameList[lFocus].mSteamID.ConvertToUint64(),
+										lCurrentTrack,
+										&mThis->mModelessDlg,
+										MRM_DLG_END_JOIN,
+										mThis->mGameList[lFocus].mTrack,
+										mThis->mGameList[lFocus].mNbLap,
+										TRUE,
+										mThis->mGameList[lFocus].mAllowWeapons);
 
 									TRACE("ConnectToServer 2\n");
 								}
@@ -1827,7 +1897,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
 
-								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_Config::GetInstance()->net.tcpServPort, &mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
+								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName,
+									FALSE, MR_Config::GetInstance()->net.tcpServPort,
+									&mThis->mModelessDlg, MRM_DLG_END_ADD,
+									lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game
@@ -2181,6 +2254,8 @@ BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
+				PositionDialogToRightOfOwner(pWindow);
+
 				// Setup message
 				SetDlgItemText(pWindow, IDC_TEXT, mThis->mNetOpString);
 
@@ -2248,6 +2323,8 @@ BOOL CALLBACK MR_InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPAR
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
+				PositionDialogToRightOfOwner(pWindow);
+
 				// Setup message
 				SetDlgItemText(pWindow, IDC_TEXT, mThis->mNetOpString);
 	
@@ -2311,6 +2388,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
+				PositionDialogToRightOfOwner(pWindow);
+
 				//RoomList *roomList = reinterpret_cast<RoomList*>(pLParam);
 
 				// Setup message

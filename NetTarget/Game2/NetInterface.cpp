@@ -22,11 +22,16 @@
 #include "stdafx.h"
 
 #include <Mmsystem.h>
+#include <algorithm>
+#include <vector>
 
 #include "NetInterface.h"
+#include "TrackSelect.h"
 #include "resource.h"
+#include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/Config.h"
 #include "../Util/StrRes.h"
+#include "../VideoServices/ColorPalette.h"
 
 // Private window messages
 #define MRM_SERVER_CONNECT (WM_USER + 1)
@@ -62,10 +67,637 @@
 static CString GetLocalAddrStr(BOOL lSteamOnly);
 static MR_UInt32 GetAddrFromStr(const char *pName);
 static BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+static bool IsInternetMeetingRoomWindow(HWND wnd);
+static void PositionDialogToRightOfOwner(HWND dialog, int gap = 3);
+static bool GetDialogWorkArea(HWND dialog, RECT &workArea);
+static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle);
+static void ClearTcpTrackPreview();
+static void DrawTcpTrackPreview(const DRAWITEMSTRUCT *pDrawItem);
+static COLORREF GetTcpTrackPreviewColor(MR_UInt8 pColorIndex);
+static void InitTcpTrackPreviewPalette();
+static bool LoadTcpTrackPreview(const CString &trackName);
+static CString GetTcpTrackPreviewTrackName(HWND dialog);
+static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText);
+static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, CString &lapText, CString &weaponsText);
+static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText);
+static void UpdateTcpDialogTrackSummary(HWND dialog);
+
+namespace {
+	const int TCP_TRACK_MAP_RECORD = 3;
+	const COLORREF TCP_TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
+
+	struct TcpTrackPreviewData
+	{
+		int mWidth;
+		int mHeight;
+		std::vector<MR_UInt8> mBitmap;
+
+		TcpTrackPreviewData() : mWidth(0), mHeight(0) { }
+
+		void Reset()
+		{
+			mWidth = 0;
+			mHeight = 0;
+			mBitmap.clear();
+		}
+
+		bool IsAvailable() const
+		{
+			return !mBitmap.empty();
+		}
+	};
+}
 
 MR_NetworkInterface *MR_NetworkInterface::mActiveInterface = NULL;
 MR_NetMessageBuffer *MR_NetworkInterface::sBuffer = NULL;
 CSteamID MR_NetworkInterface::sSteamID = CSteamID();
+static TcpTrackPreviewData gsTcpTrackPreview;
+static COLORREF gsTcpTrackPreviewPalette[MR_NB_COLORS];
+static bool gsTcpTrackPreviewPaletteInit = false;
+static HWND gsTcpTrackPreviewWindow = NULL;
+static CString gsTcpOriginalGameName;
+static CString gsTcpTrackName;
+static CString gsTcpLapText;
+static CString gsTcpWeaponsText;
+
+static void PositionDialogToRightOfOwner(HWND dialog, int gap)
+{
+	const int MIN_SIDE_BY_SIDE_WIDTH = 1200;
+	const int RIGHT_POSITION_NUDGE = 4;
+
+	HWND owner = GetWindow(dialog, GW_OWNER);
+	if(owner == NULL) {
+		owner = GetParent(dialog);
+	}
+
+	if((owner == NULL) || !IsWindowVisible(owner) || !IsInternetMeetingRoomWindow(owner)) {
+		return;
+	}
+
+	RECT ownerRect;
+	RECT dialogRect;
+	if(!GetWindowRect(owner, &ownerRect) || !GetWindowRect(dialog, &dialogRect)) {
+		return;
+	}
+
+	HMONITOR monitor = MonitorFromRect(&ownerRect, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo;
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if(!GetMonitorInfo(monitor, &monitorInfo)) {
+		SystemParametersInfo(SPI_GETWORKAREA, 0, &monitorInfo.rcWork, 0);
+	}
+
+	const int workAreaWidth = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+	if(workAreaWidth < MIN_SIDE_BY_SIDE_WIDTH) {
+		return;
+	}
+
+	const int dialogWidth = dialogRect.right - dialogRect.left;
+	const int dialogHeight = dialogRect.bottom - dialogRect.top;
+
+	int x = ownerRect.right + gap - RIGHT_POSITION_NUDGE;
+	int y = ownerRect.top;
+
+	if((x + dialogWidth) > monitorInfo.rcWork.right) {
+		x = ownerRect.right - dialogWidth - gap;
+		if(x < ownerRect.left) {
+			x = monitorInfo.rcWork.right - dialogWidth - gap;
+		}
+	}
+
+	if((y + dialogHeight) > monitorInfo.rcWork.bottom) {
+		y = monitorInfo.rcWork.bottom - dialogHeight;
+	}
+	if(y < monitorInfo.rcWork.top) {
+		y = monitorInfo.rcWork.top;
+	}
+
+	SetWindowPos(dialog, NULL, x, y, 0, 0, SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER);
+}
+
+static bool IsInternetMeetingRoomWindow(HWND wnd)
+{
+	return
+		(GetDlgItem(wnd, IDC_GAME_LIST) != NULL) &&
+		(GetDlgItem(wnd, IDC_USER_LIST) != NULL);
+}
+
+static bool GetDialogWorkArea(HWND dialog, RECT &workArea)
+{
+	HWND owner = GetWindow(dialog, GW_OWNER);
+	if(owner == NULL) {
+		owner = GetParent(dialog);
+	}
+
+	HMONITOR monitor = MonitorFromWindow(owner != NULL ? owner : dialog, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo;
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if(!GetMonitorInfo(monitor, &monitorInfo)) {
+		return !!SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+	}
+
+	workArea = monitorInfo.rcWork;
+	return true;
+}
+
+static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
+{
+	const int MIN_EXPANDED_DIALOG_WIDTH = 1200;
+	const int MIN_PREVIEW_DIALOG_WIDTH = 1200;
+	const int TARGET_VISIBLE_PLAYERS = 10;
+	const int PREVIEW_MARGIN = 8;
+	const int PREVIEW_SIZE = 84;
+	const int PREVIEW_TOP = 6;
+	const int PREVIEW_LIST_GAP = 4;
+
+	if(listHandle == NULL) {
+		return;
+	}
+
+	RECT workArea;
+	if(!GetDialogWorkArea(dialog, workArea)) {
+		return;
+	}
+
+	if((workArea.right - workArea.left) < MIN_EXPANDED_DIALOG_WIDTH) {
+		return;
+	}
+
+	int currentVisibleRows = ListView_GetCountPerPage(listHandle);
+	if((currentVisibleRows <= 0) || (currentVisibleRows >= TARGET_VISIBLE_PLAYERS)) {
+		return;
+	}
+
+	RECT itemRect;
+	if(!ListView_GetItemRect(listHandle, 0, &itemRect, LVIR_BOUNDS)) {
+		return;
+	}
+
+	const int rowHeight = itemRect.bottom - itemRect.top;
+	if(rowHeight <= 0) {
+		return;
+	}
+
+	const int extraHeight = (TARGET_VISIBLE_PLAYERS - currentVisibleRows) * rowHeight;
+	if(extraHeight <= 0) {
+		return;
+	}
+
+	RECT dialogRect;
+	if(!GetWindowRect(dialog, &dialogRect)) {
+		return;
+	}
+
+	if(((dialogRect.bottom - dialogRect.top) + extraHeight) > (workArea.bottom - workArea.top)) {
+		return;
+	}
+
+	RECT listRect;
+	if(!GetWindowRect(listHandle, &listRect)) {
+		return;
+	}
+	MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&listRect), 2);
+
+	const int previewLayoutExtraHeight = ((workArea.right - workArea.left) >= MIN_PREVIEW_DIALOG_WIDTH) ?
+		(((PREVIEW_TOP + PREVIEW_SIZE + PREVIEW_LIST_GAP) > listRect.top) ?
+			((PREVIEW_TOP + PREVIEW_SIZE + PREVIEW_LIST_GAP) - listRect.top) : 0) : 0;
+	const int bottomControlShift = extraHeight + previewLayoutExtraHeight;
+
+	for(HWND child = GetWindow(dialog, GW_CHILD); child != NULL; child = GetWindow(child, GW_HWNDNEXT)) {
+		if(child == listHandle) {
+			continue;
+		}
+
+		RECT childRect;
+		if(!GetWindowRect(child, &childRect)) {
+			continue;
+		}
+		MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&childRect), 2);
+
+		if(childRect.top >= listRect.bottom) {
+			MoveWindow(child, childRect.left, childRect.top + bottomControlShift,
+				childRect.right - childRect.left, childRect.bottom - childRect.top, TRUE);
+		}
+	}
+
+	MoveWindow(listHandle, listRect.left, listRect.top + previewLayoutExtraHeight,
+		listRect.right - listRect.left, (listRect.bottom - listRect.top) + extraHeight, TRUE);
+
+	SetWindowPos(dialog, NULL, 0, 0, dialogRect.right - dialogRect.left,
+		(dialogRect.bottom - dialogRect.top) + bottomControlShift,
+		SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER);
+
+	if((workArea.right - workArea.left) < MIN_PREVIEW_DIALOG_WIDTH) {
+		return;
+	}
+
+	RECT updatedListRect;
+	if(!GetWindowRect(listHandle, &updatedListRect)) {
+		return;
+	}
+	MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&updatedListRect), 2);
+
+	const int listHeight = updatedListRect.bottom - updatedListRect.top;
+	const int previewSize = (listHeight < PREVIEW_SIZE) ? listHeight : PREVIEW_SIZE;
+	if(previewSize <= 0) {
+		return;
+	}
+
+	RECT updatedDialogRect;
+	if(!GetWindowRect(dialog, &updatedDialogRect)) {
+		return;
+	}
+	const int currentDialogWidth = updatedDialogRect.right - updatedDialogRect.left;
+	if(currentDialogWidth > (workArea.right - workArea.left)) {
+		return;
+	}
+
+	const int previewLeft = updatedListRect.right - previewSize;
+	const int previewTop = PREVIEW_TOP;
+
+	if(gsTcpTrackPreviewWindow == NULL) {
+		gsTcpTrackPreviewWindow = CreateWindow("STATIC", "",
+			WS_CHILD | WS_VISIBLE | SS_OWNERDRAW,
+			previewLeft, previewTop, previewSize, previewSize,
+			dialog, (HMENU) IDC_TCP_TRACK_PREVIEW, GetModuleHandle(NULL), NULL);
+	}
+	else {
+		MoveWindow(gsTcpTrackPreviewWindow, previewLeft, previewTop,
+			previewSize, previewSize, TRUE);
+		ShowWindow(gsTcpTrackPreviewWindow, SW_SHOW);
+	}
+
+	const int textRight = previewLeft - PREVIEW_MARGIN;
+	const int ellipsisStyle = SS_ENDELLIPSIS;
+	const int controlIds[] = { IDC_SERVER_ADDR, IDC_GAME_NAME, IDC_TCP_LAPS, IDC_TCP_WEAPONS };
+
+	for(size_t lIndex = 0; lIndex < sizeof(controlIds) / sizeof(controlIds[0]); lIndex++) {
+		HWND textWindow = GetDlgItem(dialog, controlIds[lIndex]);
+		if(textWindow != NULL) {
+			RECT textRect;
+			if(GetWindowRect(textWindow, &textRect)) {
+				MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&textRect), 2);
+				SetWindowLongPtr(textWindow, GWL_STYLE,
+					GetWindowLongPtr(textWindow, GWL_STYLE) | ellipsisStyle);
+				MoveWindow(textWindow, textRect.left, textRect.top,
+					textRight - textRect.left,
+					textRect.bottom - textRect.top, TRUE);
+			}
+		}
+	}
+
+}
+
+static void ClearTcpTrackPreview()
+{
+	gsTcpTrackPreview.Reset();
+}
+
+static COLORREF GetTcpTrackPreviewColor(MR_UInt8 pColorIndex)
+{
+	if(!gsTcpTrackPreviewPaletteInit) {
+		InitTcpTrackPreviewPalette();
+	}
+
+	if(pColorIndex < MR_NB_COLORS) {
+		return gsTcpTrackPreviewPalette[pColorIndex];
+	}
+	else {
+		return TCP_TRACK_PREVIEW_BACKGROUND;
+	}
+}
+
+static void InitTcpTrackPreviewPalette()
+{
+	int lCounter;
+	double lGamma = 1.2;
+	double lContrast = 0.95;
+	double lBrightness = 0.95;
+	int lNbColors = MR_NB_COLORS - MR_RESERVED_COLORS_BEGINNING - MR_RESERVED_COLORS_END;
+	MR_Config *lConfig = MR_Config::GetInstance();
+	PALETTEENTRY *lOurEntries;
+
+	if(lConfig != NULL) {
+		lGamma = lConfig->video.gamma;
+		lContrast = lConfig->video.contrast;
+		lBrightness = lConfig->video.brightness;
+	}
+
+	lOurEntries = MR_GetColors(
+		1.0 / lGamma,
+		lContrast * lBrightness,
+		lBrightness - (lContrast * lBrightness));
+
+	for(lCounter = 0; lCounter < MR_NB_COLORS; lCounter++) {
+		gsTcpTrackPreviewPalette[lCounter] = TCP_TRACK_PREVIEW_BACKGROUND;
+	}
+
+	for(lCounter = 0; lCounter < lNbColors; lCounter++) {
+		gsTcpTrackPreviewPalette[MR_RESERVED_COLORS_BEGINNING + lCounter] = RGB(
+			lOurEntries[lCounter].peRed,
+			lOurEntries[lCounter].peGreen,
+			lOurEntries[lCounter].peBlue);
+	}
+
+	delete[] lOurEntries;
+	gsTcpTrackPreviewPaletteInit = true;
+}
+
+static bool LoadTcpTrackPreview(const CString &trackName)
+{
+	const long lMaxPreviewPixels = 1024L * 1024L;
+	std::string lTrackName((const char *) trackName);
+	MR_RecordFile *lTrackFile;
+	bool lReturnValue = false;
+
+	ClearTcpTrackPreview();
+
+	if(lTrackName.empty()) {
+		return false;
+	}
+
+	lTrackFile = MR_TrackOpen(NULL, lTrackName.c_str());
+	if(lTrackFile == NULL) {
+		return false;
+	}
+
+	if(lTrackFile->GetNbRecords() > TCP_TRACK_MAP_RECORD) {
+		lTrackFile->SelectRecord(TCP_TRACK_MAP_RECORD);
+
+		CArchive lArchive(lTrackFile, CArchive::load | CArchive::bNoFlushOnDelete);
+		int lX0;
+		int lX1;
+		int lY0;
+		int lY1;
+		int lNbItem;
+		int lItemHeight;
+		int lTotalHeight;
+		int lWidth;
+		long lSourceSize;
+		std::vector<MR_UInt8> lSource;
+
+		lArchive >> lX0;
+		lArchive >> lX1;
+		lArchive >> lY0;
+		lArchive >> lY1;
+		lArchive >> lNbItem;
+		lArchive >> lItemHeight;
+		lArchive >> lTotalHeight;
+		lArchive >> lWidth;
+
+		if((lNbItem >= 1) && (lItemHeight > 0) && (lTotalHeight >= lItemHeight) &&
+			(lWidth > 0))
+		{
+			lSourceSize = (long) lWidth * (long) lTotalHeight;
+			if((lSourceSize > 0) && (lSourceSize <= lMaxPreviewPixels)) {
+				lSource.resize((size_t) lSourceSize);
+				if(lArchive.Read(&lSource[0], (UINT) lSourceSize) == (UINT) lSourceSize) {
+					gsTcpTrackPreview.mWidth = lWidth;
+					gsTcpTrackPreview.mHeight = lItemHeight;
+					gsTcpTrackPreview.mBitmap.resize(
+						(size_t) lWidth * (size_t) lItemHeight * 4, 0);
+
+					for(int lY = 0; lY < lItemHeight; lY++) {
+						for(int lX = 0; lX < lWidth; lX++) {
+							MR_UInt8 lSourceColor = lSource[lY * lWidth + lX];
+							COLORREF lColor = TCP_TRACK_PREVIEW_BACKGROUND;
+							size_t lOffset =
+								((size_t) lY * (size_t) lWidth + (size_t) lX) * 4;
+
+							if(lSourceColor != 0) {
+								lColor = GetTcpTrackPreviewColor(lSourceColor);
+							}
+
+							gsTcpTrackPreview.mBitmap[lOffset + 0] = GetBValue(lColor);
+							gsTcpTrackPreview.mBitmap[lOffset + 1] = GetGValue(lColor);
+							gsTcpTrackPreview.mBitmap[lOffset + 2] = GetRValue(lColor);
+							gsTcpTrackPreview.mBitmap[lOffset + 3] = 0;
+						}
+					}
+
+					lReturnValue = true;
+				}
+			}
+		}
+	}
+
+	delete lTrackFile;
+	return lReturnValue;
+}
+
+static void DrawTcpTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
+{
+	HDC lDc = pDrawItem->hDC;
+	RECT lRect = pDrawItem->rcItem;
+	RECT lInnerRect = lRect;
+	HBRUSH lWindowBrush = (HBRUSH) (COLOR_WINDOW + 1);
+
+	FillRect(lDc, &lRect, lWindowBrush);
+	DrawEdge(lDc, &lRect, EDGE_SUNKEN, BF_RECT);
+	InflateRect(&lInnerRect, -2, -2);
+	FillRect(lDc, &lInnerRect, lWindowBrush);
+
+	if(gsTcpTrackPreview.IsAvailable()) {
+		BITMAPINFO lBitmapInfo;
+
+		memset(&lBitmapInfo, 0, sizeof(lBitmapInfo));
+		lBitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		lBitmapInfo.bmiHeader.biWidth = gsTcpTrackPreview.mWidth;
+		lBitmapInfo.bmiHeader.biHeight = -gsTcpTrackPreview.mHeight;
+		lBitmapInfo.bmiHeader.biPlanes = 1;
+		lBitmapInfo.bmiHeader.biBitCount = 32;
+		lBitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+		StretchDIBits(lDc,
+			lInnerRect.left, lInnerRect.top,
+			lInnerRect.right - lInnerRect.left,
+			lInnerRect.bottom - lInnerRect.top,
+			0, 0,
+			gsTcpTrackPreview.mWidth,
+			gsTcpTrackPreview.mHeight,
+			&gsTcpTrackPreview.mBitmap[0],
+			&lBitmapInfo,
+			DIB_RGB_COLORS,
+			SRCCOPY);
+	}
+	else {
+		const char *lMessage = "Preview unavailable";
+
+		SetBkMode(lDc, TRANSPARENT);
+		SetTextColor(lDc, GetSysColor(COLOR_GRAYTEXT));
+		DrawText(lDc, lMessage, -1, &lInnerRect,
+			DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_NOPREFIX);
+	}
+}
+
+static CString GetTcpTrackPreviewTrackName(HWND dialog)
+{
+	char lTrackBuffer[256];
+	CString lTrackName;
+	CString lLapText;
+	CString lWeaponsText;
+
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText)) {
+		return lTrackName;
+	}
+
+	GetDlgItemText(dialog, IDC_GAME_NAME, lTrackBuffer, sizeof(lTrackBuffer));
+	lTrackName = lTrackBuffer;
+	lTrackName.TrimLeft();
+	lTrackName.TrimRight();
+
+	int lInfoStart = lTrackName.Find("  ");
+	if(lInfoStart > 0) {
+		lTrackName = lTrackName.Left(lInfoStart);
+		lTrackName.TrimRight();
+	}
+
+	return lTrackName;
+}
+
+static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, CString &lapText, CString &weaponsText)
+{
+	std::string summary((const char *) gameSummary);
+	std::string::size_type lapsPos;
+	std::string::size_type numberStart;
+
+	trackName.Empty();
+	lapText.Empty();
+	weaponsText.Empty();
+
+	while(!summary.empty() && (summary[summary.length() - 1] == ' ')) {
+		summary.erase(summary.length() - 1);
+	}
+
+	if(summary.empty()) {
+		return false;
+	}
+
+	const std::string withWeapons = " with weapons";
+	const std::string noWeapons = " no weapons";
+	if(summary.length() > withWeapons.length() &&
+		summary.compare(summary.length() - withWeapons.length(), withWeapons.length(), withWeapons) == 0)
+	{
+		weaponsText = "on";
+		summary.erase(summary.length() - withWeapons.length());
+	}
+	else if(summary.length() > noWeapons.length() &&
+		summary.compare(summary.length() - noWeapons.length(), noWeapons.length(), noWeapons) == 0)
+	{
+		weaponsText = "off";
+		summary.erase(summary.length() - noWeapons.length());
+	}
+
+	lapsPos = summary.rfind(" laps");
+	if(lapsPos == std::string::npos) {
+		lapsPos = summary.rfind(" lap");
+	}
+
+	if(lapsPos != std::string::npos) {
+		numberStart = summary.rfind(' ', lapsPos - 1);
+		if((numberStart != std::string::npos) && (numberStart + 1 < lapsPos)) {
+			lapText = summary.substr(numberStart + 1, lapsPos - numberStart - 1).c_str();
+			trackName = summary.substr(0, numberStart).c_str();
+			trackName.TrimRight();
+			return !trackName.IsEmpty();
+		}
+	}
+
+	trackName = summary.c_str();
+	return !trackName.IsEmpty();
+}
+
+static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText)
+{
+	char lTrackBuffer[256];
+	char lLapBuffer[64];
+	char lWeaponsBuffer[64];
+	HWND owner = GetWindow(dialog, GW_OWNER);
+
+	trackName.Empty();
+	lapText.Empty();
+	weaponsText.Empty();
+
+	if(owner == NULL) {
+		owner = GetParent(dialog);
+	}
+
+	if((owner == NULL) || !IsInternetMeetingRoomWindow(owner)) {
+		return false;
+	}
+
+	GetDlgItemText(owner, IDC_TRACK_NAME, lTrackBuffer, sizeof(lTrackBuffer));
+	GetDlgItemText(owner, IDC_NB_LAP, lLapBuffer, sizeof(lLapBuffer));
+	GetDlgItemText(owner, IDC_WEAPONS, lWeaponsBuffer, sizeof(lWeaponsBuffer));
+
+	trackName = lTrackBuffer;
+	lapText = lLapBuffer;
+	weaponsText = lWeaponsBuffer;
+
+	trackName.TrimLeft();
+	trackName.TrimRight();
+	lapText.TrimLeft();
+	lapText.TrimRight();
+	weaponsText.TrimLeft();
+	weaponsText.TrimRight();
+
+	if(trackName.IsEmpty() || (trackName == MR_LoadString(IDS_IMR_NOSELECT))) {
+		return false;
+	}
+
+	return true;
+}
+
+static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText)
+{
+	trackName = gsTcpTrackName;
+	lapText = gsTcpLapText;
+	weaponsText = gsTcpWeaponsText;
+
+	if(!trackName.IsEmpty()) {
+		return true;
+	}
+
+	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, weaponsText)) {
+		if(weaponsText.CompareNoCase("on") == 0) {
+			weaponsText = "On";
+		}
+		else if(weaponsText.CompareNoCase("off") == 0) {
+			weaponsText = "Off";
+		}
+		return true;
+	}
+
+	if(GetTcpImrTrackDetails(dialog, trackName, lapText, weaponsText)) {
+		if(weaponsText.CompareNoCase("on") == 0) {
+			weaponsText = "On";
+		}
+		else if(weaponsText.CompareNoCase("off") == 0) {
+			weaponsText = "Off";
+		}
+		return true;
+	}
+
+	return false;
+}
+
+static void UpdateTcpDialogTrackSummary(HWND dialog)
+{
+	CString lTrackName;
+	CString lLapText;
+	CString lWeaponsText;
+
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText)) {
+		SetDlgItemText(dialog, IDC_GAME_NAME, lTrackName);
+		SetDlgItemText(dialog, IDC_TCP_LAPS, lLapText);
+		SetDlgItemText(dialog, IDC_TCP_WEAPONS, lWeaponsText);
+	}
+	else {
+		SetDlgItemText(dialog, IDC_GAME_NAME, gsTcpOriginalGameName);
+		SetDlgItemText(dialog, IDC_TCP_LAPS, "");
+		SetDlgItemText(dialog, IDC_TCP_WEAPONS, "");
+	}
+}
 
 /**
  * Set up the MR_NetworkInterface.  Set up the client list and information, create and initialize both UDPOut ports, set them as non-blocking, and
@@ -91,6 +723,11 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mServerPort = 0;
 	mSteamID = CSteamID();
 	mSteamOnly = !MR_Config::GetInstance()->misc.directConnect;
+	mTrackName = "";
+	mNbLap = -1;
+	mHasGameLaps = FALSE;
+	mAllowWeapons = FALSE;
+	mHasGameWeapons = FALSE;
 
 	mAllPreLoguedRecv = FALSE;
 
@@ -243,6 +880,11 @@ void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 	mServerPort = 0;
 	mServerAddr = "";
 	mGameName = "";
+	mTrackName = "";
+	mNbLap = -1;
+	mHasGameLaps = FALSE;
+	mAllowWeapons = FALSE;
+	mHasGameWeapons = FALSE;
 
 	sSteamID = CSteamID();
 	sBuffer = NULL;
@@ -507,6 +1149,15 @@ const char *MR_NetworkInterface::GetPlayerName() const
 	return mPlayer;
 } 
 
+void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+{
+	mTrackName = (pTrackName != NULL) ? pTrackName : "";
+	mNbLap = pNbLap;
+	mHasGameLaps = (pNbLap >= 0);
+	mHasGameWeapons = pHasWeapons;
+	mAllowWeapons = pHasWeapons ? pAllowWeapons : FALSE;
+}
+
 /**
  * Set up the network interface if we are the server.  Clear existing connections, set up the server socket, and set up the interface to wait
  * for incoming connections.
@@ -517,7 +1168,7 @@ const char *MR_NetworkInterface::GetPlayerName() const
  * @param pDefaultPort The default port
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
+BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
 {
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
@@ -525,6 +1176,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 	Disconnect();
 
 	mGameName = pGameName;
+	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
 	mServerMode = TRUE;
 	mId = 0; // we are client 0 (the host)
 
@@ -667,7 +1319,7 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
  * @param pGameName Name of the game (title of the track)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
+BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
 {
 	ASSERT(!mServerMode);
 
@@ -678,6 +1330,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 	if(pGameName != NULL) {
 		mGameName = pGameName;
 	}
+	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
 
 	if(pServerIP != NULL) {
 		Disconnect();
@@ -890,6 +1543,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		case WM_INITDIALOG: // set up the dialog
 			{	
 				mActiveInterface->mConnectModal = pWindow;
+				PositionDialogToRightOfOwner(pWindow);
 
 				TRACE("\n%s: [WaitGameNameCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
 
@@ -1036,6 +1690,23 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 							TRACE("MRNM_GAME_NAME ");
 
 							mActiveInterface->mGameName = CString((const char *) lBuffer->mData, lBuffer->mDataLen);
+							if(mActiveInterface->mTrackName.IsEmpty()) {
+								CString lTrackName;
+								CString lLapText;
+								CString lWeaponsText;
+
+								if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName, lLapText, lWeaponsText)) {
+									mActiveInterface->mTrackName = lTrackName;
+									if(!lLapText.IsEmpty()) {
+										mActiveInterface->mNbLap = atoi((const char *) lLapText);
+										mActiveInterface->mHasGameLaps = TRUE;
+									}
+									if(!lWeaponsText.IsEmpty()) {
+										mActiveInterface->mAllowWeapons = (lWeaponsText.CompareNoCase("on") == 0);
+										mActiveInterface->mHasGameWeapons = TRUE;
+									}
+								}
+							}
 							EndDialog(pWindow, IDOK);
 						}
 						else {
@@ -1143,6 +1814,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 		case WM_INITDIALOG: // set up the window
 			{
 				mActiveInterface->mGameModal = pWindow;
+				gsTcpTrackPreviewWindow = NULL;
+				gsTcpOriginalGameName = "";
+				gsTcpTrackName = "";
+				gsTcpLapText = "";
+				gsTcpWeaponsText = "";
+				ClearTcpTrackPreview();
 
 				TRACE("\n%s: [ListCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
 
@@ -1191,7 +1868,15 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				// set game information in dialog
 				SetDlgItemInt(pWindow, IDC_SERVER_PORT, mActiveInterface->mServerPort, FALSE);
 				SetDlgItemText(pWindow, IDC_SERVER_ADDR, mActiveInterface->mServerAddr);
-				SetDlgItemText(pWindow, IDC_GAME_NAME, mActiveInterface->mGameName);
+				gsTcpOriginalGameName = mActiveInterface->mGameName;
+				gsTcpTrackName = mActiveInterface->mTrackName;
+				if(mActiveInterface->mHasGameLaps) {
+					gsTcpLapText.Format("%d", mActiveInterface->mNbLap);
+				}
+				if(mActiveInterface->mHasGameWeapons) {
+					gsTcpWeaponsText = mActiveInterface->mAllowWeapons ? "On" : "Off";
+				}
+				UpdateTcpDialogTrackSummary(pWindow);
 	
 				// Add the current player to the list
 				LV_ITEM lItem;
@@ -1206,12 +1891,19 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				ListView_SetItemText(lListHandle, 0, 1, (char *) MR_LoadStringBuffered(IDS_LOCAL));
 				ListView_SetItemText(lListHandle, 0, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
 	
-				for(int lCounter = 1; lCounter < eMaxClient; lCounter++) {
+				for(int lCounter = 1; lCounter <= eMaxClient; lCounter++) {
 					// Add empty entries
 					lItem.iItem = lCounter;
 					lItem.pszText = "--";
 					ListView_InsertItem(lListHandle, &lItem);
 				}
+
+				ExpandTcpConnectionsDialogIfNeeded(pWindow, lListHandle);
+				LoadTcpTrackPreview(GetTcpTrackPreviewTrackName(pWindow));
+				if(gsTcpTrackPreviewWindow != NULL) {
+					InvalidateRect(gsTcpTrackPreviewWindow, NULL, TRUE);
+				}
+				PositionDialogToRightOfOwner(pWindow);
 	
 				// Put the registry socket in listen mode, for the MRM_NEW_CLIENT message
 				listen(mActiveInterface->mRegistrySocket, 5);
@@ -1237,6 +1929,22 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				}
 			}
 	
+			break;
+
+		case WM_DRAWITEM:
+			if((pWParam == IDC_TCP_TRACK_PREVIEW) && (pLParam != 0)) {
+				DrawTcpTrackPreview((const DRAWITEMSTRUCT *) pLParam);
+				lReturnValue = TRUE;
+			}
+			break;
+
+		case WM_DESTROY:
+			ClearTcpTrackPreview();
+			gsTcpTrackPreviewWindow = NULL;
+			gsTcpOriginalGameName = "";
+			gsTcpTrackName = "";
+			gsTcpLapText = "";
+			gsTcpWeaponsText = "";
 			break;
 
 		case WM_COMMAND:
@@ -2599,8 +3307,6 @@ CString GetLocalAddrStr(BOOL lSteamOnly)
 
 	gethostname(lHostname, sizeof(lHostname));
 
-	lReturnValue = lHostname;
-
 	lHostEnt = gethostbyname(lHostname);
 
 	if(lHostEnt != NULL) {
@@ -2608,8 +3314,10 @@ CString GetLocalAddrStr(BOOL lSteamOnly)
 			const unsigned char *lHostAddr = (const unsigned char *) lHostEnt->h_addr_list[lAdapter];
 			lAdapter++;
 
-			sprintf(lHostname, "  %d.%d.%d.%d", lHostAddr[0], lHostAddr[1], lHostAddr[2], lHostAddr[3]);
-
+			if(!lReturnValue.IsEmpty()) {
+				lReturnValue += " ";
+			}
+			sprintf(lHostname, "%d.%d.%d.%d", lHostAddr[0], lHostAddr[1], lHostAddr[2], lHostAddr[3]);
 			lReturnValue += lHostname;
 		}
 	}
