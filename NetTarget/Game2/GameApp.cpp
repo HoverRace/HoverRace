@@ -44,6 +44,24 @@
 #include <direct.h>
 
 namespace {
+	void ApplySteamPersonaName(MR_Config *cfg)
+	{
+		if(cfg == NULL || cfg->player.nickNameSet) {
+			return;
+		}
+
+		ISteamFriends *steamFriends = SteamFriends();
+		if(steamFriends == NULL) {
+			return;
+		}
+
+		const char *personaName = steamFriends->GetPersonaName();
+		if(personaName != NULL && personaName[0] != '\0') {
+			cfg->player.nickName = personaName;
+			cfg->player.nickNameSet = true;
+		}
+	}
+
 	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect, char *deviceName = NULL)
 	{
 		RECT windowRect;
@@ -828,8 +846,10 @@ void MR_GameApp::LoadRegistry()
 		}
 
 		lBufferSize = sizeof(lBuffer);
-		if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
+		if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS) {
 			cfg->player.nickName = lBuffer;
+			cfg->player.nickNameSet = !cfg->player.nickName.empty();
+		}
 
 		BOOL lBool;
 
@@ -1428,6 +1448,7 @@ BOOL MR_GameApp::InitGame()
 
 	BOOL lReturnValue = TRUE;
 	MR_Config *cfg = MR_Config::GetInstance();
+	ApplySteamPersonaName(cfg);
 
 	InitCommonControls();						  // Allow some special and complex controls
 

@@ -25,6 +25,7 @@
 
 #include "NetInterface.h"
 #include "resource.h"
+#include "../Util/Config.h"
 #include "../Util/StrRes.h"
 
 // Private window messages
@@ -80,11 +81,9 @@ MR_NetworkInterface::MR_NetworkInterface()
 	if(WSAStartup(lVersionRequested, &lWsaData))
 		ASSERT(FALSE);
 
-	char lNameBuffer[80];
-	DWORD lNameLen = sizeof(lNameBuffer);
-
-	if(GetUserName(lNameBuffer, &lNameLen))
-		mPlayer = lNameBuffer;
+	MR_Config *cfg = MR_Config::GetInstance();
+	mPlayer = (cfg != NULL && !cfg->player.nickName.empty()) ?
+		cfg->player.nickName.c_str() : "Player";
 
 	mId = MR_ID_NOT_SET; // this denotes that it has not been set yet
 	mServerMode = FALSE;

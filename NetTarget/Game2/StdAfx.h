@@ -32,6 +32,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <steam/steam_api.h>
+#include <steam/isteamfriends.h>
 #include <steam/isteamuser.h>
 #include <steam/isteamuserstats.h>
 #include <steam/steamencryptedappticket.h>

@@ -99,6 +99,7 @@ class MR_Config
 
 		struct cfg_player_t {
 			std::string nickName;
+			bool nickNameSet;
 
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);

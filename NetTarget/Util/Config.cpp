@@ -12,9 +12,6 @@
 #ifdef _WIN32
 	#include <windows.h>
 	#include <shlobj.h>
-	#include <lmcons.h>
-#else
-	#include <unistd.h>
 #endif
 
 #include "yaml/Emitter.h"
@@ -236,26 +233,8 @@ void MR_Config::ResetToDefaults()
 	misc.mainLoopSleepLength = 0;
 	misc.directConnect = false;
 
-	// Get current user name as default nickname.
-#ifdef _WIN32
-	char buf[UNLEN + 1];
-	DWORD bsize = sizeof(buf);
-	if (GetUserName(buf, &bsize)) {
-		buf[UNLEN] = '\0';
-		player.nickName = buf;
-	}
-	else {
-		player.nickName = DEFAULT_NICKNAME;
-	}
-#else
-	char *buf = getlogin();
-	if (buf != NULL) {
-		player.nickName = buf;
-	}
-	else {
-		player.nickName = DEFAULT_NICKNAME;
-	}
-#endif
+	player.nickName = DEFAULT_NICKNAME;
+	player.nickNameSet = false;
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.udpRecvPort = DEFAULT_UDP_RECV_PORT;
@@ -522,7 +501,11 @@ void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
-	READ_STRING(root, nickName);
+	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("nickName"));
+	if (scalar != NULL) {
+		nickName = scalar->AsString();
+		nickNameSet = !nickName.empty();
+	}
 }
 
 void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
