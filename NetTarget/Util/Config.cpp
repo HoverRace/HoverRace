@@ -218,6 +218,9 @@ void MR_Config::ResetToDefaults()
 	video.nativeBppFullscreen = true;
 	video.useOriginalCameraParams = false;
 
+	video.windowMonitor = "";
+	video.windowMonitorPosX = 0;
+	video.windowMonitorPosY = 0;
 	video.windowPosX = CW_USEDEFAULT;
 	video.windowPosY = CW_USEDEFAULT;
 	video.windowSizeX = GetSystemMetrics(SM_CXSCREEN) / 2;
@@ -413,6 +416,9 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 
 	READ_BOOL(root, nativeBppFullscreen);
 	READ_BOOL(root, useOriginalCameraParams);
+	READ_STRING(root, windowMonitor);
+	READ_INT(root, windowMonitorPosX, INT_MIN, INT_MAX);
+	READ_INT(root, windowMonitorPosY, INT_MIN, INT_MAX);
 
 	{
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowPosX"));
@@ -444,6 +450,9 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
 	EMIT_VAR(emitter, useOriginalCameraParams);
+	EMIT_VAR(emitter, windowMonitor);
+	EMIT_VAR(emitter, windowMonitorPosX);
+	EMIT_VAR(emitter, windowMonitorPosY);
 
 	EMIT_VAR(emitter, windowPosX);
 	EMIT_VAR(emitter, windowPosY);

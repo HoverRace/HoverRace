@@ -68,6 +68,7 @@ class MR_GameApp
 		HWND mBadVideoModeDlg;
 		HWND mMovieWnd;
 		HMENU mWindowedMenu;
+		char mDesktopFullscreenDevice[CCHDEVICENAME];
 		HACCEL mAccelerators;
 		MR_VideoBuffer *mVideoBuffer;
 		MR_Observer *mObserver1;
@@ -139,8 +140,15 @@ class MR_GameApp
 
 		void DrawBackground();
 		BOOL GetDesktopFullscreenRect(RECT *pRect);
+		BOOL GetActiveDesktopFullscreenRect(RECT *pRect);
+		BOOL GetPrimaryMonitorRect(RECT *pRect, char *deviceName = NULL);
+		BOOL GetWindowMonitorRect(const RECT &windowRect, RECT *pRect, char *deviceName = NULL);
+		void ResolveInitialWindowRect(RECT *pRect);
+		void ApplyDesktopFullscreenRect(const RECT &rect);
+		void NormalizeWindowedRect(const RECT &monitorRect);
 		void EnterDesktopFullscreen();
 		void ExitDesktopFullscreen();
+		void RefreshDesktopFullscreenPlacement();
 
 		void SwitchToDesktopFullscreen();
 

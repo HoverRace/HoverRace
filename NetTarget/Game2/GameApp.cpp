@@ -44,7 +44,7 @@
 #include <direct.h>
 
 namespace {
-	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect)
+	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect, char *deviceName = NULL)
 	{
 		RECT windowRect;
 		if(!GetWindowRect(window, &windowRect)) {
@@ -60,7 +60,7 @@ namespace {
 			return FALSE;
 		}
 
-		MONITORINFO monitorInfo;
+		MONITORINFOEX monitorInfo;
 		memset(&monitorInfo, 0, sizeof(monitorInfo));
 		monitorInfo.cbSize = sizeof(monitorInfo);
 		if(!GetMonitorInfo(monitor, &monitorInfo)) {
@@ -68,6 +68,52 @@ namespace {
 		}
 
 		*rect = monitorInfo.rcMonitor;
+		if(deviceName != NULL) {
+			strcpy(deviceName, monitorInfo.szDevice);
+		}
+		return TRUE;
+	}
+
+	BOOL GetMonitorRectForDevice(const char *deviceName, RECT *rect)
+	{
+		if(deviceName == NULL || *deviceName == '\0') {
+			return FALSE;
+		}
+
+		DEVMODE devMode;
+		memset(&devMode, 0, sizeof(devMode));
+		devMode.dmSize = sizeof(devMode);
+
+		if(EnumDisplaySettingsEx(deviceName, ENUM_CURRENT_SETTINGS, &devMode, 0)) {
+			rect->left = devMode.dmPosition.x;
+			rect->top = devMode.dmPosition.y;
+			rect->right = rect->left + static_cast<LONG>(devMode.dmPelsWidth);
+			rect->bottom = rect->top + static_cast<LONG>(devMode.dmPelsHeight);
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	BOOL GetPrimaryMonitorRectImpl(RECT *rect, char *deviceName = NULL)
+	{
+		POINT origin = { 0, 0 };
+		HMONITOR monitor = MonitorFromPoint(origin, MONITOR_DEFAULTTOPRIMARY);
+		if(monitor == NULL) {
+			return FALSE;
+		}
+
+		MONITORINFOEX monitorInfo;
+		memset(&monitorInfo, 0, sizeof(monitorInfo));
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		if(!GetMonitorInfo(monitor, &monitorInfo)) {
+			return FALSE;
+		}
+
+		*rect = monitorInfo.rcMonitor;
+		if(deviceName != NULL) {
+			strcpy(deviceName, monitorInfo.szDevice);
+		}
 		return TRUE;
 	}
 }
@@ -96,6 +142,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
+#define MRM_VALIDATE_DESKTOP_FULLSCREEN 3
 
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
@@ -561,6 +608,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mBadVideoModeDlg = NULL;
 	mMovieWnd = NULL;
 	mWindowedMenu = NULL;
+	mDesktopFullscreenDevice[0] = '\0';
 	mAccelerators = NULL;
 	mVideoBuffer = NULL;
 	mObserver1 = NULL;
@@ -1004,12 +1052,12 @@ BOOL MR_GameApp::InitApplication()
 
 BOOL MR_GameApp::CreateMainWindow()
 {
-	MR_Config *cfg = MR_Config::GetInstance();
-
 	BOOL lReturnValue = TRUE;
+	RECT initialRect;
+	ResolveInitialWindowRect(&initialRect);
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, cfg->video.windowPosX, cfg->video.windowPosY, cfg->video.windowSizeX, cfg->video.windowSizeY, NULL, NULL, mInstance, NULL);
+	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, initialRect.left, initialRect.top, initialRect.right - initialRect.left, initialRect.bottom - initialRect.top, NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
@@ -1846,6 +1894,110 @@ BOOL MR_GameApp::GetDesktopFullscreenRect(RECT *pRect)
 	return GetMonitorRectFromWindowCenter(mMainWindow, pRect);
 }
 
+BOOL MR_GameApp::GetActiveDesktopFullscreenRect(RECT *pRect)
+{
+	return GetMonitorRectForDevice(mDesktopFullscreenDevice, pRect) ||
+		GetDesktopFullscreenRect(pRect);
+}
+
+BOOL MR_GameApp::GetPrimaryMonitorRect(RECT *pRect, char *deviceName)
+{
+	return GetPrimaryMonitorRectImpl(pRect, deviceName);
+}
+
+BOOL MR_GameApp::GetWindowMonitorRect(const RECT &windowRect, RECT *pRect, char *deviceName)
+{
+	POINT center;
+	center.x = windowRect.left + ((windowRect.right - windowRect.left) / 2);
+	center.y = windowRect.top + ((windowRect.bottom - windowRect.top) / 2);
+
+	HMONITOR monitor = MonitorFromPoint(center, MONITOR_DEFAULTTONEAREST);
+	if(monitor == NULL) {
+		return FALSE;
+	}
+
+	MONITORINFOEX monitorInfo;
+	memset(&monitorInfo, 0, sizeof(monitorInfo));
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if(!GetMonitorInfo(monitor, &monitorInfo)) {
+		return FALSE;
+	}
+
+	*pRect = monitorInfo.rcMonitor;
+	if(deviceName != NULL) {
+		strcpy(deviceName, monitorInfo.szDevice);
+	}
+	return TRUE;
+}
+
+void MR_GameApp::ResolveInitialWindowRect(RECT *pRect)
+{
+	MR_Config *cfg = MR_Config::GetInstance();
+
+	RECT monitorRect;
+	if(!cfg->video.windowMonitor.empty() &&
+		GetMonitorRectForDevice(cfg->video.windowMonitor.c_str(), &monitorRect))
+	{
+		pRect->left = monitorRect.left + cfg->video.windowMonitorPosX;
+		pRect->top = monitorRect.top + cfg->video.windowMonitorPosY;
+	}
+	else if(GetPrimaryMonitorRect(&monitorRect)) {
+		pRect->left = monitorRect.left;
+		pRect->top = monitorRect.top;
+	}
+	else {
+		pRect->left = 0;
+		pRect->top = 0;
+	}
+
+	pRect->right = pRect->left + cfg->video.windowSizeX;
+	pRect->bottom = pRect->top + cfg->video.windowSizeY;
+}
+
+void MR_GameApp::ApplyDesktopFullscreenRect(const RECT &rect)
+{
+	WINDOWPLACEMENT placement;
+	memset(&placement, 0, sizeof(placement));
+	placement.length = sizeof(placement);
+	if(GetWindowPlacement(mMainWindow, &placement)) {
+		placement.flags = 0;
+		placement.showCmd = IsIconic(mMainWindow) ? SW_RESTORE : SW_SHOWNORMAL;
+		placement.rcNormalPosition = rect;
+		SetWindowPlacement(mMainWindow, &placement);
+	}
+
+	SetWindowPos(mMainWindow, HWND_TOPMOST,
+		rect.left, rect.top,
+		rect.right - rect.left,
+		rect.bottom - rect.top,
+		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+}
+
+void MR_GameApp::NormalizeWindowedRect(const RECT &monitorRect)
+{
+	if(MonitorFromRect(&mWindowedRect, MONITOR_DEFAULTTONULL) != NULL) {
+		return;
+	}
+
+	int width = mWindowedRect.right - mWindowedRect.left;
+	int height = mWindowedRect.bottom - mWindowedRect.top;
+	int monitorWidth = monitorRect.right - monitorRect.left;
+	int monitorHeight = monitorRect.bottom - monitorRect.top;
+
+	if(width > monitorWidth) width = monitorWidth;
+	if(height > monitorHeight) height = monitorHeight;
+	if(width < 320) width = 320;
+	if(height < 240) height = 240;
+
+	int left = monitorRect.left + ((monitorWidth - width) / 2);
+	int top = monitorRect.top + ((monitorHeight - height) / 2);
+
+	mWindowedRect.left = left;
+	mWindowedRect.top = top;
+	mWindowedRect.right = left + width;
+	mWindowedRect.bottom = top + height;
+}
+
 void MR_GameApp::EnterDesktopFullscreen()
 {
 	if(mDesktopFullscreen || mMainWindow == NULL || mVideoBuffer == NULL) {
@@ -1853,7 +2005,7 @@ void MR_GameApp::EnterDesktopFullscreen()
 	}
 
 	RECT monitorRect;
-	if(!GetDesktopFullscreenRect(&monitorRect)) {
+	if(!GetMonitorRectFromWindowCenter(mMainWindow, &monitorRect, mDesktopFullscreenDevice)) {
 		return;
 	}
 
@@ -1868,13 +2020,10 @@ void MR_GameApp::EnterDesktopFullscreen()
 	SetMenu(mMainWindow, NULL);
 	SetWindowLong(mMainWindow, GWL_STYLE, WS_VISIBLE | WS_POPUP);
 	SetWindowLong(mMainWindow, GWL_EXSTYLE, WS_EX_APPWINDOW);
-	SetWindowPos(mMainWindow, HWND_TOPMOST,
-		monitorRect.left, monitorRect.top,
-		monitorRect.right - monitorRect.left,
-		monitorRect.bottom - monitorRect.top,
-		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+	ApplyDesktopFullscreenRect(monitorRect);
 
 	mDesktopFullscreen = true;
+	SetTimer(mMainWindow, MRM_VALIDATE_DESKTOP_FULLSCREEN, 500, NULL);
 	mVideoBuffer->SetVideoMode();
 	AssignPalette();
 
@@ -1887,18 +2036,65 @@ void MR_GameApp::ExitDesktopFullscreen()
 		return;
 	}
 
+	RECT monitorRect;
+	if(GetActiveDesktopFullscreenRect(&monitorRect)) {
+		NormalizeWindowedRect(monitorRect);
+	}
+
+	KillTimer(mMainWindow, MRM_VALIDATE_DESKTOP_FULLSCREEN);
+	mDesktopFullscreen = false;
 	SetMenu(mMainWindow, mWindowedMenu);
 	SetWindowLong(mMainWindow, GWL_STYLE, mWindowedStyle);
 	SetWindowLong(mMainWindow, GWL_EXSTYLE, mWindowedExStyle);
+
+	WINDOWPLACEMENT placement;
+	memset(&placement, 0, sizeof(placement));
+	placement.length = sizeof(placement);
+	if(GetWindowPlacement(mMainWindow, &placement)) {
+		placement.flags = 0;
+		placement.showCmd = SW_SHOWNORMAL;
+		placement.rcNormalPosition = mWindowedRect;
+		SetWindowPlacement(mMainWindow, &placement);
+	}
+
 	SetWindowPos(mMainWindow, HWND_NOTOPMOST,
 		mWindowedRect.left, mWindowedRect.top,
 		mWindowedRect.right - mWindowedRect.left,
 		mWindowedRect.bottom - mWindowedRect.top,
 		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
 
-	mDesktopFullscreen = false;
+	mDesktopFullscreenDevice[0] = '\0';
 	mVideoBuffer->SetVideoMode();
 	AssignPalette();
+}
+
+void MR_GameApp::RefreshDesktopFullscreenPlacement()
+{
+	if(!mDesktopFullscreen || mMainWindow == NULL || mVideoBuffer == NULL) {
+		return;
+	}
+
+	RECT monitorRect;
+	if(!GetActiveDesktopFullscreenRect(&monitorRect)) {
+		return;
+	}
+
+	RECT windowRect;
+	if(GetWindowRect(mMainWindow, &windowRect) &&
+		EqualRect(&windowRect, &monitorRect))
+	{
+		return;
+	}
+
+	PauseGameThread();
+	mClrScrTodo = 2;
+
+	ApplyDesktopFullscreenRect(monitorRect);
+
+	mVideoBuffer->SetVideoMode();
+	AssignPalette();
+
+	RestartGameThread();
 }
 
 void MR_GameApp::UpdateMenuItems()
@@ -1936,6 +2132,23 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 		 */
 
 		case WM_DISPLAYCHANGE:
+			This->RefreshDesktopFullscreenPlacement();
+			This->OnDisplayChange();
+			break;
+
+		case WM_WINDOWPOSCHANGING:
+			if(This->mDesktopFullscreen) {
+				RECT monitorRect;
+				if(This->GetActiveDesktopFullscreenRect(&monitorRect)) {
+					WINDOWPOS *windowPos = reinterpret_cast<WINDOWPOS*>(pLParam);
+					windowPos->flags &= ~(SWP_NOMOVE | SWP_NOSIZE);
+					windowPos->x = monitorRect.left;
+					windowPos->y = monitorRect.top;
+					windowPos->cx = monitorRect.right - monitorRect.left;
+					windowPos->cy = monitorRect.bottom - monitorRect.top;
+					windowPos->hwndInsertAfter = HWND_TOPMOST;
+				}
+			}
 			break;
 
 		case WM_SIZE:
@@ -1969,6 +2182,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						This->AssignPalette();
 					}
 
+					return 0;
+
+				case MRM_VALIDATE_DESKTOP_FULLSCREEN:
+					This->RefreshDesktopFullscreenPlacement();
 					return 0;
 			}
 			break;
@@ -2478,9 +2695,28 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->mVideoBuffer = NULL;
 
 			RECT rect;
-			GetWindowRect(This->mMainWindow, &rect);
+			if(This->mDesktopFullscreen) {
+				rect = This->mWindowedRect;
+			}
+			else {
+				GetWindowRect(This->mMainWindow, &rect);
+			}
 
 			MR_Config *cfg = MR_Config::GetInstance();
+			RECT monitorRect;
+			char monitorDevice[CCHDEVICENAME] = {0};
+			if(This->GetWindowMonitorRect(rect, &monitorRect, monitorDevice) ||
+				This->GetPrimaryMonitorRect(&monitorRect, monitorDevice))
+			{
+				cfg->video.windowMonitor = monitorDevice;
+				cfg->video.windowMonitorPosX = rect.left - monitorRect.left;
+				cfg->video.windowMonitorPosY = rect.top - monitorRect.top;
+			}
+			else {
+				cfg->video.windowMonitor = "";
+				cfg->video.windowMonitorPosX = 0;
+				cfg->video.windowMonitorPosY = 0;
+			}
 
 			cfg->video.windowPosX = rect.left;
 			cfg->video.windowPosY = rect.top;

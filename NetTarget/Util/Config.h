@@ -65,6 +65,9 @@ class MR_Config
 			bool nativeBppFullscreen;
 			bool useOriginalCameraParams;
 
+			std::string windowMonitor;
+			int windowMonitorPosX;
+			int windowMonitorPosY;
 			int windowPosX;
 			int windowPosY;
 			int windowSizeX;
