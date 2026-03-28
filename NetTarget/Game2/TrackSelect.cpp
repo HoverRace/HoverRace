@@ -27,13 +27,41 @@
 #include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/StrRes.h"
 #include "../Util/Config.h"
+#include "../VideoServices/ColorPalette.h"
 
 #include <algorithm>
+
+namespace {
+	const int TRACK_MAP_RECORD = 3;
+	const COLORREF TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
+
+	struct TrackPreviewData
+	{
+		int mWidth;
+		int mHeight;
+		std::vector<MR_UInt8> mBitmap;
+
+		TrackPreviewData() : mWidth(0), mHeight(0) { }
+
+		void Reset()
+		{
+			mWidth = 0;
+			mHeight = 0;
+			mBitmap.clear();
+		}
+
+		bool IsAvailable() const
+		{
+			return !mBitmap.empty();
+		}
+	};
+}
 
 class TrackEntry
 {
 	public:
 		std::string mFileName;
+		std::string mPath;
 		std::string mDescription;
 		int mRegistrationMode;
 		int mSortingIndex;
@@ -64,7 +92,13 @@ static const char *TRACK_PATHS[] = {
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
 static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
+static void ClearTrackPreview();
+static void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem);
+static COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex);
+static void InitTrackPreviewPalette();
+static bool LoadTrackPreview(const TrackEntry &pEntry);
 static void SortList();
+static void UpdateSelectedTrackInfo(HWND pWindow);
 static void ReadTrackList();
 static void ReadTrackListDir(const std::string &dir);
 static void CleanList();
@@ -82,6 +116,9 @@ static tracklist_t gsTrackList;
 static sorted_t gsSortedTrackList;
 static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
+static TrackPreviewData gsTrackPreview;
+static COLORREF gsTrackPreviewPalette[MR_NB_COLORS];
+static bool gsTrackPreviewPaletteInit = false;
 
 /**
  * Open a track file.
@@ -177,16 +214,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 			if (!gsSortedTrackList.empty()) {
 				gsSelectedEntry = 0;
-				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, 0, 0);
 			}
 			else {
 				gsSelectedEntry = -1;
-				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
+			UpdateSelectedTrackInfo(pWindow);
 			lReturnValue = TRUE;
 			break;
 		case WM_COMMAND:
@@ -195,14 +229,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					switch (HIWORD(pWParam)) {
 						case LBN_SELCHANGE:
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
-							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
-								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
-							}
-							else {
-								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
-							}
+							UpdateSelectedTrackInfo(pWindow);
 							break;
 					}
 					break;
@@ -222,6 +249,12 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					}
 					lReturnValue = TRUE;
 					break;
+			}
+			break;
+		case WM_DRAWITEM:
+			if ((pWParam == IDC_TRACK_PREVIEW) && (pLParam != 0)) {
+				DrawTrackPreview((const DRAWITEMSTRUCT *) pLParam);
+				lReturnValue = TRUE;
 			}
 			break;
 	}
@@ -322,6 +355,196 @@ bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2)
 	return (*ent1) < (*ent2);
 }
 
+void ClearTrackPreview()
+{
+	gsTrackPreview.Reset();
+}
+
+void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
+{
+	HDC lDc = pDrawItem->hDC;
+	RECT lRect = pDrawItem->rcItem;
+	RECT lInnerRect = lRect;
+	HBRUSH lWindowBrush = (HBRUSH) (COLOR_WINDOW + 1);
+
+	FillRect(lDc, &lRect, lWindowBrush);
+	DrawEdge(lDc, &lRect, EDGE_SUNKEN, BF_RECT);
+	InflateRect(&lInnerRect, -2, -2);
+	FillRect(lDc, &lInnerRect, lWindowBrush);
+
+	if(gsTrackPreview.IsAvailable()) {
+		BITMAPINFO lBitmapInfo;
+
+		memset(&lBitmapInfo, 0, sizeof(lBitmapInfo));
+		lBitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		lBitmapInfo.bmiHeader.biWidth = gsTrackPreview.mWidth;
+		lBitmapInfo.bmiHeader.biHeight = -gsTrackPreview.mHeight;
+		lBitmapInfo.bmiHeader.biPlanes = 1;
+		lBitmapInfo.bmiHeader.biBitCount = 32;
+		lBitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+		SetStretchBltMode(lDc, COLORONCOLOR);
+		StretchDIBits(lDc,
+			lInnerRect.left, lInnerRect.top,
+			lInnerRect.right - lInnerRect.left,
+			lInnerRect.bottom - lInnerRect.top,
+			0, 0,
+			gsTrackPreview.mWidth,
+			gsTrackPreview.mHeight,
+			&gsTrackPreview.mBitmap[0],
+			&lBitmapInfo,
+			DIB_RGB_COLORS,
+			SRCCOPY);
+	}
+	else {
+		const char *lMessage =
+			(gsSelectedEntry == -1) ? MR_LoadString(IDS_NO_SELECT) :
+			"No preview available";
+
+		SetBkMode(lDc, TRANSPARENT);
+		SetTextColor(lDc, GetSysColor(COLOR_GRAYTEXT));
+		DrawText(lDc, lMessage, -1, &lInnerRect,
+			DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_NOPREFIX);
+	}
+}
+
+COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex)
+{
+	if(!gsTrackPreviewPaletteInit) {
+		InitTrackPreviewPalette();
+	}
+
+	if(pColorIndex < MR_NB_COLORS) {
+		return gsTrackPreviewPalette[pColorIndex];
+	}
+	else {
+		return TRACK_PREVIEW_BACKGROUND;
+	}
+}
+
+void InitTrackPreviewPalette()
+{
+	int lCounter;
+	double lGamma = 1.2;
+	double lContrast = 0.95;
+	double lBrightness = 0.95;
+	MR_Config *lConfig = MR_Config::GetInstance();
+	PALETTEENTRY *lOurEntries;
+
+	if(lConfig != NULL) {
+		lGamma = lConfig->video.gamma;
+		lContrast = lConfig->video.contrast;
+		lBrightness = lConfig->video.brightness;
+	}
+
+	for(lCounter = 0; lCounter < MR_NB_COLORS; lCounter++) {
+		gsTrackPreviewPalette[lCounter] = TRACK_PREVIEW_BACKGROUND;
+	}
+
+	lOurEntries = MR_GetColors(
+		1.0 / lGamma,
+		lContrast * lBrightness,
+		lBrightness - (lContrast * lBrightness));
+
+	for(lCounter = 0;
+		(lCounter < MR_BASIC_COLORS) &&
+		((MR_RESERVED_COLORS_BEGINNING + lCounter) < MR_NB_COLORS);
+		lCounter++)
+	{
+		gsTrackPreviewPalette[MR_RESERVED_COLORS_BEGINNING + lCounter] = RGB(
+			lOurEntries[lCounter].peRed,
+			lOurEntries[lCounter].peGreen,
+			lOurEntries[lCounter].peBlue);
+	}
+
+	delete[]lOurEntries;
+	gsTrackPreviewPaletteInit = true;
+}
+
+bool LoadTrackPreview(const TrackEntry &pEntry)
+{
+	const long lMaxPreviewPixels = 1024L * 1024L;
+	MR_RecordFile lRecordFile;
+
+	ClearTrackPreview();
+
+	if(pEntry.mPath.empty()) {
+		return false;
+	}
+
+	if(!lRecordFile.OpenForRead(pEntry.mPath.c_str())) {
+		return false;
+	}
+
+	if(lRecordFile.GetNbRecords() <= TRACK_MAP_RECORD) {
+		return false;
+	}
+
+	lRecordFile.SelectRecord(TRACK_MAP_RECORD);
+
+	{
+		CArchive lArchive(&lRecordFile, CArchive::load | CArchive::bNoFlushOnDelete);
+		int lX0;
+		int lX1;
+		int lY0;
+		int lY1;
+		int lNbItem;
+		int lItemHeight;
+		int lTotalHeight;
+		int lWidth;
+		long lSourceSize;
+		std::vector<MR_UInt8> lSource;
+
+		lArchive >> lX0;
+		lArchive >> lX1;
+		lArchive >> lY0;
+		lArchive >> lY1;
+		lArchive >> lNbItem;
+		lArchive >> lItemHeight;
+		lArchive >> lTotalHeight;
+		lArchive >> lWidth;
+
+		if((lNbItem < 1) || (lItemHeight <= 0) || (lTotalHeight < lItemHeight) ||
+			(lWidth <= 0))
+		{
+			return false;
+		}
+
+		lSourceSize = (long) lWidth * (long) lTotalHeight;
+		if((lSourceSize <= 0) || (lSourceSize > lMaxPreviewPixels)) {
+			return false;
+		}
+
+		lSource.resize((size_t) lSourceSize);
+		if(lArchive.Read(&lSource[0], (UINT) lSourceSize) != (UINT) lSourceSize) {
+			return false;
+		}
+
+		gsTrackPreview.mWidth = lWidth;
+		gsTrackPreview.mHeight = lItemHeight;
+		gsTrackPreview.mBitmap.resize((size_t) lWidth * (size_t) lItemHeight * 4, 0);
+
+		for(int lY = 0; lY < lItemHeight; lY++) {
+			for(int lX = 0; lX < lWidth; lX++) {
+				MR_UInt8 lSourceColor = lSource[lY * lWidth + lX];
+				COLORREF lColor = TRACK_PREVIEW_BACKGROUND;
+				size_t lOffset = ((size_t) lY * (size_t) lWidth + (size_t) lX) * 4;
+
+				if(lSourceColor != 0) {
+					lColor = GetTrackPreviewColor(lSourceColor);
+				}
+
+				gsTrackPreview.mBitmap[lOffset + 0] = GetBValue(lColor);
+				gsTrackPreview.mBitmap[lOffset + 1] = GetGValue(lColor);
+				gsTrackPreview.mBitmap[lOffset + 2] = GetRValue(lColor);
+				gsTrackPreview.mBitmap[lOffset + 3] = 0;
+			}
+		}
+	}
+
+	return true;
+}
+
 void SortList()
 {
 	// Init pointer list
@@ -386,11 +609,12 @@ void ReadTrackListDir(const std::string &dir)
 			gsTrackList.push_back(TrackEntry());
 			TrackEntry &ent = gsTrackList.back();
 			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - strlen(TRACK_EXT));
+			ent.mPath = dir + lFileInfo.name;
 
 			// Open the file and read additional info
 			MR_RecordFile lRecordFile;
 
-			if(!lRecordFile.OpenForRead((dir + lFileInfo.name).c_str()))
+			if(!lRecordFile.OpenForRead(ent.mPath.c_str()))
 				gsTrackList.pop_back();
 			else {
 				if(!ReadTrackEntry(&lRecordFile, &ent, NULL))
@@ -406,8 +630,31 @@ void ReadTrackListDir(const std::string &dir)
 /// Clear the track list.
 void CleanList()
 {
+	ClearTrackPreview();
 	gsTrackList.clear();
 	gsSortedTrackList.clear();
+}
+
+void UpdateSelectedTrackInfo(HWND pWindow)
+{
+	HWND lPreviewWindow;
+
+	if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
+		SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
+		SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
+		ClearTrackPreview();
+	}
+	else {
+		SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
+		SetDlgItemText(pWindow, IDC_DESCRIPTION,
+			gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
+		LoadTrackPreview(*gsSortedTrackList[gsSelectedEntry]);
+	}
+
+	lPreviewWindow = GetDlgItem(pWindow, IDC_TRACK_PREVIEW);
+	if(lPreviewWindow != NULL) {
+		InvalidateRect(lPreviewWindow, NULL, TRUE);
+	}
 }
 
 /**
