@@ -43,6 +43,35 @@
 
 #include <direct.h>
 
+namespace {
+	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect)
+	{
+		RECT windowRect;
+		if(!GetWindowRect(window, &windowRect)) {
+			return FALSE;
+		}
+
+		POINT center;
+		center.x = windowRect.left + ((windowRect.right - windowRect.left) / 2);
+		center.y = windowRect.top + ((windowRect.bottom - windowRect.top) / 2);
+
+		HMONITOR monitor = MonitorFromPoint(center, MONITOR_DEFAULTTONEAREST);
+		if(monitor == NULL) {
+			return FALSE;
+		}
+
+		MONITORINFO monitorInfo;
+		memset(&monitorInfo, 0, sizeof(monitorInfo));
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		if(!GetMonitorInfo(monitor, &monitorInfo)) {
+			return FALSE;
+		}
+
+		*rect = monitorInfo.rcMonitor;
+		return TRUE;
+	}
+}
+
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
 
@@ -531,6 +560,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mMainWindow = NULL;
 	mBadVideoModeDlg = NULL;
 	mMovieWnd = NULL;
+	mWindowedMenu = NULL;
 	mAccelerators = NULL;
 	mVideoBuffer = NULL;
 	mObserver1 = NULL;
@@ -542,6 +572,10 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 
 	safeMode = false;
 	allowMultipleInstances = false;
+	mDesktopFullscreen = false;
+	SetRectEmpty(&mWindowedRect);
+	mWindowedStyle = 0;
+	mWindowedExStyle = 0;
 
 	mCurrentMode = e3DView;
 
@@ -1234,7 +1268,13 @@ void MR_GameApp::SetVideoMode(int pX, int pY)
 		mClrScrTodo = 2;
 
 		if(pX == 0) {
-			lSuccess = mVideoBuffer->SetVideoMode();
+			if(mDesktopFullscreen) {
+				ExitDesktopFullscreen();
+				lSuccess = TRUE;
+			}
+			else {
+				lSuccess = mVideoBuffer->SetVideoMode();
+			}
 
 			SetTimer(mMainWindow, MRM_RETURN2WINDOWMODE, 3000, NULL);
 		}
@@ -1793,10 +1833,72 @@ void MR_GameApp::DrawBackground()
 // Attempt to switch fullscreen, using the current desktop resolution.
 void MR_GameApp::SwitchToDesktopFullscreen()
 {
-	POINT lRes = { 0, 0 };
-	if((mVideoBuffer != NULL) && mVideoBuffer->PrepareDesktopFullscreen(&lRes)) {
-		SetVideoMode(lRes.x, lRes.y);
+	if(mDesktopFullscreen) {
+		SetVideoMode(0, 0);
 	}
+	else {
+		EnterDesktopFullscreen();
+	}
+}
+
+BOOL MR_GameApp::GetDesktopFullscreenRect(RECT *pRect)
+{
+	return GetMonitorRectFromWindowCenter(mMainWindow, pRect);
+}
+
+void MR_GameApp::EnterDesktopFullscreen()
+{
+	if(mDesktopFullscreen || mMainWindow == NULL || mVideoBuffer == NULL) {
+		return;
+	}
+
+	RECT monitorRect;
+	if(!GetDesktopFullscreenRect(&monitorRect)) {
+		return;
+	}
+
+	PauseGameThread();
+	mClrScrTodo = 2;
+
+	mWindowedStyle = GetWindowLong(mMainWindow, GWL_STYLE);
+	mWindowedExStyle = GetWindowLong(mMainWindow, GWL_EXSTYLE);
+	mWindowedMenu = GetMenu(mMainWindow);
+	GetWindowRect(mMainWindow, &mWindowedRect);
+
+	SetMenu(mMainWindow, NULL);
+	SetWindowLong(mMainWindow, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+	SetWindowLong(mMainWindow, GWL_EXSTYLE, WS_EX_APPWINDOW);
+	SetWindowPos(mMainWindow, HWND_TOPMOST,
+		monitorRect.left, monitorRect.top,
+		monitorRect.right - monitorRect.left,
+		monitorRect.bottom - monitorRect.top,
+		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+
+	mDesktopFullscreen = true;
+	mVideoBuffer->SetVideoMode();
+	AssignPalette();
+
+	RestartGameThread();
+}
+
+void MR_GameApp::ExitDesktopFullscreen()
+{
+	if(!mDesktopFullscreen || mMainWindow == NULL || mVideoBuffer == NULL) {
+		return;
+	}
+
+	SetMenu(mMainWindow, mWindowedMenu);
+	SetWindowLong(mMainWindow, GWL_STYLE, mWindowedStyle);
+	SetWindowLong(mMainWindow, GWL_EXSTYLE, mWindowedExStyle);
+	SetWindowPos(mMainWindow, HWND_NOTOPMOST,
+		mWindowedRect.left, mWindowedRect.top,
+		mWindowedRect.right - mWindowedRect.left,
+		mWindowedRect.bottom - mWindowedRect.top,
+		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+
+	mDesktopFullscreen = false;
+	mVideoBuffer->SetVideoMode();
+	AssignPalette();
 }
 
 void MR_GameApp::UpdateMenuItems()
@@ -2367,6 +2469,9 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				if(This->AskUserToAbortGame() != IDOK) {
 					return 0;
 				}
+			}
+			else if(This->mDesktopFullscreen) {
+				This->ExitDesktopFullscreen();
 			}
 			This->Clean();
 			delete This->mVideoBuffer;

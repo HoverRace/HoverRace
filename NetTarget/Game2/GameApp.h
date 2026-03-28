@@ -67,6 +67,7 @@ class MR_GameApp
 		HWND mMainWindow;
 		HWND mBadVideoModeDlg;
 		HWND mMovieWnd;
+		HMENU mWindowedMenu;
 		HACCEL mAccelerators;
 		MR_VideoBuffer *mVideoBuffer;
 		MR_Observer *mObserver1;
@@ -81,6 +82,10 @@ class MR_GameApp
 
 		bool safeMode;
 		bool allowMultipleInstances;
+		bool mDesktopFullscreen;
+		RECT mWindowedRect;
+		LONG mWindowedStyle;
+		LONG mWindowedExStyle;
 
 		int mClrScrTodo;
 
@@ -133,6 +138,9 @@ class MR_GameApp
 		void DeleteMovieWnd();
 
 		void DrawBackground();
+		BOOL GetDesktopFullscreenRect(RECT *pRect);
+		void EnterDesktopFullscreen();
+		void ExitDesktopFullscreen();
 
 		void SwitchToDesktopFullscreen();
 

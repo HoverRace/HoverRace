@@ -278,6 +278,19 @@ namespace {
 
 		return DDENUMRET_OK;
 	}
+
+	HMONITOR FindFullscreenMonitor(HWND window)
+	{
+		RECT windowRect;
+		if(GetWindowRect(window, &windowRect)) {
+			POINT center;
+			center.x = windowRect.left + ((windowRect.right - windowRect.left) / 2);
+			center.y = windowRect.top + ((windowRect.bottom - windowRect.top) / 2);
+			return MonitorFromPoint(center, MONITOR_DEFAULTTONEAREST);
+		}
+
+		return MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
+	}
 }
 
 // Computes the run length and shift of the block of ones in a bitmask.
@@ -916,15 +929,21 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 			mOriginalStyle = GetWindowLong(mWindow, GWL_STYLE);
 			GetWindowRect(mWindow, &mOriginalPos);
 
+			// Move the HWND onto the target monitor before we request exclusive fullscreen.
+			SetWindowPos(mWindow, HWND_TOPMOST,
+				mFullscreenRect.left, mFullscreenRect.top,
+				mFullscreenRect.right - mFullscreenRect.left,
+				mFullscreenRect.bottom - mFullscreenRect.top,
+				SWP_SHOWWINDOW);
 		}
 		// Make the window a non-borderwindow
 		// SetWindowLong( mWindow, GWL_STYLE, mOriginalStyle & ~(WS_THICKFRAME ) );
 
 		if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWMODEX | DDSCL_ALLOWREBOOT /*|DDSCL_NOWINDOWCHANGES */ )) != DD_OK) {
-		ASSERT(FALSE);
-		lReturnValue = FALSE;
+			ASSERT(FALSE);
+			lReturnValue = FALSE;
+		}
 	}
-}
 
 // Retrieve the window size
 if(lReturnValue) {
@@ -1012,7 +1031,7 @@ return lReturnValue;
 
 BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
 {
-	HMONITOR monitor = MonitorFromWindow(mWindow, MONITOR_DEFAULTTONEAREST);
+	HMONITOR monitor = FindFullscreenMonitor(mWindow);
 	if(monitor == NULL) {
 		return FALSE;
 	}
