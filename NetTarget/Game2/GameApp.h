@@ -143,6 +143,7 @@ class MR_GameApp
 		BOOL GetActiveDesktopFullscreenRect(RECT *pRect);
 		BOOL GetPrimaryMonitorRect(RECT *pRect, char *deviceName = NULL);
 		BOOL GetWindowMonitorRect(const RECT &windowRect, RECT *pRect, char *deviceName = NULL);
+		void ClampWindowRectToMonitor(RECT *pRect, const RECT &monitorRect);
 		void ResolveInitialWindowRect(RECT *pRect);
 		void ApplyDesktopFullscreenRect(const RECT &rect);
 		void NormalizeWindowedRect(const RECT &monitorRect);

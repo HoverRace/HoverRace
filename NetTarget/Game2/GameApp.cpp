@@ -1053,11 +1053,24 @@ BOOL MR_GameApp::InitApplication()
 BOOL MR_GameApp::CreateMainWindow()
 {
 	BOOL lReturnValue = TRUE;
-	RECT initialRect;
-	ResolveInitialWindowRect(&initialRect);
+	MR_Config *cfg = MR_Config::GetInstance();
+
+	int windowPosX = cfg->video.windowPosX;
+	int windowPosY = cfg->video.windowPosY;
+	int windowSizeX = cfg->video.windowSizeX;
+	int windowSizeY = cfg->video.windowSizeY;
+
+	if(!cfg->video.windowMonitor.empty()) {
+		RECT initialRect;
+		ResolveInitialWindowRect(&initialRect);
+		windowPosX = initialRect.left;
+		windowPosY = initialRect.top;
+		windowSizeX = initialRect.right - initialRect.left;
+		windowSizeY = initialRect.bottom - initialRect.top;
+	}
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, initialRect.left, initialRect.top, initialRect.right - initialRect.left, initialRect.bottom - initialRect.top, NULL, NULL, mInstance, NULL);
+	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, windowPosX, windowPosY, windowSizeX, windowSizeY, NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
@@ -1930,20 +1943,51 @@ BOOL MR_GameApp::GetWindowMonitorRect(const RECT &windowRect, RECT *pRect, char 
 	return TRUE;
 }
 
+void MR_GameApp::ClampWindowRectToMonitor(RECT *pRect, const RECT &monitorRect)
+{
+	int width = pRect->right - pRect->left;
+	int height = pRect->bottom - pRect->top;
+	int monitorWidth = monitorRect.right - monitorRect.left;
+	int monitorHeight = monitorRect.bottom - monitorRect.top;
+
+	if(width > monitorWidth) width = monitorWidth;
+	if(height > monitorHeight) height = monitorHeight;
+	if(width < 320) width = 320;
+	if(height < 240) height = 240;
+
+	int maxLeft = monitorRect.right - width;
+	int maxTop = monitorRect.bottom - height;
+
+	if(pRect->left < monitorRect.left) pRect->left = monitorRect.left;
+	if(pRect->top < monitorRect.top) pRect->top = monitorRect.top;
+	if(pRect->left > maxLeft) pRect->left = maxLeft;
+	if(pRect->top > maxTop) pRect->top = maxTop;
+
+	pRect->right = pRect->left + width;
+	pRect->bottom = pRect->top + height;
+}
+
 void MR_GameApp::ResolveInitialWindowRect(RECT *pRect)
 {
 	MR_Config *cfg = MR_Config::GetInstance();
 
 	RECT monitorRect;
-	if(!cfg->video.windowMonitor.empty() &&
+	BOOL haveMonitorRect = FALSE;
+	if(GetSystemMetrics(SM_CMONITORS) <= 1) {
+		haveMonitorRect = GetPrimaryMonitorRect(&monitorRect);
+	}
+	else if(!cfg->video.windowMonitor.empty() &&
 		GetMonitorRectForDevice(cfg->video.windowMonitor.c_str(), &monitorRect))
 	{
+		haveMonitorRect = TRUE;
+	}
+	else {
+		haveMonitorRect = GetPrimaryMonitorRect(&monitorRect);
+	}
+
+	if(haveMonitorRect) {
 		pRect->left = monitorRect.left + cfg->video.windowMonitorPosX;
 		pRect->top = monitorRect.top + cfg->video.windowMonitorPosY;
-	}
-	else if(GetPrimaryMonitorRect(&monitorRect)) {
-		pRect->left = monitorRect.left;
-		pRect->top = monitorRect.top;
 	}
 	else {
 		pRect->left = 0;
@@ -1952,6 +1996,10 @@ void MR_GameApp::ResolveInitialWindowRect(RECT *pRect)
 
 	pRect->right = pRect->left + cfg->video.windowSizeX;
 	pRect->bottom = pRect->top + cfg->video.windowSizeY;
+
+	if(haveMonitorRect) {
+		ClampWindowRectToMonitor(pRect, monitorRect);
+	}
 }
 
 void MR_GameApp::ApplyDesktopFullscreenRect(const RECT &rect)
@@ -1979,23 +2027,7 @@ void MR_GameApp::NormalizeWindowedRect(const RECT &monitorRect)
 		return;
 	}
 
-	int width = mWindowedRect.right - mWindowedRect.left;
-	int height = mWindowedRect.bottom - mWindowedRect.top;
-	int monitorWidth = monitorRect.right - monitorRect.left;
-	int monitorHeight = monitorRect.bottom - monitorRect.top;
-
-	if(width > monitorWidth) width = monitorWidth;
-	if(height > monitorHeight) height = monitorHeight;
-	if(width < 320) width = 320;
-	if(height < 240) height = 240;
-
-	int left = monitorRect.left + ((monitorWidth - width) / 2);
-	int top = monitorRect.top + ((monitorHeight - height) / 2);
-
-	mWindowedRect.left = left;
-	mWindowedRect.top = top;
-	mWindowedRect.right = left + width;
-	mWindowedRect.bottom = top + height;
+	ClampWindowRectToMonitor(&mWindowedRect, monitorRect);
 }
 
 void MR_GameApp::EnterDesktopFullscreen()
