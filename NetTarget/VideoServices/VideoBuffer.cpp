@@ -398,16 +398,6 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 
 	BOOL lReturnValue = TRUE;
 
-	if(mDirectDraw != NULL) {
-		BOOL adapterChanged =
-			(mCurrentAdapterGuidValid != mRequestedAdapterGuidValid) ||
-			(mCurrentAdapterGuidValid &&
-			 memcmp(&mCurrentAdapterGuid, &mRequestedAdapterGuid, sizeof(GUID)) != 0);
-		if(adapterChanged) {
-			ReleaseDirectDraw();
-		}
-	}
-
 	if(mDirectDraw == NULL) {
 		typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 		LPDIRECTDRAWCREATE directDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(directDrawInst, "DirectDrawCreate");
@@ -415,21 +405,14 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 			return false;
 		}
 
-		GUID *adapterGuid = mRequestedAdapterGuidValid ? &mRequestedAdapterGuid : NULL;
-		if(DD_CALL(directDrawCreate(adapterGuid, &mDirectDraw, NULL)) != DD_OK) {
+		if(DD_CALL(directDrawCreate(NULL, &mDirectDraw, NULL)) != DD_OK) {
 			ASSERT(FALSE);
 			lReturnValue = false;
 		}
 		else {
-			mCurrentAdapterGuidValid = mRequestedAdapterGuidValid;
-			if(mRequestedAdapterGuidValid) {
-				mCurrentAdapterGuid = mRequestedAdapterGuid;
-			}
-
 			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
 				ASSERT(FALSE);
 				lReturnValue = false;
-				ReleaseDirectDraw();
 			}
 		}
 	}
@@ -772,7 +755,6 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
-	mRequestedAdapterGuidValid = FALSE;
 
 	lReturnValue = InitDirectDraw();
 
@@ -912,7 +894,6 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 	MR_Config *cfg = MR_Config::GetInstance();
 
 	DWORD lReqBpp = cfg->video.nativeBppFullscreen ? mNativeBpp : 8;
-	lReqBpp = mNativeBpp ? mNativeBpp : 8;
 
 	ASSERT(!mModeSettingInProgress);
 
@@ -928,13 +909,6 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 			mOriginalExStyle = GetWindowLong(mWindow, GWL_EXSTYLE);
 			mOriginalStyle = GetWindowLong(mWindow, GWL_STYLE);
 			GetWindowRect(mWindow, &mOriginalPos);
-
-			// Move the HWND onto the target monitor before we request exclusive fullscreen.
-			SetWindowPos(mWindow, HWND_TOPMOST,
-				mFullscreenRect.left, mFullscreenRect.top,
-				mFullscreenRect.right - mFullscreenRect.left,
-				mFullscreenRect.bottom - mFullscreenRect.top,
-				SWP_SHOWWINDOW);
 		}
 		// Make the window a non-borderwindow
 		// SetWindowLong( mWindow, GWL_STYLE, mOriginalStyle & ~(WS_THICKFRAME ) );
@@ -965,11 +939,7 @@ if(lReturnValue) {
 
 if(lReturnValue) {
 	// Resize to full screen
-	SetWindowPos(mWindow, HWND_TOPMOST,
-		mFullscreenRect.left, mFullscreenRect.top,
-		mFullscreenRect.right - mFullscreenRect.left,
-		mFullscreenRect.bottom - mFullscreenRect.top,
-		SWP_SHOWWINDOW);
+	ShowWindow(mWindow, SW_MAXIMIZE);
 
 }
 

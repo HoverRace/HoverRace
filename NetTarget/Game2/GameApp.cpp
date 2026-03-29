@@ -1450,6 +1450,15 @@ void MR_GameApp::AssignPalette()
 	}
 }
 
+// Find the desktop resolution of the primary monitor.
+// Returns FALSE if the operation failed.
+BOOL MR_GameApp::GetDesktopResolution(POINT* lpPoint)
+{
+	lpPoint->x = GetSystemMetrics(SM_CXSCREEN);
+	lpPoint->y = GetSystemMetrics(SM_CYSCREEN);
+	return (lpPoint->x != 0 && lpPoint->y != 0);
+}
+
 void MR_GameApp::DeleteMovieWnd()
 {
 	if(mMovieWnd != NULL) {
