@@ -33,8 +33,22 @@ enum MR_TrackAvail
 	eTrackNotFound
 };
 
+unsigned MR_GetDefaultAllowedCraftMask();
+unsigned MR_NormalizeAllowedCraftMask(unsigned pAllowedCraftMask);
+bool MR_HasAllowedCraft(unsigned pAllowedCraftMask);
+bool MR_IsCraftAllowed(unsigned pAllowedCraftMask, int pCraftId);
+int MR_GetFirstAllowedCraft(unsigned pAllowedCraftMask);
+int MR_GetNextAllowedCraft(unsigned pAllowedCraftMask, int pCurrentCraftId,
+	int pDirection);
+std::string MR_FormatAllowedCraftMask(unsigned pAllowedCraftMask);
+std::string MR_FormatAllowedCraftDisplayMask(unsigned pAllowedCraftMask);
+std::string MR_FormatPowerupDisplay(bool pAllowWeapons, bool pAllowCans,
+	bool pAllowMines);
+unsigned MR_ParseAllowedCraftMask(const char *pAllowedCrafts);
+
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
-	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines);
+	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines,
+	unsigned &pAllowedCraftMask);
 
 // pFile name must contains no path and no extension
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);

@@ -31,11 +31,52 @@
 
 #include <algorithm>
 #include <cctype>
+#include <sstream>
 
 namespace {
 	const int TRACK_MAP_RECORD = 3;
 	const COLORREF TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
 	const DWORD TRACK_SEARCH_TIMEOUT = 1500;
+	const int ALLOWED_CRAFT_MODELS[] = { 0, 1, 2, 7 };
+	const size_t ALLOWED_CRAFT_MODEL_COUNT =
+		sizeof(ALLOWED_CRAFT_MODELS) / sizeof(ALLOWED_CRAFT_MODELS[0]);
+
+	unsigned BuildDefaultAllowedCraftMask()
+	{
+		unsigned lReturnValue = 0;
+
+		for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+			lReturnValue |= (1u << ALLOWED_CRAFT_MODELS[lIndex]);
+		}
+
+		return lReturnValue;
+	}
+
+	std::string TrimCopy(const std::string &value)
+	{
+		size_t begin = 0;
+		size_t end = value.length();
+
+		while((begin < end) && std::isspace((unsigned char) value[begin])) {
+			++begin;
+		}
+		while((end > begin) && std::isspace((unsigned char) value[end - 1])) {
+			--end;
+		}
+
+		return value.substr(begin, end - begin);
+	}
+
+	std::string ToLowerCopy(const std::string &value)
+	{
+		std::string lReturnValue = value;
+
+		for(size_t lIndex = 0; lIndex < lReturnValue.length(); ++lIndex) {
+			lReturnValue[lIndex] = (char) std::tolower((unsigned char) lReturnValue[lIndex]);
+		}
+
+		return lReturnValue;
+	}
 
 	bool IsInternetMeetingRoomWindow(HWND wnd)
 	{
@@ -187,6 +228,7 @@ static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
 static BOOL gsAllowCans = FALSE;
 static BOOL gsAllowMines = FALSE;
+static unsigned gsAllowedCraftMask = 0;
 static TrackPreviewData gsTrackPreview;
 static COLORREF gsTrackPreviewPalette[MR_NB_COLORS];
 static bool gsTrackPreviewPaletteInit = false;
@@ -244,7 +286,8 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
  *         the dialog.
  */
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
-	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines)
+	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines,
+	unsigned &pAllowedCraftMask)
 {
 	bool lReturnValue = true;
 	gsSelectedEntry = -1;
@@ -260,6 +303,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 	gsAllowWeapons = TRUE;
 	gsAllowCans = TRUE;
 	gsAllowMines = TRUE;
+	gsAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
 
 	if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsVisibleTrackList[gsSelectedEntry]->mFileName;
@@ -267,12 +311,232 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 		pAllowWeapons = (gsAllowWeapons != FALSE);
 		pAllowCans = (gsAllowCans != FALSE);
 		pAllowMines = (gsAllowMines != FALSE);
+		pAllowedCraftMask = gsAllowedCraftMask;
 		lReturnValue = true;
 	} else
 	lReturnValue = false;
 	CleanList();
 
 	return lReturnValue;
+}
+
+unsigned MR_GetDefaultAllowedCraftMask()
+{
+	static const unsigned DEFAULT_ALLOWED_CRAFT_MASK =
+		BuildDefaultAllowedCraftMask();
+
+	return DEFAULT_ALLOWED_CRAFT_MASK;
+}
+
+unsigned MR_NormalizeAllowedCraftMask(unsigned pAllowedCraftMask)
+{
+	const unsigned lValidMask = MR_GetDefaultAllowedCraftMask();
+
+	pAllowedCraftMask &= lValidMask;
+	return (pAllowedCraftMask != 0) ? pAllowedCraftMask : lValidMask;
+}
+
+bool MR_HasAllowedCraft(unsigned pAllowedCraftMask)
+{
+	return (pAllowedCraftMask & MR_GetDefaultAllowedCraftMask()) != 0;
+}
+
+bool MR_IsCraftAllowed(unsigned pAllowedCraftMask, int pCraftId)
+{
+	if((pCraftId < 0) || (pCraftId >= 32)) {
+		return false;
+	}
+
+	return (MR_NormalizeAllowedCraftMask(pAllowedCraftMask) &
+		(1u << pCraftId)) != 0;
+}
+
+int MR_GetFirstAllowedCraft(unsigned pAllowedCraftMask)
+{
+	const unsigned lMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
+
+	for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+		if((lMask & (1u << ALLOWED_CRAFT_MODELS[lIndex])) != 0) {
+			return ALLOWED_CRAFT_MODELS[lIndex];
+		}
+	}
+
+	return ALLOWED_CRAFT_MODELS[0];
+}
+
+int MR_GetNextAllowedCraft(unsigned pAllowedCraftMask, int pCurrentCraftId,
+	int pDirection)
+{
+	const unsigned lMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
+	int lCurrentIndex = -1;
+	int lStep = (pDirection < 0) ? -1 : 1;
+
+	for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+		if(ALLOWED_CRAFT_MODELS[lIndex] == pCurrentCraftId) {
+			lCurrentIndex = (int) lIndex;
+			break;
+		}
+	}
+
+	if(lCurrentIndex == -1) {
+		return MR_GetFirstAllowedCraft(lMask);
+	}
+
+	for(size_t lOffset = 0; lOffset < ALLOWED_CRAFT_MODEL_COUNT; ++lOffset) {
+		lCurrentIndex =
+			(lCurrentIndex + lStep + (int) ALLOWED_CRAFT_MODEL_COUNT) %
+			(int) ALLOWED_CRAFT_MODEL_COUNT;
+		if((lMask & (1u << ALLOWED_CRAFT_MODELS[lCurrentIndex])) != 0) {
+			return ALLOWED_CRAFT_MODELS[lCurrentIndex];
+		}
+	}
+
+	return MR_GetFirstAllowedCraft(lMask);
+}
+
+std::string MR_FormatAllowedCraftMask(unsigned pAllowedCraftMask)
+{
+	std::ostringstream lOutput;
+	bool lFirst = true;
+	const unsigned lMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
+
+	for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+		const int lCraftId = ALLOWED_CRAFT_MODELS[lIndex];
+		if((lMask & (1u << lCraftId)) == 0) {
+			continue;
+		}
+
+		if(!lFirst) {
+			lOutput << ",";
+		}
+		lOutput << lCraftId;
+		lFirst = false;
+	}
+
+	return lOutput.str();
+}
+
+std::string MR_FormatAllowedCraftDisplayMask(unsigned pAllowedCraftMask)
+{
+	static const char *CRAFT_DISPLAY_NAMES[] = {
+		"Basic",
+		"Low CX",
+		"Bi-Turbo",
+		"EON"
+	};
+
+	std::ostringstream lOutput;
+	bool lFirst = true;
+	const unsigned lMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
+
+	for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+		const int lCraftId = ALLOWED_CRAFT_MODELS[lIndex];
+		if((lMask & (1u << lCraftId)) == 0) {
+			continue;
+		}
+
+		if(!lFirst) {
+			lOutput << ", ";
+		}
+		lOutput << CRAFT_DISPLAY_NAMES[lIndex];
+		lFirst = false;
+	}
+
+	return lOutput.str();
+}
+
+std::string MR_FormatPowerupDisplay(bool pAllowWeapons, bool pAllowCans,
+	bool pAllowMines)
+{
+	std::ostringstream lOutput;
+	bool lFirst = true;
+
+	if(pAllowWeapons) {
+		lOutput << "Missiles";
+		lFirst = false;
+	}
+	if(pAllowCans) {
+		if(!lFirst) {
+			lOutput << ", ";
+		}
+		lOutput << "Cans";
+		lFirst = false;
+	}
+	if(pAllowMines) {
+		if(!lFirst) {
+			lOutput << ", ";
+		}
+		lOutput << "Mines";
+		lFirst = false;
+	}
+
+	if(lFirst) {
+		return "None";
+	}
+
+	return lOutput.str();
+}
+
+unsigned MR_ParseAllowedCraftMask(const char *pAllowedCrafts)
+{
+	static const char *CRAFT_DISPLAY_NAMES[] = {
+		"basic",
+		"low cx",
+		"bi-turbo",
+		"eon"
+	};
+
+	std::string lAllowedCrafts =
+		(pAllowedCrafts != NULL) ? pAllowedCrafts : "";
+	unsigned lMask = 0;
+	size_t lStart = 0;
+
+	lAllowedCrafts = TrimCopy(lAllowedCrafts);
+	if(lAllowedCrafts.empty()) {
+		return MR_GetDefaultAllowedCraftMask();
+	}
+
+	while(lStart <= lAllowedCrafts.length()) {
+		size_t lEnd = lAllowedCrafts.find(',', lStart);
+		std::string lToken = TrimCopy(lAllowedCrafts.substr(lStart,
+			(lEnd == std::string::npos) ? std::string::npos : (lEnd - lStart)));
+
+		if(!lToken.empty()) {
+			bool lNumeric = true;
+			for(size_t lIndex = 0; lIndex < lToken.length(); ++lIndex) {
+				if(!std::isdigit((unsigned char) lToken[lIndex])) {
+					lNumeric = false;
+					break;
+				}
+			}
+
+			if(lNumeric) {
+				const int lCraftId = atoi(lToken.c_str());
+				if((lCraftId >= 0) && (lCraftId < 32)) {
+					const unsigned lCraftBit = (1u << lCraftId);
+					if((MR_GetDefaultAllowedCraftMask() & lCraftBit) != 0) {
+						lMask |= lCraftBit;
+					}
+				}
+			}
+			else {
+				const std::string lLowerToken = ToLowerCopy(lToken);
+				for(size_t lIndex = 0; lIndex < ALLOWED_CRAFT_MODEL_COUNT; ++lIndex) {
+					if(lLowerToken == CRAFT_DISPLAY_NAMES[lIndex]) {
+						lMask |= (1u << ALLOWED_CRAFT_MODELS[lIndex]);
+						break;
+					}
+				}
+			}
+		}
+
+		if(lEnd == std::string::npos) {
+			break;
+		}
+		lStart = lEnd + 1;
+	}
+
+	return (lMask != 0) ? lMask : MR_GetDefaultAllowedCraftMask();
 }
 
 static bool StartsWithNoCase(const std::string &value, size_t offset, const std::string &prefix)
@@ -485,6 +749,14 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				gsAllowCans ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_TRACK_MINES, BM_SETCHECK,
 				gsAllowMines ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT0, BM_SETCHECK,
+				MR_IsCraftAllowed(gsAllowedCraftMask, 0) ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT1, BM_SETCHECK,
+				MR_IsCraftAllowed(gsAllowedCraftMask, 1) ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT2, BM_SETCHECK,
+				MR_IsCraftAllowed(gsAllowedCraftMask, 2) ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT7, BM_SETCHECK,
+				MR_IsCraftAllowed(gsAllowedCraftMask, 7) ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_NB_LAP_SPIN, UDM_SETRANGE, 0, MAKELONG(99, 1));
 			SetDlgItemText(pWindow, IDC_TRACK_FILTER, "");
 			SendDlgItemMessage(pWindow, IDC_TRACK_FILTER, EM_SETCUEBANNER, FALSE,
@@ -533,9 +805,24 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 						gsAllowCans = (SendDlgItemMessage(pWindow, IDC_TRACK_CANS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 						gsAllowMines = (SendDlgItemMessage(pWindow, IDC_TRACK_MINES, BM_GETCHECK, 0, 0) == BST_CHECKED);
+						gsAllowedCraftMask = 0;
+						if(SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT0, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+							gsAllowedCraftMask |= (1u << 0);
+						}
+						if(SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+							gsAllowedCraftMask |= (1u << 1);
+						}
+						if(SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+							gsAllowedCraftMask |= (1u << 2);
+						}
+						if(SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT7, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+							gsAllowedCraftMask |= (1u << 7);
+						}
 
 						if(gsNbLaps < 1)
 							MessageBox(pWindow, MR_LoadString(IDS_LAP_RANGE), MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+						else if(!MR_HasAllowedCraft(gsAllowedCraftMask))
+							MessageBox(pWindow, "At least one hovercraft must be enabled.", MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						else
 							EndDialog(pWindow, IDOK);
 					}

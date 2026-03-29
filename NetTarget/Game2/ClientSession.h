@@ -63,6 +63,7 @@ class MR_ClientSession
 		BOOL mAllowWeapons;
 		BOOL mAllowCans;
 		BOOL mAllowMines;
+		unsigned mAllowedCraftMask;
 
 		void ReadLevelAttrib(MR_RecordFile * pFile, MR_VideoBuffer * pVideo);
 		void ApplyGameOptions();
@@ -77,6 +78,7 @@ class MR_ClientSession
 
 		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap,
 			BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+			unsigned pAllowedCraftMask,
 			MR_VideoBuffer * pVideo);
 
 		// Main character control and interrogation

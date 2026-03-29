@@ -24,6 +24,7 @@
 #include <Mmsystem.h>
 #include "NetworkSession.h"
 #include "InternetRoom.h"
+#include "TrackSelect.h"
 #include "resource.h"
 #include "../Util/StrRes.h"
 
@@ -380,10 +381,11 @@ BOOL MR_NetworkSession::Process(int pSpeedFactor)
  */
 BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile,
 	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+	unsigned pAllowedCraftMask,
 	MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap,
-		pAllowWeapons, pAllowCans, pAllowMines, pVideo);
+		pAllowWeapons, pAllowCans, pAllowMines, pAllowedCraftMask, pVideo);
 
 	if(lReturnValue) {
 		mSession.GetCurrentLevel()->SetBroadcastHook(ElementCreationHook, PermElementStateHook, this);
@@ -777,6 +779,19 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
 	BOOL pHasMines, BOOL pAllowMines)
 {
+	return WaitConnections(pWindow, pGameName, pPromptForPort, pDefaultPort,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		FALSE, MR_GetDefaultAllowedCraftMask());
+}
+
+BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask)
+{
 	mMasterMode = TRUE;
 	mSended12SecClockUpdate = FALSE;
 	mSended8SecClockUpdate = FALSE;
@@ -784,7 +799,7 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort,
 		pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
-		pHasMines, pAllowMines);
+		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask);
 }
 
 /**
@@ -818,12 +833,25 @@ BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
 	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
 	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines)
 {
+	return ConnectToServer(pWindow, pServerIP, pPort, pSteamID, pGameName,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		FALSE, MR_GetDefaultAllowedCraftMask());
+}
+
+BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
+	unsigned pPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask)
+{
 	mMasterMode = FALSE;
 
 	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID,
 		pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
-		pHasMines, pAllowMines);
+		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask);
 }
 
 /**
@@ -852,7 +880,7 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
 	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons,
-		mAllowCans, mAllowMines);
+		mAllowCans, mAllowMines, mAllowedCraftMask);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();

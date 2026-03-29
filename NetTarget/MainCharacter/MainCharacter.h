@@ -99,6 +99,7 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL mAllowWeapons;
 		BOOL mAllowCans;
 		BOOL mAllowMines;
+		unsigned mAllowedCraftMask;
 
 		double mXSpeed;
 		double mYSpeed;
@@ -157,12 +158,13 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL IsWeaponSelectable(eWeapon pWeapon) const;
 		void SelectNextWeapon();
 		void NormalizeCurrentWeapon();
+		void ClampHoverModel();
 
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
 		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, BOOL pAllowWeapons,
-			BOOL pAllowCans, BOOL pAllowMines);
+			BOOL pAllowCans, BOOL pAllowMines, unsigned pAllowedCraftMask);
 
 		~MR_MainCharacter();
 

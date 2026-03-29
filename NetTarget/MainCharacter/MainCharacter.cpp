@@ -149,6 +149,80 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 	1.1,
 };
 
+namespace {
+	const int ALLOWED_HOVER_MODELS[] = { 0, 1, 2, 7 };
+	const size_t ALLOWED_HOVER_MODEL_COUNT =
+		sizeof(ALLOWED_HOVER_MODELS) / sizeof(ALLOWED_HOVER_MODELS[0]);
+
+	unsigned GetDefaultAllowedCraftMask()
+	{
+		unsigned lReturnValue = 0;
+
+		for(size_t lIndex = 0; lIndex < ALLOWED_HOVER_MODEL_COUNT; ++lIndex) {
+			lReturnValue |= (1u << ALLOWED_HOVER_MODELS[lIndex]);
+		}
+
+		return lReturnValue;
+	}
+
+	unsigned NormalizeAllowedCraftMask(unsigned pAllowedCraftMask)
+	{
+		const unsigned lValidMask = GetDefaultAllowedCraftMask();
+
+		pAllowedCraftMask &= lValidMask;
+		return (pAllowedCraftMask != 0) ? pAllowedCraftMask : lValidMask;
+	}
+
+	bool IsAllowedCraft(unsigned pAllowedCraftMask, int pCraftId)
+	{
+		return (pCraftId >= 0) && (pCraftId < 32) &&
+			((NormalizeAllowedCraftMask(pAllowedCraftMask) & (1u << pCraftId)) != 0);
+	}
+
+	int GetFirstAllowedCraft(unsigned pAllowedCraftMask)
+	{
+		const unsigned lMask = NormalizeAllowedCraftMask(pAllowedCraftMask);
+
+		for(size_t lIndex = 0; lIndex < ALLOWED_HOVER_MODEL_COUNT; ++lIndex) {
+			if((lMask & (1u << ALLOWED_HOVER_MODELS[lIndex])) != 0) {
+				return ALLOWED_HOVER_MODELS[lIndex];
+			}
+		}
+
+		return ALLOWED_HOVER_MODELS[0];
+	}
+
+	int GetNextAllowedCraft(unsigned pAllowedCraftMask, int pCurrentCraftId,
+		int pDirection)
+	{
+		const unsigned lMask = NormalizeAllowedCraftMask(pAllowedCraftMask);
+		int lCurrentIndex = -1;
+		int lStep = (pDirection < 0) ? -1 : 1;
+
+		for(size_t lIndex = 0; lIndex < ALLOWED_HOVER_MODEL_COUNT; ++lIndex) {
+			if(ALLOWED_HOVER_MODELS[lIndex] == pCurrentCraftId) {
+				lCurrentIndex = (int) lIndex;
+				break;
+			}
+		}
+
+		if(lCurrentIndex == -1) {
+			return GetFirstAllowedCraft(lMask);
+		}
+
+		for(size_t lOffset = 0; lOffset < ALLOWED_HOVER_MODEL_COUNT; ++lOffset) {
+			lCurrentIndex =
+				(lCurrentIndex + lStep + (int) ALLOWED_HOVER_MODEL_COUNT) %
+				(int) ALLOWED_HOVER_MODEL_COUNT;
+			if((lMask & (1u << ALLOWED_HOVER_MODELS[lCurrentIndex])) != 0) {
+				return ALLOWED_HOVER_MODELS[lCurrentIndex];
+			}
+		}
+
+		return GetFirstAllowedCraft(lMask);
+	}
+}
+
 // Functions implementations
 
 MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
@@ -168,6 +242,7 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mAllowWeapons = TRUE;
 	mAllowCans = TRUE;
 	mAllowMines = TRUE;
+	mAllowedCraftMask = GetDefaultAllowedCraftMask();
 
 	mXSpeed = 0;
 	mYSpeed = 0;
@@ -226,7 +301,12 @@ void MR_MainCharacter::SetHoverId(int pId)
 
 void MR_MainCharacter::SetHoverModel(int pModel)
 {
-	mHoverModel = pModel;
+	if(IsAllowedCraft(mAllowedCraftMask, pModel)) {
+		mHoverModel = pModel;
+	}
+	else {
+		ClampHoverModel();
+	}
 }
 
 int MR_MainCharacter::GetHoverModel() const
@@ -268,7 +348,7 @@ void MR_MainCharacter::RegisterFactory()
 }
 
 MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons,
-	BOOL pAllowCans, BOOL pAllowMines)
+	BOOL pAllowCans, BOOL pAllowMines, unsigned pAllowedCraftMask)
 {
 	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
@@ -279,9 +359,19 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons,
 		lReturnValue->mAllowWeapons = pAllowWeapons;
 		lReturnValue->mAllowCans = pAllowCans;
 		lReturnValue->mAllowMines = pAllowMines;
+		lReturnValue->mAllowedCraftMask =
+			NormalizeAllowedCraftMask(pAllowedCraftMask);
+		lReturnValue->ClampHoverModel();
 		lReturnValue->NormalizeCurrentWeapon();
 	}
 	return lReturnValue;
+}
+
+void MR_MainCharacter::ClampHoverModel()
+{
+	if(!IsAllowedCraft(mAllowedCraftMask, mHoverModel)) {
+		mHoverModel = GetFirstAllowedCraft(mAllowedCraftMask);
+	}
 }
 
 BOOL MR_MainCharacter::IsWeaponSelectable(eWeapon pWeapon) const
@@ -435,23 +525,14 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		// Set HoverType if race not started
 		if (pTime < 0) {
 			if (!(mControlState & (eRight | eLeft))) {
-				static const int lAllowedHoverModels[4] = { 0, 1, 2, 7 };
-				int lHoverModelIndex = 0;
-
-				for (int i = 0; i < 4; i++) {
-					if (lAllowedHoverModels[i] == mHoverModel) {
-						lHoverModelIndex = i;
-						break;
-					}
+				if(pState & eRight) {
+					mHoverModel = GetNextAllowedCraft(mAllowedCraftMask,
+						mHoverModel, 1);
 				}
-
-				if (pState & eRight)
-					lHoverModelIndex++;
-				if (pState & eLeft)
-					lHoverModelIndex--;
-
-				lHoverModelIndex = (lHoverModelIndex + 4) % 4;
-				mHoverModel = lAllowedHoverModels[lHoverModelIndex];
+				else if(pState & eLeft) {
+					mHoverModel = GetNextAllowedCraft(mAllowedCraftMask,
+						mHoverModel, -1);
+				}
 			}
 		}
 		// First verify transition states

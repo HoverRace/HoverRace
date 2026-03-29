@@ -22,6 +22,7 @@
 #include "stdafx.h"
 
 #include "ClientSession.h"
+#include "TrackSelect.h"
 #include "../MazeCompiler/TrackCommonStuff.h"
 
 MR_ClientSession::MR_ClientSession()
@@ -37,6 +38,7 @@ MR_ClientSession::MR_ClientSession()
 	mAllowWeapons = TRUE;
 	mAllowCans = TRUE;
 	mAllowMines = TRUE;
+	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
 
 	InitializeCriticalSection(&mChatMutex);
 }
@@ -115,6 +117,7 @@ void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuff
 
 BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile,
 	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+	unsigned pAllowedCraftMask,
 	MR_VideoBuffer * pVideo)
 {
 	BOOL lReturnValue;
@@ -122,6 +125,7 @@ BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile,
 	mAllowWeapons = pAllowWeapons;
 	mAllowCans = pAllowCans;
 	mAllowMines = pAllowMines;
+	mAllowedCraftMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
 	lReturnValue = mSession.LoadNew(pTitle, pMazeFile);
 
 	if(lReturnValue) {
@@ -184,7 +188,8 @@ BOOL MR_ClientSession::CreateMainCharacter()
 	ASSERT(mMainCharacter1 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
+	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
+		mAllowMines, mAllowedCraftMask);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -226,7 +231,8 @@ BOOL MR_ClientSession::CreateMainCharacter2()
 	ASSERT(mMainCharacter2 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
+	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
+		mAllowMines, mAllowedCraftMask);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -249,7 +255,8 @@ BOOL MR_ClientSession::CreateMainCharacter3()
 	ASSERT(mMainCharacter3 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
+	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
+		mAllowMines, mAllowedCraftMask);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -272,7 +279,8 @@ BOOL MR_ClientSession::CreateMainCharacter4()
 	ASSERT(mMainCharacter4 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
+	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
+		mAllowMines, mAllowedCraftMask);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();

@@ -173,6 +173,12 @@
 #define IDC_TCP_MINES                   1099
 #define IDC_TRACK_CANS                  1100
 #define IDC_TRACK_MINES                 1101
+#define IDC_CRAFTS                      1102
+#define IDC_TCP_CRAFTS                  1103
+#define IDC_TRACK_CRAFT0                1104
+#define IDC_TRACK_CRAFT1                1105
+#define IDC_TRACK_CRAFT2                1106
+#define IDC_TRACK_CRAFT7                1107
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -451,7 +457,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1092
+#define _APS_NEXT_CONTROL_VALUE         1108
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

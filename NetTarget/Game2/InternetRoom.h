@@ -112,6 +112,8 @@ class MR_InternetRoom
 				BOOL mAllowWeapons;
 				BOOL mAllowCans;
 				BOOL mAllowMines;
+				unsigned mAllowedCraftMask;
+				CString mAllowedCrafts;
 				int mNbClient;
 				int mClientList[eMaxPlayerGame];
 				CString mIPAddr;
@@ -186,7 +188,7 @@ class MR_InternetRoom
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
 		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName,
 			int pNbLap, BOOL pAlllowWeapons, BOOL pAllowCans,
-			BOOL pAllowMines, unsigned pPort);
+			BOOL pAllowMines, unsigned pAllowedCraftMask, unsigned pPort);
 		BOOL DelGameOp(HWND pParentWindow);
 		BOOL JoinGameOp(HWND pParentWindow, int pGameIndex);
 		BOOL LeaveGameOp(HWND pParentWindow);

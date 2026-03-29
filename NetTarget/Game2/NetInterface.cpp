@@ -80,12 +80,11 @@ static CString GetTcpTrackPreviewTrackName(HWND dialog);
 static CString FormatTcpServerAddrForDialog(const CString &serverAddr);
 static void AdjustTcpServerAddrLayout(HWND dialog, const CString &serverAddrText);
 static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText,
-	CString &weaponsText, CString &cansText, CString &minesText);
+	CString &powerupsText, CString &craftsText);
 static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
-	CString &lapText, CString &weaponsText, CString &cansText,
-	CString &minesText);
+	CString &lapText, CString &powerupsText, CString &craftsText);
 static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText,
-	CString &weaponsText, CString &cansText, CString &minesText);
+	CString &powerupsText, CString &craftsText);
 static void UpdateTcpDialogTrackSummary(HWND dialog);
 
 namespace {
@@ -124,9 +123,8 @@ static HWND gsTcpTrackPreviewWindow = NULL;
 static CString gsTcpOriginalGameName;
 static CString gsTcpTrackName;
 static CString gsTcpLapText;
-static CString gsTcpWeaponsText;
-static CString gsTcpCansText;
-static CString gsTcpMinesText;
+static CString gsTcpPowerupsText;
+static CString gsTcpCraftsText;
 
 static void PositionDialogToRightOfOwner(HWND dialog, int gap)
 {
@@ -214,9 +212,8 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 	const int MIN_PREVIEW_DIALOG_WIDTH = 1200;
 	const int TARGET_VISIBLE_PLAYERS = 10;
 	const int PREVIEW_MARGIN = 4;
-	const int PREVIEW_SIZE = 108;
 	const int PREVIEW_TOP = 6;
-	const int PREVIEW_LIST_GAP = 4;
+	const int PREVIEW_LIST_GAP = 1;
 
 	if(listHandle == NULL) {
 		return;
@@ -266,9 +263,26 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 	}
 	MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&listRect), 2);
 
-	const int previewLayoutExtraHeight = ((workArea.right - workArea.left) >= MIN_PREVIEW_DIALOG_WIDTH) ?
-		(((PREVIEW_TOP + PREVIEW_SIZE + PREVIEW_LIST_GAP) > listRect.top) ?
-			((PREVIEW_TOP + PREVIEW_SIZE + PREVIEW_LIST_GAP) - listRect.top) : 0) : 0;
+	int previewLayoutExtraHeight = 0;
+	if((workArea.right - workArea.left) >= MIN_PREVIEW_DIALOG_WIDTH) {
+		int previewSize = (listRect.bottom - listRect.top) + extraHeight;
+		HWND craftsWindow = GetDlgItem(dialog, IDC_TCP_CRAFTS);
+		if(craftsWindow != NULL) {
+			RECT craftsRect;
+			if(GetWindowRect(craftsWindow, &craftsRect)) {
+				MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&craftsRect), 2);
+				const int craftsBottom = craftsRect.bottom;
+				if(craftsBottom > PREVIEW_TOP) {
+					previewSize = min(previewSize, craftsBottom - PREVIEW_TOP);
+				}
+			}
+		}
+
+		const int previewBottom = PREVIEW_TOP + previewSize + PREVIEW_LIST_GAP;
+		if(previewBottom > listRect.top) {
+			previewLayoutExtraHeight = previewBottom - listRect.top;
+		}
+	}
 	const int bottomControlShift = extraHeight + previewLayoutExtraHeight;
 
 	for(HWND child = GetWindow(dialog, GW_CHILD); child != NULL; child = GetWindow(child, GW_HWNDNEXT)) {
@@ -306,7 +320,18 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 	MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&updatedListRect), 2);
 
 	const int listHeight = updatedListRect.bottom - updatedListRect.top;
-	const int previewSize = (listHeight < PREVIEW_SIZE) ? listHeight : PREVIEW_SIZE;
+	int previewSize = listHeight;
+	HWND craftsWindow = GetDlgItem(dialog, IDC_TCP_CRAFTS);
+	if(craftsWindow != NULL) {
+		RECT craftsRect;
+		if(GetWindowRect(craftsWindow, &craftsRect)) {
+			MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&craftsRect), 2);
+			const int craftsBottom = craftsRect.bottom;
+			if(craftsBottom > PREVIEW_TOP) {
+				previewSize = min(previewSize, craftsBottom - PREVIEW_TOP);
+			}
+		}
+	}
 	if(previewSize <= 0) {
 		return;
 	}
@@ -337,8 +362,7 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 
 	const int textRight = previewLeft - PREVIEW_MARGIN;
 	const int controlIds[] = {
-		IDC_GAME_NAME, IDC_TCP_LAPS, IDC_TCP_WEAPONS,
-		IDC_TCP_CANS, IDC_TCP_MINES
+		IDC_GAME_NAME, IDC_TCP_LAPS, IDC_TCP_WEAPONS, IDC_TCP_CRAFTS
 	};
 
 	for(size_t lIndex = 0; lIndex < sizeof(controlIds) / sizeof(controlIds[0]); lIndex++) {
@@ -558,12 +582,11 @@ static CString GetTcpTrackPreviewTrackName(HWND dialog)
 	char lTrackBuffer[256];
 	CString lTrackName;
 	CString lLapText;
-	CString lWeaponsText;
-	CString lCansText;
-	CString lMinesText;
+	CString lPowerupsText;
+	CString lCraftsText;
 
-	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText,
-		lCansText, lMinesText)) {
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lPowerupsText,
+		lCraftsText)) {
 		return lTrackName;
 	}
 
@@ -668,18 +691,20 @@ static void AdjustTcpServerAddrLayout(HWND dialog, const CString &serverAddrText
 }
 
 static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
-	CString &lapText, CString &weaponsText, CString &cansText,
-	CString &minesText)
+	CString &lapText, CString &powerupsText, CString &craftsText)
 {
 	std::string summary((const char *) gameSummary);
 	std::string::size_type lapsPos;
 	std::string::size_type numberStart;
+	const std::string craftsTag = " crafts ";
+	bool allowWeapons = false;
+	bool allowCans = false;
+	bool allowMines = false;
 
 	trackName.Empty();
 	lapText.Empty();
-	weaponsText.Empty();
-	cansText.Empty();
-	minesText.Empty();
+	powerupsText.Empty();
+	craftsText.Empty();
 
 	while(!summary.empty() && (summary[summary.length() - 1] == ' ')) {
 		summary.erase(summary.length() - 1);
@@ -695,45 +720,53 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
 	const std::string cansOff = " cans off";
 	const std::string withWeapons = " with weapons";
 	const std::string noWeapons = " no weapons";
+	const std::string::size_type craftsPos = summary.rfind(craftsTag);
+
+	if((craftsPos != std::string::npos) &&
+		(craftsPos + craftsTag.length() < summary.length()))
+	{
+		craftsText = MR_FormatAllowedCraftDisplayMask(MR_ParseAllowedCraftMask(
+			summary.c_str() + craftsPos + craftsTag.length())).c_str();
+		summary.erase(craftsPos);
+	}
 
 	if(summary.length() > minesOn.length() &&
 		summary.compare(summary.length() - minesOn.length(), minesOn.length(), minesOn) == 0)
 	{
-		minesText = "on";
+		allowMines = true;
 		summary.erase(summary.length() - minesOn.length());
 	}
 	else if(summary.length() > minesOff.length() &&
 		summary.compare(summary.length() - minesOff.length(), minesOff.length(), minesOff) == 0)
 	{
-		minesText = "off";
 		summary.erase(summary.length() - minesOff.length());
 	}
 
 	if(summary.length() > cansOn.length() &&
 		summary.compare(summary.length() - cansOn.length(), cansOn.length(), cansOn) == 0)
 	{
-		cansText = "on";
+		allowCans = true;
 		summary.erase(summary.length() - cansOn.length());
 	}
 	else if(summary.length() > cansOff.length() &&
 		summary.compare(summary.length() - cansOff.length(), cansOff.length(), cansOff) == 0)
 	{
-		cansText = "off";
 		summary.erase(summary.length() - cansOff.length());
 	}
 
 	if(summary.length() > withWeapons.length() &&
 		summary.compare(summary.length() - withWeapons.length(), withWeapons.length(), withWeapons) == 0)
 	{
-		weaponsText = "on";
+		allowWeapons = true;
 		summary.erase(summary.length() - withWeapons.length());
 	}
 	else if(summary.length() > noWeapons.length() &&
 		summary.compare(summary.length() - noWeapons.length(), noWeapons.length(), noWeapons) == 0)
 	{
-		weaponsText = "off";
 		summary.erase(summary.length() - noWeapons.length());
 	}
+
+	powerupsText = MR_FormatPowerupDisplay(allowWeapons, allowCans, allowMines).c_str();
 
 	lapsPos = summary.rfind(" laps");
 	if(lapsPos == std::string::npos) {
@@ -755,20 +788,20 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
 }
 
 static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText,
-	CString &weaponsText, CString &cansText, CString &minesText)
+	CString &powerupsText, CString &craftsText)
 {
 	char lTrackBuffer[256];
 	char lLapBuffer[64];
-	char lWeaponsBuffer[64];
-	char lCansBuffer[64];
-	char lMinesBuffer[64];
+	char lPowerupsBuffer[256];
+	char lCraftsBuffer[64];
 	HWND owner = GetWindow(dialog, GW_OWNER);
+
+	lCraftsBuffer[0] = 0;
 
 	trackName.Empty();
 	lapText.Empty();
-	weaponsText.Empty();
-	cansText.Empty();
-	minesText.Empty();
+	powerupsText.Empty();
+	craftsText.Empty();
 
 	if(owner == NULL) {
 		owner = GetParent(dialog);
@@ -780,26 +813,22 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 
 	GetDlgItemText(owner, IDC_TRACK_NAME, lTrackBuffer, sizeof(lTrackBuffer));
 	GetDlgItemText(owner, IDC_NB_LAP, lLapBuffer, sizeof(lLapBuffer));
-	GetDlgItemText(owner, IDC_WEAPONS, lWeaponsBuffer, sizeof(lWeaponsBuffer));
-	GetDlgItemText(owner, IDC_CANS, lCansBuffer, sizeof(lCansBuffer));
-	GetDlgItemText(owner, IDC_MINES, lMinesBuffer, sizeof(lMinesBuffer));
+	GetDlgItemText(owner, IDC_WEAPONS, lPowerupsBuffer, sizeof(lPowerupsBuffer));
+	GetDlgItemText(owner, IDC_CRAFTS, lCraftsBuffer, sizeof(lCraftsBuffer));
 
 	trackName = lTrackBuffer;
 	lapText = lLapBuffer;
-	weaponsText = lWeaponsBuffer;
-	cansText = lCansBuffer;
-	minesText = lMinesBuffer;
+	powerupsText = lPowerupsBuffer;
+	craftsText = lCraftsBuffer;
 
 	trackName.TrimLeft();
 	trackName.TrimRight();
 	lapText.TrimLeft();
 	lapText.TrimRight();
-	weaponsText.TrimLeft();
-	weaponsText.TrimRight();
-	cansText.TrimLeft();
-	cansText.TrimRight();
-	minesText.TrimLeft();
-	minesText.TrimRight();
+	powerupsText.TrimLeft();
+	powerupsText.TrimRight();
+	craftsText.TrimLeft();
+	craftsText.TrimRight();
 
 	if(trackName.IsEmpty() || (trackName == MR_LoadString(IDS_IMR_NOSELECT))) {
 		return false;
@@ -809,61 +838,24 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 }
 
 static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText,
-	CString &weaponsText, CString &cansText, CString &minesText)
+	CString &powerupsText, CString &craftsText)
 {
 	trackName = gsTcpTrackName;
 	lapText = gsTcpLapText;
-	weaponsText = gsTcpWeaponsText;
-	cansText = gsTcpCansText;
-	minesText = gsTcpMinesText;
+	powerupsText = gsTcpPowerupsText;
+	craftsText = gsTcpCraftsText;
 
 	if(!trackName.IsEmpty()) {
 		return true;
 	}
 
-	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, weaponsText,
-		cansText, minesText))
+	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, powerupsText,
+		craftsText))
 	{
-		if(weaponsText.CompareNoCase("on") == 0) {
-			weaponsText = "On";
-		}
-		else if(weaponsText.CompareNoCase("off") == 0) {
-			weaponsText = "Off";
-		}
-		if(cansText.CompareNoCase("on") == 0) {
-			cansText = "On";
-		}
-		else if(cansText.CompareNoCase("off") == 0) {
-			cansText = "Off";
-		}
-		if(minesText.CompareNoCase("on") == 0) {
-			minesText = "On";
-		}
-		else if(minesText.CompareNoCase("off") == 0) {
-			minesText = "Off";
-		}
 		return true;
 	}
 
-	if(GetTcpImrTrackDetails(dialog, trackName, lapText, weaponsText, cansText, minesText)) {
-		if(weaponsText.CompareNoCase("on") == 0) {
-			weaponsText = "On";
-		}
-		else if(weaponsText.CompareNoCase("off") == 0) {
-			weaponsText = "Off";
-		}
-		if(cansText.CompareNoCase("on") == 0) {
-			cansText = "On";
-		}
-		else if(cansText.CompareNoCase("off") == 0) {
-			cansText = "Off";
-		}
-		if(minesText.CompareNoCase("on") == 0) {
-			minesText = "On";
-		}
-		else if(minesText.CompareNoCase("off") == 0) {
-			minesText = "Off";
-		}
+	if(GetTcpImrTrackDetails(dialog, trackName, lapText, powerupsText, craftsText)) {
 		return true;
 	}
 
@@ -874,23 +866,21 @@ static void UpdateTcpDialogTrackSummary(HWND dialog)
 {
 	CString lTrackName;
 	CString lLapText;
-	CString lWeaponsText;
-	CString lCansText;
-	CString lMinesText;
+	CString lPowerupsText;
+	CString lCraftsText;
 
-	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText, lCansText, lMinesText)) {
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lPowerupsText,
+		lCraftsText)) {
 		SetDlgItemText(dialog, IDC_GAME_NAME, lTrackName);
 		SetDlgItemText(dialog, IDC_TCP_LAPS, lLapText);
-		SetDlgItemText(dialog, IDC_TCP_WEAPONS, lWeaponsText);
-		SetDlgItemText(dialog, IDC_TCP_CANS, lCansText);
-		SetDlgItemText(dialog, IDC_TCP_MINES, lMinesText);
+		SetDlgItemText(dialog, IDC_TCP_WEAPONS, lPowerupsText);
+		SetDlgItemText(dialog, IDC_TCP_CRAFTS, lCraftsText);
 	}
 	else {
 		SetDlgItemText(dialog, IDC_GAME_NAME, gsTcpOriginalGameName);
 		SetDlgItemText(dialog, IDC_TCP_LAPS, "");
 		SetDlgItemText(dialog, IDC_TCP_WEAPONS, "");
-		SetDlgItemText(dialog, IDC_TCP_CANS, "");
-		SetDlgItemText(dialog, IDC_TCP_MINES, "");
+		SetDlgItemText(dialog, IDC_TCP_CRAFTS, "");
 	}
 }
 
@@ -927,6 +917,8 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mHasGameCans = FALSE;
 	mAllowMines = FALSE;
 	mHasGameMines = FALSE;
+	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
+	mHasGameCrafts = FALSE;
 
 	mAllPreLoguedRecv = FALSE;
 
@@ -1354,7 +1346,8 @@ const char *MR_NetworkInterface::GetPlayerName() const
 
 void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap,
 	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
-	BOOL pHasMines, BOOL pAllowMines)
+	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask)
 {
 	mTrackName = (pTrackName != NULL) ? pTrackName : "";
 	mNbLap = pNbLap;
@@ -1365,6 +1358,10 @@ void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap,
 	mAllowCans = pHasCans ? pAllowCans : FALSE;
 	mHasGameMines = pHasMines;
 	mAllowMines = pHasMines ? pAllowMines : FALSE;
+	mHasGameCrafts = pHasCrafts;
+	mAllowedCraftMask = pHasCrafts ?
+		MR_NormalizeAllowedCraftMask(pAllowedCraftMask) :
+		MR_GetDefaultAllowedCraftMask();
 }
 
 /**
@@ -1383,6 +1380,19 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
 	BOOL pHasMines, BOOL pAllowMines)
 {
+	return MasterConnect(pWindow, pGameName, pPromptForPort, pDefaultPort,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		FALSE, MR_GetDefaultAllowedCraftMask());
+}
+
+BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask)
+{
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
 
@@ -1390,7 +1400,8 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 
 	mGameName = pGameName;
 	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
-		pHasCans, pAllowCans, pHasMines, pAllowMines);
+		pHasCans, pAllowCans, pHasMines, pAllowMines, pHasCrafts,
+		pAllowedCraftMask);
 	mServerMode = TRUE;
 	mId = 0; // we are client 0 (the host)
 
@@ -1539,6 +1550,19 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
 	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
 	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines)
 {
+	return SlaveConnect(pWindow, pServerIP, pDefaultPort, pSteamID, pGameName,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		FALSE, MR_GetDefaultAllowedCraftMask());
+}
+
+BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
+	unsigned pDefaultPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask)
+{
 	ASSERT(!mServerMode);
 
 	BOOL lReturnValue = TRUE;
@@ -1548,8 +1572,13 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
 	if(pGameName != NULL) {
 		mGameName = pGameName;
 	}
-	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
-		pHasCans, pAllowCans, pHasMines, pAllowMines);
+	if((pTrackName != NULL) || (pNbLap >= 0) || pHasWeapons || pHasCans ||
+		pHasMines || pHasCrafts)
+	{
+		SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
+			pHasCans, pAllowCans, pHasMines, pAllowMines, pHasCrafts,
+			pAllowedCraftMask);
+	}
 
 	if(pServerIP != NULL) {
 		Disconnect();
@@ -1912,29 +1941,32 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 							if(mActiveInterface->mTrackName.IsEmpty()) {
 								CString lTrackName;
 								CString lLapText;
-								CString lWeaponsText;
-								CString lCansText;
-								CString lMinesText;
+								CString lPowerupsText;
+								CString lCraftsText;
 
 								if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName,
-									lLapText, lWeaponsText, lCansText, lMinesText))
+									lLapText, lPowerupsText, lCraftsText))
 								{
 									mActiveInterface->mTrackName = lTrackName;
 									if(!lLapText.IsEmpty()) {
 										mActiveInterface->mNbLap = atoi((const char *) lLapText);
 										mActiveInterface->mHasGameLaps = TRUE;
 									}
-									if(!lWeaponsText.IsEmpty()) {
-										mActiveInterface->mAllowWeapons = (lWeaponsText.CompareNoCase("on") == 0);
+									if(!lPowerupsText.IsEmpty()) {
+										mActiveInterface->mAllowWeapons =
+											(lPowerupsText.Find("Missiles") != -1);
 										mActiveInterface->mHasGameWeapons = TRUE;
-									}
-									if(!lCansText.IsEmpty()) {
-										mActiveInterface->mAllowCans = (lCansText.CompareNoCase("on") == 0);
 										mActiveInterface->mHasGameCans = TRUE;
-									}
-									if(!lMinesText.IsEmpty()) {
-										mActiveInterface->mAllowMines = (lMinesText.CompareNoCase("on") == 0);
 										mActiveInterface->mHasGameMines = TRUE;
+										mActiveInterface->mAllowCans =
+											(lPowerupsText.Find("Cans") != -1);
+										mActiveInterface->mAllowMines =
+											(lPowerupsText.Find("Mines") != -1);
+									}
+									if(!lCraftsText.IsEmpty()) {
+										mActiveInterface->mAllowedCraftMask =
+											MR_ParseAllowedCraftMask(lCraftsText);
+										mActiveInterface->mHasGameCrafts = TRUE;
 									}
 								}
 							}
@@ -2049,9 +2081,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				gsTcpOriginalGameName = "";
 				gsTcpTrackName = "";
 				gsTcpLapText = "";
-				gsTcpWeaponsText = "";
-				gsTcpCansText = "";
-				gsTcpMinesText = "";
+				gsTcpPowerupsText = "";
+				gsTcpCraftsText = "";
 				ClearTcpTrackPreview();
 
 				TRACE("\n%s: [ListCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
@@ -2139,14 +2170,17 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				if(mActiveInterface->mHasGameLaps) {
 					gsTcpLapText.Format("%d", mActiveInterface->mNbLap);
 				}
-				if(mActiveInterface->mHasGameWeapons) {
-					gsTcpWeaponsText = mActiveInterface->mAllowWeapons ? "On" : "Off";
+				if(mActiveInterface->mHasGameWeapons || mActiveInterface->mHasGameCans ||
+					mActiveInterface->mHasGameMines)
+				{
+					gsTcpPowerupsText = MR_FormatPowerupDisplay(
+						mActiveInterface->mHasGameWeapons && (mActiveInterface->mAllowWeapons != FALSE),
+						mActiveInterface->mHasGameCans && (mActiveInterface->mAllowCans != FALSE),
+						mActiveInterface->mHasGameMines && (mActiveInterface->mAllowMines != FALSE)).c_str();
 				}
-				if(mActiveInterface->mHasGameCans) {
-					gsTcpCansText = mActiveInterface->mAllowCans ? "On" : "Off";
-				}
-				if(mActiveInterface->mHasGameMines) {
-					gsTcpMinesText = mActiveInterface->mAllowMines ? "On" : "Off";
+				if(mActiveInterface->mHasGameCrafts) {
+					gsTcpCraftsText = MR_FormatAllowedCraftDisplayMask(
+						mActiveInterface->mAllowedCraftMask).c_str();
 				}
 				UpdateTcpDialogTrackSummary(pWindow);
 	
@@ -2216,9 +2250,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 			gsTcpOriginalGameName = "";
 			gsTcpTrackName = "";
 			gsTcpLapText = "";
-			gsTcpWeaponsText = "";
-			gsTcpCansText = "";
-			gsTcpMinesText = "";
+			gsTcpPowerupsText = "";
 			break;
 
 		case WM_COMMAND:
