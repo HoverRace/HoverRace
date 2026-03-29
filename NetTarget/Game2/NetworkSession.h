@@ -88,6 +88,7 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL mInternetGame;
 		HWND mWindow;
 		CString mRaceHash;
+		int mLastBroadcastCraftModel;
 
 		// Awfull Ladder patch
 		int mOpponendMajorID;
@@ -99,7 +100,8 @@ class MR_NetworkSession : public MR_ClientSession
 												  // Creation of autonomous elements
 		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom);
 		void BroadcastPermElementState(int pPermId, const MR_ElementNetState & pState, int pRoom);
-		void BroadcastMainElementState(const MR_ElementNetState & pState);
+		void BroadcastMainElementState(const MR_ElementNetState & pState,
+			int pReqLevel = MR_NET_DATAGRAM);
 		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
 		void BroadcastChatMessage(const char *pMessage);
 		void BroadcastTime();

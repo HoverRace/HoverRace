@@ -84,6 +84,7 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 
 	mChatEditBuffer[0] = 0;
 	mRaceHash = "";
+	mLastBroadcastCraftModel = -1;
 
 	mTimeToSendCharacterCreation = -5000;		  // send at least 5 sec before game start
 
@@ -496,9 +497,11 @@ void MR_NetworkSession::ReadNet()
 			case MRNM_SET_MAIN_ELEM_STATE: // move a hovercraft (another player)
 				if(mClientCharacter[lClientId] != NULL) {
 					// Drop the message if there was a recent collision on that item
-					int lLastCollisionAge = mSession.GetSimulationTime() - mClientCharacter[lClientId]->mLastCollisionTime;
+					int lCurrentSimTime = mSession.GetSimulationTime();
+					int lLastCollisionAge = lCurrentSimTime - mClientCharacter[lClientId]->mLastCollisionTime;
 
-					if(lLastCollisionAge < (mNetInterface.GetAvgLag(lClientId) + 40)) {
+					if((lCurrentSimTime >= 0) &&
+						(lLastCollisionAge < (mNetInterface.GetAvgLag(lClientId) + 40))) {
 						// Drop this message
 					}
 					else {
@@ -649,11 +652,22 @@ void MR_NetworkSession::WriteNet()
 	if(mTimeToSendCharacterCreation != 0) {
 		if(mSession.GetSimulationTime() >= mTimeToSendCharacterCreation) { // it is time to broadcast the created hovercraft
 			BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
+			mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
 			mTimeToSendCharacterCreation = 0; // set to 0 so we don't broadcast it again
 		}
 	}
 	else if(mMainCharacter1 != NULL) { // it has already been broadcast
-		BroadcastMainElementState(mMainCharacter1->GetNetState()); // send state
+		MR_ElementNetState lState = mMainCharacter1->GetNetState();
+		const BOOL lPregame = (mSession.GetSimulationTime() < 0);
+
+		if(!lPregame && (mMainCharacter1->GetHoverModel() != mLastBroadcastCraftModel)) {
+			BroadcastMainElementState(lState, MR_NET_REQUIRED);
+			mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
+		}
+
+		BroadcastMainElementState(lState,
+			lPregame ? MR_NET_REQUIRED : MR_NET_DATAGRAM); // send state
+		mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
 
 		if(mSendedPlayerStats != -1) { // send statistics if necessary
 			if(mMainCharacter1->GetLap() >= mSendedPlayerStats || mMainCharacter1->GetCurrentCheckpoint() >= mSendedCheckpointStats) {
@@ -892,7 +906,13 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 
 	lCurrentLevel->InsertElement(mMainCharacter1, mMainCharacter1->mRoom);
 
-	// BroadcastMainElementCreation( mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId() );
+	// Make the hovercraft visible for the full countdown so the other clients
+	// can see pre-race craft changes as they happen.
+	MR_ElementNetState lState = mMainCharacter1->GetNetState();
+	BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), lState,
+		mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
+	mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
+	mTimeToSendCharacterCreation = 0;
 
 	return TRUE;
 }
@@ -1130,7 +1150,8 @@ void MR_NetworkSession::BroadcastTime()
  *
  * @param pState Current state of the hovercraft
  */
-void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState)
+void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState,
+	int pReqLevel)
 {
 	MR_NetMessageBuffer lMessage;
 
@@ -1139,6 +1160,11 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 	lMessage.mDataLen = pState.mDataLen;
 
 	memcpy(lMessage.mData, pState.mData, pState.mDataLen);
+
+	if(pReqLevel != MR_NET_DATAGRAM) {
+		mNetInterface.BroadcastMessage(&lMessage, pReqLevel);
+		return;
+	}
 
 	// Old method
 	// mNetInterface.BroadcastMessage( &lMessage, MR_NET_DATAGRAM/*MR_NOT_REQUIRED*/ );
