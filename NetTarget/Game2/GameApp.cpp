@@ -380,227 +380,474 @@ static const ControlKey KeyChoice[] =
 #define NB_KEY_PLAYER_4   87
 
 BOOL gFirstKDBCall = TRUE;						  // Set to TRUE on each new game
-BOOL gFirstKDBResetJoy1 = TRUE;					  // Set to TRUE on each new scan
-BOOL gFirstKDBResetJoy2 = TRUE;					  // Set to TRUE on each new scan
-BOOL gFirstKDBResetJoy3 = TRUE;					  // Set to TRUE on each new scan
-BOOL gFirstKDBResetJoy4 = TRUE;					  // Set to TRUE on each new scan
+
+enum ControlAction
+{
+	CtlMotorOn,
+	CtlBrake,
+	CtlLeft,
+	CtlRight,
+	CtlJump,
+	CtlFire,
+	CtlWeapon,
+	CtlLookBack,
+	NB_CONTROL_ACTIONS
+};
+
+struct CachedJoystickState
+{
+	BOOL loaded[MR_Config::MAX_PLAYERS];
+	BOOL available[MR_Config::MAX_PLAYERS];
+	JOYINFOEX state[MR_Config::MAX_PLAYERS];
+};
+
+struct ControlDialogState
+{
+	MR_Config::cfg_controls_t controls[MR_Config::MAX_PLAYERS];
+};
+
+struct ControlCaptureDialogState
+{
+	int maxKeyIndex;
+	int result;
+	BOOL previousStates[sizeof(KeyChoice) / sizeof(KeyChoice[0])];
+	char prompt[128];
+};
+
+static CachedJoystickState gCachedJoystickState;
+
+static const int gControlButtonIds[MR_Config::MAX_PLAYERS][NB_CONTROL_ACTIONS] =
+{
+	{ IDC_MOTOR_ON1, IDC_BREAK1, IDC_LEFT1, IDC_RIGHT1, IDC_JUMP1, IDC_FIRE1, IDC_SELWEAPON1, IDC_LOOKBACK1 },
+	{ IDC_MOTOR_ON2, IDC_BREAK2, IDC_LEFT2, IDC_RIGHT2, IDC_JUMP2, IDC_FIRE2, IDC_SELWEAPON2, IDC_LOOKBACK2 },
+	{ IDC_MOTOR_ON3, IDC_BREAK3, IDC_LEFT3, IDC_RIGHT3, IDC_JUMP3, IDC_FIRE3, IDC_SELWEAPON3, IDC_LOOKBACK3 },
+	{ IDC_MOTOR_ON4, IDC_BREAK4, IDC_LEFT4, IDC_RIGHT4, IDC_JUMP4, IDC_FIRE4, IDC_SELWEAPON4, IDC_LOOKBACK4 }
+};
+
+static const int gSetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
+{
+	IDC_SET_PLAYER1,
+	IDC_SET_PLAYER2,
+	IDC_SET_PLAYER3,
+	IDC_SET_PLAYER4
+};
+
+static const int gResetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
+{
+	IDC_RESET_PLAYER1,
+	IDC_RESET_PLAYER2,
+	IDC_RESET_PLAYER3,
+	IDC_RESET_PLAYER4
+};
+
+static const char *gControlActionNames[NB_CONTROL_ACTIONS] =
+{
+	"Motor On",
+	"Brake",
+	"Turn Left",
+	"Turn Right",
+	"Jump",
+	"Fire Weapon",
+	"Select Weapon",
+	"Look Back"
+};
+
+static const UINT_PTR CONTROL_CAPTURE_TIMER_ID = 1;
+static const UINT CONTROL_CAPTURE_TIMER_INTERVAL_MS = 50;
+
+static int GetPlayerKeyCount(int playerIdx)
+{
+	switch(playerIdx) {
+		case 0:
+			return NB_KEY_PLAYER_1;
+		case 1:
+			return NB_KEY_PLAYER_2;
+		case 2:
+			return NB_KEY_PLAYER_3;
+		case 3:
+		default:
+			return NB_KEY_PLAYER_4;
+	}
+}
+
+static int ClampKeyChoiceIndex(int playerIdx, int keyIndex)
+{
+	const int maxIndex = GetPlayerKeyCount(playerIdx) - 1;
+	if((keyIndex < 0) || (keyIndex > maxIndex)) {
+		return 0;
+	}
+	return keyIndex;
+}
+
+static int GetControlBinding(const MR_Config::cfg_controls_t &controls, int actionIdx)
+{
+	switch(actionIdx) {
+		case CtlMotorOn:
+			return controls.motorOn;
+		case CtlBrake:
+			return controls.brake;
+		case CtlLeft:
+			return controls.left;
+		case CtlRight:
+			return controls.right;
+		case CtlJump:
+			return controls.jump;
+		case CtlFire:
+			return controls.fire;
+		case CtlWeapon:
+			return controls.weapon;
+		case CtlLookBack:
+		default:
+			return controls.lookBack;
+	}
+}
+
+static void SetControlBinding(MR_Config::cfg_controls_t &controls, int actionIdx, int keyIndex)
+{
+	switch(actionIdx) {
+		case CtlMotorOn:
+			controls.motorOn = keyIndex;
+			break;
+		case CtlBrake:
+			controls.brake = keyIndex;
+			break;
+		case CtlLeft:
+			controls.left = keyIndex;
+			break;
+		case CtlRight:
+			controls.right = keyIndex;
+			break;
+		case CtlJump:
+			controls.jump = keyIndex;
+			break;
+		case CtlFire:
+			controls.fire = keyIndex;
+			break;
+		case CtlWeapon:
+			controls.weapon = keyIndex;
+			break;
+		case CtlLookBack:
+			controls.lookBack = keyIndex;
+			break;
+	}
+}
+
+static void LoadKeyChoiceText(int keyIndex, char *buffer, int bufferLen)
+{
+	if((keyIndex < 0) || (keyIndex >= static_cast<int>(sizeof(KeyChoice) / sizeof(KeyChoice[0])))) {
+		keyIndex = 0;
+	}
+
+	if(LoadString(NULL, KeyChoice[keyIndex].mStringId, buffer, bufferLen) == 0) {
+		lstrcpyn(buffer, KeyChoice[keyIndex].mOldKeyName, bufferLen);
+	}
+}
+
+static void UpdateControlButtonText(HWND pWindow, int playerIdx, int actionIdx, int keyIndex)
+{
+	char buffer[64];
+
+	LoadKeyChoiceText(ClampKeyChoiceIndex(playerIdx, keyIndex), buffer, sizeof(buffer));
+	SetDlgItemText(pWindow, gControlButtonIds[playerIdx][actionIdx], buffer);
+}
+
+static void RefreshControlButtons(HWND pWindow, const ControlDialogState *state)
+{
+	for(int playerIdx = 0; playerIdx < MR_Config::MAX_PLAYERS; ++playerIdx) {
+		for(int actionIdx = 0; actionIdx < NB_CONTROL_ACTIONS; ++actionIdx) {
+			UpdateControlButtonText(pWindow, playerIdx, actionIdx,
+				GetControlBinding(state->controls[playerIdx], actionIdx));
+		}
+	}
+}
+
+static void ResetCachedJoystickState()
+{
+	memset(&gCachedJoystickState, 0, sizeof(gCachedJoystickState));
+}
+
+static int GetJoystickIndex(MR_InControler controller)
+{
+	switch(controller) {
+		case MR_JOY1:
+			return 0;
+		case MR_JOY2:
+			return 1;
+		case MR_JOY3:
+			return 2;
+		case MR_JOY4:
+			return 3;
+		default:
+			return -1;
+	}
+}
+
+static BOOL ReadJoystickState(int joystickIdx, JOYINFOEX *joystick)
+{
+	if((joystickIdx < 0) || (joystickIdx >= MR_Config::MAX_PLAYERS) || (joystick == NULL)) {
+		return FALSE;
+	}
+
+	memset(joystick, 0, sizeof(*joystick));
+	joystick->dwSize = sizeof(*joystick);
+	joystick->dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
+	return (joyGetPosEx(static_cast<UINT>(joystickIdx), joystick) == JOYERR_NOERROR);
+}
+
+static BOOL IsJoystickBindingPressed(const JOYINFOEX &joystick, int keyValue)
+{
+	switch(keyValue) {
+		case AxeTop:
+			return (joystick.dwYpos < 16000);
+		case AxeBottom:
+			return (joystick.dwYpos > 48000);
+		case AxeLeft:
+			return (joystick.dwXpos < 16000);
+		case AxeRight:
+			return (joystick.dwXpos > 48000);
+		case Btn1:
+			return ((joystick.dwButtons & 1) != 0);
+		case Btn2:
+			return ((joystick.dwButtons & 2) != 0);
+		case Btn3:
+			return ((joystick.dwButtons & 4) != 0);
+		case Btn4:
+			return ((joystick.dwButtons & 8) != 0);
+		case Btn5:
+			return ((joystick.dwButtons & 16) != 0);
+		case Btn6:
+			return ((joystick.dwButtons & 32) != 0);
+		case Btn7:
+			return ((joystick.dwButtons & 64) != 0);
+		case Btn8:
+			return ((joystick.dwButtons & 128) != 0);
+		default:
+			return FALSE;
+	}
+}
+
+static BOOL TryReadKeyChoiceState(int keyIndex, BOOL useCachedJoystickState, BOOL *pressed)
+{
+	if((pressed == NULL) || (keyIndex < 0) ||
+		(keyIndex >= static_cast<int>(sizeof(KeyChoice) / sizeof(KeyChoice[0]))))
+	{
+		return FALSE;
+	}
+
+	*pressed = FALSE;
+
+	switch(KeyChoice[keyIndex].mControler) {
+		case MR_KDB:
+			*pressed = ((GetAsyncKeyState(KeyChoice[keyIndex].mKeyValue) & 0x8000) != 0);
+			return TRUE;
+
+		case MR_JOY1:
+		case MR_JOY2:
+		case MR_JOY3:
+		case MR_JOY4:
+		{
+			const int joystickIdx = GetJoystickIndex(KeyChoice[keyIndex].mControler);
+			JOYINFOEX joystick;
+			BOOL available = FALSE;
+
+			if(useCachedJoystickState) {
+				if(!gCachedJoystickState.loaded[joystickIdx]) {
+					gCachedJoystickState.loaded[joystickIdx] = TRUE;
+					gCachedJoystickState.available[joystickIdx] =
+						ReadJoystickState(joystickIdx, &gCachedJoystickState.state[joystickIdx]);
+				}
+
+				available = gCachedJoystickState.available[joystickIdx];
+				if(available) {
+					joystick = gCachedJoystickState.state[joystickIdx];
+				}
+			}
+			else {
+				available = ReadJoystickState(joystickIdx, &joystick);
+			}
+
+			if(available) {
+				*pressed = IsJoystickBindingPressed(joystick, KeyChoice[keyIndex].mKeyValue);
+			}
+			return TRUE;
+		}
+
+		default:
+			return FALSE;
+	}
+}
 
 static BOOL CheckKeyState(int pKeyIndex)
 {
-	BOOL lReturnValue = FALSE;
+	BOOL pressed = FALSE;
+	TryReadKeyChoiceState(pKeyIndex, TRUE, &pressed);
+	return pressed;
+}
 
-	static JOYINFOEX lJoystick1;
-	static JOYINFOEX lJoystick2;
-	static JOYINFOEX lJoystick3;
-	static JOYINFOEX lJoystick4;
+static BOOL FindControlBindingById(int controlId, int *playerIdx, int *actionIdx)
+{
+	for(int player = 0; player < MR_Config::MAX_PLAYERS; ++player) {
+		for(int action = 0; action < NB_CONTROL_ACTIONS; ++action) {
+			if(gControlButtonIds[player][action] == controlId) {
+				if(playerIdx != NULL) {
+					*playerIdx = player;
+				}
+				if(actionIdx != NULL) {
+					*actionIdx = action;
+				}
+				return TRUE;
+			}
+		}
+	}
 
-	switch (KeyChoice[pKeyIndex].mControler) {
-		case MR_KDB:
-			lReturnValue = GetAsyncKeyState(KeyChoice[pKeyIndex].mKeyValue);
-			break;
-		case MR_JOY1:
-			if(gFirstKDBResetJoy1) {
-				gFirstKDBResetJoy1 = FALSE;
+	return FALSE;
+}
 
-				lJoystick1.dwSize = sizeof(lJoystick1);
-				lJoystick1.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
-				joyGetPosEx(0, &lJoystick1);
+static int FindPlayerSetupButton(int controlId)
+{
+	for(int player = 0; player < MR_Config::MAX_PLAYERS; ++player) {
+		if(gSetPlayerButtonIds[player] == controlId) {
+			return player;
+		}
+	}
 
-				/*
-				   TRACE( "Joy %d %d %d %d %d %d \n",
-				   lJoystick1.dwXpos, lJoystick1.dwYpos,
-				   lJoystick1.dwButtons&1,
-				   lJoystick1.dwButtons&2,
-				   lJoystick1.dwButtons&4,
-				   lJoystick1.dwButtons&8              );
-				 */
+	return -1;
+}
+
+static void BuildControlPrompt(char *buffer, int bufferLen, int playerIdx, int actionIdx,
+	int step = 0, int totalSteps = 0)
+{
+	if(step > 0) {
+		sprintf(buffer, "Player %d - %s (%d/%d)", playerIdx + 1,
+			gControlActionNames[actionIdx], step, totalSteps);
+	}
+	else {
+		sprintf(buffer, "Player %d - %s", playerIdx + 1, gControlActionNames[actionIdx]);
+	}
+}
+
+static void LoadDefaultControls(MR_Config::cfg_controls_t *controls)
+{
+	if(controls == NULL) {
+		return;
+	}
+
+	controls[0].motorOn = 1;
+	controls[0].right = 5;
+	controls[0].left = 6;
+	controls[0].jump = 3;
+	controls[0].fire = 2;
+	controls[0].brake = 4;
+	controls[0].weapon = 11;
+	controls[0].lookBack = 10;
+
+	controls[1].motorOn = 66;
+	controls[1].right = 64;
+	controls[1].left = 61;
+	controls[1].jump = 83;
+	controls[1].fire = 78;
+	controls[1].brake = 79;
+	controls[1].weapon = 77;
+	controls[1].lookBack = 65;
+
+	memset(&controls[2], 0, sizeof(MR_Config::cfg_controls_t));
+	memset(&controls[3], 0, sizeof(MR_Config::cfg_controls_t));
+}
+
+static int FindResetPlayerButton(int controlId)
+{
+	for(int player = 0; player < MR_Config::MAX_PLAYERS; ++player) {
+		if(gResetPlayerButtonIds[player] == controlId) {
+			return player;
+		}
+	}
+
+	return -1;
+}
+
+static BOOL CALLBACK ControlCaptureDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+{
+	ControlCaptureDialogState *state =
+		reinterpret_cast<ControlCaptureDialogState *>(GetWindowLongPtr(pWindow, GWLP_USERDATA));
+
+	switch(pMsgId) {
+		case WM_INITDIALOG:
+		{
+			state = reinterpret_cast<ControlCaptureDialogState *>(pLParam);
+			SetWindowLongPtr(pWindow, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(state));
+			SetDlgItemText(pWindow, IDC_CAPTURE_PROMPT, state->prompt);
+
+			for(int keyIndex = 0; keyIndex <= state->maxKeyIndex; ++keyIndex) {
+				TryReadKeyChoiceState(keyIndex, FALSE, &state->previousStates[keyIndex]);
 			}
 
-			switch (KeyChoice[pKeyIndex].mKeyValue) {
-				case AxeTop:
-					lReturnValue = (lJoystick1.dwYpos < 16000);
-					break;
-				case AxeBottom:
-					lReturnValue = (lJoystick1.dwYpos > 48000);
-					break;
-				case AxeLeft:
-					lReturnValue = (lJoystick1.dwXpos < 16000);
-					break;
-				case AxeRight:
-					lReturnValue = (lJoystick1.dwXpos > 48000);
-					break;
-				case Btn1:
-					lReturnValue = (lJoystick1.dwButtons & 1);
-					break;
-				case Btn2:
-					lReturnValue = (lJoystick1.dwButtons & 2);
-					break;
-				case Btn3:
-					lReturnValue = (lJoystick1.dwButtons & 4);
-					break;
-				case Btn4:
-					lReturnValue = (lJoystick1.dwButtons & 8);
-					break;
-				case Btn5:
-					lReturnValue = (lJoystick1.dwButtons & 16);
-					break;
-				case Btn6:
-					lReturnValue = (lJoystick1.dwButtons & 32);
-					break;
-				case Btn7:
-					lReturnValue = (lJoystick1.dwButtons & 64);
-					break;
-				case Btn8:
-					lReturnValue = (lJoystick1.dwButtons & 128);
-					break;
-			}
-			break;
-		case MR_JOY2:
-			if(gFirstKDBResetJoy2) {
-				gFirstKDBResetJoy2 = FALSE;
+			SetTimer(pWindow, CONTROL_CAPTURE_TIMER_ID, CONTROL_CAPTURE_TIMER_INTERVAL_MS, NULL);
+			SetFocus(pWindow);
+			return FALSE;
+		}
 
-				lJoystick2.dwSize = sizeof(lJoystick2);
-				lJoystick2.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
-				joyGetPosEx(0, &lJoystick2);
-			}
+		case WM_TIMER:
+			if((state != NULL) && (pWParam == CONTROL_CAPTURE_TIMER_ID)) {
+				for(int keyIndex = 1; keyIndex <= state->maxKeyIndex; ++keyIndex) {
+					BOOL pressed = FALSE;
+					TryReadKeyChoiceState(keyIndex, FALSE, &pressed);
 
-			switch (KeyChoice[pKeyIndex].mKeyValue) {
-				case AxeTop:
-					lReturnValue = (lJoystick2.dwYpos < 16000);
-					break;
-				case AxeBottom:
-					lReturnValue = (lJoystick2.dwYpos > 48000);
-					break;
-				case AxeLeft:
-					lReturnValue = (lJoystick2.dwXpos < 16000);
-					break;
-				case AxeRight:
-					lReturnValue = (lJoystick2.dwXpos > 48000);
-					break;
-				case Btn1:
-					lReturnValue = (lJoystick2.dwButtons & 1);
-					break;
-				case Btn2:
-					lReturnValue = (lJoystick2.dwButtons & 2);
-					break;
-				case Btn3:
-					lReturnValue = (lJoystick2.dwButtons & 4);
-					break;
-				case Btn4:
-					lReturnValue = (lJoystick2.dwButtons & 8);
-					break;
-				case Btn5:
-					lReturnValue = (lJoystick2.dwButtons & 16);
-					break;
-				case Btn6:
-					lReturnValue = (lJoystick2.dwButtons & 32);
-					break;
-				case Btn7:
-					lReturnValue = (lJoystick2.dwButtons & 64);
-					break;
-				case Btn8:
-					lReturnValue = (lJoystick2.dwButtons & 128);
-					break;
-			}
-			break;
-		case MR_JOY3:
-			if(gFirstKDBResetJoy3) {
-				gFirstKDBResetJoy3 = FALSE;
+					if(pressed && !state->previousStates[keyIndex]) {
+						state->result = keyIndex;
+						EndDialog(pWindow, IDOK);
+						return TRUE;
+					}
 
-				lJoystick3.dwSize = sizeof(lJoystick3);
-				lJoystick3.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
-				joyGetPosEx(0, &lJoystick3);
-			}
-
-			switch (KeyChoice[pKeyIndex].mKeyValue) {
-				case AxeTop:
-					lReturnValue = (lJoystick3.dwYpos < 16000);
-					break;
-				case AxeBottom:
-					lReturnValue = (lJoystick3.dwYpos > 48000);
-					break;
-				case AxeLeft:
-					lReturnValue = (lJoystick3.dwXpos < 16000);
-					break;
-				case AxeRight:
-					lReturnValue = (lJoystick3.dwXpos > 48000);
-					break;
-				case Btn1:
-					lReturnValue = (lJoystick3.dwButtons & 1);
-					break;
-				case Btn2:
-					lReturnValue = (lJoystick3.dwButtons & 2);
-					break;
-				case Btn3:
-					lReturnValue = (lJoystick3.dwButtons & 4);
-					break;
-				case Btn4:
-					lReturnValue = (lJoystick3.dwButtons & 8);
-					break;
-				case Btn5:
-					lReturnValue = (lJoystick3.dwButtons & 16);
-					break;
-				case Btn6:
-					lReturnValue = (lJoystick3.dwButtons & 32);
-					break;
-				case Btn7:
-					lReturnValue = (lJoystick3.dwButtons & 64);
-					break;
-				case Btn8:
-					lReturnValue = (lJoystick3.dwButtons & 128);
-					break;
+					state->previousStates[keyIndex] = pressed;
+				}
 			}
 			break;
-		case MR_JOY4:
-			if(gFirstKDBResetJoy4) {
-				gFirstKDBResetJoy4 = FALSE;
 
-				lJoystick4.dwSize = sizeof(lJoystick4);
-				lJoystick4.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
-				joyGetPosEx(0, &lJoystick4);
-			}
+		case WM_COMMAND:
+			switch(LOWORD(pWParam)) {
+				case IDC_CAPTURE_CANCEL:
+					EndDialog(pWindow, IDC_CAPTURE_CANCEL);
+					return TRUE;
 
-			switch (KeyChoice[pKeyIndex].mKeyValue) {
-				case AxeTop:
-					lReturnValue = (lJoystick4.dwYpos < 16000);
-					break;
-				case AxeBottom:
-					lReturnValue = (lJoystick4.dwYpos > 48000);
-					break;
-				case AxeLeft:
-					lReturnValue = (lJoystick4.dwXpos < 16000);
-					break;
-				case AxeRight:
-					lReturnValue = (lJoystick4.dwXpos > 48000);
-					break;
-				case Btn1:
-					lReturnValue = (lJoystick4.dwButtons & 1);
-					break;
-				case Btn2:
-					lReturnValue = (lJoystick4.dwButtons & 2);
-					break;
-				case Btn3:
-					lReturnValue = (lJoystick4.dwButtons & 4);
-					break;
-				case Btn4:
-					lReturnValue = (lJoystick4.dwButtons & 8);
-					break;
-				case Btn5:
-					lReturnValue = (lJoystick4.dwButtons & 16);
-					break;
-				case Btn6:
-					lReturnValue = (lJoystick4.dwButtons & 32);
-					break;
-				case Btn7:
-					lReturnValue = (lJoystick4.dwButtons & 64);
-					break;
-				case Btn8:
-					lReturnValue = (lJoystick4.dwButtons & 128);
-					break;
+				case IDCANCEL:
+					if(state != NULL) {
+						state->result = 0;
+					}
+					EndDialog(pWindow, IDOK);
+					return TRUE;
 			}
+			break;
+
+		case WM_CLOSE:
+			EndDialog(pWindow, IDC_CAPTURE_CANCEL);
+			return TRUE;
+
+		case WM_DESTROY:
+			KillTimer(pWindow, CONTROL_CAPTURE_TIMER_ID);
 			break;
 	}
-	return lReturnValue;
+
+	return FALSE;
+}
+
+static BOOL CaptureControlBinding(HWND pWindow, int playerIdx, const char *prompt, int *bindingIndex)
+{
+	ControlCaptureDialogState state;
+	HINSTANCE instance = reinterpret_cast<HINSTANCE>(GetWindowLongPtr(pWindow, GWLP_HINSTANCE));
+
+	memset(&state, 0, sizeof(state));
+	state.maxKeyIndex = GetPlayerKeyCount(playerIdx) - 1;
+	state.result = ClampKeyChoiceIndex(playerIdx, *bindingIndex);
+	lstrcpyn(state.prompt, prompt, sizeof(state.prompt));
+
+	if(DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONTROL_CAPTURE), pWindow,
+		ControlCaptureDialogFunc, reinterpret_cast<LPARAM>(&state)) == IDOK)
+	{
+		*bindingIndex = ClampKeyChoiceIndex(playerIdx, state.result);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 MR_GameApp *MR_GameApp::This;
@@ -1758,8 +2005,7 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 
 void MR_GameApp::ReadAsyncInputController()
 {
-	gFirstKDBResetJoy1 = TRUE;
-	gFirstKDBResetJoy2 = TRUE;
+	ResetCachedJoystickState();
 
 	if(mCurrentSession != NULL) {
 		if(GetForegroundWindow() == mMainWindow)
@@ -2362,7 +2608,7 @@ void MR_GameApp::SetProperties()
 	psp[2].pfnCallback = NULL;
 
 	psh.dwSize = sizeof(PROPSHEETHEADER);
-	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_PROPTITLE;
+	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW;
 	psh.hwndParent = mMainWindow;
 	psh.hInstance = mInstance;
 	psh.pszCaption = MAKEINTRESOURCE(IDS_PROP_SETTING);
@@ -3537,150 +3783,105 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
 	MR_Config *cfg = MR_Config::GetInstance();
+	ControlDialogState *state =
+		reinterpret_cast<ControlDialogState *>(GetWindowLongPtr(pWindow, GWLP_USERDATA));
 
 	BOOL lReturnValue = FALSE;
-	int lCounter;
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
-			// Initialize the lists
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_1; lCounter++) {
-				char lBuffer[50];
-
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_ADDSTRING, 0, (LONG) lBuffer);
+			state = new ControlDialogState;
+			if(state == NULL) {
+				return FALSE;
 			}
 
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_2; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_ADDSTRING, 0, (LONG) lBuffer);
+			for(int playerIdx = 0; playerIdx < MR_Config::MAX_PLAYERS; ++playerIdx) {
+				state->controls[playerIdx] = cfg->controls[playerIdx];
+				for(int actionIdx = 0; actionIdx < NB_CONTROL_ACTIONS; ++actionIdx) {
+					SetControlBinding(state->controls[playerIdx], actionIdx,
+						ClampKeyChoiceIndex(playerIdx,
+							GetControlBinding(state->controls[playerIdx], actionIdx)));
+				}
 			}
 
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_3; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
+			SetWindowLongPtr(pWindow, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(state));
+			RefreshControlButtons(pWindow, state);
+			break;
 
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_ADDSTRING, 0, (LONG) lBuffer);
+		case WM_COMMAND:
+			if((HIWORD(pWParam) == BN_CLICKED) && (state != NULL)) {
+				const int controlId = LOWORD(pWParam);
+				int playerIdx = 0;
+				int actionIdx = 0;
+
+				if(FindControlBindingById(controlId, &playerIdx, &actionIdx)) {
+					char prompt[128];
+					int bindingIndex = GetControlBinding(state->controls[playerIdx], actionIdx);
+
+					BuildControlPrompt(prompt, sizeof(prompt), playerIdx, actionIdx);
+					if(CaptureControlBinding(pWindow, playerIdx, prompt, &bindingIndex)) {
+						SetControlBinding(state->controls[playerIdx], actionIdx, bindingIndex);
+						UpdateControlButtonText(pWindow, playerIdx, actionIdx, bindingIndex);
+						SendMessage(GetParent(pWindow), PSM_CHANGED, reinterpret_cast<WPARAM>(pWindow), 0);
+					}
+					return TRUE;
+				}
+
+				playerIdx = FindPlayerSetupButton(controlId);
+				if(playerIdx >= 0) {
+					BOOL changed = FALSE;
+
+					for(actionIdx = 0; actionIdx < NB_CONTROL_ACTIONS; ++actionIdx) {
+						char prompt[128];
+						int bindingIndex = GetControlBinding(state->controls[playerIdx], actionIdx);
+
+						BuildControlPrompt(prompt, sizeof(prompt), playerIdx, actionIdx,
+							actionIdx + 1, NB_CONTROL_ACTIONS);
+						if(!CaptureControlBinding(pWindow, playerIdx, prompt, &bindingIndex)) {
+							break;
+						}
+
+						SetControlBinding(state->controls[playerIdx], actionIdx, bindingIndex);
+						changed = TRUE;
+					}
+
+					if(changed) {
+						RefreshControlButtons(pWindow, state);
+						SendMessage(GetParent(pWindow), PSM_CHANGED, reinterpret_cast<WPARAM>(pWindow), 0);
+					}
+					return TRUE;
+				}
+
+				playerIdx = FindResetPlayerButton(controlId);
+				if(playerIdx >= 0) {
+					MR_Config::cfg_controls_t defaultControls[MR_Config::MAX_PLAYERS];
+					LoadDefaultControls(defaultControls);
+					state->controls[playerIdx] = defaultControls[playerIdx];
+					RefreshControlButtons(pWindow, state);
+					SendMessage(GetParent(pWindow), PSM_CHANGED, reinterpret_cast<WPARAM>(pWindow), 0);
+					return TRUE;
+				}
 			}
-
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_4; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_ADDSTRING, 0, (LONG) lBuffer);
-			}
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_SETCURSEL, cfg->controls[0].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_SETCURSEL, cfg->controls[0].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT1, CB_SETCURSEL, cfg->controls[0].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP1, CB_SETCURSEL, cfg->controls[0].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE1, CB_SETCURSEL, cfg->controls[0].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK1, CB_SETCURSEL, cfg->controls[0].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_SETCURSEL, cfg->controls[0].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_SETCURSEL, cfg->controls[0].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_SETCURSEL, cfg->controls[1].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_SETCURSEL, cfg->controls[1].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT2, CB_SETCURSEL, cfg->controls[1].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP2, CB_SETCURSEL, cfg->controls[1].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE2, CB_SETCURSEL, cfg->controls[1].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK2, CB_SETCURSEL, cfg->controls[1].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_SETCURSEL, cfg->controls[1].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_SETCURSEL, cfg->controls[1].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_SETCURSEL, cfg->controls[2].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_SETCURSEL, cfg->controls[2].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT3, CB_SETCURSEL, cfg->controls[2].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP3, CB_SETCURSEL, cfg->controls[2].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE3, CB_SETCURSEL, cfg->controls[2].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK3, CB_SETCURSEL, cfg->controls[2].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_SETCURSEL, cfg->controls[2].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_SETCURSEL, cfg->controls[2].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_SETCURSEL, cfg->controls[3].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_SETCURSEL, cfg->controls[3].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT4, CB_SETCURSEL, cfg->controls[3].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP4, CB_SETCURSEL, cfg->controls[3].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE4, CB_SETCURSEL, cfg->controls[3].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK4, CB_SETCURSEL, cfg->controls[3].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_SETCURSEL, cfg->controls[3].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_SETCURSEL, cfg->controls[3].lookBack, 0);
-
 			break;
 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					cfg->controls[0].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].right    = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].left     = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].jump     = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].fire     = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].brake    = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[1].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].right    = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].left     = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].jump     = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].fire     = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].brake    = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[2].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].right    = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].left     = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].jump     = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].fire     = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].brake    = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[3].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].right    = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].left     = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].jump     = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].fire     = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].brake    = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
+					if(state != NULL) {
+						for(int playerIdx = 0; playerIdx < MR_Config::MAX_PLAYERS; ++playerIdx) {
+							cfg->controls[playerIdx] = state->controls[playerIdx];
+						}
+					}
 
 					This->SaveRegistry();
 					break;
 			}
+			break;
+
+		case WM_DESTROY:
+			delete state;
+			SetWindowLongPtr(pWindow, GWLP_USERDATA, 0);
+			break;
 	}
 
 	return lReturnValue;

@@ -46,6 +46,7 @@
 #define IDD_LADDER_SUBMIT_PROCESS       160
 #define IDD_MISC                        161
 #define IDD_TRACK_DOWNLOAD              163
+#define IDD_CONTROL_CAPTURE             164
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -179,6 +180,16 @@
 #define IDC_TRACK_CRAFT1                1105
 #define IDC_TRACK_CRAFT2                1106
 #define IDC_TRACK_CRAFT7                1107
+#define IDC_SET_PLAYER1                 1108
+#define IDC_SET_PLAYER2                 1109
+#define IDC_SET_PLAYER3                 1110
+#define IDC_SET_PLAYER4                 1111
+#define IDC_CAPTURE_PROMPT              1112
+#define IDC_CAPTURE_CANCEL              1113
+#define IDC_RESET_PLAYER1               1114
+#define IDC_RESET_PLAYER2               1115
+#define IDC_RESET_PLAYER3               1116
+#define IDC_RESET_PLAYER4               1117
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -455,9 +466,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        164
+#define _APS_NEXT_RESOURCE_VALUE        165
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1108
+#define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
