@@ -185,6 +185,8 @@ static sorted_t gsSortedTrackList;
 static sorted_t gsVisibleTrackList;
 static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
+static BOOL gsAllowCans = FALSE;
+static BOOL gsAllowMines = FALSE;
 static TrackPreviewData gsTrackPreview;
 static COLORREF gsTrackPreviewPalette[MR_NB_COLORS];
 static bool gsTrackPreviewPaletteInit = false;
@@ -241,7 +243,8 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
  *         @p pAllowWeapons will be filled in), @c false if the user canceled
  *         the dialog.
  */
-bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bool &pAllowWeapons)
+bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
+	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines)
 {
 	bool lReturnValue = true;
 	gsSelectedEntry = -1;
@@ -254,12 +257,16 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 	SortList();
 
 	gsNbLaps = 5;								  // Default value
-	gsAllowWeapons = false;
+	gsAllowWeapons = TRUE;
+	gsAllowCans = TRUE;
+	gsAllowMines = TRUE;
 
 	if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsVisibleTrackList[gsSelectedEntry]->mFileName;
 		pNbLap = gsNbLaps;
 		pAllowWeapons = (gsAllowWeapons != FALSE);
+		pAllowCans = (gsAllowCans != FALSE);
+		pAllowMines = (gsAllowMines != FALSE);
 		lReturnValue = true;
 	} else
 	lReturnValue = false;
@@ -472,7 +479,12 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			}
 
 			SetDlgItemInt(pWindow, IDC_NB_LAP, gsNbLaps, FALSE);
-			SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_SETCHECK,
+				gsAllowWeapons ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_CANS, BM_SETCHECK,
+				gsAllowCans ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_TRACK_MINES, BM_SETCHECK,
+				gsAllowMines ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_NB_LAP_SPIN, UDM_SETRANGE, 0, MAKELONG(99, 1));
 			SetDlgItemText(pWindow, IDC_TRACK_FILTER, "");
 			SendDlgItemMessage(pWindow, IDC_TRACK_FILTER, EM_SETCUEBANNER, FALSE,
@@ -519,6 +531,8 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					if(gsSelectedEntry != -1) {
 						gsNbLaps = GetDlgItemInt(pWindow, IDC_NB_LAP, NULL, FALSE);
 						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
+						gsAllowCans = (SendDlgItemMessage(pWindow, IDC_TRACK_CANS, BM_GETCHECK, 0, 0) == BST_CHECKED);
+						gsAllowMines = (SendDlgItemMessage(pWindow, IDC_TRACK_MINES, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
 						if(gsNbLaps < 1)
 							MessageBox(pWindow, MR_LoadString(IDS_LAP_RANGE), MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);

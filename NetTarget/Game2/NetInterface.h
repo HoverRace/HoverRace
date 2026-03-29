@@ -165,6 +165,10 @@ class MR_NetworkInterface
 		BOOL mHasGameLaps;
 		BOOL mAllowWeapons;
 		BOOL mHasGameWeapons;
+		BOOL mAllowCans;
+		BOOL mHasGameCans;
+		BOOL mAllowMines;
+		BOOL mHasGameMines;
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
@@ -219,11 +223,14 @@ class MR_NetworkInterface
 		void SetId(const int id);
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
-		void SetGameDetails(const char *pTrackName, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE);
+		void SetGameDetails(const char *pTrackName, int pNbLap = -1,
+			BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE,
+			BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE,
+			BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 
-		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE);
+		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
-		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE);
+		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 
 		int Connect(SOCKET pS, const sockaddr *pName, int pNamelen, CSteamID pSteamID, UINT lMsg, long lEvent);
 		SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CSteamID pSteamID, UINT lMsg, long lEvent, int lClient);

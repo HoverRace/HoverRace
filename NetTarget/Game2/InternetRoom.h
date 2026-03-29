@@ -110,11 +110,14 @@ class MR_InternetRoom
 				CString mTrack;
 				int mNbLap;
 				BOOL mAllowWeapons;
+				BOOL mAllowCans;
+				BOOL mAllowMines;
 				int mNbClient;
 				int mClientList[eMaxPlayerGame];
 				CString mIPAddr;
 				unsigned mPort;
 				CSteamID mSteamID;
+				CString mRaceHash;
 
 		};
 
@@ -129,6 +132,7 @@ class MR_InternetRoom
 		int mCurrentUserId;
 		int mCurrentGameIndex;
 		int mCurrentGameId;
+		CString mCurrentGameRaceHash;
 
 		int mMajorID;
 		int mMinorID;
@@ -180,7 +184,9 @@ class MR_InternetRoom
 		BOOL LocateServers(HWND pWindow, BOOL pShouldRecheckServer);
 		BOOL AddUserOp(HWND pParentWindow);
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
-		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, BOOL pAlllowWeapons, unsigned pPort);
+		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName,
+			int pNbLap, BOOL pAlllowWeapons, BOOL pAllowCans,
+			BOOL pAllowMines, unsigned pPort);
 		BOOL DelGameOp(HWND pParentWindow);
 		BOOL JoinGameOp(HWND pParentWindow, int pGameIndex);
 		BOOL LeaveGameOp(HWND pParentWindow);
@@ -217,6 +223,6 @@ class MR_InternetRoom
 
 };
 
-BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer, HoverRace::Client::RoomListPtr roomList);
+BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer, HoverRace::Client::RoomListPtr roomList, const char *pRaceHash = NULL);
 BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajorID, int pWinMinorID, const char *pLoseAlias, int pLoseMajorID, int pLoseMinorID, const char *pTrack, int pNbLap);
 #endif

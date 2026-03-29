@@ -62,6 +62,80 @@ namespace {
 		}
 	}
 
+	bool ParseTcpGameSummary(std::string &summary, int &nbLap, bool &allowWeapons,
+		bool &allowCans, bool &allowMines)
+	{
+		const std::string minesOn = " mines on";
+		const std::string minesOff = " mines off";
+		const std::string cansOn = " cans on";
+		const std::string cansOff = " cans off";
+		const std::string withWeapons = " with weapons";
+		const std::string noWeapons = " no weapons";
+
+		nbLap = 5;
+		allowWeapons = false;
+		allowCans = true;
+		allowMines = true;
+
+		if(summary.length() > minesOn.length() &&
+			summary.compare(summary.length() - minesOn.length(), minesOn.length(), minesOn) == 0)
+		{
+			allowMines = true;
+			summary.erase(summary.length() - minesOn.length());
+		}
+		else if(summary.length() > minesOff.length() &&
+			summary.compare(summary.length() - minesOff.length(), minesOff.length(), minesOff) == 0)
+		{
+			allowMines = false;
+			summary.erase(summary.length() - minesOff.length());
+		}
+
+		if(summary.length() > cansOn.length() &&
+			summary.compare(summary.length() - cansOn.length(), cansOn.length(), cansOn) == 0)
+		{
+			allowCans = true;
+			summary.erase(summary.length() - cansOn.length());
+		}
+		else if(summary.length() > cansOff.length() &&
+			summary.compare(summary.length() - cansOff.length(), cansOff.length(), cansOff) == 0)
+		{
+			allowCans = false;
+			summary.erase(summary.length() - cansOff.length());
+		}
+
+		if(summary.length() > withWeapons.length() &&
+			summary.compare(summary.length() - withWeapons.length(), withWeapons.length(), withWeapons) == 0)
+		{
+			allowWeapons = true;
+			summary.erase(summary.length() - withWeapons.length());
+		}
+		else if(summary.length() > noWeapons.length() &&
+			summary.compare(summary.length() - noWeapons.length(), noWeapons.length(), noWeapons) == 0)
+		{
+			allowWeapons = false;
+			summary.erase(summary.length() - noWeapons.length());
+		}
+
+		const std::string::size_type lapsPos = summary.rfind(" laps");
+		const std::string::size_type lapPos = (lapsPos == std::string::npos) ? summary.rfind(" lap") : lapsPos;
+		if(lapPos != std::string::npos) {
+			const std::string::size_type numberStart = summary.rfind(' ', lapPos - 1);
+			if((numberStart != std::string::npos) && (numberStart + 1 < lapPos)) {
+				nbLap = atoi(summary.c_str() + numberStart + 1);
+				if(nbLap < 1) {
+					nbLap = 5;
+				}
+				summary.erase(numberStart);
+				while(!summary.empty() && summary[summary.length() - 1] == ' ') {
+					summary.erase(summary.length() - 1);
+				}
+				return !summary.empty();
+			}
+		}
+
+		return !summary.empty();
+	}
+
 	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect, char *deviceName = NULL)
 	{
 		RECT windowRect;
@@ -1894,8 +1968,11 @@ void MR_GameApp::NewLocalSession()
 	std::string lCurrentTrack;
 	int lNbLap;
 	bool lAllowWeapons;
+	bool lAllowCans;
+	bool lAllowMines;
 
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
+		lAllowWeapons, lAllowCans, lAllowMines);
 
 	if(lSuccess) {
 		DeleteMovieWnd();
@@ -1908,7 +1985,8 @@ void MR_GameApp::NewLocalSession()
 		// Load the selected track
 		if(lSuccess) {
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
+				lNbLap, lAllowWeapons, lAllowCans, lAllowMines, mVideoBuffer) != FALSE);
 		}
 		// Create the main character
 		if(lSuccess)
@@ -1952,8 +2030,11 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	std::string lCurrentTrack;
 	int lNbLap;
 	bool lAllowWeapons;
+	bool lAllowCans;
+	bool lAllowMines;
 
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
+		lAllowWeapons, lAllowCans, lAllowMines);
 
 	if(lSuccess) {
 		// Create the new session
@@ -1988,7 +2069,8 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		// Load the selected maze
 		if(lSuccess) {
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
+				lNbLap, lAllowWeapons, lAllowCans, lAllowMines, mVideoBuffer) != FALSE);
 		}
 
 		if(lSuccess) {
@@ -2041,10 +2123,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	std::string lCurrentTrack;
 	int lNbLap;
 	bool lAllowWeapons;
+	bool lAllowCans;
+	bool lAllowMines;
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
-		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
+			lAllowWeapons, lAllowCans, lAllowMines);
 
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
@@ -2065,32 +2150,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
-		// Extract the lap count from the track name and weapon use
-		// From the end of the string find the two last space
-		int lSpaceCount = 0;
-
-		lNbLap = 5;								  // Default
-		lAllowWeapons = FALSE;
-
-		for(int lCounter = lCurrentTrack.length() - 1; lCounter >= 0; lCounter--) {
-			if(lCurrentTrack[lCounter] == ' ') {
-				lSpaceCount++;
-
-				if(lSpaceCount == 2)
-					lAllowWeapons = (strncmp(lCurrentTrack.c_str() + lCounter + 1, "no", 2) != 0);
-
-				if(lSpaceCount == 4) {
-					lNbLap = atoi(lCurrentTrack.c_str() + lCounter + 1);
-
-					if(lNbLap < 1)
-						lNbLap = 5;
-
-					//lCurrentTrack = CString(lCurrentTrack, lCounter);
-					lCurrentTrack.resize(lCounter);
-					break;
-				}
-			}
-		}
+		ParseTcpGameSummary(lCurrentTrack, lNbLap, lAllowWeapons, lAllowCans, lAllowMines);
 	}
 
 	MR_RecordFile *lTrackFile;
@@ -2111,21 +2171,27 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	}
 
 	if(lSuccess) {
-		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
+			lNbLap, lAllowWeapons, lAllowCans, lAllowMines, mVideoBuffer) != FALSE);
 	}
 
 	if(lSuccess) {
 		if(pServer) {
 			CString lNameBuffer;
 
-			lNameBuffer.Format("%s %d %s %s", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", lAllowWeapons ? "with weapons" : "no weapons");
+			lNameBuffer.Format("%s %d %s %s cans %s mines %s",
+				lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap",
+				lAllowWeapons ? "with weapons" : "no weapons",
+				lAllowCans ? "on" : "off",
+				lAllowMines ? "on" : "off");
 
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer, TRUE,
 				MR_Config::GetInstance()->net.tcpServPort, NULL, 0,
-				lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons) != FALSE);
+				lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
+				TRUE, lAllowCans, TRUE, lAllowMines) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();

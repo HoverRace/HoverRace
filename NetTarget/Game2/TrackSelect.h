@@ -33,7 +33,8 @@ enum MR_TrackAvail
 	eTrackNotFound
 };
 
-bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bool &pAllowWeapons);
+bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
+	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines);
 
 // pFile name must contains no path and no extension
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);

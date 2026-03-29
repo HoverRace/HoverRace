@@ -167,6 +167,12 @@
 #define IDC_TCP_TRACK_PREVIEW           1093
 #define IDC_TCP_LAPS                    1094
 #define IDC_TCP_WEAPONS                 1095
+#define IDC_CANS                        1096
+#define IDC_MINES                       1097
+#define IDC_TCP_CANS                    1098
+#define IDC_TCP_MINES                   1099
+#define IDC_TRACK_CANS                  1100
+#define IDC_TRACK_MINES                 1101
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774

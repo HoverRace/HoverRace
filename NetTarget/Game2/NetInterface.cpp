@@ -77,9 +77,15 @@ static COLORREF GetTcpTrackPreviewColor(MR_UInt8 pColorIndex);
 static void InitTcpTrackPreviewPalette();
 static bool LoadTcpTrackPreview(const CString &trackName);
 static CString GetTcpTrackPreviewTrackName(HWND dialog);
-static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText);
-static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, CString &lapText, CString &weaponsText);
-static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText);
+static CString FormatTcpServerAddrForDialog(const CString &serverAddr);
+static void AdjustTcpServerAddrLayout(HWND dialog, const CString &serverAddrText);
+static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText,
+	CString &weaponsText, CString &cansText, CString &minesText);
+static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
+	CString &lapText, CString &weaponsText, CString &cansText,
+	CString &minesText);
+static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText,
+	CString &weaponsText, CString &cansText, CString &minesText);
 static void UpdateTcpDialogTrackSummary(HWND dialog);
 
 namespace {
@@ -119,6 +125,8 @@ static CString gsTcpOriginalGameName;
 static CString gsTcpTrackName;
 static CString gsTcpLapText;
 static CString gsTcpWeaponsText;
+static CString gsTcpCansText;
+static CString gsTcpMinesText;
 
 static void PositionDialogToRightOfOwner(HWND dialog, int gap)
 {
@@ -205,8 +213,8 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 	const int MIN_EXPANDED_DIALOG_WIDTH = 1200;
 	const int MIN_PREVIEW_DIALOG_WIDTH = 1200;
 	const int TARGET_VISIBLE_PLAYERS = 10;
-	const int PREVIEW_MARGIN = 8;
-	const int PREVIEW_SIZE = 84;
+	const int PREVIEW_MARGIN = 4;
+	const int PREVIEW_SIZE = 108;
 	const int PREVIEW_TOP = 6;
 	const int PREVIEW_LIST_GAP = 4;
 
@@ -328,8 +336,10 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 	}
 
 	const int textRight = previewLeft - PREVIEW_MARGIN;
-	const int ellipsisStyle = SS_ENDELLIPSIS;
-	const int controlIds[] = { IDC_SERVER_ADDR, IDC_GAME_NAME, IDC_TCP_LAPS, IDC_TCP_WEAPONS };
+	const int controlIds[] = {
+		IDC_GAME_NAME, IDC_TCP_LAPS, IDC_TCP_WEAPONS,
+		IDC_TCP_CANS, IDC_TCP_MINES
+	};
 
 	for(size_t lIndex = 0; lIndex < sizeof(controlIds) / sizeof(controlIds[0]); lIndex++) {
 		HWND textWindow = GetDlgItem(dialog, controlIds[lIndex]);
@@ -338,11 +348,25 @@ static void ExpandTcpConnectionsDialogIfNeeded(HWND dialog, HWND listHandle)
 			if(GetWindowRect(textWindow, &textRect)) {
 				MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&textRect), 2);
 				SetWindowLongPtr(textWindow, GWL_STYLE,
-					GetWindowLongPtr(textWindow, GWL_STYLE) | ellipsisStyle);
+					GetWindowLongPtr(textWindow, GWL_STYLE) | SS_ENDELLIPSIS);
 				MoveWindow(textWindow, textRect.left, textRect.top,
 					textRight - textRect.left,
 					textRect.bottom - textRect.top, TRUE);
 			}
+		}
+	}
+
+	HWND serverAddrWindow = GetDlgItem(dialog, IDC_SERVER_ADDR);
+	if(serverAddrWindow != NULL) {
+		RECT textRect;
+		if(GetWindowRect(serverAddrWindow, &textRect)) {
+			MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&textRect), 2);
+			LONG_PTR textStyle = GetWindowLongPtr(serverAddrWindow, GWL_STYLE);
+			textStyle &= ~SS_ENDELLIPSIS;
+			SetWindowLongPtr(serverAddrWindow, GWL_STYLE, textStyle);
+			MoveWindow(serverAddrWindow, textRect.left, textRect.top,
+				textRight - textRect.left,
+				textRect.bottom - textRect.top, TRUE);
 		}
 	}
 
@@ -494,8 +518,7 @@ static void DrawTcpTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
 
 	FillRect(lDc, &lRect, lWindowBrush);
 	DrawEdge(lDc, &lRect, EDGE_SUNKEN, BF_RECT);
-	InflateRect(&lInnerRect, -2, -2);
-	FillRect(lDc, &lInnerRect, lWindowBrush);
+	InflateRect(&lInnerRect, -1, -1);
 
 	if(gsTcpTrackPreview.IsAvailable()) {
 		BITMAPINFO lBitmapInfo;
@@ -536,8 +559,11 @@ static CString GetTcpTrackPreviewTrackName(HWND dialog)
 	CString lTrackName;
 	CString lLapText;
 	CString lWeaponsText;
+	CString lCansText;
+	CString lMinesText;
 
-	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText)) {
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText,
+		lCansText, lMinesText)) {
 		return lTrackName;
 	}
 
@@ -555,7 +581,95 @@ static CString GetTcpTrackPreviewTrackName(HWND dialog)
 	return lTrackName;
 }
 
-static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, CString &lapText, CString &weaponsText)
+static CString FormatTcpServerAddrForDialog(const CString &serverAddr)
+{
+	CString formatted(serverAddr);
+	bool sawNewline = (formatted.Find('\n') >= 0) || (formatted.Find('\r') >= 0);
+
+	if(sawNewline || formatted.IsEmpty() ||
+		(formatted.CompareNoCase("Peer to Peer via Steam") == 0))
+	{
+		return formatted;
+	}
+
+	int separatorPos = formatted.Find(' ');
+	if(separatorPos < 0) {
+		return formatted;
+	}
+
+	while(separatorPos >= 0) {
+		formatted.Delete(separatorPos);
+		formatted.Insert(separatorPos, "\r\n");
+		separatorPos = formatted.Find(' ', separatorPos + 2);
+	}
+
+	return formatted;
+}
+
+static void AdjustTcpServerAddrLayout(HWND dialog, const CString &serverAddrText)
+{
+	HWND serverAddrWindow = GetDlgItem(dialog, IDC_SERVER_ADDR);
+	if(serverAddrWindow == NULL) {
+		return;
+	}
+
+	int lineCount = 1;
+	for(int lIndex = 0; lIndex < serverAddrText.GetLength(); lIndex++) {
+		if(serverAddrText[lIndex] == '\n') {
+			lineCount++;
+		}
+	}
+
+	if(lineCount <= 1) {
+		return;
+	}
+
+	RECT serverAddrRect;
+	if(!GetWindowRect(serverAddrWindow, &serverAddrRect)) {
+		return;
+	}
+	MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&serverAddrRect), 2);
+
+	const int baseHeight = serverAddrRect.bottom - serverAddrRect.top;
+	if(baseHeight <= 0) {
+		return;
+	}
+
+	const int extraHeight = baseHeight * (lineCount - 1);
+	const int originalBottom = serverAddrRect.bottom;
+
+	MoveWindow(serverAddrWindow, serverAddrRect.left, serverAddrRect.top,
+		serverAddrRect.right - serverAddrRect.left, baseHeight + extraHeight, TRUE);
+
+	for(HWND child = GetWindow(dialog, GW_CHILD); child != NULL; child = GetWindow(child, GW_HWNDNEXT)) {
+		if(child == serverAddrWindow) {
+			continue;
+		}
+
+		RECT childRect;
+		if(!GetWindowRect(child, &childRect)) {
+			continue;
+		}
+		MapWindowPoints(NULL, dialog, reinterpret_cast<LPPOINT>(&childRect), 2);
+
+		if(childRect.top >= originalBottom) {
+			MoveWindow(child, childRect.left, childRect.top + extraHeight,
+				childRect.right - childRect.left, childRect.bottom - childRect.top, TRUE);
+		}
+	}
+
+	RECT dialogRect;
+	if(GetWindowRect(dialog, &dialogRect)) {
+		SetWindowPos(dialog, NULL, 0, 0,
+			dialogRect.right - dialogRect.left,
+			(dialogRect.bottom - dialogRect.top) + extraHeight,
+			SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOZORDER);
+	}
+}
+
+static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
+	CString &lapText, CString &weaponsText, CString &cansText,
+	CString &minesText)
 {
 	std::string summary((const char *) gameSummary);
 	std::string::size_type lapsPos;
@@ -564,6 +678,8 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, 
 	trackName.Empty();
 	lapText.Empty();
 	weaponsText.Empty();
+	cansText.Empty();
+	minesText.Empty();
 
 	while(!summary.empty() && (summary[summary.length() - 1] == ' ')) {
 		summary.erase(summary.length() - 1);
@@ -573,8 +689,39 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, 
 		return false;
 	}
 
+	const std::string minesOn = " mines on";
+	const std::string minesOff = " mines off";
+	const std::string cansOn = " cans on";
+	const std::string cansOff = " cans off";
 	const std::string withWeapons = " with weapons";
 	const std::string noWeapons = " no weapons";
+
+	if(summary.length() > minesOn.length() &&
+		summary.compare(summary.length() - minesOn.length(), minesOn.length(), minesOn) == 0)
+	{
+		minesText = "on";
+		summary.erase(summary.length() - minesOn.length());
+	}
+	else if(summary.length() > minesOff.length() &&
+		summary.compare(summary.length() - minesOff.length(), minesOff.length(), minesOff) == 0)
+	{
+		minesText = "off";
+		summary.erase(summary.length() - minesOff.length());
+	}
+
+	if(summary.length() > cansOn.length() &&
+		summary.compare(summary.length() - cansOn.length(), cansOn.length(), cansOn) == 0)
+	{
+		cansText = "on";
+		summary.erase(summary.length() - cansOn.length());
+	}
+	else if(summary.length() > cansOff.length() &&
+		summary.compare(summary.length() - cansOff.length(), cansOff.length(), cansOff) == 0)
+	{
+		cansText = "off";
+		summary.erase(summary.length() - cansOff.length());
+	}
+
 	if(summary.length() > withWeapons.length() &&
 		summary.compare(summary.length() - withWeapons.length(), withWeapons.length(), withWeapons) == 0)
 	{
@@ -607,16 +754,21 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName, 
 	return !trackName.IsEmpty();
 }
 
-static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText)
+static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText,
+	CString &weaponsText, CString &cansText, CString &minesText)
 {
 	char lTrackBuffer[256];
 	char lLapBuffer[64];
 	char lWeaponsBuffer[64];
+	char lCansBuffer[64];
+	char lMinesBuffer[64];
 	HWND owner = GetWindow(dialog, GW_OWNER);
 
 	trackName.Empty();
 	lapText.Empty();
 	weaponsText.Empty();
+	cansText.Empty();
+	minesText.Empty();
 
 	if(owner == NULL) {
 		owner = GetParent(dialog);
@@ -629,10 +781,14 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 	GetDlgItemText(owner, IDC_TRACK_NAME, lTrackBuffer, sizeof(lTrackBuffer));
 	GetDlgItemText(owner, IDC_NB_LAP, lLapBuffer, sizeof(lLapBuffer));
 	GetDlgItemText(owner, IDC_WEAPONS, lWeaponsBuffer, sizeof(lWeaponsBuffer));
+	GetDlgItemText(owner, IDC_CANS, lCansBuffer, sizeof(lCansBuffer));
+	GetDlgItemText(owner, IDC_MINES, lMinesBuffer, sizeof(lMinesBuffer));
 
 	trackName = lTrackBuffer;
 	lapText = lLapBuffer;
 	weaponsText = lWeaponsBuffer;
+	cansText = lCansBuffer;
+	minesText = lMinesBuffer;
 
 	trackName.TrimLeft();
 	trackName.TrimRight();
@@ -640,6 +796,10 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 	lapText.TrimRight();
 	weaponsText.TrimLeft();
 	weaponsText.TrimRight();
+	cansText.TrimLeft();
+	cansText.TrimRight();
+	minesText.TrimLeft();
+	minesText.TrimRight();
 
 	if(trackName.IsEmpty() || (trackName == MR_LoadString(IDS_IMR_NOSELECT))) {
 		return false;
@@ -648,32 +808,61 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 	return true;
 }
 
-static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText, CString &weaponsText)
+static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText,
+	CString &weaponsText, CString &cansText, CString &minesText)
 {
 	trackName = gsTcpTrackName;
 	lapText = gsTcpLapText;
 	weaponsText = gsTcpWeaponsText;
+	cansText = gsTcpCansText;
+	minesText = gsTcpMinesText;
 
 	if(!trackName.IsEmpty()) {
 		return true;
 	}
 
-	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, weaponsText)) {
+	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, weaponsText,
+		cansText, minesText))
+	{
 		if(weaponsText.CompareNoCase("on") == 0) {
 			weaponsText = "On";
 		}
 		else if(weaponsText.CompareNoCase("off") == 0) {
 			weaponsText = "Off";
+		}
+		if(cansText.CompareNoCase("on") == 0) {
+			cansText = "On";
+		}
+		else if(cansText.CompareNoCase("off") == 0) {
+			cansText = "Off";
+		}
+		if(minesText.CompareNoCase("on") == 0) {
+			minesText = "On";
+		}
+		else if(minesText.CompareNoCase("off") == 0) {
+			minesText = "Off";
 		}
 		return true;
 	}
 
-	if(GetTcpImrTrackDetails(dialog, trackName, lapText, weaponsText)) {
+	if(GetTcpImrTrackDetails(dialog, trackName, lapText, weaponsText, cansText, minesText)) {
 		if(weaponsText.CompareNoCase("on") == 0) {
 			weaponsText = "On";
 		}
 		else if(weaponsText.CompareNoCase("off") == 0) {
 			weaponsText = "Off";
+		}
+		if(cansText.CompareNoCase("on") == 0) {
+			cansText = "On";
+		}
+		else if(cansText.CompareNoCase("off") == 0) {
+			cansText = "Off";
+		}
+		if(minesText.CompareNoCase("on") == 0) {
+			minesText = "On";
+		}
+		else if(minesText.CompareNoCase("off") == 0) {
+			minesText = "Off";
 		}
 		return true;
 	}
@@ -686,16 +875,22 @@ static void UpdateTcpDialogTrackSummary(HWND dialog)
 	CString lTrackName;
 	CString lLapText;
 	CString lWeaponsText;
+	CString lCansText;
+	CString lMinesText;
 
-	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText)) {
+	if(GetTcpTrackDetails(dialog, lTrackName, lLapText, lWeaponsText, lCansText, lMinesText)) {
 		SetDlgItemText(dialog, IDC_GAME_NAME, lTrackName);
 		SetDlgItemText(dialog, IDC_TCP_LAPS, lLapText);
 		SetDlgItemText(dialog, IDC_TCP_WEAPONS, lWeaponsText);
+		SetDlgItemText(dialog, IDC_TCP_CANS, lCansText);
+		SetDlgItemText(dialog, IDC_TCP_MINES, lMinesText);
 	}
 	else {
 		SetDlgItemText(dialog, IDC_GAME_NAME, gsTcpOriginalGameName);
 		SetDlgItemText(dialog, IDC_TCP_LAPS, "");
 		SetDlgItemText(dialog, IDC_TCP_WEAPONS, "");
+		SetDlgItemText(dialog, IDC_TCP_CANS, "");
+		SetDlgItemText(dialog, IDC_TCP_MINES, "");
 	}
 }
 
@@ -728,6 +923,10 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mHasGameLaps = FALSE;
 	mAllowWeapons = FALSE;
 	mHasGameWeapons = FALSE;
+	mAllowCans = FALSE;
+	mHasGameCans = FALSE;
+	mAllowMines = FALSE;
+	mHasGameMines = FALSE;
 
 	mAllPreLoguedRecv = FALSE;
 
@@ -885,6 +1084,10 @@ void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 	mHasGameLaps = FALSE;
 	mAllowWeapons = FALSE;
 	mHasGameWeapons = FALSE;
+	mAllowCans = FALSE;
+	mHasGameCans = FALSE;
+	mAllowMines = FALSE;
+	mHasGameMines = FALSE;
 
 	sSteamID = CSteamID();
 	sBuffer = NULL;
@@ -1149,13 +1352,19 @@ const char *MR_NetworkInterface::GetPlayerName() const
 	return mPlayer;
 } 
 
-void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines)
 {
 	mTrackName = (pTrackName != NULL) ? pTrackName : "";
 	mNbLap = pNbLap;
 	mHasGameLaps = (pNbLap >= 0);
 	mHasGameWeapons = pHasWeapons;
 	mAllowWeapons = pHasWeapons ? pAllowWeapons : FALSE;
+	mHasGameCans = pHasCans;
+	mAllowCans = pHasCans ? pAllowCans : FALSE;
+	mHasGameMines = pHasMines;
+	mAllowMines = pHasMines ? pAllowMines : FALSE;
 }
 
 /**
@@ -1168,7 +1377,11 @@ void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap, BOO
  * @param pDefaultPort The default port
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines)
 {
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
@@ -1176,7 +1389,8 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 	Disconnect();
 
 	mGameName = pGameName;
-	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
+	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
+		pHasCans, pAllowCans, pHasMines, pAllowMines);
 	mServerMode = TRUE;
 	mId = 0; // we are client 0 (the host)
 
@@ -1319,7 +1533,11 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
  * @param pGameName Name of the game (title of the track)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
+	unsigned pDefaultPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines)
 {
 	ASSERT(!mServerMode);
 
@@ -1330,7 +1548,8 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 	if(pGameName != NULL) {
 		mGameName = pGameName;
 	}
-	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
+	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
+		pHasCans, pAllowCans, pHasMines, pAllowMines);
 
 	if(pServerIP != NULL) {
 		Disconnect();
@@ -1694,8 +1913,12 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 								CString lTrackName;
 								CString lLapText;
 								CString lWeaponsText;
+								CString lCansText;
+								CString lMinesText;
 
-								if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName, lLapText, lWeaponsText)) {
+								if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName,
+									lLapText, lWeaponsText, lCansText, lMinesText))
+								{
 									mActiveInterface->mTrackName = lTrackName;
 									if(!lLapText.IsEmpty()) {
 										mActiveInterface->mNbLap = atoi((const char *) lLapText);
@@ -1704,6 +1927,14 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 									if(!lWeaponsText.IsEmpty()) {
 										mActiveInterface->mAllowWeapons = (lWeaponsText.CompareNoCase("on") == 0);
 										mActiveInterface->mHasGameWeapons = TRUE;
+									}
+									if(!lCansText.IsEmpty()) {
+										mActiveInterface->mAllowCans = (lCansText.CompareNoCase("on") == 0);
+										mActiveInterface->mHasGameCans = TRUE;
+									}
+									if(!lMinesText.IsEmpty()) {
+										mActiveInterface->mAllowMines = (lMinesText.CompareNoCase("on") == 0);
+										mActiveInterface->mHasGameMines = TRUE;
 									}
 								}
 							}
@@ -1819,6 +2050,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				gsTcpTrackName = "";
 				gsTcpLapText = "";
 				gsTcpWeaponsText = "";
+				gsTcpCansText = "";
+				gsTcpMinesText = "";
 				ClearTcpTrackPreview();
 
 				TRACE("\n%s: [ListCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
@@ -1837,28 +2070,58 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 	
 					lSpec.mask = LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
 	
+					CString lLagLabel;
+					lLagLabel.LoadString(IDS_LAG);
+					CString lStatusLabel;
+					lStatusLabel.LoadString(IDS_STATUS);
+					SIZE lLagSize = {0, 0};
+					SIZE lStatusSize = {0, 0};
+					HDC lDc = GetDC(lListHandle);
+					if(lDc != NULL) {
+						HFONT lFont = (HFONT) SendMessage(lListHandle, WM_GETFONT, 0, 0);
+						HGDIOBJ lOldFont = NULL;
+						if(lFont != NULL) {
+							lOldFont = SelectObject(lDc, lFont);
+						}
+						GetTextExtentPoint32(lDc, lLagLabel, lLagLabel.GetLength(), &lLagSize);
+						GetTextExtentPoint32(lDc, lStatusLabel, lStatusLabel.GetLength(), &lStatusSize);
+						if(lOldFont != NULL) {
+							SelectObject(lDc, lOldFont);
+						}
+						ReleaseDC(lListHandle, lDc);
+					}
+
+					const int lScrollbarWidth = GetSystemMetrics(SM_CXVSCROLL);
+					const int lLagWidth = max(lWidth / 5, lLagSize.cx + 20);
+					int lStatusWidth = max(lWidth / 4, lStatusSize.cx + 18);
+					int lPlayerWidth = lWidth - lLagWidth - lStatusWidth - lScrollbarWidth;
+					const int lMinPlayerWidth = 110;
+					if(lPlayerWidth < lMinPlayerWidth) {
+						const int lMinStatusWidth = lStatusSize.cx + 18;
+						const int lStatusReduction = min(lMinPlayerWidth - lPlayerWidth,
+							lStatusWidth - lMinStatusWidth);
+						lStatusWidth -= lStatusReduction;
+						lPlayerWidth = lWidth - lLagWidth - lStatusWidth - lScrollbarWidth;
+					}
+
 					CString lPlayerLabel;
 					lPlayerLabel.LoadString(IDS_PLAYER);
 					lSpec.fmt = LVCFMT_LEFT;
-					lSpec.cx = lWidth - (lWidth / 6) - (lWidth / 4) - GetSystemMetrics(SM_CXVSCROLL);
+					lSpec.cx = lPlayerWidth;
 					lSpec.pszText = (char *) (const char *) lPlayerLabel;
 					lSpec.iSubItem = 0;
-	
+
 					ListView_InsertColumn(lListHandle, 0, &lSpec);
-	
-					CString lLagLabel;
-					lLagLabel.LoadString(IDS_LAG);
+
 					lSpec.fmt = LVCFMT_RIGHT;
-					lSpec.cx = lWidth / 6;
+					lSpec.cx = lLagWidth;
 					lSpec.pszText = (char *) (const char *) lLagLabel;
 					lSpec.iSubItem = 1;
-	
+
 					ListView_InsertColumn(lListHandle, 1, &lSpec);
-	
-					CString lStatusLabel;
-					lStatusLabel.LoadString(IDS_STATUS);
+
 					lSpec.fmt = LVCFMT_LEFT;
-					lSpec.cx = lWidth / 4;
+					lSpec.cx = lStatusWidth;
 					lSpec.pszText = (char *) (const char *) lStatusLabel;
 					lSpec.iSubItem = 2;
 	
@@ -1867,7 +2130,10 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 	
 				// set game information in dialog
 				SetDlgItemInt(pWindow, IDC_SERVER_PORT, mActiveInterface->mServerPort, FALSE);
-				SetDlgItemText(pWindow, IDC_SERVER_ADDR, mActiveInterface->mServerAddr);
+				CString lServerAddrText =
+					FormatTcpServerAddrForDialog(mActiveInterface->mServerAddr);
+				SetDlgItemText(pWindow, IDC_SERVER_ADDR, lServerAddrText);
+				AdjustTcpServerAddrLayout(pWindow, lServerAddrText);
 				gsTcpOriginalGameName = mActiveInterface->mGameName;
 				gsTcpTrackName = mActiveInterface->mTrackName;
 				if(mActiveInterface->mHasGameLaps) {
@@ -1875,6 +2141,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				}
 				if(mActiveInterface->mHasGameWeapons) {
 					gsTcpWeaponsText = mActiveInterface->mAllowWeapons ? "On" : "Off";
+				}
+				if(mActiveInterface->mHasGameCans) {
+					gsTcpCansText = mActiveInterface->mAllowCans ? "On" : "Off";
+				}
+				if(mActiveInterface->mHasGameMines) {
+					gsTcpMinesText = mActiveInterface->mAllowMines ? "On" : "Off";
 				}
 				UpdateTcpDialogTrackSummary(pWindow);
 	
@@ -1945,6 +2217,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 			gsTcpTrackName = "";
 			gsTcpLapText = "";
 			gsTcpWeaponsText = "";
+			gsTcpCansText = "";
+			gsTcpMinesText = "";
 			break;
 
 		case WM_COMMAND:

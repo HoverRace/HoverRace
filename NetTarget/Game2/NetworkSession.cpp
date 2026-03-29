@@ -82,6 +82,7 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 	mSendedCheckpointStats = 1;
 
 	mChatEditBuffer[0] = 0;
+	mRaceHash = "";
 
 	mTimeToSendCharacterCreation = -5000;		  // send at least 5 sec before game start
 
@@ -136,7 +137,13 @@ MR_NetworkSession::~MR_NetworkSession()
 
 				int lTotalLap = mMainCharacter1->GetTotalLap();
 
-				MR_SendRaceResult(mWindow, mSession.GetTitle(), lPlayer->mBestLap, mMajorID, mMinorID, mNetInterface.GetPlayerName(-1), mSession.GetCurrentMazeFile()->GetCheckSum(), mMainCharacter1->GetHoverModel(), (lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0, (lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0, lNbPlayer, roomList);
+				MR_SendRaceResult(mWindow, mSession.GetTitle(), lPlayer->mBestLap,
+					mMajorID, mMinorID, mNetInterface.GetPlayerName(-1),
+					mSession.GetCurrentMazeFile()->GetCheckSum(),
+					mMainCharacter1->GetHoverModel(),
+					(lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0,
+					(lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0,
+					lNbPlayer, roomList, GetRaceHash());
 
 				// Report ladder matchs
 				if(lNbPlayer == 2) {
@@ -371,9 +378,12 @@ BOOL MR_NetworkSession::Process(int pSpeedFactor)
  * Load a new level.  This function calls MR_ClientSession::LoadNew() and then tells the level to notify call ElementCreationHook() and PermElementStateHook() when
  * elements are created.
  */
-BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer *pVideo)
+BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile,
+	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+	MR_VideoBuffer *pVideo)
 {
-	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap, pAllowWeapons, pVideo);
+	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap,
+		pAllowWeapons, pAllowCans, pAllowMines, pVideo);
 
 	if(lReturnValue) {
 		mSession.GetCurrentLevel()->SetBroadcastHook(ElementCreationHook, PermElementStateHook, this);
@@ -735,6 +745,16 @@ const char *MR_NetworkSession::GetPlayerName() const
 	return mNetInterface.GetPlayerName();
 }
 
+void MR_NetworkSession::SetRaceHash(const char *pRaceHash)
+{
+	mRaceHash = (pRaceHash != NULL) ? pRaceHash : "";
+}
+
+const char *MR_NetworkSession::GetRaceHash() const
+{
+	return mRaceHash;
+}
+
 void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
 {
 	this->roomList = roomList;
@@ -751,13 +771,20 @@ void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
  * @param pDefaultPort The default port (MR_DEFAULT_NET_PORT)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines)
 {
 	mMasterMode = TRUE;
 	mSended12SecClockUpdate = FALSE;
 	mSended8SecClockUpdate = FALSE;
 
-	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort, pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
+	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort,
+		pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
+		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
+		pHasMines, pAllowMines);
 }
 
 /**
@@ -785,11 +812,18 @@ BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
  * @param pGameName String representing the name of the game (track name)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
-BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons)
+BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
+	unsigned pPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines)
 {
 	mMasterMode = FALSE;
 
-	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID, pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons, pAllowWeapons);
+	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID,
+		pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
+		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
+		pHasMines, pAllowMines);
 }
 
 /**
@@ -817,7 +851,8 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	ASSERT(mMainCharacter1 == NULL);			  // make sure we are not creating it twice
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons,
+		mAllowCans, mAllowMines);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();

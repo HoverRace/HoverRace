@@ -491,7 +491,10 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							mGameList[lEntry].mNbClient = 0;
 							mGameList[lEntry].mNbLap = 1;
 							mGameList[lEntry].mAllowWeapons = FALSE;
+							mGameList[lEntry].mAllowCans = TRUE;
+							mGameList[lEntry].mAllowMines = TRUE;
 							mGameList[lEntry].mPort = (unsigned) -1;
+							mGameList[lEntry].mRaceHash = "";
 							mGameList[lEntry].mName = GetLine(lLinePtr);
 
 							lLinePtr = GetNextLine(lLinePtr);
@@ -506,11 +509,34 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 
 							lLinePtr = GetNextLine(lLinePtr);
 
-							int lNbClient;
-							int lDummyBool;
+							int lNbClient = 0;
+							int lDummyBool = 0;
+							int lDummyCans = 1;
+							int lDummyMines = 1;
+							char lRaceHash[80];
+							lRaceHash[0] = 0;
 
-							if(sscanf(lLinePtr, "%u %d %d %d", &mGameList[lEntry].mPort, &mGameList[lEntry].mNbLap, &lDummyBool, &lNbClient) == 4) {
+							int lParsed = sscanf(lLinePtr, "%u %d %d %d %d %d %79s",
+								&mGameList[lEntry].mPort,
+								&mGameList[lEntry].mNbLap,
+								&lDummyBool,
+								&lDummyCans,
+								&lDummyMines,
+								&lNbClient,
+								lRaceHash);
+							if(lParsed == 4) {
+								lNbClient = lDummyCans;
+								lDummyCans = 1;
+								lDummyMines = 1;
+							}
+
+							if((lParsed == 4) || (lParsed >= 6)) {
 								mGameList[lEntry].mAllowWeapons = lDummyBool;
+								mGameList[lEntry].mAllowCans = lDummyCans;
+								mGameList[lEntry].mAllowMines = lDummyMines;
+								if(lParsed == 7) {
+									mGameList[lEntry].mRaceHash = lRaceHash;
+								}
 
 								if(lNbClient > eMaxPlayerGame) {
 									lNbClient = eMaxPlayerGame;
@@ -650,7 +676,9 @@ BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, BOOL pWeapons, unsigned pPort)
+BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName,
+	const char *pTrackName, int pNbLap, BOOL pWeapons, BOOL pCans,
+	BOOL pMines, unsigned pPort)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -658,7 +686,11 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const
 
 	mNetOpString.LoadString(IDS_IMR_ADD_GAME);
 
-	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d", (const char *) roomList->GetSelectedRoom()->path.c_str(), mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName), (const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort);
+	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d%%%%%d%%%%%d",
+		(const char *) roomList->GetSelectedRoom()->path.c_str(),
+		mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName),
+		(const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort,
+		pCans ? 1 : 0, pMines ? 1 : 0);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -675,7 +707,11 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const
 		else {
 			lData = GetNextLine(lData);
 
-			sscanf(lData, "GAME_ID %d-%u", &mCurrentGameIndex, &mCurrentGameId);
+			char lRaceHash[80];
+			lRaceHash[0] = 0;
+			sscanf(lData, "GAME_ID %d-%u %79s", &mCurrentGameIndex, &mCurrentGameId, lRaceHash);
+			mCurrentGameRaceHash = lRaceHash;
+			mSession->SetRaceHash(mCurrentGameRaceHash);
 		}
 	}
 
@@ -870,24 +906,14 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 		SetDlgItemText(pWindow, IDC_TRACK_NAME, MR_LoadString(IDS_IMR_NOSELECT));
 		SetDlgItemText(pWindow, IDC_NB_LAP, "");
 		SetDlgItemText(pWindow, IDC_WEAPONS, "");
-		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, "");
+		SetDlgItemText(pWindow, IDC_CANS, "");
+		SetDlgItemText(pWindow, IDC_MINES, "");
 		SetDlgItemText(pWindow, IDC_PLAYER_LIST, "");
 
 		SendMessage(GetDlgItem(pWindow, IDC_JOIN), WM_ENABLE, FALSE, 0);
 	}
 	else {
-		CString lAvailString = "";
 		CString lPlayerList;
-
-		switch (mGameList[lGameIndex].mAvailCode) {
-			case eTrackAvail:
-				lAvailString.LoadString(IDS_AVAIL);
-				break;
-
-			case eTrackNotFound:
-				lAvailString.LoadString(IDS_TRACK_NOTINSTALL);
-				break;
-		}
 
 		for(int lCounter = 0; lCounter < mGameList[lGameIndex].mNbClient; lCounter++) {
 			int lClientIndex = mGameList[lGameIndex].mClientList[lCounter];
@@ -904,10 +930,11 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 		SetDlgItemText(pWindow, IDC_TRACK_NAME, mGameList[lGameIndex].mTrack);
 		SetDlgItemInt(pWindow, IDC_NB_LAP, mGameList[lGameIndex].mNbLap, FALSE);
 		SetDlgItemText(pWindow, IDC_WEAPONS, mGameList[lGameIndex].mAllowWeapons ? "on" : "off");
-		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, lAvailString);
+		SetDlgItemText(pWindow, IDC_CANS, mGameList[lGameIndex].mAllowCans ? "on" : "off");
+		SetDlgItemText(pWindow, IDC_MINES, mGameList[lGameIndex].mAllowMines ? "on" : "off");
 		SetDlgItemText(pWindow, IDC_PLAYER_LIST, lPlayerList);
 
-		SendMessage(GetDlgItem(pWindow, IDC_JOIN), WM_ENABLE, mGameList[lGameIndex].mAvailCode == eTrackAvail, 0);
+		SendMessage(GetDlgItem(pWindow, IDC_JOIN), WM_ENABLE, TRUE, 0);
 	}
 
 }
@@ -1834,7 +1861,13 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								}
 
 								if (lSuccess) {
-									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer);
+									mThis->mSession->SetRaceHash(mThis->mGameList[lFocus].mRaceHash);
+									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
+										lTrackFile, mThis->mGameList[lFocus].mNbLap,
+										mThis->mGameList[lFocus].mAllowWeapons,
+										mThis->mGameList[lFocus].mAllowCans,
+										mThis->mGameList[lFocus].mAllowMines,
+										mThis->mVideoBuffer);
 									TRACE("LoadNew\n");
 								}
 
@@ -1852,7 +1885,11 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 										mThis->mGameList[lFocus].mTrack,
 										mThis->mGameList[lFocus].mNbLap,
 										TRUE,
-										mThis->mGameList[lFocus].mAllowWeapons);
+										mThis->mGameList[lFocus].mAllowWeapons,
+										TRUE,
+										mThis->mGameList[lFocus].mAllowCans,
+										TRUE,
+										mThis->mGameList[lFocus].mAllowMines);
 
 									TRACE("ConnectToServer 2\n");
 								}
@@ -1878,29 +1915,43 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						std::string lCurrentTrack;
 						int lNbLap;
 						bool lAllowWeapons;
+						bool lAllowCans;
+						bool lAllowMines;
 
-						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap,
+							lAllowWeapons, lAllowCans, lAllowMines);
 
 						if(lSuccess) {
 							// Load the track
 							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
-							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mThis->mVideoBuffer) != FALSE);
+							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(),
+								lTrackFile, lNbLap, lAllowWeapons, lAllowCans,
+								lAllowMines, mThis->mVideoBuffer) != FALSE);
 						}
 
 						if(lSuccess) {
 							// Register to the InternetServer
-							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(), lCurrentTrack.c_str(), lNbLap, lAllowWeapons, MR_Config::GetInstance()->net.tcpServPort) != FALSE);
+							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(),
+								lCurrentTrack.c_str(), lNbLap, lAllowWeapons,
+								lAllowCans, lAllowMines,
+								MR_Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
 								CString lTrackName;
 
-								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
+								lTrackName.Format("%s %d %s %s cans %s mines %s",
+									lCurrentTrack.c_str(), lNbLap,
+									lNbLap > 1 ? "laps" : "lap",
+									lAllowWeapons ? "with weapons" : "no weapons",
+									lAllowCans ? "on" : "off",
+									lAllowMines ? "on" : "off");
 
 								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName,
 									FALSE, MR_Config::GetInstance()->net.tcpServPort,
 									&mThis->mModelessDlg, MRM_DLG_END_ADD,
-									lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons) != FALSE);
+									lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
+									TRUE, lAllowCans, TRUE, lAllowMines) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game
@@ -2494,7 +2545,10 @@ BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajo
 	return lReturnValue;
 }
 
-BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer, RoomListPtr roomList)
+BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
+	int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum,
+	int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer,
+	RoomListPtr roomList, const char *pRaceHash)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2525,6 +2579,10 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
 			roomList->GetScoreServer().path % pBestLapTime %
 			std::string((LPCTSTR) MR_Pad(pTrack)) % std::string((LPCTSTR) MR_Pad(pAlias)) %
 			pTrackSum % pHoverModel % pTotalTime % pNbLap % pNbPlayer)).c_str();
+		if((pRaceHash != NULL) && (*pRaceHash != 0)) {
+			gScoreRequestStr += "%%%%%";
+			gScoreRequestStr += MR_Pad(pRaceHash);
+		}
 		gScoreServer.mAddress = roomList->GetScoreServer().addr;
 		gScoreServer.mPort = roomList->GetScoreServer().port;
 		//}

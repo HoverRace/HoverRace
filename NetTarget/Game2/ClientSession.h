@@ -61,8 +61,11 @@ class MR_ClientSession
 
 		int mNbLap;
 		BOOL mAllowWeapons;
+		BOOL mAllowCans;
+		BOOL mAllowMines;
 
 		void ReadLevelAttrib(MR_RecordFile * pFile, MR_VideoBuffer * pVideo);
+		void ApplyGameOptions();
 	public:
 		// Creation and destruction
 		MR_ClientSession();
@@ -72,7 +75,9 @@ class MR_ClientSession
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 		virtual BOOL Process(int pSpeedFactor = 1);
 
-		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
+		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap,
+			BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+			MR_VideoBuffer * pVideo);
 
 		// Main character control and interrogation
 		BOOL CreateMainCharacter();

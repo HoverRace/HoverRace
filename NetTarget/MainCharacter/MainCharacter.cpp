@@ -165,6 +165,9 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mControlState = 0;
 	mMotorOnState = FALSE;
 	mMotorDisplay = 0;
+	mAllowWeapons = TRUE;
+	mAllowCans = TRUE;
+	mAllowMines = TRUE;
 
 	mXSpeed = 0;
 	mYSpeed = 0;
@@ -264,7 +267,8 @@ void MR_MainCharacter::RegisterFactory()
 	MR_DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
-MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons)
+MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons,
+	BOOL pAllowCans, BOOL pAllowMines)
 {
 	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
@@ -273,8 +277,49 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons)
 	if(lReturnValue != NULL) {
 		lReturnValue->mNbLapForRace = pNbLap;
 		lReturnValue->mAllowWeapons = pAllowWeapons;
+		lReturnValue->mAllowCans = pAllowCans;
+		lReturnValue->mAllowMines = pAllowMines;
+		lReturnValue->NormalizeCurrentWeapon();
 	}
 	return lReturnValue;
+}
+
+BOOL MR_MainCharacter::IsWeaponSelectable(eWeapon pWeapon) const
+{
+	switch(pWeapon) {
+		case eMissile:
+			return mAllowWeapons;
+
+		case eMine:
+			return mAllowMines;
+
+		case ePowerUp:
+			return mAllowCans;
+
+		default:
+			return FALSE;
+	}
+}
+
+void MR_MainCharacter::SelectNextWeapon()
+{
+	for(int lOffset = 1; lOffset <= eNotAWeapon; lOffset++) {
+		const eWeapon lCandidate = (eWeapon) (((int) mCurrentWeapon + lOffset) % eNotAWeapon);
+		if(IsWeaponSelectable(lCandidate)) {
+			mCurrentWeapon = lCandidate;
+			return;
+		}
+	}
+
+	mCurrentWeapon = eNotAWeapon;
+}
+
+void MR_MainCharacter::NormalizeCurrentWeapon()
+{
+	if(!IsWeaponSelectable(mCurrentWeapon)) {
+		mCurrentWeapon = eNotAWeapon;
+		SelectNextWeapon();
+	}
 }
 
 MR_ElementNetState MR_MainCharacter::GetNetState() const
@@ -411,9 +456,7 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		}
 		// First verify transition states
 		if(!(mControlState & eSelectWeapon) && (lState & eSelectWeapon)) {
-			(*(int *) &mCurrentWeapon)++;
-			if(mCurrentWeapon == eNotAWeapon)
-				(*(int *) &mCurrentWeapon) = 0;
+			SelectNextWeapon();
 		}
 		if(!(mControlState & eFire) && (lState & eFire))
 			mFireDone = FALSE;
@@ -984,7 +1027,7 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	}
 	int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
 	{
-		if(mAllowWeapons)
+		if(IsWeaponSelectable(eMissile))
 			return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
 		else
 			return 0;
@@ -992,12 +1035,12 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 
 	int MR_MainCharacter::GetMineCount() const
 	{
-		return mMineList.Used();
+		return mAllowMines ? mMineList.Used() : 0;
 	}
 
 	int MR_MainCharacter::GetPowerUpCount() const
 	{
-		return mPowerUpList.Used();
+		return mAllowCans ? mPowerUpList.Used() : 0;
 	}
 	int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
 	{

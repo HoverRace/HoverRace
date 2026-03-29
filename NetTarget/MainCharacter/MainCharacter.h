@@ -97,6 +97,8 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL mMotorOnState;
 		int mMotorDisplay;
 		BOOL mAllowWeapons;
+		BOOL mAllowCans;
+		BOOL mAllowMines;
 
 		double mXSpeed;
 		double mYSpeed;
@@ -152,11 +154,15 @@ class MR_MainCharacter:public MR_FreeElement
 		static MR_ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
 
 		int InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
+		BOOL IsWeaponSelectable(eWeapon pWeapon) const;
+		void SelectNextWeapon();
+		void NormalizeCurrentWeapon();
 
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, BOOL pAllowWeapons);
+		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, BOOL pAllowWeapons,
+			BOOL pAllowCans, BOOL pAllowMines);
 
 		~MR_MainCharacter();
 

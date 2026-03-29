@@ -35,6 +35,8 @@ MR_ClientSession::MR_ClientSession()
 	mMap = NULL;
 	mNbLap = 1;
 	mAllowWeapons = TRUE;
+	mAllowCans = TRUE;
+	mAllowMines = TRUE;
 
 	InitializeCriticalSection(&mChatMutex);
 }
@@ -111,18 +113,60 @@ void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuff
 	}
 }
 
-BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo)
+BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile,
+	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
+	MR_VideoBuffer * pVideo)
 {
 	BOOL lReturnValue;
 	mNbLap = pNbLap;
 	mAllowWeapons = pAllowWeapons;
+	mAllowCans = pAllowCans;
+	mAllowMines = pAllowMines;
 	lReturnValue = mSession.LoadNew(pTitle, pMazeFile);
 
 	if(lReturnValue) {
 		ReadLevelAttrib(pMazeFile, pVideo);
+		ApplyGameOptions();
 	}
 
 	return lReturnValue;
+}
+
+void MR_ClientSession::ApplyGameOptions()
+{
+	static const MR_UInt16 TRACK_OBJECT_DLL_ID = 1;
+	static const MR_UInt16 TRACK_CAN_CLASS_ID = 152;
+	static const MR_3DCoordinate HIDDEN_POSITION(0, 0, -32000);
+
+	if(mAllowCans) {
+		return;
+	}
+
+	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	if(lCurrentLevel == NULL) {
+		return;
+	}
+
+	const int lRoomCount = lCurrentLevel->GetRoomCount();
+	for(int lRoom = 0; lRoom < lRoomCount; lRoom++) {
+		MR_FreeElementHandle lCurrent = lCurrentLevel->GetFirstFreeElement(lRoom);
+		while(lCurrent != NULL) {
+			MR_FreeElementHandle lNext = MR_Level::GetNextFreeElement(lCurrent);
+			MR_FreeElement *lElement = MR_Level::GetFreeElement(lCurrent);
+			const MR_ObjectFromFactoryId &lTypeId = lElement->GetTypeId();
+			const bool lHideCan =
+				!mAllowCans &&
+				(lTypeId.mDllId == TRACK_OBJECT_DLL_ID) &&
+				(lTypeId.mClassId == TRACK_CAN_CLASS_ID);
+
+			if(lHideCan) {
+				lElement->mPosition = HIDDEN_POSITION;
+				lCurrentLevel->MoveElement(lCurrent, MR_Level::eNonClassified);
+			}
+
+			lCurrent = lNext;
+		}
+	}
 }
 
 const MR_UInt8 *MR_ClientSession::GetBackImage() const
@@ -140,7 +184,7 @@ BOOL MR_ClientSession::CreateMainCharacter()
 	ASSERT(mMainCharacter1 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -182,7 +226,7 @@ BOOL MR_ClientSession::CreateMainCharacter2()
 	ASSERT(mMainCharacter2 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -205,7 +249,7 @@ BOOL MR_ClientSession::CreateMainCharacter3()
 	ASSERT(mMainCharacter3 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
@@ -228,7 +272,7 @@ BOOL MR_ClientSession::CreateMainCharacter4()
 	ASSERT(mMainCharacter4 == NULL);			  // why creating it twice?
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans, mAllowMines);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
