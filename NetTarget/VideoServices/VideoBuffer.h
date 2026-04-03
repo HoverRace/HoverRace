@@ -98,6 +98,9 @@ class MR_VideoBuffer
 
 		DWORD PackRGB(DWORD r, DWORD g, DWORD b);
 
+		BOOL PrepareWindowedAdapter();
+		void SetRequestedAdapterForMonitor(HMONITOR pMonitor);
+		BOOL IsCurrentAdapterRequested() const;
 		BOOL InitDirectDraw();
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();

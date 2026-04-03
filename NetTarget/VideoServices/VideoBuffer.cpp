@@ -233,20 +233,207 @@ int DDrawCall(int pFuncResult, int pLine)
 
 #else
 
-void PrintLog(const char *pFormat, ...);
+static FILE *gOutputFile = NULL;
+static char gOutputPath[MAX_PATH] = { 0 };
+static BOOL gLogSessionOpen = FALSE;
 
-#define OPEN_LOG()
-#define CLOSE_LOG()
+static void BuildDebugLogPath(char *buffer, size_t bufferSize)
+{
+	if(bufferSize == 0) {
+		return;
+	}
 
+	buffer[0] = '\0';
+
+	char appData[MAX_PATH] = { 0 };
+	DWORD len = GetEnvironmentVariableA("APPDATA", appData, sizeof(appData));
+	if((len > 0) && (len < sizeof(appData))) {
+		_snprintf(buffer, bufferSize - 1, "%s\\HoverRace.com", appData);
+		buffer[bufferSize - 1] = '\0';
+		CreateDirectoryA(buffer, NULL);
+
+		_snprintf(buffer, bufferSize - 1, "%s\\HoverRace.com\\HoverRace", appData);
+		buffer[bufferSize - 1] = '\0';
+		CreateDirectoryA(buffer, NULL);
+
+		_snprintf(buffer, bufferSize - 1, "%s\\HoverRace.com\\HoverRace\\Video.log", appData);
+		buffer[bufferSize - 1] = '\0';
+		return;
+	}
+
+	_snprintf(buffer, bufferSize - 1, "Video.log");
+	buffer[bufferSize - 1] = '\0';
+}
+
+static void EnsureDebugLog()
+{
+	if(gOutputFile == NULL) {
+		if(gOutputPath[0] == '\0') {
+			BuildDebugLogPath(gOutputPath, sizeof(gOutputPath));
+		}
+		gOutputFile = fopen(gOutputPath, "a");
+		if((gOutputFile != NULL) && !gLogSessionOpen) {
+			SYSTEMTIME st;
+			char exePath[MAX_PATH] = { 0 };
+			GetLocalTime(&st);
+			GetModuleFileNameA(NULL, exePath, sizeof(exePath));
+			fprintf(gOutputFile,
+				"\n========== VIDEO LOG SESSION START %04d-%02d-%02d %02d:%02d:%02d pid=%lu build=%s ==========\n",
+				st.wYear, st.wMonth, st.wDay,
+				st.wHour, st.wMinute, st.wSecond,
+				GetCurrentProcessId(),
 #ifdef _DEBUG
-#define PRINT_LOG          1?NULL:
+				"Debug"
 #else
-#define PRINT_LOG          if( FALSE )PrintLog
+				"Release"
 #endif
-#define DD_CALL( pFunc )   pFunc
+			);
+			fprintf(gOutputFile, "exe=%s\n", exePath);
+			fprintf(gOutputFile, "log=%s\n", gOutputPath);
+			fflush(gOutputFile);
+			gLogSessionOpen = TRUE;
+		}
+	}
+}
+
+static void CloseDebugLog()
+{
+	if(gOutputFile != NULL) {
+		if(gLogSessionOpen) {
+			SYSTEMTIME st;
+			GetLocalTime(&st);
+			fprintf(gOutputFile,
+				"========== VIDEO LOG SESSION END %04d-%02d-%02d %02d:%02d:%02d ==========\n",
+				st.wYear, st.wMonth, st.wDay,
+				st.wHour, st.wMinute, st.wSecond);
+			fflush(gOutputFile);
+			gLogSessionOpen = FALSE;
+		}
+		fclose(gOutputFile);
+		gOutputFile = NULL;
+	}
+}
+
+void PrintLog(const char *pFormat, ...)
+{
+	char buffer[1024];
+	va_list lParamList;
+
+	va_start(lParamList, pFormat);
+	_vsnprintf(buffer, sizeof(buffer) - 1, pFormat, lParamList);
+	buffer[sizeof(buffer) - 1] = '\0';
+	va_end(lParamList);
+
+	EnsureDebugLog();
+	if(gOutputFile != NULL) {
+		fprintf(gOutputFile, "%10lu %s\n", GetTickCount(), buffer);
+		fflush(gOutputFile);
+	}
+
+	OutputDebugStringA(buffer);
+	OutputDebugStringA("\n");
+}
+
+static int DDrawCall(int pFuncResult, int pLine)
+{
+	if(pFuncResult != DD_OK) {
+		PrintLog("DDRAW line=%d hr=%d", pLine, pFuncResult);
+	}
+
+	return pFuncResult;
+}
+
+#define OPEN_LOG() EnsureDebugLog()
+#define CLOSE_LOG() CloseDebugLog()
+#define PRINT_LOG          PrintLog
+#define DD_CALL( pFunc )   DDrawCall( pFunc, __LINE__ )
 #endif
 
 namespace {
+	struct RenderLogStats
+	{
+		unsigned long lockCount;
+		unsigned long unlockCount;
+		unsigned long flipCount;
+		unsigned long lockFailures;
+		unsigned long unlockFailures;
+		unsigned long flipFailures;
+
+		RenderLogStats() :
+			lockCount(0), unlockCount(0), flipCount(0),
+			lockFailures(0), unlockFailures(0), flipFailures(0)
+		{
+		}
+	};
+
+	RenderLogStats gRenderLogStats;
+
+	void ResetRenderLogStats()
+	{
+		gRenderLogStats = RenderLogStats();
+	}
+
+	void LogRenderStats(const char *label)
+	{
+		PRINT_LOG("%s renderStats lock=%lu unlock=%lu flip=%lu lockFail=%lu unlockFail=%lu flipFail=%lu",
+			label,
+			gRenderLogStats.lockCount,
+			gRenderLogStats.unlockCount,
+			gRenderLogStats.flipCount,
+			gRenderLogStats.lockFailures,
+			gRenderLogStats.unlockFailures,
+			gRenderLogStats.flipFailures);
+	}
+
+	void FormatGuid(const GUID *guid, char *buffer, size_t bufferSize)
+	{
+		if((guid == NULL) || (bufferSize == 0)) {
+			return;
+		}
+
+		_snprintf(buffer, bufferSize - 1,
+			"{%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+			guid->Data1, guid->Data2, guid->Data3,
+			guid->Data4[0], guid->Data4[1], guid->Data4[2], guid->Data4[3],
+			guid->Data4[4], guid->Data4[5], guid->Data4[6], guid->Data4[7]);
+		buffer[bufferSize - 1] = '\0';
+	}
+
+	void LogRect(const char *label, const RECT &rect)
+	{
+		PRINT_LOG("%s rect=(%ld,%ld)-(%ld,%ld) size=%ldx%ld",
+			label,
+			rect.left, rect.top, rect.right, rect.bottom,
+			rect.right - rect.left, rect.bottom - rect.top);
+	}
+
+	void LogMonitor(const char *label, HMONITOR monitor)
+	{
+		if(monitor == NULL) {
+			PRINT_LOG("%s monitor=NULL", label);
+			return;
+		}
+
+		MONITORINFOEX monitorInfo;
+		memset(&monitorInfo, 0, sizeof(monitorInfo));
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		if(GetMonitorInfo(monitor, &monitorInfo)) {
+			PRINT_LOG("%s monitor=%p device=%s primary=%d rect=(%ld,%ld)-(%ld,%ld)",
+				label,
+				monitor,
+				monitorInfo.szDevice,
+				(monitorInfo.dwFlags & MONITORINFOF_PRIMARY) != 0,
+				monitorInfo.rcMonitor.left,
+				monitorInfo.rcMonitor.top,
+				monitorInfo.rcMonitor.right,
+				monitorInfo.rcMonitor.bottom);
+		}
+		else {
+			PRINT_LOG("%s monitor=%p GetMonitorInfo failed err=%lu",
+				label, monitor, GetLastError());
+		}
+	}
+
 	struct DDAdapterSearchContext
 	{
 		HMONITOR monitor;
@@ -269,11 +456,34 @@ namespace {
 		(void) lpDriverName;
 
 		if(ctx->monitor == hMonitor) {
+			char guidBuffer[64] = {0};
+			if(lpGUID != NULL) {
+				FormatGuid(lpGUID, guidBuffer, sizeof(guidBuffer));
+			}
+			PRINT_LOG("DD adapter match driver=%s desc=%s guid=%s hMonitor=%p",
+				(lpDriverName != NULL) ? lpDriverName : "<null>",
+				(lpDriverDescription != NULL) ? lpDriverDescription : "<null>",
+				(lpGUID != NULL) ? guidBuffer : "<default>",
+				hMonitor);
+			LogMonitor("DD adapter match monitor", hMonitor);
+
 			if(lpGUID != NULL) {
 				ctx->guid = *lpGUID;
 				ctx->hasGuid = TRUE;
 			}
 			return DDENUMRET_CANCEL;
+		}
+
+		if(hMonitor != NULL) {
+			char guidBuffer[64] = {0};
+			if(lpGUID != NULL) {
+				FormatGuid(lpGUID, guidBuffer, sizeof(guidBuffer));
+			}
+			PRINT_LOG("DD adapter skip driver=%s desc=%s guid=%s hMonitor=%p",
+				(lpDriverName != NULL) ? lpDriverName : "<null>",
+				(lpDriverDescription != NULL) ? lpDriverDescription : "<null>",
+				(lpGUID != NULL) ? guidBuffer : "<default>",
+				hMonitor);
 		}
 
 		return DDENUMRET_OK;
@@ -324,6 +534,7 @@ DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity) const
 MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, double pBrightness)
 {
 	OPEN_LOG();
+	ResetRenderLogStats();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
 
 	ASSERT(pWindow != NULL);
@@ -382,6 +593,7 @@ MR_VideoBuffer::~MR_VideoBuffer()
 	delete[]mBackPalette;
 	delete[]mPackedPalette;
 
+	LogRenderStats("VIDEO_BUFFER_DESTRUCTION");
 	PRINT_LOG("VIDEO_BUFFER_DESTRUCTION\n\n");
 	CLOSE_LOG();
 
@@ -392,25 +604,130 @@ DWORD MR_VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
 	return mRChan.Pack(r) | mGChan.Pack(g) | mBChan.Pack(b);
 }
 
+void MR_VideoBuffer::SetRequestedAdapterForMonitor(HMONITOR pMonitor)
+{
+	mRequestedAdapterGuidValid = FALSE;
+	LogMonitor("SetRequestedAdapterForMonitor", pMonitor);
+
+	if((pMonitor == NULL) || (directDrawInst == NULL)) {
+		PRINT_LOG("SetRequestedAdapterForMonitor using default adapter");
+		return;
+	}
+
+	LPDIRECTDRAWENUMERATEEX enumerateEx =
+		(LPDIRECTDRAWENUMERATEEX)GetProcAddress(directDrawInst, "DirectDrawEnumerateExA");
+	if(enumerateEx != NULL) {
+		DDAdapterSearchContext ctx(pMonitor);
+		if(enumerateEx(FindMonitorAdapterCallback, &ctx,
+			DDENUM_ATTACHEDSECONDARYDEVICES) == DD_OK && ctx.hasGuid)
+		{
+			mRequestedAdapterGuid = ctx.guid;
+			mRequestedAdapterGuidValid = TRUE;
+		}
+	}
+
+	if(mRequestedAdapterGuidValid) {
+		char guidBuffer[64] = {0};
+		FormatGuid(&mRequestedAdapterGuid, guidBuffer, sizeof(guidBuffer));
+		PRINT_LOG("Requested DirectDraw adapter guid=%s", guidBuffer);
+	}
+	else {
+		PRINT_LOG("Requested DirectDraw adapter guid=<default>");
+	}
+}
+
+BOOL MR_VideoBuffer::PrepareWindowedAdapter()
+{
+	RECT windowRect;
+	if(GetWindowRect(mWindow, &windowRect)) {
+		LogRect("PrepareWindowedAdapter window", windowRect);
+	}
+	SetRequestedAdapterForMonitor(FindFullscreenMonitor(mWindow));
+	return TRUE;
+}
+
+BOOL MR_VideoBuffer::IsCurrentAdapterRequested() const
+{
+	if(mRequestedAdapterGuidValid != mCurrentAdapterGuidValid) {
+		return FALSE;
+	}
+
+	return !mRequestedAdapterGuidValid ||
+		IsEqualGUID(mRequestedAdapterGuid, mCurrentAdapterGuid);
+}
+
 BOOL MR_VideoBuffer::InitDirectDraw()
 {
 	PRINT_LOG("InitDirectDraw");
 
 	BOOL lReturnValue = TRUE;
+	char requestedGuidBuffer[64] = {0};
+	char currentGuidBuffer[64] = {0};
+
+	if(mRequestedAdapterGuidValid) {
+		FormatGuid(&mRequestedAdapterGuid, requestedGuidBuffer, sizeof(requestedGuidBuffer));
+	}
+	if(mCurrentAdapterGuidValid) {
+		FormatGuid(&mCurrentAdapterGuid, currentGuidBuffer, sizeof(currentGuidBuffer));
+	}
+
+	PRINT_LOG("InitDirectDraw requestedValid=%d requested=%s currentValid=%d current=%s existingDD=%p fullscreen=%d",
+		mRequestedAdapterGuidValid,
+		mRequestedAdapterGuidValid ? requestedGuidBuffer : "<default>",
+		mCurrentAdapterGuidValid,
+		mCurrentAdapterGuidValid ? currentGuidBuffer : "<default>",
+		mDirectDraw,
+		mFullScreen);
+
+	if((mDirectDraw != NULL) && !IsCurrentAdapterRequested()) {
+		PRINT_LOG("InitDirectDraw releasing DirectDraw because adapter request changed");
+		if(mFullScreen) {
+			DD_CALL(mDirectDraw->RestoreDisplayMode());
+			DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL));
+			mFullScreen = FALSE;
+		}
+
+		ReleaseDirectDraw();
+	}
 
 	if(mDirectDraw == NULL) {
 		typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 		LPDIRECTDRAWCREATE directDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(directDrawInst, "DirectDrawCreate");
+		GUID FAR *requestedGuid = mRequestedAdapterGuidValid ? &mRequestedAdapterGuid : NULL;
+
 		if (directDrawCreate == NULL) {
+			PRINT_LOG("InitDirectDraw DirectDrawCreate export missing");
 			return false;
 		}
 
-		if(DD_CALL(directDrawCreate(NULL, &mDirectDraw, NULL)) != DD_OK) {
-			ASSERT(FALSE);
-			lReturnValue = false;
+		if(DD_CALL(directDrawCreate(requestedGuid, &mDirectDraw, NULL)) != DD_OK) {
+			if((requestedGuid != NULL) &&
+				(DD_CALL(directDrawCreate(NULL, &mDirectDraw, NULL)) == DD_OK))
+			{
+				char guidBuffer[64] = {0};
+				FormatGuid(&mRequestedAdapterGuid, guidBuffer, sizeof(guidBuffer));
+				PRINT_LOG("InitDirectDraw fell back to default adapter after failing guid=%s", guidBuffer);
+				mRequestedAdapterGuidValid = FALSE;
+			}
+			else {
+				PRINT_LOG("InitDirectDraw failed to create DirectDraw requested=%s",
+					(requestedGuid != NULL) ? requestedGuidBuffer : "<default>");
+				ASSERT(FALSE);
+				lReturnValue = false;
+			}
 		}
-		else {
+		if(lReturnValue) {
+			mCurrentAdapterGuidValid = mRequestedAdapterGuidValid;
+			if(mCurrentAdapterGuidValid) {
+				mCurrentAdapterGuid = mRequestedAdapterGuid;
+			}
+
+			PRINT_LOG("InitDirectDraw created DirectDraw=%p currentAdapter=%s",
+				mDirectDraw,
+				mCurrentAdapterGuidValid ? requestedGuidBuffer : "<default>");
+
 			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
+				PRINT_LOG("InitDirectDraw SetCooperativeLevel(DDSCL_NORMAL) failed");
 				ASSERT(FALSE);
 				lReturnValue = false;
 			}
@@ -664,6 +981,11 @@ void MR_VideoBuffer::AssignPalette()
 	PRINT_LOG("AssignPalette");
 
 	// Currently only work in 8bit mode
+	if(mBpp != 8) {
+		PRINT_LOG("AssignPalette skipped because bpp=%d", mBpp);
+		return;
+	}
+
 	if((mFrontBuffer != NULL) && (mPalette != NULL)) {
 		DD_CALL(mFrontBuffer->SetPalette(mPalette));
 
@@ -751,16 +1073,20 @@ BOOL MR_VideoBuffer::SetVideoMode()
 
 	BOOL lReturnValue;
 	DDSURFACEDESC lSurfaceDesc;
+	RECT windowRect;
 
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
 
-	lReturnValue = InitDirectDraw();
-
-	if(lReturnValue) {
-		ReturnToWindowsResolution();
+	if(GetWindowRect(mWindow, &windowRect)) {
+		LogRect("SetVideoMode(Window) window", windowRect);
 	}
+
+	ReturnToWindowsResolution();
+	mRequestedAdapterGuidValid = FALSE;
+	PRINT_LOG("SetVideoMode(Window) forcing default DirectDraw adapter");
+	lReturnValue = InitDirectDraw();
 	// Retrieve the window size
 	if(lReturnValue) {
 		RECT lRect;
@@ -899,6 +1225,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 	mModeSettingInProgress = TRUE;
 
+	PrepareDesktopFullscreen(NULL);
 	lReturnValue = InitDirectDraw();
 
 	if(lReturnValue) {
@@ -1001,10 +1328,18 @@ return lReturnValue;
 
 BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
 {
+	mRequestedAdapterGuidValid = FALSE;
+	RECT windowRect;
+	if(GetWindowRect(mWindow, &windowRect)) {
+		LogRect("PrepareDesktopFullscreen window", windowRect);
+	}
+
 	HMONITOR monitor = FindFullscreenMonitor(mWindow);
 	if(monitor == NULL) {
+		PRINT_LOG("PrepareDesktopFullscreen could not find monitor");
 		return FALSE;
 	}
+	LogMonitor("PrepareDesktopFullscreen target", monitor);
 
 	MONITORINFOEX monitorInfo;
 	memset(&monitorInfo, 0, sizeof(monitorInfo));
@@ -1017,8 +1352,16 @@ BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
 	memset(&displayMode, 0, sizeof(displayMode));
 	displayMode.dmSize = sizeof(displayMode);
 	if(!EnumDisplaySettings(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, &displayMode)) {
+		PRINT_LOG("PrepareDesktopFullscreen EnumDisplaySettings failed for %s", monitorInfo.szDevice);
 		return FALSE;
 	}
+
+	PRINT_LOG("PrepareDesktopFullscreen device=%s resolution=%ldx%ld position=%ld,%ld",
+		monitorInfo.szDevice,
+		displayMode.dmPelsWidth,
+		displayMode.dmPelsHeight,
+		displayMode.dmPosition.x,
+		displayMode.dmPosition.y);
 
 	if(pResolution != NULL) {
 		pResolution->x = displayMode.dmPelsWidth;
@@ -1026,21 +1369,7 @@ BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
 	}
 
 	mFullscreenRect = monitorInfo.rcMonitor;
-	mRequestedAdapterGuidValid = FALSE;
-
-	if(directDrawInst != NULL) {
-		LPDIRECTDRAWENUMERATEEX enumerateEx =
-			(LPDIRECTDRAWENUMERATEEX)GetProcAddress(directDrawInst, "DirectDrawEnumerateExA");
-		if(enumerateEx != NULL) {
-			DDAdapterSearchContext ctx(monitor);
-			if(enumerateEx(FindMonitorAdapterCallback, &ctx,
-				DDENUM_ATTACHEDSECONDARYDEVICES) == DD_OK && ctx.hasGuid)
-			{
-				mRequestedAdapterGuid = ctx.guid;
-				mRequestedAdapterGuidValid = TRUE;
-			}
-		}
-	}
+	SetRequestedAdapterForMonitor(monitor);
 
 	return TRUE;
 }
@@ -1112,11 +1441,11 @@ int MR_VideoBuffer::GetYPixelMeter() const
 
 BOOL MR_VideoBuffer::Lock()
 {
-	PRINT_LOG("Lock");
-
 	MR_SAMPLE_CONTEXT("LockVideoBuffer");
 
 	BOOL lReturnValue = TRUE;
+
+	gRenderLogStats.lockCount++;
 
 	ASSERT(mBuffer == NULL);
 	ASSERT(mDirectDraw != NULL);
@@ -1169,14 +1498,19 @@ BOOL MR_VideoBuffer::Lock()
 		}
 	}
 
+	if(!lReturnValue) {
+		gRenderLogStats.lockFailures++;
+	}
+
 	return lReturnValue;
 }
 
 void MR_VideoBuffer::Unlock()
 {
-	PRINT_LOG("Unlock");
-
 	MR_SAMPLE_CONTEXT("UnlockVideoBuffer");
+	BOOL unlockFailed = FALSE;
+
+	gRenderLogStats.unlockCount++;
 
 	ASSERT(mBuffer != NULL);
 	ASSERT(mDirectDraw != NULL);
@@ -1185,6 +1519,7 @@ void MR_VideoBuffer::Unlock()
 	if(!gDebugMode && (mBpp == 8)) {
 		if(DD_CALL(mBackBuffer->Unlock(NULL)) != DD_OK) {
 			ASSERT(FALSE);
+			unlockFailed = TRUE;
 		}
 		mBuffer = NULL;
 	}
@@ -1207,6 +1542,7 @@ void MR_VideoBuffer::Unlock()
 
 		if(DD_CALL(mBackBuffer->Lock(NULL, &lSurfaceDesc, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL)) != DD_OK) {
 			// ASSERT( FALSE );
+			unlockFailed = TRUE;
 		}
 		else {
 			int lLineLen = lSurfaceDesc.lPitch;
@@ -1264,10 +1600,15 @@ void MR_VideoBuffer::Unlock()
 		// Unlock
 		if(DD_CALL(mBackBuffer->Unlock(NULL)) != DD_OK) {
 			// ASSERT( FALSE );
+			unlockFailed = TRUE;
 		}
 
 		delete[]mBuffer;
 		mBuffer = NULL;
+	}
+
+	if(unlockFailed) {
+		gRenderLogStats.unlockFailures++;
 	}
 
 	Flip();
@@ -1275,9 +1616,9 @@ void MR_VideoBuffer::Unlock()
 
 void MR_VideoBuffer::Flip()
 {
-	PRINT_LOG("Flip");
-
 	HRESULT lErrorCode;
+
+	gRenderLogStats.flipCount++;
 
 	ASSERT(mBuffer == NULL);
 	ASSERT(mDirectDraw != NULL);
@@ -1286,6 +1627,7 @@ void MR_VideoBuffer::Flip()
 	if(mFullScreen) {
 		if(DD_CALL(mFrontBuffer->Flip(NULL, DDFLIP_WAIT)) != DD_OK) {
 			// ASSERT( FALSE );
+			gRenderLogStats.flipFailures++;
 		}
 
 	}
@@ -1301,6 +1643,7 @@ void MR_VideoBuffer::Flip()
 
 		if(lErrorCode != DD_OK) {
 			// ASSERT( FALSE );
+			gRenderLogStats.flipFailures++;
 		}
 	}
 }
