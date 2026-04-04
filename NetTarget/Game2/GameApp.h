@@ -89,9 +89,13 @@ class MR_GameApp
 		LONG mWindowedExStyle;
 		int mAdaptiveRenderScalePercent;
 		int mAppliedRenderScalePercent;
+		int mAdaptiveRenderScaleMaxPercent;
+		int mAdaptiveRenderScaleUpBasePercent;
 		DWORD mAdaptiveRenderScaleLastChangeTick;
+		DWORD mAdaptiveRenderScaleLastIncreaseTick;
 		DWORD mAdaptiveRenderScaleAccumulatedMs;
 		int mAdaptiveRenderScaleSampleCount;
+		int mAdaptiveRenderScaleGoodSampleCount;
 
 		int mClrScrTodo;
 
@@ -120,6 +124,7 @@ class MR_GameApp
 		void SetVideoMode(int pX, int pY);
 		void RefreshTitleBar();
 		void ResetAdaptiveRenderScale();
+		void ResetAdaptiveRenderScaleForResize();
 		BOOL ShouldUseAdaptiveRenderScale() const;
 		void RequestAdaptiveRenderScale(int pPercent);
 		void ApplyAdaptiveRenderScale(int pPercent);
