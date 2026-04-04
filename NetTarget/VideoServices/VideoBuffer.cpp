@@ -576,6 +576,14 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 
 	mModeSettingInProgress = FALSE;
 	mFullScreen = FALSE;
+	mX0 = 0;
+	mY0 = 0;
+	mDisplayXRes = 0;
+	mDisplayYRes = 0;
+	mXRes = 0;
+	mYRes = 0;
+	mLineLen = 0;
+	mRenderScalePercent = 100;
 
 	mBpp = 0;
 	mNativeBpp = 0;
@@ -684,6 +692,28 @@ BOOL MR_VideoBuffer::IsCurrentAdapterRequested() const
 		IsEqualGUID(mRequestedAdapterGuid, mCurrentAdapterGuid);
 }
 
+void MR_VideoBuffer::ComputeRenderResolution(int pDisplayXRes, int pDisplayYRes,
+	int &pRenderXRes, int &pRenderYRes) const
+{
+	if(pDisplayXRes <= 0 || pDisplayYRes <= 0) {
+		pRenderXRes = pDisplayXRes;
+		pRenderYRes = pDisplayYRes;
+		return;
+	}
+
+	if(mRenderScalePercent >= 100) {
+		pRenderXRes = pDisplayXRes;
+		pRenderYRes = pDisplayYRes;
+		return;
+	}
+
+	pRenderXRes = max(1, min(pDisplayXRes, (pDisplayXRes * mRenderScalePercent + 50) / 100));
+	pRenderYRes = max(1, min(pDisplayYRes, (pDisplayYRes * mRenderScalePercent + 50) / 100));
+
+	pRenderXRes = min(pDisplayXRes, max(pRenderXRes, min(320, pDisplayXRes)));
+	pRenderYRes = min(pDisplayYRes, max(pRenderYRes, min(200, pDisplayYRes)));
+}
+
 void MR_VideoBuffer::ResetWindowedPresentFallback()
 {
 	mUseGdiWindowedPresentFallback = FALSE;
@@ -717,10 +747,10 @@ BOOL MR_VideoBuffer::PresentWindowedWithGdi()
 	const WORD dibBpp =
 		(mBpp <= 16) ? 16 :
 		((mBpp <= 24) ? 24 : 32);
-	if(dibBpp == 0 || mXRes <= 0 || mYRes <= 0) {
+	if(dibBpp == 0 || mXRes <= 0 || mYRes <= 0 || mDisplayXRes <= 0 || mDisplayYRes <= 0) {
 		gRenderLogStats.gdiPresentFailures++;
-		PRINT_LOG("GDI windowed present fallback invalid geometry size=%dx%d bpp=%lu",
-			mXRes, mYRes, mBpp);
+		PRINT_LOG("GDI windowed present fallback invalid geometry render=%dx%d display=%dx%d bpp=%lu",
+			mXRes, mYRes, mDisplayXRes, mDisplayYRes, mBpp);
 		return FALSE;
 	}
 
@@ -786,7 +816,7 @@ BOOL MR_VideoBuffer::PresentWindowedWithGdi()
 	else {
 		SetStretchBltMode(windowDc, COLORONCOLOR);
 		int result = StretchDIBits(windowDc,
-			0, 0, mXRes, mYRes,
+			0, 0, mDisplayXRes, mDisplayYRes,
 			0, 0, mXRes, mYRes,
 			dibBits,
 			reinterpret_cast<BITMAPINFO*>(&dibInfo),
@@ -1254,9 +1284,12 @@ BOOL MR_VideoBuffer::SetVideoMode()
 
 		ASSERT(lReturnValue);
 
-		mXRes = lRect.right;
-		mYRes = lRect.bottom;
+		mDisplayXRes = lRect.right;
+		mDisplayYRes = lRect.bottom;
+		ComputeRenderResolution(mDisplayXRes, mDisplayYRes, mXRes, mYRes);
 		mLineLen = mXRes;
+		PRINT_LOG("SetVideoMode(Window) display=%dx%d render=%dx%d scale=%d%%",
+			mDisplayXRes, mDisplayYRes, mXRes, mYRes, mRenderScalePercent);
 	}
 
 	if(lReturnValue) {
@@ -1408,6 +1441,8 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 // Retrieve the window size
 if(lReturnValue) {
+	mDisplayXRes = pXRes;
+	mDisplayYRes = pYRes;
 	mXRes = pXRes;
 	mYRes = pYRes;
 	mLineLen = mXRes;
@@ -1559,6 +1594,16 @@ int MR_VideoBuffer::GetYRes() const
 	return mYRes;
 }
 
+int MR_VideoBuffer::GetDisplayXRes() const
+{
+	return mDisplayXRes;
+}
+
+int MR_VideoBuffer::GetDisplayYRes() const
+{
+	return mDisplayYRes;
+}
+
 int MR_VideoBuffer::GetLineLen() const
 {
 	return mLineLen;
@@ -1596,6 +1641,27 @@ int MR_VideoBuffer::GetYPixelMeter() const
 	}
 	else {
 		return 4 * GetSystemMetrics(SM_CYSCREEN);
+	}
+}
+
+int MR_VideoBuffer::GetRenderScalePercent() const
+{
+	return mRenderScalePercent;
+}
+
+void MR_VideoBuffer::SetRenderScalePercent(int pPercent)
+{
+	int lClampedPercent = pPercent;
+	if(lClampedPercent < 10) {
+		lClampedPercent = 10;
+	}
+	else if(lClampedPercent > 100) {
+		lClampedPercent = 100;
+	}
+
+	if(mRenderScalePercent != lClampedPercent) {
+		PRINT_LOG("SetRenderScalePercent %d -> %d", mRenderScalePercent, lClampedPercent);
+		mRenderScalePercent = lClampedPercent;
 	}
 }
 
@@ -1803,7 +1869,9 @@ void MR_VideoBuffer::Flip()
 		int lX0 = mFullScreen ? 0 : mX0;
 		int lY0 = mFullScreen ? 0 : mY0;
 
-		RECT lDestRectangle = { lX0, lY0, lX0 + mXRes, lY0 + mYRes };
+		const int lDestXRes = mFullScreen ? mXRes : mDisplayXRes;
+		const int lDestYRes = mFullScreen ? mYRes : mDisplayYRes;
+		RECT lDestRectangle = { lX0, lY0, lX0 + lDestXRes, lY0 + lDestYRes };
 		RECT lSrcRectangle = { 0, 0, mXRes, mYRes };
 
 		lErrorCode = DD_CALL(mFrontBuffer->Blt(&lDestRectangle, mBackBuffer, &lSrcRectangle, DDBLT_WAIT, NULL));

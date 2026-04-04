@@ -217,6 +217,8 @@ void MR_Config::ResetToDefaults()
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = true;
 	video.useOriginalCameraParams = false;
+	video.adaptiveRenderScale = true;
+	video.adaptiveRenderScaleMinPercent = 50;
 
 	video.windowMonitor = "";
 	video.windowMonitorPosX = 0;
@@ -416,6 +418,8 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 
 	READ_BOOL(root, nativeBppFullscreen);
 	READ_BOOL(root, useOriginalCameraParams);
+	READ_BOOL(root, adaptiveRenderScale);
+	READ_INT(root, adaptiveRenderScaleMinPercent, 10, 100);
 	READ_STRING(root, windowMonitor);
 	READ_INT(root, windowMonitorPosX, INT_MIN, INT_MAX);
 	READ_INT(root, windowMonitorPosY, INT_MIN, INT_MAX);
@@ -450,6 +454,8 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
 	EMIT_VAR(emitter, useOriginalCameraParams);
+	EMIT_VAR(emitter, adaptiveRenderScale);
+	EMIT_VAR(emitter, adaptiveRenderScaleMinPercent);
 	EMIT_VAR(emitter, windowMonitor);
 	EMIT_VAR(emitter, windowMonitorPosX);
 	EMIT_VAR(emitter, windowMonitorPosY);

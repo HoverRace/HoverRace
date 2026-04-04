@@ -87,6 +87,11 @@ class MR_GameApp
 		RECT mWindowedRect;
 		LONG mWindowedStyle;
 		LONG mWindowedExStyle;
+		int mAdaptiveRenderScalePercent;
+		int mAppliedRenderScalePercent;
+		DWORD mAdaptiveRenderScaleLastChangeTick;
+		DWORD mAdaptiveRenderScaleAccumulatedMs;
+		int mAdaptiveRenderScaleSampleCount;
 
 		int mClrScrTodo;
 
@@ -114,6 +119,11 @@ class MR_GameApp
 		void RefreshView();
 		void SetVideoMode(int pX, int pY);
 		void RefreshTitleBar();
+		void ResetAdaptiveRenderScale();
+		BOOL ShouldUseAdaptiveRenderScale() const;
+		void RequestAdaptiveRenderScale(int pPercent);
+		void ApplyAdaptiveRenderScale(int pPercent);
+		void UpdateAdaptiveRenderScale(DWORD pFrameMs);
 
 		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)

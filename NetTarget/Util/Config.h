@@ -64,6 +64,8 @@ class MR_Config
 
 			bool nativeBppFullscreen;
 			bool useOriginalCameraParams;
+			bool adaptiveRenderScale;
+			int adaptiveRenderScaleMinPercent;
 
 			std::string windowMonitor;
 			int windowMonitorPosX;

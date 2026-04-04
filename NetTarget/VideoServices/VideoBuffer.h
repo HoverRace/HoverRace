@@ -68,9 +68,12 @@ class MR_VideoBuffer
 
 		int mX0;								  // used only when
 		int mY0;								  // displaying in a window
+		int mDisplayXRes;
+		int mDisplayYRes;
 		int mXRes;
 		int mYRes;
 		int mLineLen;
+		int mRenderScalePercent;
 
 		DWORD mBpp;								  // current bits per pixel
 		DWORD mNativeBpp;						  // native (desktop) bits per pixel
@@ -107,6 +110,7 @@ class MR_VideoBuffer
 		BOOL PrepareWindowedAdapter();
 		void SetRequestedAdapterForMonitor(HMONITOR pMonitor);
 		BOOL IsCurrentAdapterRequested() const;
+		void ComputeRenderResolution(int pDisplayXRes, int pDisplayYRes, int &pRenderXRes, int &pRenderYRes) const;
 		void ResetWindowedPresentFallback();
 		BOOL PresentWindowedWithGdi();
 		BOOL InitDirectDraw();
@@ -149,8 +153,12 @@ class MR_VideoBuffer
 		// Buffer access functions
 		MR_DllDeclare int GetXRes() const;
 		MR_DllDeclare int GetYRes() const;
+		MR_DllDeclare int GetDisplayXRes() const;
+		MR_DllDeclare int GetDisplayYRes() const;
 		MR_DllDeclare int GetLineLen() const;
 		MR_DllDeclare int GetZLineLen() const;
+		MR_DllDeclare int GetRenderScalePercent() const;
+		MR_DllDeclare void SetRenderScalePercent(int pPercent);
 
 		MR_DllDeclare MR_UInt8 *GetBuffer();
 		MR_DllDeclare MR_UInt16 *GetZBuffer();
