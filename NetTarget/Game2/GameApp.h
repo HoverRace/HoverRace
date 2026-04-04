@@ -62,6 +62,7 @@ class MR_GameApp
 		enum eViewMode { e3DView, eDebugView };
 
 		static MR_GameApp *This;				  // unique instance pointer
+		enum { ADAPTIVE_RENDER_SCALE_CACHE_SIZE = 8 };
 
 		HINSTANCE mInstance;
 		HWND mMainWindow;
@@ -91,11 +92,16 @@ class MR_GameApp
 		int mAppliedRenderScalePercent;
 		int mAdaptiveRenderScaleMaxPercent;
 		int mAdaptiveRenderScaleUpBasePercent;
+		int mAdaptiveRenderScaleDownChainCount;
 		DWORD mAdaptiveRenderScaleLastChangeTick;
 		DWORD mAdaptiveRenderScaleLastIncreaseTick;
 		DWORD mAdaptiveRenderScaleAccumulatedMs;
 		int mAdaptiveRenderScaleSampleCount;
 		int mAdaptiveRenderScaleGoodSampleCount;
+		int mAdaptiveRenderScaleCacheWidth[ADAPTIVE_RENDER_SCALE_CACHE_SIZE];
+		int mAdaptiveRenderScaleCacheHeight[ADAPTIVE_RENDER_SCALE_CACHE_SIZE];
+		int mAdaptiveRenderScaleCachePercent[ADAPTIVE_RENDER_SCALE_CACHE_SIZE];
+		int mAdaptiveRenderScaleCacheNext;
 
 		int mClrScrTodo;
 
@@ -124,11 +130,13 @@ class MR_GameApp
 		void SetVideoMode(int pX, int pY);
 		void RefreshTitleBar();
 		void ResetAdaptiveRenderScale();
-		void ResetAdaptiveRenderScaleForResize();
+		void ResetAdaptiveRenderScaleForResize(int pPercent = 100);
 		BOOL ShouldUseAdaptiveRenderScale() const;
 		void RequestAdaptiveRenderScale(int pPercent);
 		void ApplyAdaptiveRenderScale(int pPercent);
 		void UpdateAdaptiveRenderScale(DWORD pFrameMs);
+		void RememberAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes, int pPercent);
+		int GetCachedAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes) const;
 
 		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)

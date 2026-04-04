@@ -147,10 +147,13 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 
 static const int gAdaptiveRenderScaleDownStep = 10;
 static const int gAdaptiveRenderScaleUpStep = 2;
-static const DWORD gAdaptiveRenderScaleDownThresholdMs = 24;
+static const DWORD gAdaptiveRenderScaleDownThresholdMs = 22;
+static const DWORD gAdaptiveRenderScaleDownContinueThresholdMs = 15;
+static const DWORD gAdaptiveRenderScaleDownFastThresholdMs = 20;
 static const DWORD gAdaptiveRenderScaleUpThresholdMs = 12;
-static const DWORD gAdaptiveRenderScaleCooldownMs = 2000;
-static const int gAdaptiveRenderScaleSampleFrames = 24;
+static const DWORD gAdaptiveRenderScaleCooldownMs = 1000;
+static const DWORD gAdaptiveRenderScaleDownFastCooldownMs = 200;
+static const int gAdaptiveRenderScaleSampleFrames = 10;
 static const int gAdaptiveRenderScaleUpSampleWindows = 5;
 static const DWORD gAdaptiveRenderScaleRetryWindowMs = 15000;
 
@@ -641,11 +644,16 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mAppliedRenderScalePercent = 100;
 	mAdaptiveRenderScaleMaxPercent = 100;
 	mAdaptiveRenderScaleUpBasePercent = 0;
+	mAdaptiveRenderScaleDownChainCount = 0;
 	mAdaptiveRenderScaleLastChangeTick = 0;
 	mAdaptiveRenderScaleLastIncreaseTick = 0;
 	mAdaptiveRenderScaleAccumulatedMs = 0;
 	mAdaptiveRenderScaleSampleCount = 0;
 	mAdaptiveRenderScaleGoodSampleCount = 0;
+	memset(mAdaptiveRenderScaleCacheWidth, 0, sizeof(mAdaptiveRenderScaleCacheWidth));
+	memset(mAdaptiveRenderScaleCacheHeight, 0, sizeof(mAdaptiveRenderScaleCacheHeight));
+	memset(mAdaptiveRenderScaleCachePercent, 0, sizeof(mAdaptiveRenderScaleCachePercent));
+	mAdaptiveRenderScaleCacheNext = 0;
 
 	mCurrentMode = e3DView;
 
@@ -1123,6 +1131,7 @@ void MR_GameApp::ResetAdaptiveRenderScale()
 	mAppliedRenderScalePercent = 100;
 	mAdaptiveRenderScaleMaxPercent = 100;
 	mAdaptiveRenderScaleUpBasePercent = 0;
+	mAdaptiveRenderScaleDownChainCount = 0;
 	mAdaptiveRenderScaleLastChangeTick = 0;
 	mAdaptiveRenderScaleLastIncreaseTick = 0;
 	mAdaptiveRenderScaleAccumulatedMs = 0;
@@ -1140,12 +1149,67 @@ void MR_GameApp::ResetAdaptiveRenderScale()
 	}
 }
 
-void MR_GameApp::ResetAdaptiveRenderScaleForResize()
+void MR_GameApp::RememberAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes, int pPercent)
 {
-	mAdaptiveRenderScalePercent = 100;
-	mAppliedRenderScalePercent = 100;
+	int lIndex;
+
+	if(pDisplayXRes <= 0 || pDisplayYRes <= 0) {
+		return;
+	}
+
+	if(pPercent < 10) {
+		pPercent = 10;
+	}
+	else if(pPercent > 100) {
+		pPercent = 100;
+	}
+
+	for(lIndex = 0; lIndex < ADAPTIVE_RENDER_SCALE_CACHE_SIZE; lIndex++) {
+		if((mAdaptiveRenderScaleCacheWidth[lIndex] == pDisplayXRes) &&
+			(mAdaptiveRenderScaleCacheHeight[lIndex] == pDisplayYRes))
+		{
+			mAdaptiveRenderScaleCachePercent[lIndex] = pPercent;
+			return;
+		}
+	}
+
+	lIndex = mAdaptiveRenderScaleCacheNext;
+	mAdaptiveRenderScaleCacheWidth[lIndex] = pDisplayXRes;
+	mAdaptiveRenderScaleCacheHeight[lIndex] = pDisplayYRes;
+	mAdaptiveRenderScaleCachePercent[lIndex] = pPercent;
+	mAdaptiveRenderScaleCacheNext = (mAdaptiveRenderScaleCacheNext + 1) % ADAPTIVE_RENDER_SCALE_CACHE_SIZE;
+}
+
+int MR_GameApp::GetCachedAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes) const
+{
+	int lIndex;
+
+	for(lIndex = 0; lIndex < ADAPTIVE_RENDER_SCALE_CACHE_SIZE; lIndex++) {
+		if((mAdaptiveRenderScaleCacheWidth[lIndex] == pDisplayXRes) &&
+			(mAdaptiveRenderScaleCacheHeight[lIndex] == pDisplayYRes) &&
+			(mAdaptiveRenderScaleCachePercent[lIndex] >= 10))
+		{
+			return mAdaptiveRenderScaleCachePercent[lIndex];
+		}
+	}
+
+	return 100;
+}
+
+void MR_GameApp::ResetAdaptiveRenderScaleForResize(int pPercent)
+{
+	if(pPercent < 10) {
+		pPercent = 10;
+	}
+	else if(pPercent > 100) {
+		pPercent = 100;
+	}
+
+	mAdaptiveRenderScalePercent = pPercent;
+	mAppliedRenderScalePercent = pPercent;
 	mAdaptiveRenderScaleMaxPercent = 100;
 	mAdaptiveRenderScaleUpBasePercent = 0;
+	mAdaptiveRenderScaleDownChainCount = 0;
 	mAdaptiveRenderScaleLastChangeTick = 0;
 	mAdaptiveRenderScaleLastIncreaseTick = 0;
 	mAdaptiveRenderScaleAccumulatedMs = 0;
@@ -1153,7 +1217,7 @@ void MR_GameApp::ResetAdaptiveRenderScaleForResize()
 	mAdaptiveRenderScaleGoodSampleCount = 0;
 
 	if(mVideoBuffer != NULL) {
-		mVideoBuffer->SetRenderScalePercent(100);
+		mVideoBuffer->SetRenderScalePercent(pPercent);
 	}
 }
 
@@ -1243,6 +1307,7 @@ void MR_GameApp::UpdateAdaptiveRenderScale(DWORD pFrameMs)
 	if(!ShouldUseAdaptiveRenderScale()) {
 		mAdaptiveRenderScaleMaxPercent = 100;
 		mAdaptiveRenderScaleUpBasePercent = 0;
+		mAdaptiveRenderScaleDownChainCount = 0;
 		mAdaptiveRenderScaleLastIncreaseTick = 0;
 		mAdaptiveRenderScaleAccumulatedMs = 0;
 		mAdaptiveRenderScaleSampleCount = 0;
@@ -1264,6 +1329,15 @@ void MR_GameApp::UpdateAdaptiveRenderScale(DWORD pFrameMs)
 	DWORD lNow = GetTickCount();
 	int lTargetPercent = mAdaptiveRenderScalePercent;
 	const int lMinPercent = max(10, min(100, cfg->video.adaptiveRenderScaleMinPercent));
+	const DWORD lDownThresholdMs =
+		(mAdaptiveRenderScaleDownChainCount > 0) ?
+		gAdaptiveRenderScaleDownContinueThresholdMs : gAdaptiveRenderScaleDownThresholdMs;
+	const DWORD lDownFastThresholdMs =
+		(mAdaptiveRenderScaleDownChainCount > 0) ?
+		gAdaptiveRenderScaleDownContinueThresholdMs : gAdaptiveRenderScaleDownFastThresholdMs;
+	const DWORD lCooldownMs =
+		(mAdaptiveRenderScaleDownChainCount >= 1 && lAverageFrameMs > lDownFastThresholdMs) ?
+		gAdaptiveRenderScaleDownFastCooldownMs : gAdaptiveRenderScaleCooldownMs;
 	const BOOL lRecentUpscaleFailure =
 		(mAdaptiveRenderScaleUpBasePercent > 0) &&
 		(mAdaptiveRenderScalePercent > mAdaptiveRenderScaleUpBasePercent) &&
@@ -1272,12 +1346,13 @@ void MR_GameApp::UpdateAdaptiveRenderScale(DWORD pFrameMs)
 	mAdaptiveRenderScaleAccumulatedMs = 0;
 	mAdaptiveRenderScaleSampleCount = 0;
 
-	if((lNow - mAdaptiveRenderScaleLastChangeTick) < gAdaptiveRenderScaleCooldownMs) {
+	if((lNow - mAdaptiveRenderScaleLastChangeTick) < lCooldownMs) {
 		return;
 	}
 
-	if(lAverageFrameMs > gAdaptiveRenderScaleDownThresholdMs && lTargetPercent > lMinPercent) {
+	if(lAverageFrameMs > lDownThresholdMs && lTargetPercent > lMinPercent) {
 		mAdaptiveRenderScaleGoodSampleCount = 0;
+		mAdaptiveRenderScaleDownChainCount++;
 		if(lRecentUpscaleFailure) {
 			mAdaptiveRenderScaleMaxPercent = min(mAdaptiveRenderScaleMaxPercent, mAdaptiveRenderScaleUpBasePercent);
 			lTargetPercent = max(lMinPercent, mAdaptiveRenderScaleMaxPercent);
@@ -1289,6 +1364,7 @@ void MR_GameApp::UpdateAdaptiveRenderScale(DWORD pFrameMs)
 	}
 	else if(lAverageFrameMs < gAdaptiveRenderScaleUpThresholdMs && lTargetPercent < mAdaptiveRenderScaleMaxPercent) {
 		mAdaptiveRenderScaleGoodSampleCount++;
+		mAdaptiveRenderScaleDownChainCount = 0;
 		if(mAdaptiveRenderScaleGoodSampleCount >= gAdaptiveRenderScaleUpSampleWindows) {
 			mAdaptiveRenderScaleGoodSampleCount = 0;
 			if(mAdaptiveRenderScaleUpBasePercent == 0) {
@@ -1299,10 +1375,14 @@ void MR_GameApp::UpdateAdaptiveRenderScale(DWORD pFrameMs)
 	}
 	else {
 		mAdaptiveRenderScaleGoodSampleCount = 0;
+		mAdaptiveRenderScaleDownChainCount = 0;
 	}
 
 	if(lTargetPercent != mAdaptiveRenderScalePercent) {
 		mAdaptiveRenderScaleGoodSampleCount = 0;
+		if(lTargetPercent > mAdaptiveRenderScalePercent) {
+			mAdaptiveRenderScaleDownChainCount = 0;
+		}
 		mAdaptiveRenderScaleLastChangeTick = lNow;
 		if(lTargetPercent > mAdaptiveRenderScalePercent) {
 			mAdaptiveRenderScaleLastIncreaseTick = lNow;
@@ -1591,12 +1671,18 @@ void MR_GameApp::OnDisplayChange()
 
 	if(!IsIconic(mMainWindow)) {
 		if(GetClientRect(mMainWindow, &lClientRect)) {
+			int lClientWidth = lClientRect.right - lClientRect.left;
+			int lClientHeight = lClientRect.bottom - lClientRect.top;
 			if((mVideoBuffer != NULL) && mVideoBuffer->IsWindowMode()) {
-				int lClientWidth = lClientRect.right - lClientRect.left;
-				int lClientHeight = lClientRect.bottom - lClientRect.top;
 				lWindowSizeChanged =
 					(lClientWidth != mVideoBuffer->GetDisplayXRes()) ||
 					(lClientHeight != mVideoBuffer->GetDisplayYRes());
+				if(lWindowSizeChanged) {
+					RememberAdaptiveRenderScaleForSize(
+						mVideoBuffer->GetDisplayXRes(),
+						mVideoBuffer->GetDisplayYRes(),
+						mAppliedRenderScalePercent);
+				}
 			}
 
 			POINT lUpperLeft = { lClientRect.left, lClientRect.top };
@@ -1652,7 +1738,10 @@ void MR_GameApp::OnDisplayChange()
 				else {
 					if(mVideoBuffer->IsWindowMode()) {
 						if(lWindowSizeChanged) {
-							ResetAdaptiveRenderScaleForResize();
+							ResetAdaptiveRenderScaleForResize(
+								GetCachedAdaptiveRenderScaleForSize(
+									lClientRect.right - lClientRect.left,
+									lClientRect.bottom - lClientRect.top));
 						}
 
 						PauseGameThread();
@@ -2306,6 +2395,10 @@ void MR_GameApp::EnterDesktopFullscreen()
 
 	mDesktopFullscreen = true;
 	SetTimer(mMainWindow, MRM_VALIDATE_DESKTOP_FULLSCREEN, 500, NULL);
+	RememberAdaptiveRenderScaleForSize(
+		mVideoBuffer->GetDisplayXRes(),
+		mVideoBuffer->GetDisplayYRes(),
+		mAppliedRenderScalePercent);
 	mVideoBuffer->SetVideoMode();
 	AssignPalette();
 
@@ -2346,6 +2439,10 @@ void MR_GameApp::ExitDesktopFullscreen()
 		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
 
 	mDesktopFullscreenDevice[0] = '\0';
+	RememberAdaptiveRenderScaleForSize(
+		mVideoBuffer->GetDisplayXRes(),
+		mVideoBuffer->GetDisplayYRes(),
+		mAppliedRenderScalePercent);
 	mVideoBuffer->SetVideoMode();
 	AssignPalette();
 }
@@ -2373,6 +2470,10 @@ void MR_GameApp::RefreshDesktopFullscreenPlacement()
 
 	ApplyDesktopFullscreenRect(monitorRect);
 
+	RememberAdaptiveRenderScaleForSize(
+		mVideoBuffer->GetDisplayXRes(),
+		mVideoBuffer->GetDisplayYRes(),
+		mAppliedRenderScalePercent);
 	mVideoBuffer->SetVideoMode();
 	AssignPalette();
 
@@ -3299,6 +3400,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, !cfg->misc.displayFirstScreen, 0);
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, cfg->video.nativeBppFullscreen, 0);
 			SendDlgItemMessage(pWindow, IDC_USE_ORIGINAL_CAMERA_PARAMS, BM_SETCHECK, cfg->video.useOriginalCameraParams, 0);
+			SendDlgItemMessage(pWindow, IDC_ADAPTIVE_RENDER_SCALE, BM_SETCHECK, cfg->video.adaptiveRenderScale, 0);
 			SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_SETCHECK, cfg->misc.directConnect, 0);
 
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
@@ -3319,11 +3421,15 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					cfg->misc.introMovie = !SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
-					cfg->misc.displayFirstScreen = !SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
-					cfg->video.nativeBppFullscreen = (SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0) != FALSE);
-					cfg->video.useOriginalCameraParams = (SendDlgItemMessage(pWindow, IDC_USE_ORIGINAL_CAMERA_PARAMS, BM_GETCHECK, 0, 0) != FALSE);
-					cfg->misc.directConnect = (SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_GETCHECK, 0, 0) != FALSE);
+					{
+						const BOOL lOldUseOriginalCameraParams = cfg->video.useOriginalCameraParams;
+
+						cfg->misc.introMovie = !SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
+						cfg->misc.displayFirstScreen = !SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
+						cfg->video.nativeBppFullscreen = (SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0) != FALSE);
+						cfg->video.useOriginalCameraParams = (SendDlgItemMessage(pWindow, IDC_USE_ORIGINAL_CAMERA_PARAMS, BM_GETCHECK, 0, 0) != FALSE);
+						cfg->video.adaptiveRenderScale = (SendDlgItemMessage(pWindow, IDC_ADAPTIVE_RENDER_SCALE, BM_GETCHECK, 0, 0) != FALSE);
+						cfg->misc.directConnect = (SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_GETCHECK, 0, 0) != FALSE);
 
 					{
 						char lBuffer[80];
@@ -3349,7 +3455,42 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						cfg->net.udpRecvPort = atoi(lBuffer);
 					}
 
-					This->SaveRegistry();
+						if(lOldUseOriginalCameraParams != cfg->video.useOriginalCameraParams &&
+							This->mVideoBuffer != NULL &&
+							!This->mVideoBuffer->IsModeSettingInProgress())
+						{
+							if(This->mObserver1 != NULL) This->mObserver1->InvalidateViewportMetrics();
+							if(This->mObserver2 != NULL) This->mObserver2->InvalidateViewportMetrics();
+							if(This->mObserver3 != NULL) This->mObserver3->InvalidateViewportMetrics();
+							if(This->mObserver4 != NULL) This->mObserver4->InvalidateViewportMetrics();
+
+							This->PauseGameThread();
+							This->mClrScrTodo = 2;
+
+							if(This->mVideoBuffer->IsWindowMode()) {
+								This->mVideoBuffer->SetVideoMode();
+								This->RestartGameThread();
+								if(This->mMainWindow != NULL) {
+									PostMessage(This->mMainWindow, WM_QUERYNEWPALETTE, 0, 0);
+								}
+							}
+							else {
+								int lXRes = This->mVideoBuffer->GetDisplayXRes();
+								int lYRes = This->mVideoBuffer->GetDisplayYRes();
+								if(lXRes <= 0) {
+									lXRes = This->mVideoBuffer->GetXRes();
+								}
+								if(lYRes <= 0) {
+									lYRes = This->mVideoBuffer->GetYRes();
+								}
+								This->mVideoBuffer->SetVideoMode(lXRes, lYRes);
+								This->AssignPalette();
+								This->RestartGameThread();
+							}
+						}
+
+						This->SaveRegistry();
+					}
 					break;
 
 			}

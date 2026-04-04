@@ -575,7 +575,7 @@ BEGIN
     CTEXT           "Submitting result to server...\nPlease wait",IDC_STATIC,27,13,109,21
 END
 
-IDD_MISC DIALOGEX 0, 0, 277, 126
+IDD_MISC DIALOGEX 0, 0, 277, 138
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
@@ -583,15 +583,17 @@ BEGIN
     CONTROL         "Disable the prompt to connect to the Internet each time HoverRace starts",IDC_SHOW_INTERNET,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,250,10
     CONTROL         "Use original camera parameters",IDC_USE_ORIGINAL_CAMERA_PARAMS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,185,10
-    LTEXT           "Address of Server Roomlist:",IDC_STATIC,7,51,169,8
-    EDITTEXT        IDC_MAINSERVER,7,61,218,12,ES_AUTOHSCROLL
-    LTEXT           "UDP Receive Port:",IDC_STATIC,7,107,63,10
-    EDITTEXT        IDC_UDP_RECV_PORT,69,106,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "TCP Receive Port:",IDC_STATIC,7,94,63,10
-    EDITTEXT        IDC_TCP_RECV_PORT,69,93,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_TCP_SERV_PORT,69,80,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "TCP Server Port:",IDC_STATIC,7,81,59,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,31,185,10
+    CONTROL         "Adaptive render scaling",IDC_ADAPTIVE_RENDER_SCALE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,43,185,10
+    LTEXT           "Address of Server Roomlist:",IDC_STATIC,7,62,169,8
+    EDITTEXT        IDC_MAINSERVER,7,72,218,12,ES_AUTOHSCROLL
+    LTEXT           "UDP Receive Port:",IDC_STATIC,7,118,63,10
+    EDITTEXT        IDC_UDP_RECV_PORT,69,117,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "TCP Receive Port:",IDC_STATIC,7,105,63,10
+    EDITTEXT        IDC_TCP_RECV_PORT,69,104,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_TCP_SERV_PORT,69,91,30,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "TCP Server Port:",IDC_STATIC,7,92,59,10
 END
 
 

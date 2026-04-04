@@ -66,6 +66,7 @@ MR_Observer::MR_Observer()
 	mSplitMode = eNotSplit;
 
 	mCockpitView = FALSE;
+	mForceViewportMetricsRefresh = FALSE;
 
 	MR_ObjectFromFactoryId lBaseFontId = { 1, 1000 };
 	mBaseFont = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lBaseFontId);
@@ -106,6 +107,11 @@ void MR_Observer::Delete()
 void MR_Observer::SetCockpitView(BOOL pOn)
 {
 	mCockpitView = pOn;
+}
+
+void MR_Observer::InvalidateViewportMetrics()
+{
+	mForceViewportMetricsRefresh = TRUE;
 }
 
 void MR_Observer::Scroll(int pOffset)
@@ -998,9 +1004,11 @@ void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSess
 			break;
 	}
 
-	mWireFrameView.Setup(pDest, 0, lYOffset, lXRes / 2, lYRes / 2, mApperture);
-	m3DView.Setup(pDest, 0, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture);
-	m2DDebugView.Setup(pDest, lXRes / 2, lYOffset, lXRes / 2, lYRes);
+	const int lForceMetrics = mForceViewportMetricsRefresh ? 8 : 0;
+	mWireFrameView.Setup(pDest, 0, lYOffset, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
+	m3DView.Setup(pDest, 0, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
+	m2DDebugView.Setup(pDest, lXRes / 2, lYOffset, lXRes / 2, lYRes, lForceMetrics);
+	mForceViewportMetricsRefresh = FALSE;
 
 	if(pViewingCharacter->mRoom != -1) {
 		const MR_Level *lLevel = pSession->GetCurrentLevel();
@@ -1106,7 +1114,9 @@ void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const MR_ClientSes
 	int lXMargin = (mXMargin_1024 * lXRes / 1024) & 0xFFFFFFFC;
 	int lYMargin = lYMargin_1024 * lYRes / 1024;
 
-	m3DView.Setup(pDest, lXOffset + lXMargin, lYOffset + lYMargin, lXRes - 2 * lXMargin, lYRes - 2 * lYMargin, mApperture);
+	m3DView.Setup(pDest, lXOffset + lXMargin, lYOffset + lYMargin, lXRes - 2 * lXMargin, lYRes - 2 * lYMargin,
+		mApperture, mForceViewportMetricsRefresh ? 8 : 0);
+	mForceViewportMetricsRefresh = FALSE;
 
 	// Clear screen if needed
 	if(lXMargin > 0) {

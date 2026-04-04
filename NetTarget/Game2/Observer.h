@@ -46,6 +46,7 @@ class MR_Observer
 	private:
 		BOOL mLastCameraPosValid;
 		BOOL mCockpitView;
+		BOOL mForceViewportMetricsRefresh;
 
 		MR_2DViewPort m2DDebugView;
 		MR_3DViewPort mWireFrameView;
@@ -99,6 +100,7 @@ class MR_Observer
 		void PlayersListPageDn();
 
 		void SetCockpitView(BOOL pOn);
+		void InvalidateViewportMetrics();
 
 		void SetSplitMode(eSplitMode pMode);
 
