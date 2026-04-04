@@ -55,6 +55,8 @@ class MR_VideoBuffer
 		GUID mRequestedAdapterGuid;
 		BOOL mCurrentAdapterGuidValid;
 		GUID mCurrentAdapterGuid;
+		BOOL mUseGdiWindowedPresentFallback;
+		int mWindowedInvalidRectStreak;
 
 		LONG mOriginalExStyle;					  // Only valid if mFullScreen
 		LONG mOriginalStyle;					  // Only valid if mFullScreen
@@ -75,7 +77,9 @@ class MR_VideoBuffer
 			DWORD mShift;
 			DWORD mSize;
 			Channel():mShift(0), mSize(0) {
-			} void SetMask(DWORD mask);
+			}
+			void SetMask(DWORD mask);
+			DWORD GetMask() const;
 			DWORD Pack(DWORD intensity) const;
 		};
 		Channel mRChan, mGChan, mBChan;
@@ -101,6 +105,8 @@ class MR_VideoBuffer
 		BOOL PrepareWindowedAdapter();
 		void SetRequestedAdapterForMonitor(HMONITOR pMonitor);
 		BOOL IsCurrentAdapterRequested() const;
+		void ResetWindowedPresentFallback();
+		BOOL PresentWindowedWithGdi();
 		BOOL InitDirectDraw();
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();

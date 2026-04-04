@@ -358,10 +358,17 @@ namespace {
 		unsigned long lockFailures;
 		unsigned long unlockFailures;
 		unsigned long flipFailures;
+		unsigned long invalidRectFlipFailures;
+		unsigned long gdiPresentCount;
+		unsigned long gdiPresentFailures;
+		unsigned long gdiFallbackActivations;
 
 		RenderLogStats() :
 			lockCount(0), unlockCount(0), flipCount(0),
-			lockFailures(0), unlockFailures(0), flipFailures(0)
+			lockFailures(0), unlockFailures(0), flipFailures(0),
+			invalidRectFlipFailures(0),
+			gdiPresentCount(0), gdiPresentFailures(0),
+			gdiFallbackActivations(0)
 		{
 		}
 	};
@@ -375,14 +382,18 @@ namespace {
 
 	void LogRenderStats(const char *label)
 	{
-		PRINT_LOG("%s renderStats lock=%lu unlock=%lu flip=%lu lockFail=%lu unlockFail=%lu flipFail=%lu",
+		PRINT_LOG("%s renderStats lock=%lu unlock=%lu flip=%lu lockFail=%lu unlockFail=%lu flipFail=%lu invalidRectFlipFail=%lu gdiPresent=%lu gdiPresentFail=%lu gdiFallbackActivations=%lu",
 			label,
 			gRenderLogStats.lockCount,
 			gRenderLogStats.unlockCount,
 			gRenderLogStats.flipCount,
 			gRenderLogStats.lockFailures,
 			gRenderLogStats.unlockFailures,
-			gRenderLogStats.flipFailures);
+			gRenderLogStats.flipFailures,
+			gRenderLogStats.invalidRectFlipFailures,
+			gRenderLogStats.gdiPresentCount,
+			gRenderLogStats.gdiPresentFailures,
+			gRenderLogStats.gdiFallbackActivations);
 	}
 
 	void FormatGuid(const GUID *guid, char *buffer, size_t bufferSize)
@@ -523,6 +534,19 @@ void MR_VideoBuffer::Channel::SetMask(DWORD mask)
 	}
 }
 
+DWORD MR_VideoBuffer::Channel::GetMask() const
+{
+	if(mSize == 0) {
+		return 0;
+	}
+
+	if(mSize >= 32) {
+		return 0xffffffffUL;
+	}
+
+	return (((DWORD) 1 << mSize) - 1) << mShift;
+}
+
 // Packs a value into the bitmask for this channel.
 DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity) const
 {
@@ -568,6 +592,8 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 		GetSystemMetrics(SM_CYSCREEN));
 	mRequestedAdapterGuidValid = FALSE;
 	mCurrentAdapterGuidValid = FALSE;
+	mUseGdiWindowedPresentFallback = FALSE;
+	mWindowedInvalidRectStreak = 0;
 
 	// backported from newer VideoBuffer.cpp
 	// Load DirectDraw.
@@ -654,6 +680,134 @@ BOOL MR_VideoBuffer::IsCurrentAdapterRequested() const
 
 	return !mRequestedAdapterGuidValid ||
 		IsEqualGUID(mRequestedAdapterGuid, mCurrentAdapterGuid);
+}
+
+void MR_VideoBuffer::ResetWindowedPresentFallback()
+{
+	mUseGdiWindowedPresentFallback = FALSE;
+	mWindowedInvalidRectStreak = 0;
+}
+
+BOOL MR_VideoBuffer::PresentWindowedWithGdi()
+{
+	struct DibBufferInfo
+	{
+		BITMAPINFOHEADER header;
+		DWORD masks[3];
+		RGBQUAD colors[256];
+	};
+
+	if((mWindow == NULL) || (mBackBuffer == NULL)) {
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback unavailable window=%p backBuffer=%p",
+			mWindow, mBackBuffer);
+		return FALSE;
+	}
+
+	if(mBpp <= 8) {
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback unsupported bpp=%lu", mBpp);
+		return FALSE;
+	}
+
+	const WORD dibBpp =
+		(mBpp <= 16) ? 16 :
+		((mBpp <= 24) ? 24 : 32);
+	if(dibBpp == 0 || mXRes <= 0 || mYRes <= 0) {
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback invalid geometry size=%dx%d bpp=%lu",
+			mXRes, mYRes, mBpp);
+		return FALSE;
+	}
+
+	DDSURFACEDESC surfaceDesc;
+	memset(&surfaceDesc, 0, sizeof(surfaceDesc));
+	surfaceDesc.dwSize = sizeof(surfaceDesc);
+	if(DD_CALL(mBackBuffer->Lock(NULL, &surfaceDesc,
+		DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, NULL)) != DD_OK)
+	{
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback could not lock back buffer");
+		return FALSE;
+	}
+
+	const int sourceStride = surfaceDesc.lPitch;
+	const int packedStride = ((mXRes * dibBpp + 31) / 32) * 4;
+	const int copyStride = (sourceStride < packedStride) ? sourceStride : packedStride;
+	const MR_UInt8 *surfaceBits =
+		reinterpret_cast<const MR_UInt8*>(surfaceDesc.lpSurface);
+	MR_UInt8 *packedBits = NULL;
+	const void *dibBits = surfaceBits;
+
+	if(sourceStride != packedStride) {
+		packedBits = new MR_UInt8[packedStride * mYRes];
+		memset(packedBits, 0, packedStride * mYRes);
+		for(int y = 0; y < mYRes; y++) {
+			memcpy(packedBits + (packedStride * y),
+				surfaceBits + (sourceStride * y),
+				copyStride);
+		}
+		dibBits = packedBits;
+	}
+
+	DibBufferInfo dibInfo;
+	memset(&dibInfo, 0, sizeof(dibInfo));
+	dibInfo.header.biSize = sizeof(dibInfo.header);
+	dibInfo.header.biWidth = mXRes;
+	dibInfo.header.biHeight = -mYRes;
+	dibInfo.header.biPlanes = 1;
+	dibInfo.header.biBitCount = dibBpp;
+	dibInfo.header.biSizeImage = packedStride * mYRes;
+
+	if(dibBpp == 16 || dibBpp == 32) {
+		dibInfo.header.biCompression = BI_BITFIELDS;
+		dibInfo.masks[0] = mRChan.GetMask();
+		dibInfo.masks[1] = mGChan.GetMask();
+		dibInfo.masks[2] = mBChan.GetMask();
+	}
+	else {
+		dibInfo.header.biCompression = BI_RGB;
+	}
+
+	HDC windowDc = GetDC(mWindow);
+	BOOL success = FALSE;
+	DWORD lastError = 0;
+	gRenderLogStats.gdiPresentCount++;
+
+	if(windowDc == NULL) {
+		lastError = GetLastError();
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback GetDC failed err=%lu", lastError);
+	}
+	else {
+		SetStretchBltMode(windowDc, COLORONCOLOR);
+		int result = StretchDIBits(windowDc,
+			0, 0, mXRes, mYRes,
+			0, 0, mXRes, mYRes,
+			dibBits,
+			reinterpret_cast<BITMAPINFO*>(&dibInfo),
+			DIB_RGB_COLORS,
+			SRCCOPY);
+		if(result == GDI_ERROR) {
+			lastError = GetLastError();
+			gRenderLogStats.gdiPresentFailures++;
+			PRINT_LOG("GDI windowed present fallback StretchDIBits failed err=%lu stride=%d packedStride=%d bpp=%u",
+				lastError, sourceStride, packedStride, dibBpp);
+		}
+		else {
+			success = TRUE;
+		}
+		ReleaseDC(mWindow, windowDc);
+	}
+
+	if(DD_CALL(mBackBuffer->Unlock(NULL)) != DD_OK) {
+		gRenderLogStats.gdiPresentFailures++;
+		PRINT_LOG("GDI windowed present fallback unlock failed");
+		success = FALSE;
+	}
+
+	delete[]packedBits;
+	return success;
 }
 
 BOOL MR_VideoBuffer::InitDirectDraw()
@@ -1078,6 +1232,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
+	ResetWindowedPresentFallback();
 
 	if(GetWindowRect(mWindow, &windowRect)) {
 		LogRect("SetVideoMode(Window) window", windowRect);
@@ -1224,6 +1379,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
+	ResetWindowedPresentFallback();
 
 	PrepareDesktopFullscreen(NULL);
 	lReturnValue = InitDirectDraw();
@@ -1633,6 +1789,13 @@ void MR_VideoBuffer::Flip()
 	}
 	else {
 		// We are in a window, use normal blitting
+		if(mUseGdiWindowedPresentFallback) {
+			if(!PresentWindowedWithGdi()) {
+				gRenderLogStats.flipFailures++;
+			}
+			return;
+		}
+
 		int lX0 = mFullScreen ? 0 : mX0;
 		int lY0 = mFullScreen ? 0 : mY0;
 
@@ -1642,8 +1805,29 @@ void MR_VideoBuffer::Flip()
 		lErrorCode = DD_CALL(mFrontBuffer->Blt(&lDestRectangle, mBackBuffer, &lSrcRectangle, DDBLT_WAIT, NULL));
 
 		if(lErrorCode != DD_OK) {
+			if(lErrorCode == DDERR_INVALIDRECT) {
+				gRenderLogStats.invalidRectFlipFailures++;
+				mWindowedInvalidRectStreak++;
+
+				if(mWindowedInvalidRectStreak >= 3) {
+					mUseGdiWindowedPresentFallback = TRUE;
+					gRenderLogStats.gdiFallbackActivations++;
+					PRINT_LOG("Activating GDI windowed present fallback after %d consecutive DDERR_INVALIDRECT failures origin=%d,%d size=%dx%d",
+						mWindowedInvalidRectStreak, mX0, mY0, mXRes, mYRes);
+					if(PresentWindowedWithGdi()) {
+						return;
+					}
+				}
+			}
+			else {
+				mWindowedInvalidRectStreak = 0;
+			}
+
 			// ASSERT( FALSE );
 			gRenderLogStats.flipFailures++;
+		}
+		else {
+			mWindowedInvalidRectStreak = 0;
 		}
 	}
 }
