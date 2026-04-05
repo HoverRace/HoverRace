@@ -594,6 +594,8 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	mCurrentAdapterGuidValid = FALSE;
 	mUseGdiWindowedPresentFallback = FALSE;
 	mWindowedInvalidRectStreak = 0;
+	mWindowedPresentFailureStreak = 0;
+	mWindowedPresentFailureHr = DD_OK;
 
 	// backported from newer VideoBuffer.cpp
 	// Load DirectDraw.
@@ -686,6 +688,8 @@ void MR_VideoBuffer::ResetWindowedPresentFallback()
 {
 	mUseGdiWindowedPresentFallback = FALSE;
 	mWindowedInvalidRectStreak = 0;
+	mWindowedPresentFailureStreak = 0;
+	mWindowedPresentFailureHr = DD_OK;
 }
 
 BOOL MR_VideoBuffer::PresentWindowedWithGdi()
@@ -1805,22 +1809,34 @@ void MR_VideoBuffer::Flip()
 		lErrorCode = DD_CALL(mFrontBuffer->Blt(&lDestRectangle, mBackBuffer, &lSrcRectangle, DDBLT_WAIT, NULL));
 
 		if(lErrorCode != DD_OK) {
+			mWindowedPresentFailureStreak++;
+			mWindowedPresentFailureHr = lErrorCode;
+
 			if(lErrorCode == DDERR_INVALIDRECT) {
 				gRenderLogStats.invalidRectFlipFailures++;
 				mWindowedInvalidRectStreak++;
-
-				if(mWindowedInvalidRectStreak >= 3) {
-					mUseGdiWindowedPresentFallback = TRUE;
-					gRenderLogStats.gdiFallbackActivations++;
-					PRINT_LOG("Activating GDI windowed present fallback after %d consecutive DDERR_INVALIDRECT failures origin=%d,%d size=%dx%d",
-						mWindowedInvalidRectStreak, mX0, mY0, mXRes, mYRes);
-					if(PresentWindowedWithGdi()) {
-						return;
-					}
-				}
 			}
 			else {
 				mWindowedInvalidRectStreak = 0;
+			}
+
+			if(mWindowedInvalidRectStreak >= 3) {
+				mUseGdiWindowedPresentFallback = TRUE;
+				gRenderLogStats.gdiFallbackActivations++;
+				PRINT_LOG("Activating GDI windowed present fallback after %d consecutive DDERR_INVALIDRECT failures origin=%d,%d render=%dx%d display=%dx%d",
+					mWindowedInvalidRectStreak, mX0, mY0, mXRes, mYRes, lDestXRes, lDestYRes);
+				if(PresentWindowedWithGdi()) {
+					return;
+				}
+			}
+			else if(mWindowedPresentFailureStreak >= 3) {
+				mUseGdiWindowedPresentFallback = TRUE;
+				gRenderLogStats.gdiFallbackActivations++;
+				PRINT_LOG("Activating GDI windowed present fallback after %d consecutive windowed Blt failures hr=%ld origin=%d,%d render=%dx%d display=%dx%d",
+					mWindowedPresentFailureStreak, (long)mWindowedPresentFailureHr, mX0, mY0, mXRes, mYRes, lDestXRes, lDestYRes);
+				if(PresentWindowedWithGdi()) {
+					return;
+				}
 			}
 
 			// ASSERT( FALSE );
@@ -1828,6 +1844,8 @@ void MR_VideoBuffer::Flip()
 		}
 		else {
 			mWindowedInvalidRectStreak = 0;
+			mWindowedPresentFailureStreak = 0;
+			mWindowedPresentFailureHr = DD_OK;
 		}
 	}
 }

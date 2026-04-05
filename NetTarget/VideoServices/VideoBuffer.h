@@ -57,6 +57,8 @@ class MR_VideoBuffer
 		GUID mCurrentAdapterGuid;
 		BOOL mUseGdiWindowedPresentFallback;
 		int mWindowedInvalidRectStreak;
+		int mWindowedPresentFailureStreak;
+		HRESULT mWindowedPresentFailureHr;
 
 		LONG mOriginalExStyle;					  // Only valid if mFullScreen
 		LONG mOriginalStyle;					  // Only valid if mFullScreen
