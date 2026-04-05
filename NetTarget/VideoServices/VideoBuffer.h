@@ -33,6 +33,10 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+struct MR_OpenGLState;
+class MR_GpuSceneRenderer;
+class MR_Bitmap;
+
 class MR_VideoBuffer
 {
 
@@ -92,6 +96,31 @@ class MR_VideoBuffer
 
 		MR_UInt16 *mZBuffer;
 		MR_UInt8 *mBuffer;
+		MR_UInt8 *mRenderSurface;
+		MR_UInt8 *mPaletteTexture;
+		BOOL mPaletteDirty;
+		MR_OpenGLState *mOpenGLState;
+		MR_GpuSceneRenderer *mGpuSceneRenderer;
+		int mOpenGLPresentFailureLogCount;
+		int mOpenGLFrameTraceLogCount;
+		BOOL mOpenGLLoggedPresentPath;
+		DWORD mStagePerfAccumulatedClearMs;
+		DWORD mStagePerfAccumulatedBackgroundMs;
+		DWORD mStagePerfAccumulatedClearZMs;
+		DWORD mStagePerfAccumulatedFloorMs;
+		DWORD mStagePerfAccumulatedWallMs;
+		DWORD mStagePerfAccumulatedWallSetupMs;
+		DWORD mStagePerfAccumulatedWallLoopMs;
+		DWORD mStagePerfAccumulatedActorMs;
+		DWORD mStagePerfMaxClearMs;
+		DWORD mStagePerfMaxBackgroundMs;
+		DWORD mStagePerfMaxClearZMs;
+		DWORD mStagePerfMaxFloorMs;
+		DWORD mStagePerfMaxWallMs;
+		DWORD mStagePerfMaxWallSetupMs;
+		DWORD mStagePerfMaxWallLoopMs;
+		DWORD mStagePerfMaxActorMs;
+		int mStagePerfSampleCount;
 
 		MR_UInt8 *mBackPalette;
 
@@ -114,6 +143,14 @@ class MR_VideoBuffer
 		void ResetWindowedPresentFallback();
 		BOOL PresentWindowedWithGdi();
 		BOOL InitDirectDraw();
+		BOOL InitOpenGL();
+		void ReleaseOpenGL();
+		BOOL EnsureOpenGLResources();
+		BOOL PresentOpenGL();
+		void RenderGpuSceneOverlay();
+		unsigned int GetOrCreateGpuBitmapTexture(const MR_Bitmap *pBitmap, int pSubBitmap,
+			int &pWidth, int &pHeight);
+		void SetOpenGLColorFromPaletteIndex(MR_UInt8 pColorIndex, unsigned char pAlpha) const;
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();
 		void ReleaseDirectDraw();
@@ -145,6 +182,11 @@ class MR_VideoBuffer
 		MR_DllDeclare void CreatePalette(double pGamma, double pContrast, double pBrightness);
 		MR_DllDeclare void GetPaletteAttrib(double &pGamma, double &pContrast, double &pBrightness);
 		MR_DllDeclare void SetBackPalette(MR_UInt8 * pPalette);
+		MR_DllDeclare MR_GpuSceneRenderer *GetGpuSceneRenderer() const;
+		MR_DllDeclare void LogPerformanceSample(DWORD pFrameAvgMs, DWORD pCpuAvgMs, DWORD pPresentAvgMs,
+			DWORD pFrameMaxMs, DWORD pCpuMaxMs, DWORD pPresentMaxMs, int pSampleCount);
+		MR_DllDeclare void LogRenderStageSample(DWORD pClearMs, DWORD pBackgroundMs, DWORD pClearZMs, DWORD pFloorMs,
+			DWORD pWallMs, DWORD pWallSetupMs, DWORD pWallLoopMs, DWORD pActorMs);
 
 		// Buffers manipulation
 		MR_DllDeclare BOOL Lock();				  // Must be called before drawing

@@ -545,11 +545,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		if(lRefreshView) {
 			MR_SAMPLE_START(Refresh, "Refresh");
-			DWORD lRefreshStart = GetTickCount();
 			lThis->mGameApp->RefreshView();
-			DWORD lRefreshEnd = GetTickCount();
 			lThis->mGameApp->mNbFrames++;
-			lThis->mGameApp->UpdateAdaptiveRenderScale(lRefreshEnd - lRefreshStart);
 			MR_SAMPLE_END(Refresh);
 		}
 
@@ -654,6 +651,13 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	memset(mAdaptiveRenderScaleCacheHeight, 0, sizeof(mAdaptiveRenderScaleCacheHeight));
 	memset(mAdaptiveRenderScaleCachePercent, 0, sizeof(mAdaptiveRenderScaleCachePercent));
 	mAdaptiveRenderScaleCacheNext = 0;
+	mRenderPerfAccumulatedFrameMs = 0;
+	mRenderPerfAccumulatedCpuMs = 0;
+	mRenderPerfAccumulatedPresentMs = 0;
+	mRenderPerfMaxFrameMs = 0;
+	mRenderPerfMaxCpuMs = 0;
+	mRenderPerfMaxPresentMs = 0;
+	mRenderPerfSampleCount = 0;
 
 	mCurrentMode = e3DView;
 
@@ -1500,6 +1504,10 @@ BOOL MR_GameApp::InitGame()
 void MR_GameApp::RefreshView()
 {
 	static int lColor = 0;
+	DWORD frameStartTick = GetTickCount();
+	DWORD cpuEndTick = frameStartTick;
+	DWORD presentEndTick = frameStartTick;
+	BOOL sampledFrame = FALSE;
 
 	// Game processing
 	if(mVideoBuffer != NULL) {
@@ -1543,8 +1551,16 @@ void MR_GameApp::RefreshView()
 
 			} else
 			mVideoBuffer->Clear((MR_UInt8) (lColor++));
+			cpuEndTick = GetTickCount();
 			mVideoBuffer->Unlock();
+			presentEndTick = GetTickCount();
+			sampledFrame = TRUE;
 		}
+	}
+	if(sampledFrame) {
+		AccumulateRenderPerformanceSample(presentEndTick - frameStartTick,
+			cpuEndTick - frameStartTick,
+			presentEndTick - cpuEndTick);
 	}
 	// Sound refresh
 	if(mCurrentSession != NULL) {
@@ -1558,6 +1574,43 @@ void MR_GameApp::RefreshView()
 			mObserver4->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter4());
 
 		MR_SoundServer::ApplyContinuousPlay();
+	}
+}
+
+void MR_GameApp::AccumulateRenderPerformanceSample(DWORD pFrameMs, DWORD pCpuMs, DWORD pPresentMs)
+{
+	enum { PERF_LOG_SAMPLE_COUNT = 120 };
+
+	mRenderPerfAccumulatedFrameMs += pFrameMs;
+	mRenderPerfAccumulatedCpuMs += pCpuMs;
+	mRenderPerfAccumulatedPresentMs += pPresentMs;
+	if(pFrameMs > mRenderPerfMaxFrameMs) {
+		mRenderPerfMaxFrameMs = pFrameMs;
+	}
+	if(pCpuMs > mRenderPerfMaxCpuMs) {
+		mRenderPerfMaxCpuMs = pCpuMs;
+	}
+	if(pPresentMs > mRenderPerfMaxPresentMs) {
+		mRenderPerfMaxPresentMs = pPresentMs;
+	}
+	mRenderPerfSampleCount++;
+
+	if((mVideoBuffer != NULL) && (mRenderPerfSampleCount >= PERF_LOG_SAMPLE_COUNT)) {
+		mVideoBuffer->LogPerformanceSample(
+			mRenderPerfAccumulatedFrameMs / mRenderPerfSampleCount,
+			mRenderPerfAccumulatedCpuMs / mRenderPerfSampleCount,
+			mRenderPerfAccumulatedPresentMs / mRenderPerfSampleCount,
+			mRenderPerfMaxFrameMs,
+			mRenderPerfMaxCpuMs,
+			mRenderPerfMaxPresentMs,
+			mRenderPerfSampleCount);
+		mRenderPerfAccumulatedFrameMs = 0;
+		mRenderPerfAccumulatedCpuMs = 0;
+		mRenderPerfAccumulatedPresentMs = 0;
+		mRenderPerfMaxFrameMs = 0;
+		mRenderPerfMaxCpuMs = 0;
+		mRenderPerfMaxPresentMs = 0;
+		mRenderPerfSampleCount = 0;
 	}
 }
 
@@ -3400,7 +3453,6 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, !cfg->misc.displayFirstScreen, 0);
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, cfg->video.nativeBppFullscreen, 0);
 			SendDlgItemMessage(pWindow, IDC_USE_ORIGINAL_CAMERA_PARAMS, BM_SETCHECK, cfg->video.useOriginalCameraParams, 0);
-			SendDlgItemMessage(pWindow, IDC_ADAPTIVE_RENDER_SCALE, BM_SETCHECK, cfg->video.adaptiveRenderScale, 0);
 			SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_SETCHECK, cfg->misc.directConnect, 0);
 
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
@@ -3428,7 +3480,6 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						cfg->misc.displayFirstScreen = !SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
 						cfg->video.nativeBppFullscreen = (SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0) != FALSE);
 						cfg->video.useOriginalCameraParams = (SendDlgItemMessage(pWindow, IDC_USE_ORIGINAL_CAMERA_PARAMS, BM_GETCHECK, 0, 0) != FALSE);
-						cfg->video.adaptiveRenderScale = (SendDlgItemMessage(pWindow, IDC_ADAPTIVE_RENDER_SCALE, BM_GETCHECK, 0, 0) != FALSE);
 						cfg->misc.directConnect = (SendDlgItemMessage(pWindow, IDC_DIRECT_CONNECT, BM_GETCHECK, 0, 0) != FALSE);
 
 					{

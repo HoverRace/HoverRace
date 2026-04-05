@@ -109,11 +109,20 @@ void MR_2DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX
 
 void MR_2DViewPort::Clear(MR_UInt8 pColor)
 {
-	MR_UInt8 *lBuffer = mBuffer;
+	if((mBuffer == NULL) || (mXRes <= 0) || (mYRes <= 0)) {
+		return;
+	}
 
-	for(int lCounter = 0; lCounter < mYRes; lCounter++) {
-		memset(lBuffer, pColor, mXRes);
-		lBuffer += mLineLen;
+	if(mLineLen == mXRes) {
+		memset(mBuffer, pColor, static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes));
+	}
+	else {
+		MR_UInt8 *lBuffer = mBuffer;
+
+		for(int lCounter = 0; lCounter < mYRes; lCounter++) {
+			memset(lBuffer, pColor, mXRes);
+			lBuffer += mLineLen;
+		}
 	}
 }
 

@@ -32,6 +32,32 @@
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
+namespace
+{
+	LONGLONG GetHighResolutionTick()
+	{
+		LARGE_INTEGER counter;
+		QueryPerformanceCounter(&counter);
+		return counter.QuadPart;
+	}
+
+	DWORD HighResolutionElapsedMs(LONGLONG pStartTick, LONGLONG pEndTick)
+	{
+		static LONGLONG sFrequency = 0;
+		if(sFrequency == 0) {
+			LARGE_INTEGER frequency;
+			QueryPerformanceFrequency(&frequency);
+			sFrequency = frequency.QuadPart;
+		}
+
+		if((pEndTick <= pStartTick) || (sFrequency <= 0)) {
+			return 0;
+		}
+
+		return static_cast<DWORD>(((pEndTick - pStartTick) * 1000 + (sFrequency / 2)) / sFrequency);
+	}
+}
+
 CString gRankTitle = Ascii2Simple(MR_LoadString(IDS_RANK_TITLE));
 CString gHitTitle = Ascii2Simple(MR_LoadString(IDS_HIT_TITLE));
 
@@ -384,8 +410,16 @@ void MR_Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pS
 
 }
 
-void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
+	DWORD lClearMs = 0;
+	DWORD lBackgroundMs = 0;
+	DWORD lClearZMs = 0;
+	DWORD lFloorMs = 0;
+	DWORD lWallMs = 0;
+	DWORD lActorMs = 0;
+	LONGLONG lStageTick = 0;
+	LONGLONG lStageEndTick = 0;
 
 	const MR_Level *lLevel = pSession->GetCurrentLevel();
 
@@ -433,28 +467,38 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	mLastCameraPosValid = TRUE;
 
 	m3DView.SetupCameraPosition(lCameraPos, lOrientation, mScroll);
+	m3DView.BeginGpuSceneFrame();
 
 	MR_SAMPLE_START(Clear, "ClearScreen");
-
 	// Clear background
 	if(pBackImage == NULL) {
+		lStageTick = GetHighResolutionTick();
 		m3DView.Clear(0);						  // Will have to be replace by a bitmapped background
+		lStageEndTick = GetHighResolutionTick();
+		lClearMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 	}
 	else {
+		lStageTick = GetHighResolutionTick();
 		m3DView.RenderBackground(pBackImage);
+		lStageEndTick = GetHighResolutionTick();
+		lBackgroundMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 	}
 
 	MR_SAMPLE_END(Clear);
 	MR_SAMPLE_START(ClearZ, "ClearZScreen");
+	lStageTick = GetHighResolutionTick();
 
 	m3DView.ClearZ();
 
 	MR_SAMPLE_END(ClearZ);
+	lStageEndTick = GetHighResolutionTick();
+	lClearZMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 
 	int lCounter;
 
 	// Floor and ceiling drawing
 	MR_SAMPLE_START(FloorRendering, "Floor Rendering");
+	lStageTick = GetHighResolutionTick();
 
 	int lTotalSections = lLevel->GetNbVisibleSurface(lRoom);
 	const MR_SectionId *lFloorList = lLevel->GetVisibleFloorList(lRoom);
@@ -470,9 +514,13 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	}
 
 	MR_SAMPLE_END(FloorRendering);
+	lStageEndTick = GetHighResolutionTick();
+	lFloorMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 
 	// Draw the walls and features of the visibles rooms
 	MR_SAMPLE_START(WallRendering, "Wall Rendering");
+	lStageTick = GetHighResolutionTick();
+	m3DView.ResetWallTimingStats();
 
 	int lRoomCount;
 	const int *lRoomList = lLevel->GetVisibleZones(lRoom, lRoomCount);
@@ -499,9 +547,12 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	}
 
 	MR_SAMPLE_END(WallRendering);
+	lStageEndTick = GetHighResolutionTick();
+	lWallMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 
 	// Draw all the elements of the visibles room
 	MR_SAMPLE_START(ActorRendering, "Actor Rendering");
+	lStageTick = GetHighResolutionTick();
 
 	for(lCounter = -1; lCounter < lRoomCount; lCounter++) {
 		int lRoomId;
@@ -829,6 +880,15 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	}
 
 	MR_SAMPLE_END(ActorRendering);
+	lStageEndTick = GetHighResolutionTick();
+	lActorMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
+
+	if(pDest != NULL) {
+		pDest->LogRenderStageSample(lClearMs, lBackgroundMs, lClearZMs, lFloorMs, lWallMs,
+			m3DView.GetWallSetupTimingMs(), m3DView.GetWallLoopTimingMs(), lActorMs);
+	}
+
+	m3DView.EndGpuSceneFrame();
 
 }
 
@@ -1015,7 +1075,7 @@ void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSess
 
 		Render2DDebugView(pDest, lLevel, pViewingCharacter);
 		RenderWireFrameView(lLevel, pViewingCharacter);
-		Render3DView(pSession, pViewingCharacter, pTime, pBackImage);
+		Render3DView(pDest, pSession, pViewingCharacter, pTime, pBackImage);
 	}
 
 }
@@ -1127,7 +1187,7 @@ void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const MR_ClientSes
 	}
 
 	if(pViewingCharacter->mRoom != -1) {
-		Render3DView(pSession, pViewingCharacter, pTime, pBackImage);
+		Render3DView(pDest, pSession, pViewingCharacter, pTime, pBackImage);
 	}
 }
 

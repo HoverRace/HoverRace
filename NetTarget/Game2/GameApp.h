@@ -102,6 +102,13 @@ class MR_GameApp
 		int mAdaptiveRenderScaleCacheHeight[ADAPTIVE_RENDER_SCALE_CACHE_SIZE];
 		int mAdaptiveRenderScaleCachePercent[ADAPTIVE_RENDER_SCALE_CACHE_SIZE];
 		int mAdaptiveRenderScaleCacheNext;
+		DWORD mRenderPerfAccumulatedFrameMs;
+		DWORD mRenderPerfAccumulatedCpuMs;
+		DWORD mRenderPerfAccumulatedPresentMs;
+		DWORD mRenderPerfMaxFrameMs;
+		DWORD mRenderPerfMaxCpuMs;
+		DWORD mRenderPerfMaxPresentMs;
+		int mRenderPerfSampleCount;
 
 		int mClrScrTodo;
 
@@ -135,6 +142,7 @@ class MR_GameApp
 		void RequestAdaptiveRenderScale(int pPercent);
 		void ApplyAdaptiveRenderScale(int pPercent);
 		void UpdateAdaptiveRenderScale(DWORD pFrameMs);
+		void AccumulateRenderPerformanceSample(DWORD pFrameMs, DWORD pCpuMs, DWORD pPresentMs);
 		void RememberAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes, int pPercent);
 		int GetCachedAdaptiveRenderScaleForSize(int pDisplayXRes, int pDisplayYRes) const;
 

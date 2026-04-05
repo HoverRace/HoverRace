@@ -162,7 +162,6 @@
 #define IDC_TCP_SERV_PORT               1089
 #define IDC_MSG_LBL                     1089
 #define IDC_USE_ORIGINAL_CAMERA_PARAMS  1090
-#define IDC_ADAPTIVE_RENDER_SCALE       1091
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774

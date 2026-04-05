@@ -23,10 +23,32 @@
 #include "stdafx.h"
 
 #include "3DViewport.h"
+#include "GpuSceneRenderer.h"
 #include "../Util/FastMemManip.h"
 #include "../Util/Config.h"
 
 #include <math.h>
+
+namespace {
+	long long GetPerfTick()
+	{
+		LARGE_INTEGER counter;
+		QueryPerformanceCounter(&counter);
+		return counter.QuadPart;
+	}
+
+	DWORD PerfTicksToMs(long long ticks)
+	{
+		static LARGE_INTEGER frequency = {0};
+		if(frequency.QuadPart == 0) {
+			QueryPerformanceFrequency(&frequency);
+		}
+		if((ticks <= 0) || (frequency.QuadPart <= 0)) {
+			return 0;
+		}
+		return static_cast<DWORD>((ticks * 1000) / frequency.QuadPart);
+	}
+}
 
 // Methods implementation
 MR_3DViewPort::MR_3DViewPort()
@@ -39,6 +61,10 @@ MR_3DViewPort::MR_3DViewPort()
 	mBufferLine = NULL;
 	mZBufferLine = NULL;
 	mBackgroundConst = NULL;
+	mBackgroundSourceColumn = NULL;
+	mBackgroundRowIndex_1024 = NULL;
+	mWallSetupTicks = 0;
+	mWallLoopTicks = 0;
 
 }
 
@@ -47,6 +73,19 @@ MR_3DViewPort::~MR_3DViewPort()
 	delete[]mBufferLine;
 	delete[]mZBufferLine;
 	delete[]mBackgroundConst;
+	delete[]mBackgroundSourceColumn;
+	delete[]mBackgroundRowIndex_1024;
+}
+
+MR_GpuScenePositionMatrix MR_3DViewPort::BuildGpuScenePositionMatrix(const MR_PositionMatrix &pMatrix) const
+{
+	MR_GpuScenePositionMatrix matrix;
+	matrix.mRotation[0][0] = pMatrix.mRotation[0][0];
+	matrix.mRotation[0][1] = pMatrix.mRotation[0][1];
+	matrix.mRotation[1][0] = pMatrix.mRotation[1][0];
+	matrix.mRotation[1][1] = pMatrix.mRotation[1][1];
+	matrix.mDisplacement = pMatrix.mDisplacement;
+	return matrix;
 }
 
 void MR_3DViewPort::OnMetricsChange(int pMetrics)
@@ -92,9 +131,13 @@ void MR_3DViewPort::OnMetricsChange(int pMetrics)
 	if(pMetrics & eBuffer) {
 		delete[]mBufferLine;
 		delete[]mZBufferLine;
+		delete[]mBackgroundSourceColumn;
+		delete[]mBackgroundRowIndex_1024;
 
 		mBufferLine = new MR_UInt8 *[mYRes];
 		mZBufferLine = new MR_UInt16 *[mYRes];
+		mBackgroundSourceColumn = new const MR_UInt8 *[mXRes];
+		mBackgroundRowIndex_1024 = new MR_Int32[mXRes];
 
 		MR_UInt8 *lLineBuffer = mBuffer;
 		MR_UInt16 *lZLineBuffer = mZBuffer;
@@ -136,6 +179,56 @@ void MR_3DViewPort::SetupCameraPosition(const MR_3DCoordinate & pPosition, MR_An
 	mScroll = pScroll * mYRes / 8;
 
 	ComputeRotationMatrix();
+}
+
+void MR_3DViewPort::BeginGpuSceneFrame()
+{
+	if((mVideoBuffer == NULL) || (mBuffer == NULL)) {
+		return;
+	}
+
+	MR_GpuSceneRenderer *renderer = mVideoBuffer->GetGpuSceneRenderer();
+	if(renderer == NULL || !renderer->IsEnabled()) {
+		return;
+	}
+
+	RECT viewport;
+	viewport.left = 0;
+	viewport.top = 0;
+	viewport.right = mXRes;
+	viewport.bottom = mYRes;
+	renderer->BeginFrame(viewport, mPosition, mOrientation, mScroll,
+		mPlanDist, mPlanHW, mPlanVW);
+}
+
+void MR_3DViewPort::EndGpuSceneFrame()
+{
+	if(mVideoBuffer == NULL) {
+		return;
+	}
+
+	MR_GpuSceneRenderer *renderer = mVideoBuffer->GetGpuSceneRenderer();
+	if(renderer == NULL || !renderer->IsEnabled()) {
+		return;
+	}
+
+	renderer->EndFrame();
+}
+
+void MR_3DViewPort::ResetWallTimingStats()
+{
+	mWallSetupTicks = 0;
+	mWallLoopTicks = 0;
+}
+
+DWORD MR_3DViewPort::GetWallSetupTimingMs() const
+{
+	return PerfTicksToMs(mWallSetupTicks);
+}
+
+DWORD MR_3DViewPort::GetWallLoopTimingMs() const
+{
+	return PerfTicksToMs(mWallLoopTicks);
 }
 
 void MR_3DViewPort::ComputeBackgroundConst()
@@ -306,12 +399,20 @@ void MR_3DViewPort::ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const
 
 void MR_3DViewPort::ClearZ()
 {
+	if((mZBuffer == NULL) || (mXRes <= 0) || (mYRes <= 0)) {
+		return;
+	}
 
-	MR_UInt16 *lZBuffer = mZBuffer;
+	if(mZLineLen == mXRes) {
+		memset(mZBuffer, 0xFF, static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * sizeof(MR_UInt16));
+	}
+	else {
+		MR_UInt16 *lZBuffer = mZBuffer;
 
-	for(int lCounter = 0; lCounter < mYRes; lCounter++) {
-		memset(lZBuffer, -1, 2 * mXRes);
-		lZBuffer += mZLineLen;
+		for(int lCounter = 0; lCounter < mYRes; lCounter++) {
+			memset(lZBuffer, 0xFF, sizeof(MR_UInt16) * mXRes);
+			lZBuffer += mZLineLen;
+		}
 	}
 }
 

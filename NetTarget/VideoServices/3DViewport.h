@@ -25,6 +25,7 @@
 #include "2DViewport.h"
 #include "ColorPalette.h"
 #include "Bitmap.h"
+#include "GpuSceneRenderer.h"
 #include "Patch.h"
 
 #ifdef MR_VIDEO_SERVICES
@@ -70,6 +71,10 @@ class MR_3DViewPort:public MR_2DViewPort
 
 		MR_UInt8 **mBufferLine;
 		MR_UInt16 **mZBufferLine;
+		const MR_UInt8 **mBackgroundSourceColumn;
+		MR_Int32 *mBackgroundRowIndex_1024;
+		long long mWallSetupTicks;
+		long long mWallLoopTicks;
 
 		// Usefull pre-defined constants
 		MR_Int32 mHVarPerDInc_16384;			  // Ray divergence by HPixel
@@ -83,6 +88,7 @@ class MR_3DViewPort:public MR_2DViewPort
 		BackColumn *mBackgroundConst;			  // Constants used to display each bitmap column
 
 		MR_Int32 mRotationMatrix[3][3];
+		MR_GpuScenePositionMatrix BuildGpuScenePositionMatrix(const MR_PositionMatrix &pMatrix) const;
 
 		void ComputeRotationMatrix();
 		void ComputeBackgroundConst();
@@ -119,6 +125,11 @@ class MR_3DViewPort:public MR_2DViewPort
 		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor);
 
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
+		MR_DllDeclare void BeginGpuSceneFrame();
+		MR_DllDeclare void EndGpuSceneFrame();
+		MR_DllDeclare void ResetWallTimingStats();
+		MR_DllDeclare DWORD GetWallSetupTimingMs() const;
+		MR_DllDeclare DWORD GetWallLoopTimingMs() const;
 };
 
 // Local constants (Used by the cpp of this module)
