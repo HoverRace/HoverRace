@@ -3108,6 +3108,16 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			continue;
 		}
 
+		// Backface culling: replicate CPU formula from RenderHorizontalSurface.
+		// A ceiling (mTop=TRUE) is only visible when camera is above (level >= cameraZ).
+		// A floor (mTop=FALSE) is only visible when camera is below (level <= cameraZ).
+		{
+			const MR_Int32 lLevel = lSurface.mLevel - lFrame.mCameraPosition.mZ;
+			if((lSurface.mTop && (lLevel < 0)) || (!lSurface.mTop && (lLevel > 0))) {
+				continue;
+			}
+		}
+
 		const double lBitmapWidthMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetWidth()));
 		const double lBitmapHeightMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetHeight()));
 
