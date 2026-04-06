@@ -2051,7 +2051,7 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 		// The CPU buffer was cleared to mGpuClearColorIndex; HUD elements
 		// have been drawn with other palette indices. Make the clear color
 		// transparent so only the HUD shows through.
-		if(mRenderSurface != NULL && mOpenGLState->shaderReady) {
+		if(0 && mRenderSurface != NULL && mOpenGLState->shaderReady) {
 			// Temporarily set clear color's alpha to 0 in the palette
 			const int lPaletteIdx = mGpuClearColorIndex * 4 + 3;
 			const MR_UInt8 lSavedAlpha = mPaletteTexture[lPaletteIdx];
@@ -2061,6 +2061,7 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
 				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
 
+			// Restore palette RAM immediately (GL texture keeps alpha=0 for this frame)
 			mPaletteTexture[lPaletteIdx] = lSavedAlpha;
 
 			// Upload CPU framebuffer as indexed texture
@@ -2096,6 +2097,13 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 
 			gGL.UseProgram(0);
 			glDisable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+
+			// Re-upload the original palette (with correct alpha) so the next
+			// frame's scene rendering isn't affected by the transparent clear color
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
+				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
 		}
 
 		if(!SwapBuffers(mOpenGLState->windowDc)) {
