@@ -2048,62 +2048,60 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 		RenderGpuSceneOverlay();
 
 		// Draw CPU framebuffer (HUD/overlay elements) on top of GPU scene.
-		// The CPU buffer was cleared to mGpuClearColorIndex; HUD elements
-		// have been drawn with other palette indices. Make the clear color
-		// transparent so only the HUD shows through.
-		if(0 && mRenderSurface != NULL && mOpenGLState->shaderReady) {
-			// Temporarily set clear color's alpha to 0 in the palette
-			const int lPaletteIdx = mGpuClearColorIndex * 4 + 3;
-			const MR_UInt8 lSavedAlpha = mPaletteTexture[lPaletteIdx];
-			mPaletteTexture[lPaletteIdx] = 0;
+		// Convert palette-indexed pixels to RGBA with the clear color as
+		// transparent, then draw with alpha blending.
+		if(mRenderSurface != NULL && mPaletteTexture != NULL) {
+			const size_t lPixelCount = static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes);
+			std::vector<MR_UInt8> lHudRgba(lPixelCount * 4);
+			BOOL lHasHudPixels = FALSE;
 
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
-				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
+			for(size_t i = 0; i < lPixelCount; i++) {
+				const MR_UInt8 lIdx = mRenderSurface[i];
+				const size_t lDest = i * 4;
+				if(lIdx == mGpuClearColorIndex) {
+					lHudRgba[lDest + 0] = 0;
+					lHudRgba[lDest + 1] = 0;
+					lHudRgba[lDest + 2] = 0;
+					lHudRgba[lDest + 3] = 0;
+				}
+				else {
+					lHudRgba[lDest + 0] = mPaletteTexture[lIdx * 4 + 0];
+					lHudRgba[lDest + 1] = mPaletteTexture[lIdx * 4 + 1];
+					lHudRgba[lDest + 2] = mPaletteTexture[lIdx * 4 + 2];
+					lHudRgba[lDest + 3] = 255;
+					lHasHudPixels = TRUE;
+				}
+			}
 
-			// Restore palette RAM immediately (GL texture keeps alpha=0 for this frame)
-			mPaletteTexture[lPaletteIdx] = lSavedAlpha;
+			if(lHasHudPixels) {
+				if(gGL.UseProgram != NULL) {
+					gGL.UseProgram(0);
+				}
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glEnable(GL_TEXTURE_2D);
 
-			// Upload CPU framebuffer as indexed texture
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mXRes, mYRes,
-				GL_LUMINANCE, GL_UNSIGNED_BYTE, mRenderSurface);
+				glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mXRes, mYRes, 0,
+					GL_RGBA, GL_UNSIGNED_BYTE, &lHudRgba[0]);
 
-			// Draw with palette shader and alpha blending
-			glDisable(GL_DEPTH_TEST);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
 
-			gGL.UseProgram(mOpenGLState->shaderProgram);
-			gGL.ActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
-			gGL.ActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
-			gGL.ActiveTexture(GL_TEXTURE0);
+				glColor4ub(255, 255, 255, 255);
+				glBegin(GL_TRIANGLE_STRIP);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
+				glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
+				glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
+				glEnd();
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-
-			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
-			glEnd();
-
-			gGL.UseProgram(0);
-			glDisable(GL_BLEND);
-			glEnable(GL_DEPTH_TEST);
-
-			// Re-upload the original palette (with correct alpha) so the next
-			// frame's scene rendering isn't affected by the transparent clear color
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
-				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
+				glDisable(GL_BLEND);
+				glDisable(GL_TEXTURE_2D);
+			}
 		}
 
 		if(!SwapBuffers(mOpenGLState->windowDc)) {
