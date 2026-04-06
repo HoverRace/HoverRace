@@ -2089,10 +2089,12 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 
 				// Use glDrawPixels with pixel zoom to blit the RGBA HUD overlay.
 				// This avoids texture state issues with the shared frameTexture.
+				// Negative Y zoom flips the image vertically since the CPU buffer
+				// is stored top-to-bottom but glDrawPixels draws bottom-to-top.
 				const GLfloat lZoomX = static_cast<GLfloat>(mDisplayXRes) / static_cast<GLfloat>(mXRes);
 				const GLfloat lZoomY = static_cast<GLfloat>(mDisplayYRes) / static_cast<GLfloat>(mYRes);
-				glPixelZoom(lZoomX, lZoomY);
-				glRasterPos2f(-1.0f, -1.0f);
+				glPixelZoom(lZoomX, -lZoomY);
+				glRasterPos2f(-1.0f, 1.0f);
 				glDrawPixels(mXRes, mYRes, GL_RGBA, GL_UNSIGNED_BYTE, &lHudRgba[0]);
 				glPixelZoom(1.0f, 1.0f);
 
@@ -2770,17 +2772,24 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const GLfloat lU0 = lBaseU - lFovFraction * 0.5f;
 		const GLfloat lU1 = lBaseU + lFovFraction * 0.5f;
 
-		// V range: the background occupies the upper portion of the screen.
-		// In the texture, row 0 (V=0) is ground, row 255 (V=1) is sky.
-		// In NDC, top of screen (Y=1) should show sky (V=1), bottom shows ground (V=0).
-		// CPU rendering: background fills from horizon (mYRes/2 + mScroll) upward to top,
-		// with a small extension below horizon (mYRes/8). In NDC, the bottom edge is:
-		//   y = 1.0 - 2.0 * (mYRes/2 + mScroll + mYRes/8) / mYRes = -0.25 - 2.0 * scroll/height
+		// V range: match CPU background mapping.
+		// CPU uses lBaseSrcIndex = MR_BACK_Y_RES / 9 as the horizon row in the bitmap.
+		// From horizon upward, it advances by lineIncrement per viewport row.
+		// At center column: lineIncrement = MR_BACK_Y_RES * mPlanVW / (mPlanDist * mYRes/2)
+		// Over mYRes/2 rows: total advance = MR_BACK_Y_RES * mPlanVW / mPlanDist
+		// So V_top = (1/9 + mPlanVW/mPlanDist), V_horizon = 1/9,
+		// V_bottom = (1/9 - mPlanVW/(4*mPlanDist)) for the mYRes/8 extension below horizon.
+		const GLfloat lVwOverDist = static_cast<GLfloat>(lFrame.mPlanVW)
+			/ static_cast<GLfloat>(max(1, lFrame.mPlanDist));
+		const GLfloat lHorizonV = 1.0f / 9.0f;
+		const GLfloat lVTop = min(1.0f, lHorizonV + lVwOverDist);
+		const GLfloat lVBottom = max(0.0f, lHorizonV - lVwOverDist / 4.0f);
+
+		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
+		// Horizon NDC y ≈ -2.0 * scroll/height; bottom = horizon - 0.25.
 		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
 			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
-		const GLfloat lBgBottom = max(-1.0f, 0.0f - lScrollNorm * 2.0f);
-		const GLfloat lVTop = 1.0f;
-		const GLfloat lVBottom = 0.0f;
+		const GLfloat lBgBottom = max(-1.0f, -0.25f - lScrollNorm * 2.0f);
 
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
