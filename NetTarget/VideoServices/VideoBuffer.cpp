@@ -1473,6 +1473,7 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	mPaletteDirty = FALSE;
 	mOpenGLState = NULL;
 	mGpuSceneRenderer = NULL;
+	mGpuClearColorIndex = 0;
 	mOpenGLPresentFailureLogCount = 0;
 	mOpenGLFrameTraceLogCount = 0;
 	mOpenGLLoggedPresentPath = FALSE;
@@ -2045,6 +2046,57 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 		}
 
 		RenderGpuSceneOverlay();
+
+		// Draw CPU framebuffer (HUD/overlay elements) on top of GPU scene.
+		// The CPU buffer was cleared to mGpuClearColorIndex; HUD elements
+		// have been drawn with other palette indices. Make the clear color
+		// transparent so only the HUD shows through.
+		if(mRenderSurface != NULL && mOpenGLState->shaderReady) {
+			// Temporarily set clear color's alpha to 0 in the palette
+			const int lPaletteIdx = mGpuClearColorIndex * 4 + 3;
+			const MR_UInt8 lSavedAlpha = mPaletteTexture[lPaletteIdx];
+			mPaletteTexture[lPaletteIdx] = 0;
+
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
+				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
+
+			mPaletteTexture[lPaletteIdx] = lSavedAlpha;
+
+			// Upload CPU framebuffer as indexed texture
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mXRes, mYRes,
+				GL_LUMINANCE, GL_UNSIGNED_BYTE, mRenderSurface);
+
+			// Draw with palette shader and alpha blending
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			gGL.UseProgram(mOpenGLState->shaderProgram);
+			gGL.ActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
+			gGL.ActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
+			gGL.ActiveTexture(GL_TEXTURE0);
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
+			glEnd();
+
+			gGL.UseProgram(0);
+			glDisable(GL_BLEND);
+		}
 
 		if(!SwapBuffers(mOpenGLState->windowDc)) {
 			if(mOpenGLPresentFailureLogCount < 10) {
@@ -2724,7 +2776,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		//   y = 1.0 - 2.0 * (mYRes/2 + mScroll + mYRes/8) / mYRes = -0.25 - 2.0 * scroll/height
 		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
 			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
-		const GLfloat lBgBottom = max(-1.0f, -0.25f - lScrollNorm * 2.0f);
+		const GLfloat lBgBottom = max(-1.0f, 0.0f - lScrollNorm * 2.0f);
 		const GLfloat lVTop = 1.0f;
 		const GLfloat lVBottom = 0.0f;
 
@@ -2780,6 +2832,20 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 		if((lWall.mPrimaryBitmap == NULL) || (lWallHeight <= 0.0)) {
 			continue;
+		}
+
+		// Backface check: only render walls facing the camera.
+		// Wall normal points to the left of the UL→LR direction.
+		{
+			const double lWallDX = static_cast<double>(lWall.mLowerRight.mX - lWall.mUpperLeft.mX);
+			const double lWallDY = static_cast<double>(lWall.mLowerRight.mY - lWall.mUpperLeft.mY);
+			const double lNormalX = -lWallDY;
+			const double lNormalY = lWallDX;
+			const double lToCamX = static_cast<double>(lFrame.mCameraPosition.mX - lWall.mUpperLeft.mX);
+			const double lToCamY = static_cast<double>(lFrame.mCameraPosition.mY - lWall.mUpperLeft.mY);
+			if((lNormalX * lToCamX + lNormalY * lToCamY) < 0.0) {
+				continue;
+			}
 		}
 
 		// Transform the 4 wall corners to camera space
@@ -3880,6 +3946,12 @@ void MR_VideoBuffer::Clear(MR_UInt8 pColor)
 {
 	if(IsGpuRenderFullEnabled() && (mGpuSceneRenderer != NULL)
 		&& mGpuSceneRenderer->IsEnabled()) {
+		// Still clear the CPU buffer so the HUD overlay has a clean canvas.
+		// Track the clear color so PresentOpenGL can make it transparent.
+		mGpuClearColorIndex = pColor;
+		if(mBuffer != NULL) {
+			memset(mBuffer, pColor, mLineLen * mYRes);
+		}
 		return;
 	}
 

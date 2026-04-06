@@ -101,6 +101,7 @@ class MR_VideoBuffer
 		BOOL mPaletteDirty;
 		MR_OpenGLState *mOpenGLState;
 		MR_GpuSceneRenderer *mGpuSceneRenderer;
+		MR_UInt8 mGpuClearColorIndex;
 		int mOpenGLPresentFailureLogCount;
 		int mOpenGLFrameTraceLogCount;
 		BOOL mOpenGLLoggedPresentPath;
