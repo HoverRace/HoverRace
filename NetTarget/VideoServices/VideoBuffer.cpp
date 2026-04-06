@@ -2616,10 +2616,11 @@ unsigned int MR_VideoBuffer::GetOrCreateGpuBitmapTexture(const MR_Bitmap *pBitma
 	}
 
 	glBindTexture(GL_TEXTURE_2D, lTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, 0x8191 /*GL_GENERATE_MIPMAP*/, GL_TRUE);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pWidth, pHeight, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, &lRgbBuffer[0]);
@@ -2707,20 +2708,23 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
 		glColor4ub(255, 255, 255, 255);
 
-		// U is based on camera orientation: orientation wraps around the panorama
-		const GLfloat lBaseU = static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
+		// U is based on camera orientation: orientation wraps around the panorama.
+		// CPU formula: baseBitmapColumn = (MR_BACK_X_RES + ((MR_PI/2 - mOrientation) * MR_BACK_X_RES / MR_2PI))
+		// So the base U coordinate is (PI/2 - orientation) / 2PI = 0.25 - orientation/2PI.
+		const GLfloat lBaseU = 0.25f - static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
 		// The panorama covers a horizontal FOV, compute the span
 		const GLfloat lFovFraction = static_cast<GLfloat>(
 			atan2(static_cast<double>(lFrame.mPlanHW), static_cast<double>(lFrame.mPlanDist)) * 2.0 / 6.28318530718);
 		const GLfloat lU0 = lBaseU - lFovFraction * 0.5f;
 		const GLfloat lU1 = lBaseU + lFovFraction * 0.5f;
 
-		// V range: the background occupies the upper portion of the screen
-		// Use scroll to determine vertical placement
+		// V range: the background occupies the upper portion of the screen.
+		// In the texture, row 0 (V=0) is ground, row 255 (V=1) is sky.
+		// In NDC, top of screen (Y=1) should show sky (V=1), bottom shows ground (V=0).
 		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
 			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
-		const GLfloat lVTop = 0.0f;
-		const GLfloat lVBottom = 1.0f;
+		const GLfloat lVTop = 1.0f;
+		const GLfloat lVBottom = 0.0f;
 
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
