@@ -2126,6 +2126,7 @@ void MR_3DViewPort::RenderBackground(const MR_UInt8 * pBitmap)
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
 		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitBackground(pBitmap);
+		return;
 	}
 
 	int lStartingLine = mYRes / 2 - 1 + mScroll;

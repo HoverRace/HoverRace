@@ -2007,12 +2007,61 @@ BOOL MR_VideoBuffer::EnsureOpenGLResources()
 	return TRUE;
 }
 
+static BOOL IsGpuRenderFullEnabled()
+{
+	static int sResult = -1;
+	if(sResult == -1) {
+		char buffer[8] = { 0 };
+		DWORD len = GetEnvironmentVariableA("HOVERRACE_GPU_RENDER_FULL", buffer, sizeof(buffer));
+		sResult = ((len > 0) && (len < sizeof(buffer)) && (buffer[0] != '0')) ? 1 : 0;
+	}
+	return (sResult == 1);
+}
+
 BOOL MR_VideoBuffer::PresentOpenGL()
 {
 	OpenGLShaderBringupMode shaderMode = GetOpenGLShaderBringupMode();
 	BOOL useShaderPath = mOpenGLState != NULL &&
 		mOpenGLState->shaderReady &&
 		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW);
+
+	// Full GPU rendering mode: skip CPU framebuffer entirely
+	if(IsGpuRenderFullEnabled() && (mOpenGLState != NULL)
+		&& (mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled()
+		&& mOpenGLState->sceneShaderReady) {
+
+		if(!MakeOpenGLCurrent(mOpenGLState)) {
+			mOpenGLPresentFailureLogCount++;
+			return FALSE;
+		}
+
+		glViewport(0, 0, mDisplayXRes, mDisplayYRes);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if(mPaletteDirty && mOpenGLState->paletteTexture != 0) {
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
+				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
+			mPaletteDirty = FALSE;
+		}
+
+		RenderGpuSceneOverlay();
+
+		if(!SwapBuffers(mOpenGLState->windowDc)) {
+			if(mOpenGLPresentFailureLogCount < 10) {
+				PRINT_LOG("PresentOpenGL (full GPU) SwapBuffers failed err=%lu",
+					GetLastError());
+			}
+			mOpenGLPresentFailureLogCount++;
+			ReleaseOpenGLCurrent();
+			return FALSE;
+		}
+
+		mOpenGLPresentFailureLogCount = 0;
+		ReleaseOpenGLCurrent();
+		return TRUE;
+	}
 
 	if((mOpenGLState == NULL) || (mRenderSurface == NULL)) {
 		if(mOpenGLPresentFailureLogCount < 10) {
@@ -3689,6 +3738,11 @@ void MR_VideoBuffer::Flip()
 
 void MR_VideoBuffer::Clear(MR_UInt8 pColor)
 {
+	if(IsGpuRenderFullEnabled() && (mGpuSceneRenderer != NULL)
+		&& mGpuSceneRenderer->IsEnabled()) {
+		return;
+	}
+
 	ASSERT(mBuffer != NULL);
 	if(mOpenGLFrameTraceLogCount < 10) {
 		PRINT_LOG("Clear color=%u lineLen=%d yres=%d", (unsigned) pColor, mLineLen, mYRes);

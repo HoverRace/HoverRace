@@ -399,6 +399,11 @@ void MR_3DViewPort::ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const
 
 void MR_3DViewPort::ClearZ()
 {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
+		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+		return;
+	}
+
 	if((mZBuffer == NULL) || (mXRes <= 0) || (mYRes <= 0)) {
 		return;
 	}
