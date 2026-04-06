@@ -26,6 +26,7 @@
 #include "Bitmap.h"
 #include "ColorPalette.h"
 #include "GpuSceneRenderer.h"
+#include "3DViewport.h"
 
 #include "../Util/Profiler.h"
 #include "../Util/Config.h"
@@ -2602,11 +2603,99 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	}
 
 	if(lFrame.mWalls.empty() && lFrame.mHorizontalSurfaces.empty()
-		&& lFrame.mBitmapPatches.empty() && lFrame.mColorPatches.empty()) {
+		&& lFrame.mBitmapPatches.empty() && lFrame.mColorPatches.empty()
+		&& lFrame.mBackgroundBitmap == NULL) {
 		return;
 	}
 
 	const GLdouble lNearPlane = max(1.0, static_cast<GLdouble>(lFrame.mPlanDist));
+
+	// --- BACKGROUND PANORAMA ---
+	// Render as a fullscreen quad behind all geometry using fixed-function pipeline.
+	// The background is a 2048x256 column-major paletted bitmap.
+	if(lFrame.mBackgroundBitmap != NULL && mOpenGLState != NULL) {
+		// Upload background as a texture (convert from paletted column-major to RGBA row-major)
+		static GLuint sBackgroundTexture = 0;
+		static const MR_UInt8 *sLastBackgroundBitmap = NULL;
+		if(sBackgroundTexture == 0 || sLastBackgroundBitmap != lFrame.mBackgroundBitmap) {
+			if(sBackgroundTexture == 0) {
+				glGenTextures(1, &sBackgroundTexture);
+			}
+			std::vector<MR_UInt8> lRgba(MR_BACK_X_RES * MR_BACK_Y_RES * 4);
+			for(int lX = 0; lX < MR_BACK_X_RES; lX++) {
+				for(int lY = 0; lY < MR_BACK_Y_RES; lY++) {
+					const MR_UInt8 lIndex = lFrame.mBackgroundBitmap[lX * MR_BACK_Y_RES + lY];
+					const int lDest = (lY * MR_BACK_X_RES + lX) * 4;
+					if(mPaletteTexture != NULL) {
+						lRgba[lDest + 0] = mPaletteTexture[lIndex * 4 + 0];
+						lRgba[lDest + 1] = mPaletteTexture[lIndex * 4 + 1];
+						lRgba[lDest + 2] = mPaletteTexture[lIndex * 4 + 2];
+						lRgba[lDest + 3] = 255;
+					}
+					else {
+						lRgba[lDest + 0] = lRgba[lDest + 1] = lRgba[lDest + 2] = lIndex;
+						lRgba[lDest + 3] = 255;
+					}
+				}
+			}
+			glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MR_BACK_X_RES, MR_BACK_Y_RES, 0,
+				GL_RGBA, GL_UNSIGNED_BYTE, &lRgba[0]);
+			sLastBackgroundBitmap = lFrame.mBackgroundBitmap;
+		}
+
+		// Draw background as fullscreen quad in NDC, behind everything
+		if(gGL.UseProgram != NULL) {
+			gGL.UseProgram(0);
+		}
+		glDisable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
+		glColor4ub(255, 255, 255, 255);
+
+		// U is based on camera orientation: orientation wraps around the panorama
+		const GLfloat lBaseU = static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
+		// The panorama covers a horizontal FOV, compute the span
+		const GLfloat lFovFraction = static_cast<GLfloat>(
+			atan2(static_cast<double>(lFrame.mPlanHW), static_cast<double>(lFrame.mPlanDist)) * 2.0 / 6.28318530718);
+		const GLfloat lU0 = lBaseU - lFovFraction * 0.5f;
+		const GLfloat lU1 = lBaseU + lFovFraction * 0.5f;
+
+		// V range: the background occupies the upper portion of the screen
+		// Use scroll to determine vertical placement
+		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
+			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
+		const GLfloat lVTop = 0.0f;
+		const GLfloat lVBottom = 1.0f;
+
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+
+		glBegin(GL_QUADS);
+		glTexCoord2f(lU0, lVTop);    glVertex3f(-1.0f,  1.0f, 0.999f);
+		glTexCoord2f(lU1, lVTop);    glVertex3f( 1.0f,  1.0f, 0.999f);
+		glTexCoord2f(lU1, lVBottom); glVertex3f( 1.0f, -1.0f + lScrollNorm * 2.0f, 0.999f);
+		glTexCoord2f(lU0, lVBottom); glVertex3f(-1.0f, -1.0f + lScrollNorm * 2.0f, 0.999f);
+		glEnd();
+
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+
+		glDisable(GL_TEXTURE_2D);
+		glDepthMask(GL_TRUE);
+	}
 
 	// Vertex batch: all triangles for the frame, grouped by texture
 	std::vector<MR_GpuSceneBatchVertex> lAllVertices;
