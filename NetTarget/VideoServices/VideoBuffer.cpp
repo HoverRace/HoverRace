@@ -2766,11 +2766,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		// CPU formula: baseBitmapColumn = (MR_BACK_X_RES + ((MR_PI/2 - mOrientation) * MR_BACK_X_RES / MR_2PI))
 		// So the base U coordinate is (PI/2 - orientation) / 2PI = 0.25 - orientation/2PI.
 		const GLfloat lBaseU = 0.25f - static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
-		// The panorama covers a horizontal FOV, compute the span
-		const GLfloat lFovFraction = static_cast<GLfloat>(
-			atan2(static_cast<double>(lFrame.mPlanHW), static_cast<double>(lFrame.mPlanDist)) * 2.0 / 6.28318530718);
-		const GLfloat lU0 = lBaseU - lFovFraction * 0.5f;
-		const GLfloat lU1 = lBaseU + lFovFraction * 0.5f;
+		// CPU uses atan() per-column for cylindrical projection of the panorama.
+		// We replicate this by splitting into strips with atan-corrected U coords.
+		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
+		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
 
 		// V range: match CPU background mapping.
 		// CPU uses lBaseSrcIndex = MR_BACK_Y_RES / 9 as the horizon row in the bitmap.
@@ -2798,11 +2797,16 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glPushMatrix();
 		glLoadIdentity();
 
-		glBegin(GL_QUADS);
-		glTexCoord2f(lU0, lVTop);    glVertex3f(-1.0f,  1.0f, 0.999f);
-		glTexCoord2f(lU1, lVTop);    glVertex3f( 1.0f,  1.0f, 0.999f);
-		glTexCoord2f(lU1, lVBottom); glVertex3f( 1.0f, lBgBottom, 0.999f);
-		glTexCoord2f(lU0, lVBottom); glVertex3f(-1.0f, lBgBottom, 0.999f);
+		// Draw as a strip of vertical slices with atan-corrected U for cylindrical projection.
+		const int lBgStrips = 32;
+		glBegin(GL_QUAD_STRIP);
+		for(int lS = 0; lS <= lBgStrips; lS++) {
+			const GLfloat lNdcX = -1.0f + 2.0f * static_cast<GLfloat>(lS) / static_cast<GLfloat>(lBgStrips);
+			const GLfloat lAngle = static_cast<GLfloat>(atan(static_cast<double>(lNdcX) * lBgPlanHW / lBgPlanDist));
+			const GLfloat lU = lBaseU + lAngle / (2.0f * 3.14159265f);
+			glTexCoord2f(lU, lVTop);    glVertex3f(lNdcX,  1.0f, 0.999f);
+			glTexCoord2f(lU, lVBottom); glVertex3f(lNdcX, lBgBottom, 0.999f);
+		}
 		glEnd();
 
 		glMatrixMode(GL_MODELVIEW);
@@ -2843,6 +2847,19 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 		if((lWall.mPrimaryBitmap == NULL) || (lWallHeight <= 0.0)) {
 			continue;
+		}
+
+		// Backface culling: replicate CPU formula from RenderAlternateWallSurface.
+		// Skip wall if camera is on the wrong side (2D cross product test in XY plane).
+		{
+			const long long lCross =
+				static_cast<long long>(lWall.mLowerRight.mY - lWall.mUpperLeft.mY)
+					* static_cast<long long>(lWall.mUpperLeft.mX - lFrame.mCameraPosition.mX)
+				+ static_cast<long long>(-lWall.mLowerRight.mX + lWall.mUpperLeft.mX)
+					* static_cast<long long>(lWall.mUpperLeft.mY - lFrame.mCameraPosition.mY);
+			if(lCross >= 0) {
+				continue;
+			}
 		}
 
 		// Transform the 4 wall corners to camera space
