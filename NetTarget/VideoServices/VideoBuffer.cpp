@@ -2078,29 +2078,25 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 					gGL.UseProgram(0);
 				}
 				glDisable(GL_DEPTH_TEST);
+				glDisable(GL_TEXTURE_2D);
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glEnable(GL_TEXTURE_2D);
-
-				glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mXRes, mYRes, 0,
-					GL_RGBA, GL_UNSIGNED_BYTE, &lHudRgba[0]);
 
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
 
-				glColor4ub(255, 255, 255, 255);
-				glBegin(GL_TRIANGLE_STRIP);
-				glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
-				glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
-				glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
-				glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
-				glEnd();
+				// Use glDrawPixels with pixel zoom to blit the RGBA HUD overlay.
+				// This avoids texture state issues with the shared frameTexture.
+				const GLfloat lZoomX = static_cast<GLfloat>(mDisplayXRes) / static_cast<GLfloat>(mXRes);
+				const GLfloat lZoomY = static_cast<GLfloat>(mDisplayYRes) / static_cast<GLfloat>(mYRes);
+				glPixelZoom(lZoomX, lZoomY);
+				glRasterPos2f(-1.0f, -1.0f);
+				glDrawPixels(mXRes, mYRes, GL_RGBA, GL_UNSIGNED_BYTE, &lHudRgba[0]);
+				glPixelZoom(1.0f, 1.0f);
 
 				glDisable(GL_BLEND);
-				glDisable(GL_TEXTURE_2D);
 			}
 		}
 
