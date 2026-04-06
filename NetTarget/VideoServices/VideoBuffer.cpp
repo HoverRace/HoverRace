@@ -2725,6 +2725,17 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			if(sBackgroundTexture == 0) {
 				glGenTextures(1, &sBackgroundTexture);
 			}
+			// Background bitmap pointer changed → new level loaded.
+			// Clear the scene texture cache to avoid stale textures from
+			// freed MR_Bitmap pointers that may have been reused.
+			if(sLastBackgroundBitmap != NULL) {
+				for(size_t lIdx = 0; lIdx < mOpenGLState->cachedBitmapTextures.size(); lIdx++) {
+					if(mOpenGLState->cachedBitmapTextures[lIdx].texture != 0) {
+						glDeleteTextures(1, &mOpenGLState->cachedBitmapTextures[lIdx].texture);
+					}
+				}
+				mOpenGLState->cachedBitmapTextures.clear();
+			}
 			std::vector<MR_UInt8> lRgba(MR_BACK_X_RES * MR_BACK_Y_RES * 4);
 			for(int lX = 0; lX < MR_BACK_X_RES; lX++) {
 				for(int lY = 0; lY < MR_BACK_Y_RES; lY++) {
@@ -2785,10 +2796,14 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const GLfloat lVBottom = max(0.0f, lHorizonV - lVwOverDist / 4.0f);
 
 		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
-		// Horizon NDC y ≈ -2.0 * scroll/height; bottom = horizon - 0.25.
-		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
-			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
-		const GLfloat lBgBottom = max(-1.0f, -0.25f - lScrollNorm * 2.0f);
+		// CPU horizon at viewport row (mYRes/2 - 1 + mScroll).
+		// NDC y = 1 - 2*(mYRes/2 - 1 + mScroll)/mYRes = 2/mYRes - 2*scroll/mYRes.
+		// Bottom extends mYRes/8 further: y_bottom = 2/mYRes - 2*scroll/mYRes - 0.25.
+		const GLfloat lViewportH = max(1.0f,
+			static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
+		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) / lViewportH;
+		const GLfloat lPixelNdc = 2.0f / lViewportH;
+		const GLfloat lBgBottom = max(-1.0f, lPixelNdc - 0.25f - lScrollNorm * 2.0f);
 
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
