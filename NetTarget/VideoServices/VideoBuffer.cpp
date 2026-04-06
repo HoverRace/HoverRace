@@ -157,20 +157,18 @@ namespace {
 		const double lCameraZ = lDZ;
 		const double lNearPlane = max(1.0, static_cast<double>(pFrame.mPlanDist));
 
-		pCameraVertex.mVisible = FALSE;
-		pCameraVertex.mX = 0.0;
-		pCameraVertex.mY = 0.0;
-		pCameraVertex.mZ = 0.0;
-
-		if(lCameraX < lNearPlane) {
-			return FALSE;
-		}
-
 		// Map HoverRace camera space to OpenGL eye space:
 		// +X right, +Y up, and looking down -Z.
+		// Always compute the position so near-plane clipping can interpolate correctly.
 		pCameraVertex.mX = -lCameraY;
 		pCameraVertex.mY = lCameraZ;
 		pCameraVertex.mZ = -lCameraX;
+
+		if(lCameraX < lNearPlane) {
+			pCameraVertex.mVisible = FALSE;
+			return FALSE;
+		}
+
 		pCameraVertex.mVisible = TRUE;
 		return TRUE;
 	}
@@ -2616,7 +2614,7 @@ unsigned int MR_VideoBuffer::GetOrCreateGpuBitmapTexture(const MR_Bitmap *pBitma
 	}
 
 	glBindTexture(GL_TEXTURE_2D, lTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -2721,8 +2719,12 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		// V range: the background occupies the upper portion of the screen.
 		// In the texture, row 0 (V=0) is ground, row 255 (V=1) is sky.
 		// In NDC, top of screen (Y=1) should show sky (V=1), bottom shows ground (V=0).
+		// CPU rendering: background fills from horizon (mYRes/2 + mScroll) upward to top,
+		// with a small extension below horizon (mYRes/8). In NDC, the bottom edge is:
+		//   y = 1.0 - 2.0 * (mYRes/2 + mScroll + mYRes/8) / mYRes = -0.25 - 2.0 * scroll/height
 		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) /
 			max(1.0f, static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
+		const GLfloat lBgBottom = max(-1.0f, -0.25f - lScrollNorm * 2.0f);
 		const GLfloat lVTop = 1.0f;
 		const GLfloat lVBottom = 0.0f;
 
@@ -2736,8 +2738,8 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glBegin(GL_QUADS);
 		glTexCoord2f(lU0, lVTop);    glVertex3f(-1.0f,  1.0f, 0.999f);
 		glTexCoord2f(lU1, lVTop);    glVertex3f( 1.0f,  1.0f, 0.999f);
-		glTexCoord2f(lU1, lVBottom); glVertex3f( 1.0f, -1.0f + lScrollNorm * 2.0f, 0.999f);
-		glTexCoord2f(lU0, lVBottom); glVertex3f(-1.0f, -1.0f + lScrollNorm * 2.0f, 0.999f);
+		glTexCoord2f(lU1, lVBottom); glVertex3f( 1.0f, lBgBottom, 0.999f);
+		glTexCoord2f(lU0, lVBottom); glVertex3f(-1.0f, lBgBottom, 0.999f);
 		glEnd();
 
 		glMatrixMode(GL_MODELVIEW);
