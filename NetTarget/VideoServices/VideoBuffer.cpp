@@ -2835,49 +2835,183 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			}
 		}
 
-		int lTexW = 0, lTexH = 0;
-		GLuint lTexture = GetOrCreateGpuBitmapTexture(lWall.mPrimaryBitmap, lWallSubBitmap, lTexW, lTexH);
+		// Determine if this wall uses alternate texture animation
+		const BOOL lHasAlternate = (lWall.mAlternateBitmap != NULL)
+			&& (lWall.mSerialLen > 1) && (lBitmapRepeatCount > 1);
 
-		if(lTexture != 0) {
-			MR_GpuSceneBatch lBatch;
-			lBatch.mTexture = lTexture;
-			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-			lBatch.mVertexCount = 0;
+		if(lHasAlternate) {
+			// Split wall into per-tile sub-quads with alternating textures.
+			// CPU code: serialStart decrements each tile; when == 0, use alternate bitmap.
+			int lSerialPos = lWall.mSerialStart;
 
-			// Triangulate clipped polygon as fan
-			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
-				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-					lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
-				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-					lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
-				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-					lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
-				lBatch.mVertexCount += 3;
+			// Get LOD sub-bitmap for alternate texture too
+			int lAltSubBitmap = 0;
+			if(lWall.mAlternateBitmap->GetNbSubBitmap() > 1) {
+				MR_GpuSceneProjectedVertex lProj0, lProj3;
+				if(ProjectGpuSceneVertex(lFrame, lWorldCorners[0], lProj0)
+					&& ProjectGpuSceneVertex(lFrame, lWorldCorners[3], lProj3)) {
+					const int lAltBitmapHeightMm = max(1, lWall.mAlternateBitmap->GetHeight());
+					int lProjHeight = max(1, static_cast<int>(
+						fabs(static_cast<double>(lProj3.mY - lProj0.mY))
+						* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
+					int lTileHeight = lUseFittedHeight
+						? max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount)
+						: max(1, MulDiv(lProjHeight, lAltBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+					lAltSubBitmap = lWall.mAlternateBitmap->GetBestBitmapForYRes(lTileHeight);
+					if(lAltSubBitmap < 0) lAltSubBitmap = 0;
+				}
 			}
 
-			lBatches.push_back(lBatch);
+			for(int lTile = 0; lTile < lBitmapRepeatCount; lTile++) {
+				const double lT0 = static_cast<double>(lTile) / lURepeat;
+				const double lT1 = static_cast<double>(lTile + 1) / lURepeat;
+
+				// Choose bitmap for this tile
+				const MR_Bitmap *lTileBitmap;
+				int lTileSubBitmap;
+				if(lSerialPos == 0) {
+					lTileBitmap = lWall.mAlternateBitmap;
+					lTileSubBitmap = lAltSubBitmap;
+				} else {
+					lTileBitmap = lWall.mPrimaryBitmap;
+					lTileSubBitmap = lWallSubBitmap;
+				}
+
+				// Advance serial position (decrement, wrapping)
+				lSerialPos--;
+				if(lSerialPos < 0) {
+					lSerialPos = lWall.mSerialLen - 1;
+				}
+
+				// Interpolate the 4 corners for this tile sub-quad
+				// Corners 0,3 are at upper-left/lower-left; corners 1,2 are at upper-right/lower-right
+				// lT0 interpolates from left edge, lT1 from right edge
+				MR_3DCoordinate lTileCorners[4];
+				lTileCorners[0].mX = static_cast<MR_Int32>(lWorldCorners[0].mX + lT0 * (lWorldCorners[1].mX - lWorldCorners[0].mX));
+				lTileCorners[0].mY = static_cast<MR_Int32>(lWorldCorners[0].mY + lT0 * (lWorldCorners[1].mY - lWorldCorners[0].mY));
+				lTileCorners[0].mZ = lWorldCorners[0].mZ;
+				lTileCorners[1].mX = static_cast<MR_Int32>(lWorldCorners[0].mX + lT1 * (lWorldCorners[1].mX - lWorldCorners[0].mX));
+				lTileCorners[1].mY = static_cast<MR_Int32>(lWorldCorners[0].mY + lT1 * (lWorldCorners[1].mY - lWorldCorners[0].mY));
+				lTileCorners[1].mZ = lWorldCorners[1].mZ;
+				lTileCorners[2].mX = static_cast<MR_Int32>(lWorldCorners[3].mX + lT1 * (lWorldCorners[2].mX - lWorldCorners[3].mX));
+				lTileCorners[2].mY = static_cast<MR_Int32>(lWorldCorners[3].mY + lT1 * (lWorldCorners[2].mY - lWorldCorners[3].mY));
+				lTileCorners[2].mZ = lWorldCorners[2].mZ;
+				lTileCorners[3].mX = static_cast<MR_Int32>(lWorldCorners[3].mX + lT0 * (lWorldCorners[2].mX - lWorldCorners[3].mX));
+				lTileCorners[3].mY = static_cast<MR_Int32>(lWorldCorners[3].mY + lT0 * (lWorldCorners[2].mY - lWorldCorners[3].mY));
+				lTileCorners[3].mZ = lWorldCorners[3].mZ;
+
+				// Transform and clip this tile sub-quad
+				std::vector<MR_GpuSceneTexturedVertex> lTileClipVerts;
+				lTileClipVerts.reserve(4);
+				// Each tile gets UV [0,1] x [0,vRepeat]
+				GLfloat lTileU[4] = { 0.0f, 1.0f, 1.0f, 0.0f };
+				GLfloat lTileV[4] = { 0.0f, 0.0f, static_cast<GLfloat>(lVRepeat), static_cast<GLfloat>(lVRepeat) };
+
+				for(int lV = 0; lV < 4; lV++) {
+					MR_GpuSceneTexturedVertex lTV;
+					if(!TransformGpuSceneVertexToCameraSpace(lFrame, lTileCorners[lV], lTV.mCamera)) {
+						lTV.mCamera.mVisible = FALSE;
+					}
+					lTV.mU = lTileU[lV];
+					lTV.mV = lTileV[lV];
+					lTileClipVerts.push_back(lTV);
+				}
+
+				ClipGpuSceneTexturedPolygonToNearPlane(lTileClipVerts, -lNearPlane);
+				if(lTileClipVerts.size() < 3) {
+					continue;
+				}
+
+				int lTexW = 0, lTexH = 0;
+				GLuint lTexture = GetOrCreateGpuBitmapTexture(lTileBitmap, lTileSubBitmap, lTexW, lTexH);
+
+				if(lTexture != 0) {
+					MR_GpuSceneBatch lBatch;
+					lBatch.mTexture = lTexture;
+					lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+					lBatch.mVertexCount = 0;
+
+					for(size_t lV = 1; lV + 1 < lTileClipVerts.size(); lV++) {
+						PUSH_TRI_VERTEX(lTileClipVerts[0].mCamera.mX, lTileClipVerts[0].mCamera.mY, lTileClipVerts[0].mCamera.mZ,
+							lTileClipVerts[0].mU, lTileClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						PUSH_TRI_VERTEX(lTileClipVerts[lV].mCamera.mX, lTileClipVerts[lV].mCamera.mY, lTileClipVerts[lV].mCamera.mZ,
+							lTileClipVerts[lV].mU, lTileClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						PUSH_TRI_VERTEX(lTileClipVerts[lV+1].mCamera.mX, lTileClipVerts[lV+1].mCamera.mY, lTileClipVerts[lV+1].mCamera.mZ,
+							lTileClipVerts[lV+1].mU, lTileClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lBatch.mVertexCount += 3;
+					}
+
+					lBatches.push_back(lBatch);
+				}
+				else {
+					MR_UInt8 lColor = lTileBitmap->GetPlainColor();
+					GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+
+					MR_GpuSceneBatch lBatch;
+					lBatch.mTexture = 0;
+					lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+					lBatch.mVertexCount = 0;
+
+					for(size_t lV = 1; lV + 1 < lTileClipVerts.size(); lV++) {
+						PUSH_TRI_VERTEX(lTileClipVerts[0].mCamera.mX, lTileClipVerts[0].mCamera.mY, lTileClipVerts[0].mCamera.mZ,
+							0.0f, 0.0f, lR, lG, lB, 0.375f);
+						PUSH_TRI_VERTEX(lTileClipVerts[lV].mCamera.mX, lTileClipVerts[lV].mCamera.mY, lTileClipVerts[lV].mCamera.mZ,
+							0.0f, 0.0f, lR, lG, lB, 0.375f);
+						PUSH_TRI_VERTEX(lTileClipVerts[lV+1].mCamera.mX, lTileClipVerts[lV+1].mCamera.mY, lTileClipVerts[lV+1].mCamera.mZ,
+							0.0f, 0.0f, lR, lG, lB, 0.375f);
+						lBatch.mVertexCount += 3;
+					}
+
+					lBatches.push_back(lBatch);
+				}
+			}
 		}
 		else {
-			// Solid color fallback
-			MR_UInt8 lColor = lWall.mPrimaryBitmap->GetPlainColor();
-			GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+			// No alternate texture - render as single quad (original path)
+			int lTexW = 0, lTexH = 0;
+			GLuint lTexture = GetOrCreateGpuBitmapTexture(lWall.mPrimaryBitmap, lWallSubBitmap, lTexW, lTexH);
 
-			MR_GpuSceneBatch lBatch;
-			lBatch.mTexture = 0;
-			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-			lBatch.mVertexCount = 0;
+			if(lTexture != 0) {
+				MR_GpuSceneBatch lBatch;
+				lBatch.mTexture = lTexture;
+				lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+				lBatch.mVertexCount = 0;
 
-			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
-				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 0.375f);
-				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 0.375f);
-				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 0.375f);
-				lBatch.mVertexCount += 3;
+				// Triangulate clipped polygon as fan
+				for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+						lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+						lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					lBatch.mVertexCount += 3;
+				}
+
+				lBatches.push_back(lBatch);
 			}
+			else {
+				// Solid color fallback
+				MR_UInt8 lColor = lWall.mPrimaryBitmap->GetPlainColor();
+				GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
 
-			lBatches.push_back(lBatch);
+				MR_GpuSceneBatch lBatch;
+				lBatch.mTexture = 0;
+				lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+				lBatch.mVertexCount = 0;
+
+				for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 0.375f);
+					PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 0.375f);
+					PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 0.375f);
+					lBatch.mVertexCount += 3;
+				}
+
+				lBatches.push_back(lBatch);
+			}
 		}
 	}
 
