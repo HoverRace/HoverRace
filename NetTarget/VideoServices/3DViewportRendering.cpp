@@ -2126,6 +2126,10 @@ void MR_3DViewPort::RenderBackground(const MR_UInt8 * pBitmap)
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
 		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitBackground(pBitmap);
+		// Clear the CPU viewport buffer so the HUD overlay has a clean canvas.
+		// Without this, stale pixels from previous frames remain and get drawn
+		// as opaque HUD pixels, covering the GPU-rendered scene.
+		MR_2DViewPort::Clear(0);
 		return;
 	}
 
