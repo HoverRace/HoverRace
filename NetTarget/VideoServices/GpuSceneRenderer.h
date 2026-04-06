@@ -35,6 +35,15 @@ struct MR_GpuSceneWall
 	int mSerialStart;
 };
 
+struct MR_GpuSceneHorizontalSurface
+{
+	int mNbVertex;
+	MR_2DCoordinate mVertexList[MR_GPU_SCENE_MAX_POLYGON_VERTEX];
+	MR_Int32 mLevel;
+	BOOL mTop;
+	const MR_Bitmap *mBitmap;
+};
+
 struct MR_GpuScenePatchBitmap
 {
 	const MR_Patch *mPatch;
@@ -60,6 +69,7 @@ struct MR_GpuSceneFrame
 	MR_Int32 mPlanVW;
 	const MR_UInt8 *mBackgroundBitmap;
 	std::vector<MR_GpuSceneWall> mWalls;
+	std::vector<MR_GpuSceneHorizontalSurface> mHorizontalSurfaces;
 	std::vector<MR_GpuScenePatchBitmap> mBitmapPatches;
 	std::vector<MR_GpuScenePatchColor> mColorPatches;
 
@@ -86,6 +96,7 @@ struct MR_GpuSceneFrame
 		mBackgroundBitmap = NULL;
 		memset(&mCameraPosition, 0, sizeof(mCameraPosition));
 		mWalls.clear();
+		mHorizontalSurfaces.clear();
 		mBitmapPatches.clear();
 		mColorPatches.clear();
 	}
@@ -116,6 +127,8 @@ class MR_GpuSceneRenderer
 		void SubmitWall(const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
 			MR_Int32 pLen, const MR_Bitmap *pBitmap, const MR_Bitmap *pBitmap2,
 			int pSerialLen, int pSerialStart);
+		void SubmitHorizontalSurface(int pNbVertex, const MR_2DCoordinate *pVertexList,
+			MR_Int32 pLevel, BOOL pTop, const MR_Bitmap *pBitmap);
 		void SubmitPatch(const MR_Patch &pPatch, const MR_GpuScenePositionMatrix &pMatrix,
 			const MR_Bitmap *pBitmap);
 		void SubmitPatch(const MR_Patch &pPatch, const MR_GpuScenePositionMatrix &pMatrix,

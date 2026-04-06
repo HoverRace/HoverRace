@@ -2385,7 +2385,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		return;
 	}
 
-	if(lFrame.mWalls.empty()
+	if(lFrame.mWalls.empty() && lFrame.mHorizontalSurfaces.empty()
 		&& lFrame.mBitmapPatches.empty() && lFrame.mColorPatches.empty()) {
 		return;
 	}
@@ -2624,6 +2624,73 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		}
 		glDisable(GL_TEXTURE_2D);
 
+	}
+
+	for(size_t lSurfIndex = 0; lSurfIndex < lFrame.mHorizontalSurfaces.size(); lSurfIndex++) {
+		const MR_GpuSceneHorizontalSurface &lSurface = lFrame.mHorizontalSurfaces[lSurfIndex];
+		if((lSurface.mNbVertex < 3) || (lSurface.mBitmap == NULL)) {
+			continue;
+		}
+
+		const double lBitmapWidthMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetWidth()));
+		const double lBitmapHeightMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetHeight()));
+
+		std::vector<MR_GpuSceneTexturedVertex> lVertices;
+		lVertices.reserve(lSurface.mNbVertex);
+
+		for(int lVertex = 0; lVertex < lSurface.mNbVertex; lVertex++) {
+			MR_3DCoordinate lWorldVertex;
+			lWorldVertex.mX = lSurface.mVertexList[lVertex].mX;
+			lWorldVertex.mY = lSurface.mVertexList[lVertex].mY;
+			lWorldVertex.mZ = lSurface.mLevel;
+
+			MR_GpuSceneTexturedVertex lTexturedVertex;
+			if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lTexturedVertex.mCamera)) {
+				lTexturedVertex.mCamera.mVisible = FALSE;
+			}
+
+			lTexturedVertex.mU = static_cast<GLfloat>(
+				static_cast<double>(lSurface.mVertexList[lVertex].mX) / lBitmapWidthMm);
+			lTexturedVertex.mV = static_cast<GLfloat>(
+				static_cast<double>(lSurface.mVertexList[lVertex].mY) / lBitmapHeightMm);
+			lVertices.push_back(lTexturedVertex);
+		}
+
+		ClipGpuSceneTexturedPolygonToNearPlane(lVertices, -lNearPlane);
+		if(lVertices.size() < 3) {
+			continue;
+		}
+
+		int lTextureWidth = 0;
+		int lTextureHeight = 0;
+		GLuint lTexture = GetOrCreateGpuBitmapTexture(lSurface.mBitmap, 0,
+			lTextureWidth, lTextureHeight);
+
+		if(lTexture != 0) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, lTexture);
+			glColor4ub(255, 255, 255, 255);
+
+			glBegin(GL_TRIANGLE_FAN);
+			for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
+				glTexCoord2f(lVertices[lVertex].mU, lVertices[lVertex].mV);
+				glVertex3d(lVertices[lVertex].mCamera.mX,
+					lVertices[lVertex].mCamera.mY,
+					lVertices[lVertex].mCamera.mZ);
+			}
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
+		else {
+			SetOpenGLColorFromPaletteIndex(lSurface.mBitmap->GetPlainColor(), 255);
+			glBegin(GL_TRIANGLE_FAN);
+			for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
+				glVertex3d(lVertices[lVertex].mCamera.mX,
+					lVertices[lVertex].mCamera.mY,
+					lVertices[lVertex].mCamera.mZ);
+			}
+			glEnd();
+		}
 	}
 
 	for(size_t lPatchIndex = 0; lPatchIndex < lFrame.mBitmapPatches.size(); lPatchIndex++) {

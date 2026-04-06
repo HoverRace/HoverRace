@@ -769,6 +769,13 @@ void BltColumnFast()
 
 void MR_3DViewPort::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const MR_Bitmap * pBitmap)
 {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
+		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+		mVideoBuffer->GetGpuSceneRenderer()->SubmitHorizontalSurface(pNbVertex, pVertexList,
+			pLevel, pTop, pBitmap);
+		return;
+	}
+
 	MR_Int32 lLevel;
 
 	lLevel = pLevel - mPosition.mZ;

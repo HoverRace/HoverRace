@@ -92,6 +92,30 @@ void MR_GpuSceneRenderer::SubmitWall(const MR_3DCoordinate &pUpperLeft,
 	mFrame.mWalls.push_back(wall);
 }
 
+void MR_GpuSceneRenderer::SubmitHorizontalSurface(int pNbVertex,
+	const MR_2DCoordinate *pVertexList, MR_Int32 pLevel, BOOL pTop,
+	const MR_Bitmap *pBitmap)
+{
+	if(!mEnabled || !mFrameOpen) {
+		return;
+	}
+
+	if((pNbVertex < 3) || (pNbVertex > MR_GPU_SCENE_MAX_POLYGON_VERTEX)
+		|| (pVertexList == NULL)) {
+		return;
+	}
+
+	MR_GpuSceneHorizontalSurface surface;
+	surface.mNbVertex = pNbVertex;
+	for(int i = 0; i < pNbVertex; i++) {
+		surface.mVertexList[i] = pVertexList[i];
+	}
+	surface.mLevel = pLevel;
+	surface.mTop = pTop;
+	surface.mBitmap = pBitmap;
+	mFrame.mHorizontalSurfaces.push_back(surface);
+}
+
 void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 	const MR_GpuScenePositionMatrix &pMatrix, const MR_Bitmap *pBitmap)
 {
