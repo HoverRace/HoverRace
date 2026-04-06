@@ -87,8 +87,35 @@ typedef GLint (APIENTRY *PFNGLGETUNIFORMLOCATIONPROC)(GLuint program, const GLch
 typedef void (APIENTRY *PFNGLUNIFORM1IPROC)(GLint location, GLint v0);
 typedef void (APIENTRY *PFNGLDELETESHADERPROC)(GLuint shader);
 typedef void (APIENTRY *PFNGLDELETEPROGRAMPROC)(GLuint program);
+typedef void (APIENTRY *PFNGLGENBUFFERSPROC)(GLsizei n, GLuint *buffers);
+typedef void (APIENTRY *PFNGLBINDBUFFERPROC)(GLenum target, GLuint buffer);
+typedef void (APIENTRY *PFNGLBUFFERDATAPROC)(GLenum target, ptrdiff_t size, const void *data, GLenum usage);
+typedef void (APIENTRY *PFNGLDELETEBUFFERSPROC)(GLsizei n, const GLuint *buffers);
+typedef void (APIENTRY *PFNGLENABLEVERTEXATTRIBARRAYPROC)(GLuint index);
+typedef void (APIENTRY *PFNGLDISABLEVERTEXATTRIBARRAYPROC)(GLuint index);
+typedef void (APIENTRY *PFNGLVERTEXATTRIBPOINTERPROC)(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+typedef GLint (APIENTRY *PFNGLGETATTRIBLOCATIONPROC)(GLuint program, const GLchar *name);
+typedef void (APIENTRY *PFNGLUNIFORMMATRIX4FVPROC)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+typedef void (APIENTRY *PFNGLUNIFORM1FPROC)(GLint location, GLfloat v0);
+
+#define GL_ARRAY_BUFFER 0x8892
+#define GL_DYNAMIC_DRAW 0x88E8
 
 namespace {
+	struct MR_GpuSceneBatchVertex
+	{
+		GLfloat mX, mY, mZ;
+		GLfloat mU, mV;
+		GLfloat mR, mG, mB, mA;
+	};
+
+	struct MR_GpuSceneBatch
+	{
+		GLuint mTexture;
+		int mStartVertex;
+		int mVertexCount;
+	};
+
 	struct MR_GpuSceneProjectedVertex
 	{
 		GLfloat mX;
@@ -360,6 +387,39 @@ namespace {
 		}
 
 		pVertices.swap(lClipped);
+	}
+
+	static void BuildGpuSceneMVP(const MR_GpuSceneFrame &pFrame, GLfloat *pMvp)
+	{
+		const GLdouble lNearPlane = max(1.0, static_cast<GLdouble>(pFrame.mPlanDist));
+		const GLdouble lFarPlane = max(lNearPlane + 1.0, 2000000.0);
+		const GLdouble lLeft = -static_cast<GLdouble>(pFrame.mPlanHW);
+		const GLdouble lRight = static_cast<GLdouble>(pFrame.mPlanHW);
+		const GLdouble lBottom = -static_cast<GLdouble>(pFrame.mPlanVW);
+		const GLdouble lTop = static_cast<GLdouble>(pFrame.mPlanVW);
+		const GLdouble lScrollNdc = -2.0 * static_cast<GLdouble>(pFrame.mScroll) /
+			max(1, pFrame.mViewport.bottom - pFrame.mViewport.top);
+
+		// glFrustum matrix (column-major)
+		GLfloat lFrustum[16];
+		memset(lFrustum, 0, sizeof(lFrustum));
+		lFrustum[0] = static_cast<GLfloat>((2.0 * lNearPlane) / (lRight - lLeft));
+		lFrustum[5] = static_cast<GLfloat>((2.0 * lNearPlane) / (lTop - lBottom));
+		lFrustum[8] = static_cast<GLfloat>((lRight + lLeft) / (lRight - lLeft));
+		lFrustum[9] = static_cast<GLfloat>((lTop + lBottom) / (lTop - lBottom));
+		lFrustum[10] = static_cast<GLfloat>(-(lFarPlane + lNearPlane) / (lFarPlane - lNearPlane));
+		lFrustum[11] = -1.0f;
+		lFrustum[14] = static_cast<GLfloat>(-(2.0 * lFarPlane * lNearPlane) / (lFarPlane - lNearPlane));
+
+		// Apply scroll as vertical translation: result = translate * frustum
+		// translate matrix only affects row 1 (Y): out[9] += scrollNdc * out[11], out[13] += scrollNdc * out[15]
+		// But since translate is pre-multiply in GL: P = T * F
+		// Column-major: P[i] = T * F[i] for each column
+		// T translates Y by scrollNdc: for column j, P[4j+1] += scrollNdc * P[4j+3]
+		memcpy(pMvp, lFrustum, sizeof(lFrustum));
+		for(int j = 0; j < 4; j++) {
+			pMvp[j * 4 + 1] += static_cast<GLfloat>(lScrollNdc) * pMvp[j * 4 + 3];
+		}
 	}
 }
 
@@ -715,13 +775,29 @@ struct MR_OpenGLState
 	std::vector<MR_UInt8> rgbaFallback;
 	std::vector<CachedBitmapTexture> cachedBitmapTextures;
 
+	GLuint sceneShaderProgram;
+	GLuint sceneVertexShader;
+	GLuint sceneFragmentShader;
+	GLint sceneMvpUniform;
+	GLint sceneTextureUniform;
+	GLint sceneUseTextureUniform;
+	GLint scenePositionAttrib;
+	GLint sceneTexCoordAttrib;
+	GLint sceneColorAttrib;
+	GLuint sceneVbo;
+	BOOL sceneShaderReady;
+
 	MR_OpenGLState() :
 		windowDc(NULL), context(NULL),
 		frameTexture(0), paletteTexture(0),
 		shaderProgram(0), vertexShader(0), fragmentShader(0),
 		indexUniform(-1), paletteUniform(-1),
 		textureWidth(0), textureHeight(0),
-		shaderReady(FALSE)
+		shaderReady(FALSE),
+		sceneShaderProgram(0), sceneVertexShader(0), sceneFragmentShader(0),
+		sceneMvpUniform(-1), sceneTextureUniform(-1), sceneUseTextureUniform(-1),
+		scenePositionAttrib(-1), sceneTexCoordAttrib(-1), sceneColorAttrib(-1),
+		sceneVbo(0), sceneShaderReady(FALSE)
 	{
 	}
 };
@@ -803,6 +879,16 @@ namespace {
 		PFNGLUNIFORM1IPROC Uniform1i;
 		PFNGLDELETESHADERPROC DeleteShader;
 		PFNGLDELETEPROGRAMPROC DeleteProgram;
+		PFNGLGENBUFFERSPROC GenBuffers;
+		PFNGLBINDBUFFERPROC BindBuffer;
+		PFNGLBUFFERDATAPROC BufferData;
+		PFNGLDELETEBUFFERSPROC DeleteBuffers;
+		PFNGLENABLEVERTEXATTRIBARRAYPROC EnableVertexAttribArray;
+		PFNGLDISABLEVERTEXATTRIBARRAYPROC DisableVertexAttribArray;
+		PFNGLVERTEXATTRIBPOINTERPROC VertexAttribPointer;
+		PFNGLGETATTRIBLOCATIONPROC GetAttribLocation;
+		PFNGLUNIFORMMATRIX4FVPROC UniformMatrix4fv;
+		PFNGLUNIFORM1FPROC Uniform1f;
 		BOOL loaded;
 
 		GLFunctions() :
@@ -811,7 +897,11 @@ namespace {
 			CreateProgram(NULL), AttachShader(NULL), LinkProgram(NULL),
 			GetProgramiv(NULL), GetProgramInfoLog(NULL), UseProgram(NULL),
 			GetUniformLocation(NULL), Uniform1i(NULL), DeleteShader(NULL),
-			DeleteProgram(NULL), loaded(FALSE)
+			DeleteProgram(NULL), GenBuffers(NULL), BindBuffer(NULL),
+			BufferData(NULL), DeleteBuffers(NULL), EnableVertexAttribArray(NULL),
+			DisableVertexAttribArray(NULL), VertexAttribPointer(NULL),
+			GetAttribLocation(NULL), UniformMatrix4fv(NULL), Uniform1f(NULL),
+			loaded(FALSE)
 		{
 		}
 	};
@@ -934,6 +1024,16 @@ namespace {
 		gGL.Uniform1i = reinterpret_cast<PFNGLUNIFORM1IPROC>(LoadOpenGLProc("glUniform1i"));
 		gGL.DeleteShader = reinterpret_cast<PFNGLDELETESHADERPROC>(LoadOpenGLProc("glDeleteShader"));
 		gGL.DeleteProgram = reinterpret_cast<PFNGLDELETEPROGRAMPROC>(LoadOpenGLProc("glDeleteProgram"));
+		gGL.GenBuffers = reinterpret_cast<PFNGLGENBUFFERSPROC>(LoadOpenGLProc("glGenBuffers"));
+		gGL.BindBuffer = reinterpret_cast<PFNGLBINDBUFFERPROC>(LoadOpenGLProc("glBindBuffer"));
+		gGL.BufferData = reinterpret_cast<PFNGLBUFFERDATAPROC>(LoadOpenGLProc("glBufferData"));
+		gGL.DeleteBuffers = reinterpret_cast<PFNGLDELETEBUFFERSPROC>(LoadOpenGLProc("glDeleteBuffers"));
+		gGL.EnableVertexAttribArray = reinterpret_cast<PFNGLENABLEVERTEXATTRIBARRAYPROC>(LoadOpenGLProc("glEnableVertexAttribArray"));
+		gGL.DisableVertexAttribArray = reinterpret_cast<PFNGLDISABLEVERTEXATTRIBARRAYPROC>(LoadOpenGLProc("glDisableVertexAttribArray"));
+		gGL.VertexAttribPointer = reinterpret_cast<PFNGLVERTEXATTRIBPOINTERPROC>(LoadOpenGLProc("glVertexAttribPointer"));
+		gGL.GetAttribLocation = reinterpret_cast<PFNGLGETATTRIBLOCATIONPROC>(LoadOpenGLProc("glGetAttribLocation"));
+		gGL.UniformMatrix4fv = reinterpret_cast<PFNGLUNIFORMMATRIX4FVPROC>(LoadOpenGLProc("glUniformMatrix4fv"));
+		gGL.Uniform1f = reinterpret_cast<PFNGLUNIFORM1FPROC>(LoadOpenGLProc("glUniform1f"));
 
 		gGL.loaded =
 			(gGL.ActiveTexture != NULL) &&
@@ -951,7 +1051,17 @@ namespace {
 			(gGL.GetUniformLocation != NULL) &&
 			(gGL.Uniform1i != NULL) &&
 			(gGL.DeleteShader != NULL) &&
-			(gGL.DeleteProgram != NULL);
+			(gGL.DeleteProgram != NULL) &&
+			(gGL.GenBuffers != NULL) &&
+			(gGL.BindBuffer != NULL) &&
+			(gGL.BufferData != NULL) &&
+			(gGL.DeleteBuffers != NULL) &&
+			(gGL.EnableVertexAttribArray != NULL) &&
+			(gGL.DisableVertexAttribArray != NULL) &&
+			(gGL.VertexAttribPointer != NULL) &&
+			(gGL.GetAttribLocation != NULL) &&
+			(gGL.UniformMatrix4fv != NULL) &&
+			(gGL.Uniform1f != NULL);
 
 		return gGL.loaded;
 	}
@@ -1157,6 +1267,87 @@ namespace {
 		}
 
 		return shader;
+	}
+
+	static BOOL BuildSceneShader(MR_OpenGLState *state)
+	{
+		static const char *VERTEX_SHADER =
+			"uniform mat4 uMVP;\n"
+			"attribute vec3 aPosition;\n"
+			"attribute vec2 aTexCoord;\n"
+			"attribute vec4 aColor;\n"
+			"varying vec2 vTexCoord;\n"
+			"varying vec4 vColor;\n"
+			"void main()\n"
+			"{\n"
+			"    gl_Position = uMVP * vec4(aPosition, 1.0);\n"
+			"    vTexCoord = aTexCoord;\n"
+			"    vColor = aColor;\n"
+			"}\n";
+
+		static const char *FRAGMENT_SHADER =
+			"uniform sampler2D uTexture;\n"
+			"uniform float uUseTexture;\n"
+			"varying vec2 vTexCoord;\n"
+			"varying vec4 vColor;\n"
+			"void main()\n"
+			"{\n"
+			"    if(uUseTexture > 0.5) {\n"
+			"        vec4 texColor = texture2D(uTexture, vTexCoord);\n"
+			"        if(texColor.a < 0.1) discard;\n"
+			"        gl_FragColor = texColor * vColor;\n"
+			"    } else {\n"
+			"        gl_FragColor = vColor;\n"
+			"    }\n"
+			"}\n";
+
+		if((state == NULL) || !LoadOpenGLFunctions()) {
+			return FALSE;
+		}
+
+		state->sceneVertexShader = CompileShader(GL_VERTEX_SHADER, VERTEX_SHADER);
+		state->sceneFragmentShader = CompileShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER);
+		if(state->sceneVertexShader == 0 || state->sceneFragmentShader == 0) {
+			return FALSE;
+		}
+
+		state->sceneShaderProgram = gGL.CreateProgram();
+		if(state->sceneShaderProgram == 0) {
+			return FALSE;
+		}
+
+		gGL.AttachShader(state->sceneShaderProgram, state->sceneVertexShader);
+		gGL.AttachShader(state->sceneShaderProgram, state->sceneFragmentShader);
+		gGL.LinkProgram(state->sceneShaderProgram);
+
+		GLint linked = GL_FALSE;
+		gGL.GetProgramiv(state->sceneShaderProgram, GL_LINK_STATUS, &linked);
+		if(linked != GL_TRUE) {
+			GLint logLength = 0;
+			gGL.GetProgramiv(state->sceneShaderProgram, GL_INFO_LOG_LENGTH, &logLength);
+			if(logLength > 1) {
+				std::vector<char> logBuffer(logLength + 1, '\0');
+				gGL.GetProgramInfoLog(state->sceneShaderProgram, logLength, NULL, &logBuffer[0]);
+				PRINT_LOG("OpenGL scene shader link failed log=%s", &logBuffer[0]);
+			}
+			return FALSE;
+		}
+
+		state->sceneMvpUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uMVP");
+		state->sceneTextureUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uTexture");
+		state->sceneUseTextureUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uUseTexture");
+		state->scenePositionAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aPosition");
+		state->sceneTexCoordAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aTexCoord");
+		state->sceneColorAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aColor");
+
+		gGL.GenBuffers(1, &state->sceneVbo);
+
+		state->sceneShaderReady = TRUE;
+		PRINT_LOG("OpenGL scene shader built successfully mvp=%d tex=%d useTex=%d pos=%d tc=%d col=%d vbo=%u",
+			state->sceneMvpUniform, state->sceneTextureUniform, state->sceneUseTextureUniform,
+			state->scenePositionAttrib, state->sceneTexCoordAttrib, state->sceneColorAttrib,
+			state->sceneVbo);
+		return TRUE;
 	}
 
 	static BOOL BuildPaletteShader(MR_OpenGLState *state)
@@ -1668,9 +1859,17 @@ BOOL MR_VideoBuffer::InitOpenGL()
 		else if(shaderMode == OGL_SHADER_BRINGUP_OFF) {
 			mOpenGLState->shaderReady = FALSE;
 		}
+
+		if(shaderMode != OGL_SHADER_BRINGUP_OFF && !mOpenGLState->sceneShaderReady) {
+			if(!BuildSceneShader(mOpenGLState)) {
+				PRINT_LOG("InitOpenGL scene shader build failed");
+				mOpenGLState->sceneShaderReady = FALSE;
+			}
+		}
 	}
 
-	PRINT_LOG("InitOpenGL shaderReady=%d frameTexture=%u paletteTexture=%u",
+	PRINT_LOG("InitOpenGL shaderReady=%d sceneShaderReady=%d frameTexture=%u paletteTexture=%u",
+		(int) mOpenGLState->sceneShaderReady,
 		(int) mOpenGLState->shaderReady,
 		(unsigned) mOpenGLState->frameTexture,
 		(unsigned) mOpenGLState->paletteTexture);
@@ -1718,6 +1917,23 @@ void MR_VideoBuffer::ReleaseOpenGL()
 			gGL.DeleteShader(mOpenGLState->fragmentShader);
 			mOpenGLState->fragmentShader = 0;
 		}
+		if(mOpenGLState->sceneVbo != 0 && gGL.DeleteBuffers != NULL) {
+			gGL.DeleteBuffers(1, &mOpenGLState->sceneVbo);
+			mOpenGLState->sceneVbo = 0;
+		}
+		if(mOpenGLState->sceneShaderProgram != 0 && gGL.DeleteProgram != NULL) {
+			gGL.DeleteProgram(mOpenGLState->sceneShaderProgram);
+			mOpenGLState->sceneShaderProgram = 0;
+		}
+		if(mOpenGLState->sceneVertexShader != 0 && gGL.DeleteShader != NULL) {
+			gGL.DeleteShader(mOpenGLState->sceneVertexShader);
+			mOpenGLState->sceneVertexShader = 0;
+		}
+		if(mOpenGLState->sceneFragmentShader != 0 && gGL.DeleteShader != NULL) {
+			gGL.DeleteShader(mOpenGLState->sceneFragmentShader);
+			mOpenGLState->sceneFragmentShader = 0;
+		}
+		mOpenGLState->sceneShaderReady = FALSE;
 		wglMakeCurrent(NULL, NULL);
 	}
 
@@ -2390,242 +2606,144 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		return;
 	}
 
-	if(gGL.UseProgram != NULL) {
-		gGL.UseProgram(0);
-	}
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
-	glLineWidth(1.5f);
-
 	const GLdouble lNearPlane = max(1.0, static_cast<GLdouble>(lFrame.mPlanDist));
-	const GLdouble lFarPlane = max(lNearPlane + 1.0, 2000000.0);
-	const GLdouble lScrollNdc = -2.0 * static_cast<GLdouble>(lFrame.mScroll) /
-		max(1, lFrame.mViewport.bottom - lFrame.mViewport.top);
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glFrustum(-static_cast<GLdouble>(lFrame.mPlanHW),
-		static_cast<GLdouble>(lFrame.mPlanHW),
-		-static_cast<GLdouble>(lFrame.mPlanVW),
-		static_cast<GLdouble>(lFrame.mPlanVW),
-		lNearPlane,
-		lFarPlane);
-	glTranslated(0.0, lScrollNdc, 0.0);
+	// Vertex batch: all triangles for the frame, grouped by texture
+	std::vector<MR_GpuSceneBatchVertex> lAllVertices;
+	std::vector<MR_GpuSceneBatch> lBatches;
+	lAllVertices.reserve(lFrame.mWalls.size() * 6 + lFrame.mHorizontalSurfaces.size() * 12
+		+ lFrame.mBitmapPatches.size() * 24 + lFrame.mColorPatches.size() * 24);
 
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
+	// Helper to add a textured triangle to the batch
+	#define PUSH_TRI_VERTEX(vx, vy, vz, vu, vv, vr, vg, vb, va) \
+	{ \
+		MR_GpuSceneBatchVertex lBV; \
+		lBV.mX = static_cast<GLfloat>(vx); lBV.mY = static_cast<GLfloat>(vy); lBV.mZ = static_cast<GLfloat>(vz); \
+		lBV.mU = static_cast<GLfloat>(vu); lBV.mV = static_cast<GLfloat>(vv); \
+		lBV.mR = (vr); lBV.mG = (vg); lBV.mB = (vb); lBV.mA = (va); \
+		lAllVertices.push_back(lBV); \
+	}
 
+	// Helper to get RGBA from palette index
+	#define PALETTE_R(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 0] / 255.0f) : ((idx) / 255.0f))
+	#define PALETTE_G(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 1] / 255.0f) : ((idx) / 255.0f))
+	#define PALETTE_B(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 2] / 255.0f) : ((idx) / 255.0f))
+
+	// --- WALLS ---
 	for(size_t lWallIndex = 0; lWallIndex < lFrame.mWalls.size(); lWallIndex++) {
 		const MR_GpuSceneWall &lWall = lFrame.mWalls[lWallIndex];
-		const MR_3DCoordinate lTopLeft = lWall.mUpperLeft;
-		const MR_3DCoordinate lTopRight(lWall.mLowerRight.mX, lWall.mLowerRight.mY, lWall.mUpperLeft.mZ);
-		const MR_3DCoordinate lBottomRight = lWall.mLowerRight;
-		const MR_3DCoordinate lBottomLeft(lWall.mUpperLeft.mX, lWall.mUpperLeft.mY, lWall.mLowerRight.mZ);
 		const double lWallHeight = static_cast<double>(lWall.mUpperLeft.mZ - lWall.mLowerRight.mZ);
-		const double lWallLength = max(1.0, static_cast<double>(lWall.mLen));
-		int lSegmentCount = max(1, min(64, lWall.mLen / 2000));
-		MR_GpuSceneProjectedVertex lEndProjected[4];
-		BOOL lAnyEndVisible = TRUE;
-
-		if(!ProjectGpuSceneVertex(lFrame, lTopLeft, lEndProjected[0])
-			|| !ProjectGpuSceneVertex(lFrame, lTopRight, lEndProjected[1])
-			|| !ProjectGpuSceneVertex(lFrame, lBottomRight, lEndProjected[2])
-			|| !ProjectGpuSceneVertex(lFrame, lBottomLeft, lEndProjected[3])) {
-			lAnyEndVisible = FALSE;
-		}
-		if(lAnyEndVisible) {
-			const double lProjectedWidth =
-				fabs(static_cast<double>(lEndProjected[1].mX - lEndProjected[0].mX))
-				* (lFrame.mViewport.right - lFrame.mViewport.left) * 0.5;
-			lSegmentCount = max(lSegmentCount, min(64, static_cast<int>(lProjectedWidth / 96.0)));
-		}
 
 		if((lWall.mPrimaryBitmap == NULL) || (lWallHeight <= 0.0)) {
 			continue;
 		}
 
-		glEnable(GL_TEXTURE_2D);
-		for(int lSegment = 0; lSegment < lSegmentCount; lSegment++) {
-			const double lT0 = static_cast<double>(lSegment) / lSegmentCount;
-			const double lT1 = static_cast<double>(lSegment + 1) / lSegmentCount;
-			MR_3DCoordinate lVertices[4];
-			MR_GpuSceneCameraVertex lCameraVertices[4];
-			BOOL lVisible = TRUE;
+		// Transform the 4 wall corners to camera space
+		MR_3DCoordinate lWorldCorners[4];
+		lWorldCorners[0] = lWall.mUpperLeft;
+		lWorldCorners[1] = MR_3DCoordinate(lWall.mLowerRight.mX, lWall.mLowerRight.mY, lWall.mUpperLeft.mZ);
+		lWorldCorners[2] = lWall.mLowerRight;
+		lWorldCorners[3] = MR_3DCoordinate(lWall.mUpperLeft.mX, lWall.mUpperLeft.mY, lWall.mLowerRight.mZ);
 
-			lVertices[0] = LerpGpuSceneCoordinate(lTopLeft, lTopRight, lT0);
-			lVertices[1] = LerpGpuSceneCoordinate(lTopLeft, lTopRight, lT1);
-			lVertices[2] = LerpGpuSceneCoordinate(lBottomLeft, lBottomRight, lT1);
-			lVertices[3] = LerpGpuSceneCoordinate(lBottomLeft, lBottomRight, lT0);
+		// Compute tiling
+		const int lBitmapWidth = max(1, lWall.mPrimaryBitmap->GetWidth());
+		const int lBitmapHeightMm = max(1, lWall.mPrimaryBitmap->GetHeight());
+		int lBitmapRepeatCount = (lWall.mLen + (lBitmapWidth / 2)) / lBitmapWidth;
+		int lBitmapHeightRepeatCount = (static_cast<int>(lWallHeight) + (lBitmapHeightMm / 2)) / lBitmapHeightMm;
+		const BOOL lUseFittedHeight = (lWallHeight > lBitmapHeightMm);
+		if(lBitmapRepeatCount < 1) lBitmapRepeatCount = 1;
+		if(lBitmapHeightRepeatCount < 1) lBitmapHeightRepeatCount = 1;
 
-			for(int lVertex = 0; lVertex < 4; lVertex++) {
-				if(!TransformGpuSceneVertexToCameraSpace(lFrame, lVertices[lVertex], lCameraVertices[lVertex])) {
-					lVisible = FALSE;
-					break;
-				}
+		const double lURepeat = static_cast<double>(lBitmapRepeatCount);
+		const double lVRepeat = lUseFittedHeight
+			? static_cast<double>(lBitmapHeightRepeatCount)
+			: (lWallHeight / lBitmapHeightMm);
+
+		// Build textured vertices with near-plane clipping
+		std::vector<MR_GpuSceneTexturedVertex> lClipVerts;
+		lClipVerts.reserve(4);
+		GLfloat lUCoords[4] = { 0.0f, static_cast<GLfloat>(lURepeat), static_cast<GLfloat>(lURepeat), 0.0f };
+		GLfloat lVCoords[4] = { 0.0f, 0.0f, static_cast<GLfloat>(lVRepeat), static_cast<GLfloat>(lVRepeat) };
+
+		for(int lV = 0; lV < 4; lV++) {
+			MR_GpuSceneTexturedVertex lTV;
+			if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldCorners[lV], lTV.mCamera)) {
+				lTV.mCamera.mVisible = FALSE;
 			}
+			lTV.mU = lUCoords[lV];
+			lTV.mV = lVCoords[lV];
+			lClipVerts.push_back(lTV);
+		}
 
-			if(!lVisible) {
-				continue;
-			}
+		ClipGpuSceneTexturedPolygonToNearPlane(lClipVerts, -lNearPlane);
+		if(lClipVerts.size() < 3) {
+			continue;
+		}
 
-			GLdouble lLeftClipT = 0.0;
-			GLdouble lRightClipT = 1.0;
-			const BOOL lLeftInside = (lCameraVertices[0].mZ <= -lNearPlane);
-			const BOOL lRightInside = (lCameraVertices[1].mZ <= -lNearPlane);
-
-			if(!lLeftInside && !lRightInside) {
-				continue;
-			}
-			if(lLeftInside != lRightInside) {
-				const GLdouble lDenominator = lCameraVertices[1].mZ - lCameraVertices[0].mZ;
-				if(lDenominator == 0.0) {
-					continue;
-				}
-
-				GLdouble lClipT = (-lNearPlane - lCameraVertices[0].mZ) / lDenominator;
-				if(lClipT < 0.0) {
-					lClipT = 0.0;
-				}
-				else if(lClipT > 1.0) {
-					lClipT = 1.0;
-				}
-
-				if(!lLeftInside) {
-					lLeftClipT = lClipT;
-					lCameraVertices[0].mX = LerpGpuSceneDouble(lCameraVertices[0].mX, lCameraVertices[1].mX, lClipT);
-					lCameraVertices[0].mY = LerpGpuSceneDouble(lCameraVertices[0].mY, lCameraVertices[1].mY, lClipT);
-					lCameraVertices[0].mZ = -lNearPlane;
-					lCameraVertices[3].mX = LerpGpuSceneDouble(lCameraVertices[3].mX, lCameraVertices[2].mX, lClipT);
-					lCameraVertices[3].mY = LerpGpuSceneDouble(lCameraVertices[3].mY, lCameraVertices[2].mY, lClipT);
-					lCameraVertices[3].mZ = -lNearPlane;
-				}
-				else {
-					lRightClipT = lClipT;
-					lCameraVertices[1].mX = LerpGpuSceneDouble(lCameraVertices[0].mX, lCameraVertices[1].mX, lClipT);
-					lCameraVertices[1].mY = LerpGpuSceneDouble(lCameraVertices[0].mY, lCameraVertices[1].mY, lClipT);
-					lCameraVertices[1].mZ = -lNearPlane;
-					lCameraVertices[2].mX = LerpGpuSceneDouble(lCameraVertices[3].mX, lCameraVertices[2].mX, lClipT);
-					lCameraVertices[2].mY = LerpGpuSceneDouble(lCameraVertices[3].mY, lCameraVertices[2].mY, lClipT);
-					lCameraVertices[2].mZ = -lNearPlane;
-				}
-			}
-
-			MR_GpuSceneProjectedVertex lProjectedVertices[4];
-			for(int lVertex = 0; lVertex < 4; lVertex++) {
-				ProjectGpuSceneCameraVertex(lFrame, lCameraVertices[lVertex], lProjectedVertices[lVertex]);
-			}
-
-			{
-				const GLdouble lEdge1X = lCameraVertices[1].mX - lCameraVertices[0].mX;
-				const GLdouble lEdge1Y = lCameraVertices[1].mY - lCameraVertices[0].mY;
-				const GLdouble lEdge1Z = lCameraVertices[1].mZ - lCameraVertices[0].mZ;
-				const GLdouble lEdge2X = lCameraVertices[3].mX - lCameraVertices[0].mX;
-				const GLdouble lEdge2Y = lCameraVertices[3].mY - lCameraVertices[0].mY;
-				const GLdouble lEdge2Z = lCameraVertices[3].mZ - lCameraVertices[0].mZ;
-				const GLdouble lNormalX = (lEdge1Y * lEdge2Z) - (lEdge1Z * lEdge2Y);
-				const GLdouble lNormalY = (lEdge1Z * lEdge2X) - (lEdge1X * lEdge2Z);
-				const GLdouble lNormalZ = (lEdge1X * lEdge2Y) - (lEdge1Y * lEdge2X);
-				const GLdouble lFacing = (lNormalX * lCameraVertices[0].mX)
-					+ (lNormalY * lCameraVertices[0].mY)
-					+ (lNormalZ * lCameraVertices[0].mZ);
-
-				if(lFacing <= 0.0) {
-					continue;
-				}
-			}
-
-			int lWallTextureWidth = 0;
-			int lWallTextureHeight = 0;
-			GLuint lWallTexture = 0;
-			int lSegmentProjectedHeight = max(1,
-				static_cast<int>(max(
-					fabs(static_cast<double>(lProjectedVertices[3].mY - lProjectedVertices[0].mY)),
-					fabs(static_cast<double>(lProjectedVertices[2].mY - lProjectedVertices[1].mY)))
+		// LOD selection based on approximate projected height
+		int lWallSubBitmap = 0;
+		if(lWall.mPrimaryBitmap->GetNbSubBitmap() > 1) {
+			MR_GpuSceneProjectedVertex lProj0, lProj3;
+			if(ProjectGpuSceneVertex(lFrame, lWorldCorners[0], lProj0)
+				&& ProjectGpuSceneVertex(lFrame, lWorldCorners[3], lProj3)) {
+				int lProjHeight = max(1, static_cast<int>(
+					fabs(static_cast<double>(lProj3.mY - lProj0.mY))
 					* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
-			const int lBitmapWidth = max(1, lWall.mPrimaryBitmap->GetWidth());
-			const int lBitmapHeightMm = max(1, lWall.mPrimaryBitmap->GetHeight());
-			int lBitmapRepeatCount =
-				static_cast<int>((lWall.mLen + (lBitmapWidth / 2)) / lBitmapWidth);
-			int lBitmapHeightRepeatCount =
-				static_cast<int>((static_cast<int>(lWallHeight) + (lBitmapHeightMm / 2)) / lBitmapHeightMm);
-			const BOOL lUseFittedHeight = (lWallHeight > lBitmapHeightMm);
-			int lWallSubBitmap = 0;
-
-			if(lBitmapRepeatCount < 1) {
-				lBitmapRepeatCount = 1;
-			}
-			if(lBitmapHeightRepeatCount < 1) {
-				lBitmapHeightRepeatCount = 1;
-			}
-
-			if(lWall.mPrimaryBitmap->GetNbSubBitmap() > 1) {
-				int lBitmapTileProjectedHeight;
-
-				if(lUseFittedHeight) {
-					lBitmapTileProjectedHeight = max(1,
-						(lSegmentProjectedHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount);
-				}
-				else {
-					lBitmapTileProjectedHeight = max(1,
-						MulDiv(lSegmentProjectedHeight, lBitmapHeightMm,
-							max(1, static_cast<int>(lWallHeight))));
-				}
-
-				lWallSubBitmap = lWall.mPrimaryBitmap->GetBestBitmapForYRes(
-					lBitmapTileProjectedHeight);
-				if(lWallSubBitmap < 0) {
-					lWallSubBitmap = 0;
-				}
-			}
-			lWallTexture = GetOrCreateGpuBitmapTexture(lWall.mPrimaryBitmap, lWallSubBitmap,
-				lWallTextureWidth, lWallTextureHeight);
-
-			if(lWallTexture != 0) {
-				if(lBitmapRepeatCount < 1) {
-					lBitmapRepeatCount = 1;
-				}
-				if(lBitmapHeightRepeatCount < 1) {
-					lBitmapHeightRepeatCount = 1;
-				}
-
-				const double lTotalURepeat = static_cast<double>(lBitmapRepeatCount);
-				const double lU0 = lTotalURepeat * (lT0 + ((lT1 - lT0) * lLeftClipT));
-				const double lU1 = lTotalURepeat * (lT0 + ((lT1 - lT0) * lRightClipT));
-				const double lVRepeat = lUseFittedHeight
-					? static_cast<double>(lBitmapHeightRepeatCount)
-					: (lWallHeight / lBitmapHeightMm);
-				const double lVTopLeft = 0.0;
-				const double lVTopRight = 0.0;
-				const double lVBottomLeft = lVRepeat;
-				const double lVBottomRight = lVRepeat;
-
-				glBindTexture(GL_TEXTURE_2D, lWallTexture);
-				glColor4ub(255, 255, 255, 255);
-				glBegin(GL_QUADS);
-				glTexCoord2f(static_cast<GLfloat>(lU0), static_cast<GLfloat>(lVTopLeft)); glVertex3d(lCameraVertices[0].mX, lCameraVertices[0].mY, lCameraVertices[0].mZ);
-				glTexCoord2f(static_cast<GLfloat>(lU1), static_cast<GLfloat>(lVTopRight)); glVertex3d(lCameraVertices[1].mX, lCameraVertices[1].mY, lCameraVertices[1].mZ);
-				glTexCoord2f(static_cast<GLfloat>(lU1), static_cast<GLfloat>(lVBottomRight)); glVertex3d(lCameraVertices[2].mX, lCameraVertices[2].mY, lCameraVertices[2].mZ);
-				glTexCoord2f(static_cast<GLfloat>(lU0), static_cast<GLfloat>(lVBottomLeft)); glVertex3d(lCameraVertices[3].mX, lCameraVertices[3].mY, lCameraVertices[3].mZ);
-				glEnd();
-			}
-			else {
-				SetOpenGLColorFromPaletteIndex(lWall.mPrimaryBitmap->GetPlainColor(), 96);
-				glBegin(GL_QUADS);
-				for(int lVertex = 0; lVertex < 4; lVertex++) {
-					glVertex3d(lCameraVertices[lVertex].mX, lCameraVertices[lVertex].mY, lCameraVertices[lVertex].mZ);
-				}
-				glEnd();
+				int lTileHeight = lUseFittedHeight
+					? max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount)
+					: max(1, MulDiv(lProjHeight, lBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+				lWallSubBitmap = lWall.mPrimaryBitmap->GetBestBitmapForYRes(lTileHeight);
+				if(lWallSubBitmap < 0) lWallSubBitmap = 0;
 			}
 		}
-		glDisable(GL_TEXTURE_2D);
 
+		int lTexW = 0, lTexH = 0;
+		GLuint lTexture = GetOrCreateGpuBitmapTexture(lWall.mPrimaryBitmap, lWallSubBitmap, lTexW, lTexH);
+
+		if(lTexture != 0) {
+			MR_GpuSceneBatch lBatch;
+			lBatch.mTexture = lTexture;
+			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+			lBatch.mVertexCount = 0;
+
+			// Triangulate clipped polygon as fan
+			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+					lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+					lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+					lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				lBatch.mVertexCount += 3;
+			}
+
+			lBatches.push_back(lBatch);
+		}
+		else {
+			// Solid color fallback
+			MR_UInt8 lColor = lWall.mPrimaryBitmap->GetPlainColor();
+			GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+
+			MR_GpuSceneBatch lBatch;
+			lBatch.mTexture = 0;
+			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+			lBatch.mVertexCount = 0;
+
+			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 0.375f);
+				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 0.375f);
+				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 0.375f);
+				lBatch.mVertexCount += 3;
+			}
+
+			lBatches.push_back(lBatch);
+		}
 	}
 
+	// --- HORIZONTAL SURFACES (floors/ceilings) ---
 	for(size_t lSurfIndex = 0; lSurfIndex < lFrame.mHorizontalSurfaces.size(); lSurfIndex++) {
 		const MR_GpuSceneHorizontalSurface &lSurface = lFrame.mHorizontalSurfaces[lSurfIndex];
 		if((lSurface.mNbVertex < 3) || (lSurface.mBitmap == NULL)) {
@@ -2635,64 +2753,74 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lBitmapWidthMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetWidth()));
 		const double lBitmapHeightMm = max(1.0, static_cast<double>(lSurface.mBitmap->GetHeight()));
 
-		std::vector<MR_GpuSceneTexturedVertex> lVertices;
-		lVertices.reserve(lSurface.mNbVertex);
+		std::vector<MR_GpuSceneTexturedVertex> lClipVerts;
+		lClipVerts.reserve(lSurface.mNbVertex);
 
-		for(int lVertex = 0; lVertex < lSurface.mNbVertex; lVertex++) {
+		for(int lV = 0; lV < lSurface.mNbVertex; lV++) {
 			MR_3DCoordinate lWorldVertex;
-			lWorldVertex.mX = lSurface.mVertexList[lVertex].mX;
-			lWorldVertex.mY = lSurface.mVertexList[lVertex].mY;
+			lWorldVertex.mX = lSurface.mVertexList[lV].mX;
+			lWorldVertex.mY = lSurface.mVertexList[lV].mY;
 			lWorldVertex.mZ = lSurface.mLevel;
 
-			MR_GpuSceneTexturedVertex lTexturedVertex;
-			if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lTexturedVertex.mCamera)) {
-				lTexturedVertex.mCamera.mVisible = FALSE;
+			MR_GpuSceneTexturedVertex lTV;
+			if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lTV.mCamera)) {
+				lTV.mCamera.mVisible = FALSE;
 			}
-
-			lTexturedVertex.mU = static_cast<GLfloat>(
-				static_cast<double>(lSurface.mVertexList[lVertex].mX) / lBitmapWidthMm);
-			lTexturedVertex.mV = static_cast<GLfloat>(
-				static_cast<double>(lSurface.mVertexList[lVertex].mY) / lBitmapHeightMm);
-			lVertices.push_back(lTexturedVertex);
+			lTV.mU = static_cast<GLfloat>(static_cast<double>(lSurface.mVertexList[lV].mX) / lBitmapWidthMm);
+			lTV.mV = static_cast<GLfloat>(static_cast<double>(lSurface.mVertexList[lV].mY) / lBitmapHeightMm);
+			lClipVerts.push_back(lTV);
 		}
 
-		ClipGpuSceneTexturedPolygonToNearPlane(lVertices, -lNearPlane);
-		if(lVertices.size() < 3) {
+		ClipGpuSceneTexturedPolygonToNearPlane(lClipVerts, -lNearPlane);
+		if(lClipVerts.size() < 3) {
 			continue;
 		}
 
-		int lTextureWidth = 0;
-		int lTextureHeight = 0;
-		GLuint lTexture = GetOrCreateGpuBitmapTexture(lSurface.mBitmap, 0,
-			lTextureWidth, lTextureHeight);
+		int lTexW = 0, lTexH = 0;
+		GLuint lTexture = GetOrCreateGpuBitmapTexture(lSurface.mBitmap, 0, lTexW, lTexH);
 
 		if(lTexture != 0) {
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, lTexture);
-			glColor4ub(255, 255, 255, 255);
+			MR_GpuSceneBatch lBatch;
+			lBatch.mTexture = lTexture;
+			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+			lBatch.mVertexCount = 0;
 
-			glBegin(GL_TRIANGLE_FAN);
-			for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
-				glTexCoord2f(lVertices[lVertex].mU, lVertices[lVertex].mV);
-				glVertex3d(lVertices[lVertex].mCamera.mX,
-					lVertices[lVertex].mCamera.mY,
-					lVertices[lVertex].mCamera.mZ);
+			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+					lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+					lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+					lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+				lBatch.mVertexCount += 3;
 			}
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
+
+			lBatches.push_back(lBatch);
 		}
 		else {
-			SetOpenGLColorFromPaletteIndex(lSurface.mBitmap->GetPlainColor(), 255);
-			glBegin(GL_TRIANGLE_FAN);
-			for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
-				glVertex3d(lVertices[lVertex].mCamera.mX,
-					lVertices[lVertex].mCamera.mY,
-					lVertices[lVertex].mCamera.mZ);
+			MR_UInt8 lColor = lSurface.mBitmap->GetPlainColor();
+			GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+
+			MR_GpuSceneBatch lBatch;
+			lBatch.mTexture = 0;
+			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+			lBatch.mVertexCount = 0;
+
+			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
+				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 1.0f);
+				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
+					0.0f, 0.0f, lR, lG, lB, 1.0f);
+				lBatch.mVertexCount += 3;
 			}
-			glEnd();
+
+			lBatches.push_back(lBatch);
 		}
 	}
 
+	// --- TEXTURED PATCHES ---
 	for(size_t lPatchIndex = 0; lPatchIndex < lFrame.mBitmapPatches.size(); lPatchIndex++) {
 		const MR_GpuScenePatchBitmap &lPatch = lFrame.mBitmapPatches[lPatchIndex];
 		if((lPatch.mPatch == NULL) || (lPatch.mBitmap == NULL)) {
@@ -2710,73 +2838,71 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			continue;
 		}
 
-		int lTextureWidth = 0;
-		int lTextureHeight = 0;
-		GLuint lTexture = GetOrCreateGpuBitmapTexture(lPatch.mBitmap, 0,
-			lTextureWidth, lTextureHeight);
+		int lTexW = 0, lTexH = 0;
+		GLuint lTexture = GetOrCreateGpuBitmapTexture(lPatch.mBitmap, 0, lTexW, lTexH);
 		if(lTexture == 0) {
 			continue;
 		}
 
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, lTexture);
-		glColor4ub(255, 255, 255, 255);
+		MR_GpuSceneBatch lBatch;
+		lBatch.mTexture = lTexture;
+		lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+		lBatch.mVertexCount = 0;
 
-		for(int lV = 0; lV < (lVRes - 1); lV++) {
-			for(int lU = 0; lU < (lURes - 1); lU++) {
-				const int lBase = lV * lURes + lU;
-				const int lIndices[4] = {
-					lBase,
-					lBase + 1,
-					lBase + lURes + 1,
-					lBase + lURes
+		for(int lPV = 0; lPV < (lVRes - 1); lPV++) {
+			for(int lPU = 0; lPU < (lURes - 1); lPU++) {
+				const int lBase = lPV * lURes + lPU;
+				const int lIndices[4] = { lBase, lBase + 1, lBase + lURes + 1, lBase + lURes };
+				const GLfloat lUC[4] = {
+					static_cast<GLfloat>(lPU) / (lURes - 1),
+					static_cast<GLfloat>(lPU + 1) / (lURes - 1),
+					static_cast<GLfloat>(lPU + 1) / (lURes - 1),
+					static_cast<GLfloat>(lPU) / (lURes - 1)
 				};
-				const GLfloat lUCoord[4] = {
-					static_cast<GLfloat>(lU) / static_cast<GLfloat>(lURes - 1),
-					static_cast<GLfloat>(lU + 1) / static_cast<GLfloat>(lURes - 1),
-					static_cast<GLfloat>(lU + 1) / static_cast<GLfloat>(lURes - 1),
-					static_cast<GLfloat>(lU) / static_cast<GLfloat>(lURes - 1)
+				const GLfloat lVC[4] = {
+					static_cast<GLfloat>(lPV) / (lVRes - 1),
+					static_cast<GLfloat>(lPV) / (lVRes - 1),
+					static_cast<GLfloat>(lPV + 1) / (lVRes - 1),
+					static_cast<GLfloat>(lPV + 1) / (lVRes - 1)
 				};
-				const GLfloat lVCoord[4] = {
-					static_cast<GLfloat>(lV) / static_cast<GLfloat>(lVRes - 1),
-					static_cast<GLfloat>(lV) / static_cast<GLfloat>(lVRes - 1),
-					static_cast<GLfloat>(lV + 1) / static_cast<GLfloat>(lVRes - 1),
-					static_cast<GLfloat>(lV + 1) / static_cast<GLfloat>(lVRes - 1)
-				};
-				std::vector<MR_GpuSceneTexturedVertex> lVertices;
-				lVertices.reserve(4);
 
-				for(int lVertex = 0; lVertex < 4; lVertex++) {
+				std::vector<MR_GpuSceneTexturedVertex> lClipVerts;
+				lClipVerts.reserve(4);
+				for(int lCV = 0; lCV < 4; lCV++) {
 					MR_3DCoordinate lWorldVertex;
-					MR_GpuSceneTexturedVertex lTexturedVertex;
-					ApplyGpuScenePositionMatrix(lPatch.mMatrix, lNodeList[lIndices[lVertex]], lWorldVertex);
-					if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lTexturedVertex.mCamera)) {
-						lTexturedVertex.mCamera.mVisible = FALSE;
+					MR_GpuSceneTexturedVertex lTV;
+					ApplyGpuScenePositionMatrix(lPatch.mMatrix, lNodeList[lIndices[lCV]], lWorldVertex);
+					if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lTV.mCamera)) {
+						lTV.mCamera.mVisible = FALSE;
 					}
-					lTexturedVertex.mU = lUCoord[lVertex];
-					lTexturedVertex.mV = lVCoord[lVertex];
-					lVertices.push_back(lTexturedVertex);
+					lTV.mU = lUC[lCV];
+					lTV.mV = lVC[lCV];
+					lClipVerts.push_back(lTV);
 				}
 
-				ClipGpuSceneTexturedPolygonToNearPlane(lVertices, -lNearPlane);
-				if(lVertices.size() < 3) {
+				ClipGpuSceneTexturedPolygonToNearPlane(lClipVerts, -lNearPlane);
+				if(lClipVerts.size() < 3) {
 					continue;
 				}
 
-				glBegin(GL_POLYGON);
-				for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
-					glTexCoord2f(lVertices[lVertex].mU, lVertices[lVertex].mV);
-					glVertex3d(lVertices[lVertex].mCamera.mX,
-						lVertices[lVertex].mCamera.mY,
-						lVertices[lVertex].mCamera.mZ);
+				for(size_t lCV = 1; lCV + 1 < lClipVerts.size(); lCV++) {
+					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lCV].mCamera.mX, lClipVerts[lCV].mCamera.mY, lClipVerts[lCV].mCamera.mZ,
+						lClipVerts[lCV].mU, lClipVerts[lCV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lCV+1].mCamera.mX, lClipVerts[lCV+1].mCamera.mY, lClipVerts[lCV+1].mCamera.mZ,
+						lClipVerts[lCV+1].mU, lClipVerts[lCV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					lBatch.mVertexCount += 3;
 				}
-				glEnd();
 			}
+		}
+
+		if(lBatch.mVertexCount > 0) {
+			lBatches.push_back(lBatch);
 		}
 	}
 
-	glDisable(GL_TEXTURE_2D);
-
+	// --- COLOR PATCHES ---
 	for(size_t lPatchIndex = 0; lPatchIndex < lFrame.mColorPatches.size(); lPatchIndex++) {
 		const MR_GpuScenePatchColor &lPatch = lFrame.mColorPatches[lPatchIndex];
 		if(lPatch.mPatch == NULL) {
@@ -2794,58 +2920,197 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			continue;
 		}
 
-		SetOpenGLColorFromPaletteIndex(lPatch.mColor, 255);
+		GLfloat lR = PALETTE_R(lPatch.mColor);
+		GLfloat lG = PALETTE_G(lPatch.mColor);
+		GLfloat lB = PALETTE_B(lPatch.mColor);
 
-		for(int lV = 0; lV < (lVRes - 1); lV++) {
-			for(int lU = 0; lU < (lURes - 1); lU++) {
-				const int lBase = lV * lURes + lU;
-				const int lIndices[4] = {
-					lBase,
-					lBase + 1,
-					lBase + lURes + 1,
-					lBase + lURes
-				};
-				std::vector<MR_GpuSceneColoredVertex> lVertices;
-				lVertices.reserve(4);
+		MR_GpuSceneBatch lBatch;
+		lBatch.mTexture = 0;
+		lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
+		lBatch.mVertexCount = 0;
 
-				for(int lVertex = 0; lVertex < 4; lVertex++) {
+		for(int lPV = 0; lPV < (lVRes - 1); lPV++) {
+			for(int lPU = 0; lPU < (lURes - 1); lPU++) {
+				const int lBase = lPV * lURes + lPU;
+				const int lIndices[4] = { lBase, lBase + 1, lBase + lURes + 1, lBase + lURes };
+
+				std::vector<MR_GpuSceneColoredVertex> lClipVerts;
+				lClipVerts.reserve(4);
+				for(int lCV = 0; lCV < 4; lCV++) {
 					MR_3DCoordinate lWorldVertex;
 					MR_GpuSceneColoredVertex lColoredVertex;
-					ApplyGpuScenePositionMatrix(lPatch.mMatrix, lNodeList[lIndices[lVertex]], lWorldVertex);
+					ApplyGpuScenePositionMatrix(lPatch.mMatrix, lNodeList[lIndices[lCV]], lWorldVertex);
 					if(!TransformGpuSceneVertexToCameraSpace(lFrame, lWorldVertex, lColoredVertex.mCamera)) {
 						lColoredVertex.mCamera.mVisible = FALSE;
 					}
-					lVertices.push_back(lColoredVertex);
+					lClipVerts.push_back(lColoredVertex);
 				}
 
-				ClipGpuSceneColoredPolygonToNearPlane(lVertices, -lNearPlane);
-				if(lVertices.size() < 3) {
+				ClipGpuSceneColoredPolygonToNearPlane(lClipVerts, -lNearPlane);
+				if(lClipVerts.size() < 3) {
 					continue;
 				}
 
-				glBegin(GL_POLYGON);
-				for(size_t lVertex = 0; lVertex < lVertices.size(); lVertex++) {
-					glVertex3d(lVertices[lVertex].mCamera.mX,
-						lVertices[lVertex].mCamera.mY,
-						lVertices[lVertex].mCamera.mZ);
+				for(size_t lCV = 1; lCV + 1 < lClipVerts.size(); lCV++) {
+					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lCV].mCamera.mX, lClipVerts[lCV].mCamera.mY, lClipVerts[lCV].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 1.0f);
+					PUSH_TRI_VERTEX(lClipVerts[lCV+1].mCamera.mX, lClipVerts[lCV+1].mCamera.mY, lClipVerts[lCV+1].mCamera.mZ,
+						0.0f, 0.0f, lR, lG, lB, 1.0f);
+					lBatch.mVertexCount += 3;
 				}
-				glEnd();
 			}
 		}
+
+		if(lBatch.mVertexCount > 0) {
+			lBatches.push_back(lBatch);
+		}
+	}
+
+	#undef PUSH_TRI_VERTEX
+	#undef PALETTE_R
+	#undef PALETTE_G
+	#undef PALETTE_B
+
+	// --- DRAW ALL BATCHES ---
+	if(lAllVertices.empty() || lBatches.empty()) {
+		return;
+	}
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+
+	const BOOL lUseSceneShader = (mOpenGLState != NULL) && mOpenGLState->sceneShaderReady
+		&& (mOpenGLState->sceneVbo != 0);
+
+	if(lUseSceneShader) {
+		// Build and upload MVP matrix
+		GLfloat lMvp[16];
+		BuildGpuSceneMVP(lFrame, lMvp);
+
+		gGL.UseProgram(mOpenGLState->sceneShaderProgram);
+		gGL.UniformMatrix4fv(mOpenGLState->sceneMvpUniform, 1, GL_FALSE, lMvp);
+		gGL.Uniform1i(mOpenGLState->sceneTextureUniform, 0);
+
+		// Upload all vertices to VBO
+		gGL.BindBuffer(GL_ARRAY_BUFFER, mOpenGLState->sceneVbo);
+		gGL.BufferData(GL_ARRAY_BUFFER,
+			static_cast<ptrdiff_t>(lAllVertices.size() * sizeof(MR_GpuSceneBatchVertex)),
+			&lAllVertices[0], GL_DYNAMIC_DRAW);
+
+		// Set up vertex attributes
+		const GLsizei lStride = sizeof(MR_GpuSceneBatchVertex);
+		if(mOpenGLState->scenePositionAttrib >= 0) {
+			gGL.EnableVertexAttribArray(mOpenGLState->scenePositionAttrib);
+			gGL.VertexAttribPointer(mOpenGLState->scenePositionAttrib, 3, GL_FLOAT, GL_FALSE,
+				lStride, reinterpret_cast<const void *>(0));
+		}
+		if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+			gGL.EnableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+			gGL.VertexAttribPointer(mOpenGLState->sceneTexCoordAttrib, 2, GL_FLOAT, GL_FALSE,
+				lStride, reinterpret_cast<const void *>(3 * sizeof(GLfloat)));
+		}
+		if(mOpenGLState->sceneColorAttrib >= 0) {
+			gGL.EnableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+			gGL.VertexAttribPointer(mOpenGLState->sceneColorAttrib, 4, GL_FLOAT, GL_FALSE,
+				lStride, reinterpret_cast<const void *>(5 * sizeof(GLfloat)));
+		}
+
+		// Draw each batch
+		for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+			const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+			if(lBatch.mVertexCount == 0) {
+				continue;
+			}
+
+			if(lBatch.mTexture != 0) {
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+				gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+			}
+			else {
+				glDisable(GL_TEXTURE_2D);
+				gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 0.0f);
+			}
+
+			glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+		}
+
+		// Cleanup
+		if(mOpenGLState->scenePositionAttrib >= 0) {
+			gGL.DisableVertexAttribArray(mOpenGLState->scenePositionAttrib);
+		}
+		if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+			gGL.DisableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+		}
+		if(mOpenGLState->sceneColorAttrib >= 0) {
+			gGL.DisableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+		}
+		gGL.BindBuffer(GL_ARRAY_BUFFER, 0);
+		gGL.UseProgram(0);
+	}
+	else {
+		// Fallback: immediate mode rendering (legacy path)
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glFrustum(-static_cast<GLdouble>(lFrame.mPlanHW),
+			static_cast<GLdouble>(lFrame.mPlanHW),
+			-static_cast<GLdouble>(lFrame.mPlanVW),
+			static_cast<GLdouble>(lFrame.mPlanVW),
+			lNearPlane,
+			max(lNearPlane + 1.0, 2000000.0));
+		const GLdouble lScrollNdc = -2.0 * static_cast<GLdouble>(lFrame.mScroll) /
+			max(1, lFrame.mViewport.bottom - lFrame.mViewport.top);
+		glTranslated(0.0, lScrollNdc, 0.0);
+
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+
+		for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+			const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+			if(lBatch.mVertexCount == 0) {
+				continue;
+			}
+
+			if(lBatch.mTexture != 0) {
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+				glColor4ub(255, 255, 255, 255);
+			}
+			else {
+				glDisable(GL_TEXTURE_2D);
+			}
+
+			glBegin(GL_TRIANGLES);
+			for(int lV = lBatch.mStartVertex; lV < lBatch.mStartVertex + lBatch.mVertexCount; lV++) {
+				const MR_GpuSceneBatchVertex &lVert = lAllVertices[lV];
+				if(lBatch.mTexture != 0) {
+					glTexCoord2f(lVert.mU, lVert.mV);
+				}
+				else {
+					glColor4f(lVert.mR, lVert.mG, lVert.mB, lVert.mA);
+				}
+				glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
+			}
+			glEnd();
+		}
+
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-
-	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
 }
 
 void MR_VideoBuffer::LogPerformanceSample(DWORD pFrameAvgMs, DWORD pCpuAvgMs, DWORD pPresentAvgMs,
