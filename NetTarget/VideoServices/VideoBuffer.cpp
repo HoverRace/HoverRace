@@ -2835,12 +2835,12 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		}
 
 		// Backface check: only render walls facing the camera.
-		// Wall normal points to the left of the UL→LR direction.
+		// Wall normal points to the right of the UL→LR direction.
 		{
 			const double lWallDX = static_cast<double>(lWall.mLowerRight.mX - lWall.mUpperLeft.mX);
 			const double lWallDY = static_cast<double>(lWall.mLowerRight.mY - lWall.mUpperLeft.mY);
-			const double lNormalX = -lWallDY;
-			const double lNormalY = lWallDX;
+			const double lNormalX = lWallDY;
+			const double lNormalY = -lWallDX;
 			const double lToCamX = static_cast<double>(lFrame.mCameraPosition.mX - lWall.mUpperLeft.mX);
 			const double lToCamY = static_cast<double>(lFrame.mCameraPosition.mY - lWall.mUpperLeft.mY);
 			if((lNormalX * lToCamX + lNormalY * lToCamY) < 0.0) {
