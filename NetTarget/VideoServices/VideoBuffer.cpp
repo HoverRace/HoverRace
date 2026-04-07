@@ -2782,10 +2782,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
 		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
 
-		// V range: per-column angle-dependent, matching CPU formula.
-		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with per-column lineIncrement
-		// that depends on viewing distance: lineInc = BACK_Y_RES * planVW / (distance * yRes/2).
-		// Columns at screen edges have larger distance, so less bitmap extent.
+		// V range: computed at center column, matching CPU formula.
+		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with lineIncrement
+		// = BACK_Y_RES * planVW / (distance * yRes/2). At center column, distance = planDist.
+		// Using uniform V across all strips avoids wavy distortion on vertical bitmap elements.
 		const GLfloat lHorizonV = 1.0f / 9.0f;
 		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
 		const double lBgYResHalf = static_cast<double>(max(1,
@@ -2793,6 +2793,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		// Number of screen rows above/below horizon
 		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
 		const double lRowsBelow = lBgYResHalf * 0.25; // mYRes/8 = (mYRes/2)/4
+		// V extent at center column (distance = planDist)
+		const double lLineInc = lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
+		const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
 
 		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
 		const GLfloat lViewportH = max(1.0f,
@@ -2808,22 +2812,14 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glPushMatrix();
 		glLoadIdentity();
 
-		// Draw as a strip of vertical slices with atan-corrected U and
-		// per-column angle-dependent V for cylindrical projection.
+		// Draw as a strip of vertical slices with atan-corrected U for cylindrical projection.
+		// V is uniform across all strips (computed at center column) to keep buildings straight.
 		const int lBgStrips = 32;
 		glBegin(GL_QUAD_STRIP);
 		for(int lS = 0; lS <= lBgStrips; lS++) {
 			const GLfloat lNdcX = -1.0f + 2.0f * static_cast<GLfloat>(lS) / static_cast<GLfloat>(lBgStrips);
-			const double lOffset = static_cast<double>(lNdcX) * lBgPlanHW;
-			const GLfloat lAngle = static_cast<GLfloat>(atan(lOffset / lBgPlanDist));
+			const GLfloat lAngle = static_cast<GLfloat>(atan(static_cast<double>(lNdcX) * lBgPlanHW / lBgPlanDist));
 			const GLfloat lU = lBaseU + lAngle / (2.0f * 3.14159265f);
-
-			// Per-column V extent: lineInc (bitmap rows per screen row) depends on viewing distance
-			const double lDistance = sqrt(lBgPlanDist * lBgPlanDist + lOffset * lOffset);
-			const double lLineInc = lBgPlanVW / (lDistance * lBgYResHalf); // in fraction of bitmap height
-			const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
-			const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
-
 			glTexCoord2f(lU, lVTop);    glVertex3f(lNdcX,  1.0f, 0.999f);
 			glTexCoord2f(lU, lVBottom); glVertex3f(lNdcX, lBgBottom, 0.999f);
 		}
@@ -2926,25 +2922,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			continue;
 		}
 
-		// LOD selection based on approximate projected height
-		int lWallSubBitmap = 0;
-		if(lWall.mPrimaryBitmap->GetNbSubBitmap() > 1) {
-			MR_GpuSceneProjectedVertex lProj0, lProj3;
-			if(ProjectGpuSceneVertex(lFrame, lWorldCorners[0], lProj0)
-				&& ProjectGpuSceneVertex(lFrame, lWorldCorners[3], lProj3)) {
-				int lProjHeight = max(1, static_cast<int>(
-					fabs(static_cast<double>(lProj3.mY - lProj0.mY))
-					* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
-				int lTileHeight;
-				if(lUseFittedHeight) {
-					lTileHeight = max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount);
-				} else {
-					lTileHeight = max(1, MulDiv(lProjHeight, lBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
-				}
-				lWallSubBitmap = lWall.mPrimaryBitmap->GetBestBitmapForYRes(lTileHeight);
-				if(lWallSubBitmap < 0) lWallSubBitmap = 0;
-			}
-		}
+		// Always use highest quality sub-bitmap (index 0) for GPU rendering.
+		// The GPU handles LOD automatically via GL_GENERATE_MIPMAP, so CPU-side
+		// LOD selection would just pick unnecessarily low-res textures.
+		const int lWallSubBitmap = 0;
 
 		// Determine if this wall uses alternate texture animation
 		const BOOL lHasAlternate = (lWall.mAlternateBitmap != NULL)
@@ -2954,29 +2935,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			// Split wall into per-tile sub-quads with alternating textures.
 			// CPU code: serialStart decrements each tile; when == 0, use alternate bitmap.
 			int lSerialPos = lWall.mSerialStart;
-
-			// Get LOD sub-bitmap for alternate texture too
-			int lAltSubBitmap = 0;
-			if(lWall.mAlternateBitmap->GetNbSubBitmap() > 1) {
-				MR_GpuSceneProjectedVertex lProj0, lProj3;
-				if(ProjectGpuSceneVertex(lFrame, lWorldCorners[0], lProj0)
-					&& ProjectGpuSceneVertex(lFrame, lWorldCorners[3], lProj3)) {
-					const int lAltBitmapHeightMm = max(1, lWall.mAlternateBitmapHeight);
-					int lProjHeight = max(1, static_cast<int>(
-						fabs(static_cast<double>(lProj3.mY - lProj0.mY))
-						* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
-					const BOOL lAltUseFittedHeight = (lWallHeight > lAltBitmapHeightMm);
-					const int lAltHeightRepeatCount = max(1, (static_cast<int>(lWallHeight) + (lAltBitmapHeightMm / 2)) / lAltBitmapHeightMm);
-					int lTileHeight;
-					if(lAltUseFittedHeight) {
-						lTileHeight = max(1, (lProjHeight + (lAltHeightRepeatCount / 2)) / lAltHeightRepeatCount);
-					} else {
-						lTileHeight = max(1, MulDiv(lProjHeight, lAltBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
-					}
-					lAltSubBitmap = lWall.mAlternateBitmap->GetBestBitmapForYRes(lTileHeight);
-					if(lAltSubBitmap < 0) lAltSubBitmap = 0;
-				}
-			}
+			const int lAltSubBitmap = 0;
 
 			for(int lTile = 0; lTile < lBitmapRepeatCount; lTile++) {
 				const double lT0 = static_cast<double>(lTile) / lURepeat;
