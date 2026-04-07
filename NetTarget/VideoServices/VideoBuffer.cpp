@@ -768,6 +768,7 @@ struct MR_OpenGLState
 	GLuint fragmentShader;
 	GLint indexUniform;
 	GLint paletteUniform;
+	GLint clearIdxUniform;
 	int textureWidth;
 	int textureHeight;
 	BOOL shaderReady;
@@ -790,7 +791,7 @@ struct MR_OpenGLState
 		windowDc(NULL), context(NULL),
 		frameTexture(0), paletteTexture(0),
 		shaderProgram(0), vertexShader(0), fragmentShader(0),
-		indexUniform(-1), paletteUniform(-1),
+		indexUniform(-1), paletteUniform(-1), clearIdxUniform(-1),
 		textureWidth(0), textureHeight(0),
 		shaderReady(FALSE),
 		sceneShaderProgram(0), sceneVertexShader(0), sceneFragmentShader(0),
@@ -1362,12 +1363,15 @@ namespace {
 		static const char *FRAGMENT_SHADER =
 			"uniform sampler2D uIndexTex;\n"
 			"uniform sampler2D uPaletteTex;\n"
+			"uniform float uClearIdx;\n"
 			"varying vec2 vTexCoord;\n"
 			"void main()\n"
 			"{\n"
 			"    float idx = texture2D(uIndexTex, vTexCoord).r;\n"
 			"    float paletteX = ((idx * 255.0) + 0.5) / 256.0;\n"
 			"    gl_FragColor = texture2D(uPaletteTex, vec2(paletteX, 0.5));\n"
+			"    if(uClearIdx >= 0.0 && abs(idx * 255.0 - uClearIdx) < 0.5)\n"
+			"        gl_FragColor.a = 0.0;\n"
 			"}\n";
 
 		if((state == NULL) || !LoadOpenGLFunctions()) {
@@ -1404,6 +1408,7 @@ namespace {
 
 		state->indexUniform = gGL.GetUniformLocation(state->shaderProgram, "uIndexTex");
 		state->paletteUniform = gGL.GetUniformLocation(state->shaderProgram, "uPaletteTex");
+		state->clearIdxUniform = gGL.GetUniformLocation(state->shaderProgram, "uClearIdx");
 		state->shaderReady = TRUE;
 		return TRUE;
 	}
@@ -2213,63 +2218,126 @@ recompute_path:
 	}
 
 	glViewport(0, 0, mDisplayXRes, mDisplayYRes);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	glDisable(GL_FRAMEBUFFER_SRGB);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glColor4ub(255, 255, 255, 255);
-	glClear(GL_COLOR_BUFFER_BIT);
 
-	if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-		gGL.UseProgram(mOpenGLState->shaderProgram);
-		gGL.ActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-		gGL.Uniform1i(mOpenGLState->indexUniform, 0);
-		gGL.ActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-		gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
-		gGL.ActiveTexture(GL_TEXTURE0);
-	}
-	else {
-		if(gGL.UseProgram != NULL) {
-			gGL.UseProgram(0);
-		}
-	}
+	// When GPU scene is active: render 3D scene first, then HUD overlay with transparency.
+	// Without GPU scene: render CPU framebuffer as before (opaque fullscreen quad).
+	const BOOL lGpuSceneActive = (mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled();
 
-	glBegin(GL_TRIANGLE_STRIP);
-	glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
-	glEnd();
-	if(!LogOpenGLErrors("PresentOpenGL draw")) {
-		if(useShaderPath) {
-			PRINT_LOG("OpenGL present shader fallback -> cpu_rgb reason=draw");
-			mOpenGLState->shaderReady = FALSE;
+	if(lGpuSceneActive) {
+		// 1. Clear and render GPU scene (background + geometry)
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		RenderGpuSceneOverlay();
+
+		// 2. Draw CPU framebuffer (HUD only) on top with clear color as transparent
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
+			gGL.UseProgram(mOpenGLState->shaderProgram);
+			gGL.ActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
-				GL_RGB, GL_UNSIGNED_BYTE, NULL);
-			mOpenGLState->rgbaFallback.resize(
-				static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * 3);
+			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
+			gGL.ActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
+			gGL.ActiveTexture(GL_TEXTURE0);
+			// Set clear color index so shader outputs alpha=0 for background pixels
+			if(mOpenGLState->clearIdxUniform >= 0) {
+				gGL.Uniform1f(mOpenGLState->clearIdxUniform,
+					static_cast<GLfloat>(mGpuClearColorIndex));
+			}
+		}
+		else {
 			if(gGL.UseProgram != NULL) {
 				gGL.UseProgram(0);
 			}
-			mOpenGLLoggedPresentPath = FALSE;
-			ReleaseOpenGLCurrent();
-			goto recompute_path;
 		}
-		mOpenGLPresentFailureLogCount++;
-		ReleaseOpenGLCurrent();
-		return FALSE;
-	}
 
-	if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-		gGL.UseProgram(0);
-	}
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	RenderGpuSceneOverlay();
+		glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
+		glEnd();
+
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+
+		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
+			gGL.UseProgram(0);
+		}
+	}
+	else {
+		// Original path: CPU framebuffer as opaque fullscreen quad, then GPU overlay
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
+			gGL.UseProgram(mOpenGLState->shaderProgram);
+			gGL.ActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
+			gGL.ActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
+			gGL.ActiveTexture(GL_TEXTURE0);
+			// No clear color transparency in non-GPU mode
+			if(mOpenGLState->clearIdxUniform >= 0) {
+				gGL.Uniform1f(mOpenGLState->clearIdxUniform, -1.0f);
+			}
+		}
+		else {
+			if(gGL.UseProgram != NULL) {
+				gGL.UseProgram(0);
+			}
+		}
+
+		glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
+		glEnd();
+		if(!LogOpenGLErrors("PresentOpenGL draw")) {
+			if(useShaderPath) {
+				PRINT_LOG("OpenGL present shader fallback -> cpu_rgb reason=draw");
+				mOpenGLState->shaderReady = FALSE;
+				glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
+					GL_RGB, GL_UNSIGNED_BYTE, NULL);
+				mOpenGLState->rgbaFallback.resize(
+					static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * 3);
+				if(gGL.UseProgram != NULL) {
+					gGL.UseProgram(0);
+				}
+				mOpenGLLoggedPresentPath = FALSE;
+				ReleaseOpenGLCurrent();
+				goto recompute_path;
+			}
+			mOpenGLPresentFailureLogCount++;
+			ReleaseOpenGLCurrent();
+			return FALSE;
+		}
+
+		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
+			gGL.UseProgram(0);
+		}
+
+		RenderGpuSceneOverlay();
+	}
 
 	if(!SwapBuffers(mOpenGLState->windowDc)) {
 		if(mOpenGLPresentFailureLogCount < 10) {
@@ -3979,15 +4047,9 @@ void MR_VideoBuffer::Flip()
 
 void MR_VideoBuffer::Clear(MR_UInt8 pColor)
 {
-	if(IsGpuRenderFullEnabled() && (mGpuSceneRenderer != NULL)
-		&& mGpuSceneRenderer->IsEnabled()) {
-		// Still clear the CPU buffer so the HUD overlay has a clean canvas.
-		// Track the clear color so PresentOpenGL can make it transparent.
+	// Always track the clear color when GPU scene is active (needed for HUD transparency)
+	if((mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled()) {
 		mGpuClearColorIndex = pColor;
-		if(mBuffer != NULL) {
-			memset(mBuffer, pColor, mLineLen * mYRes);
-		}
-		return;
 	}
 
 	ASSERT(mBuffer != NULL);
