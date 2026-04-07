@@ -2782,18 +2782,9 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
 		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
 
-		// V range: match CPU background mapping.
-		// CPU uses lBaseSrcIndex = MR_BACK_Y_RES / 9 as the horizon row in the bitmap.
-		// From horizon upward, it advances by lineIncrement per viewport row.
-		// At center column: lineIncrement = MR_BACK_Y_RES * mPlanVW / (mPlanDist * mYRes/2)
-		// Over mYRes/2 rows: total advance = MR_BACK_Y_RES * mPlanVW / mPlanDist
-		// So V_top = (1/9 + mPlanVW/mPlanDist), V_horizon = 1/9,
-		// V_bottom = (1/9 - mPlanVW/(4*mPlanDist)) for the mYRes/8 extension below horizon.
-		const GLfloat lVwOverDist = static_cast<GLfloat>(lFrame.mPlanVW)
-			/ static_cast<GLfloat>(max(1, lFrame.mPlanDist));
-		const GLfloat lHorizonV = 1.0f / 9.0f;
-		const GLfloat lVTop = min(1.0f, lHorizonV + lVwOverDist);
-		const GLfloat lVBottom = max(0.0f, lHorizonV - lVwOverDist / 4.0f);
+		// V range: full bitmap height, V=0 at bottom (ground), V=1 at top (sky).
+		const GLfloat lVTop = 1.0f;
+		const GLfloat lVBottom = 0.0f;
 
 		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
 		// CPU horizon at viewport row (mYRes/2 - 1 + mScroll).
@@ -2884,7 +2875,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		lWorldCorners[2] = lWall.mLowerRight;
 		lWorldCorners[3] = MR_3DCoordinate(lWall.mUpperLeft.mX, lWall.mUpperLeft.mY, lWall.mLowerRight.mZ);
 
-		// Compute tiling
+		// Compute tiling - match CPU formula exactly (3DViewportRendering.cpp lines 364-366)
 		const int lBitmapWidth = max(1, lWall.mPrimaryBitmap->GetWidth());
 		const int lBitmapHeightMm = max(1, lWall.mPrimaryBitmap->GetHeight());
 		int lBitmapRepeatCount = (lWall.mLen + (lBitmapWidth / 2)) / lBitmapWidth;
@@ -2896,7 +2887,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lURepeat = static_cast<double>(lBitmapRepeatCount);
 		const double lVRepeat = lUseFittedHeight
 			? static_cast<double>(lBitmapHeightRepeatCount)
-			: (lWallHeight / lBitmapHeightMm);
+			: (lWallHeight / static_cast<double>(lBitmapHeightMm));
 
 		// Build textured vertices with near-plane clipping
 		std::vector<MR_GpuSceneTexturedVertex> lClipVerts;
@@ -2928,9 +2919,12 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 				int lProjHeight = max(1, static_cast<int>(
 					fabs(static_cast<double>(lProj3.mY - lProj0.mY))
 					* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
-				int lTileHeight = lUseFittedHeight
-					? max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount)
-					: max(1, MulDiv(lProjHeight, lBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+				int lTileHeight;
+				if(lUseFittedHeight) {
+					lTileHeight = max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount);
+				} else {
+					lTileHeight = max(1, MulDiv(lProjHeight, lBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+				}
 				lWallSubBitmap = lWall.mPrimaryBitmap->GetBestBitmapForYRes(lTileHeight);
 				if(lWallSubBitmap < 0) lWallSubBitmap = 0;
 			}
@@ -2955,9 +2949,14 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 					int lProjHeight = max(1, static_cast<int>(
 						fabs(static_cast<double>(lProj3.mY - lProj0.mY))
 						* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));
-					int lTileHeight = lUseFittedHeight
-						? max(1, (lProjHeight + (lBitmapHeightRepeatCount / 2)) / lBitmapHeightRepeatCount)
-						: max(1, MulDiv(lProjHeight, lAltBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+					const BOOL lAltUseFittedHeight = (lWallHeight > lAltBitmapHeightMm);
+					const int lAltHeightRepeatCount = max(1, (static_cast<int>(lWallHeight) + (lAltBitmapHeightMm / 2)) / lAltBitmapHeightMm);
+					int lTileHeight;
+					if(lAltUseFittedHeight) {
+						lTileHeight = max(1, (lProjHeight + (lAltHeightRepeatCount / 2)) / lAltHeightRepeatCount);
+					} else {
+						lTileHeight = max(1, MulDiv(lProjHeight, lAltBitmapHeightMm, max(1, static_cast<int>(lWallHeight))));
+					}
 					lAltSubBitmap = lWall.mAlternateBitmap->GetBestBitmapForYRes(lTileHeight);
 					if(lAltSubBitmap < 0) lAltSubBitmap = 0;
 				}
