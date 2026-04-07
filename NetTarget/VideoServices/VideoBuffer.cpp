@@ -2763,7 +2763,9 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			sLastBackgroundBitmap = lFrame.mBackgroundBitmap;
 		}
 
-		// Draw background as fullscreen quad in NDC, behind everything
+		// Render background as a 3D cylinder using the scene's perspective projection.
+		// This naturally gives correct cylindrical panorama projection without any
+		// atan hacks or per-strip V correction. The GPU's perspective handles it all.
 		if(gGL.UseProgram != NULL) {
 			gGL.UseProgram(0);
 		}
@@ -2773,60 +2775,75 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
 		glColor4ub(255, 255, 255, 255);
 
-		// U is based on camera orientation: orientation wraps around the panorama.
-		// CPU formula: baseBitmapColumn = (MR_BACK_X_RES + ((MR_PI/2 - mOrientation) * MR_BACK_X_RES / MR_2PI))
-		// So the base U coordinate is (PI/2 - orientation) / 2PI = 0.25 - orientation/2PI.
-		const GLfloat lBaseU = 0.25f - static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
-		// CPU uses atan() per-column for cylindrical projection of the panorama.
-		// We replicate this by splitting into strips with atan-corrected U coords.
+		// Set up the same frustum projection used for scene geometry
+		const double lBgNearPlane = max(1.0, static_cast<double>(lFrame.mPlanDist));
 		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
-		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
-
-		// V range: per-column angle-dependent, matching CPU formula.
-		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with per-column lineIncrement
-		// = planVW / (distance * yRes/2). Both U and V compress at edges proportionally,
-		// keeping building proportions uniform across the screen.
-		const GLfloat lHorizonV = 1.0f / 9.0f;
 		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
-		const double lBgYResHalf = static_cast<double>(max(1,
-			(lFrame.mViewport.bottom - lFrame.mViewport.top))) * 0.5;
-		// Number of screen rows above/below horizon
-		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
-		const double lRowsBelow = lBgYResHalf * 0.25; // mYRes/8 = (mYRes/2)/4
-
-		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
-		const GLfloat lViewportH = max(1.0f,
-			static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
-		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) / lViewportH;
-		const GLfloat lPixelNdc = 2.0f / lViewportH;
-		const GLfloat lBgBottom = max(-1.0f, lPixelNdc - 0.25f - lScrollNorm * 2.0f);
 
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
+		glFrustum(-lBgPlanHW, lBgPlanHW, -lBgPlanVW, lBgPlanVW,
+			lBgNearPlane, 2000000.0);
+		// Apply scroll as vertical translation in projection (same as scene)
+		const double lBgScrollTranslate = -2.0 * static_cast<double>(lFrame.mScroll) /
+			max(1, lFrame.mViewport.bottom - lFrame.mViewport.top);
+		GLfloat lScrollMat[16];
+		memset(lScrollMat, 0, sizeof(lScrollMat));
+		lScrollMat[0] = 1.0f; lScrollMat[5] = 1.0f; lScrollMat[10] = 1.0f; lScrollMat[15] = 1.0f;
+		lScrollMat[13] = static_cast<GLfloat>(lBgScrollTranslate);
+		glMultMatrixf(lScrollMat);
+
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
 
-		// Draw as strips with atan-corrected U and per-column V for cylindrical projection.
-		// Both U and V vary per strip to keep proportions correct at edges.
-		// Use 64 strips for smooth V interpolation (avoids visible seams on vertical lines).
+		// Cylinder parameters
+		const double lCylRadius = 1000000.0; // Far away, behind all geometry
+		// U base: orientation maps to panorama position
+		const GLfloat lBaseU = 0.25f - static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
+		// V range: horizon at 1/9 of bitmap, extend up/down based on planVW
+		const GLfloat lHorizonV = 1.0f / 9.0f;
+		const double lBgYResHalf = static_cast<double>(max(1,
+			(lFrame.mViewport.bottom - lFrame.mViewport.top))) * 0.5;
+		// CPU lineIncrement at center: planVW / (planDist * yResHalf)
+		// Total V extent above horizon = rowsAbove * lineInc = (yResHalf + scroll) * planVW / (planDist * yResHalf)
+		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
+		const double lRowsBelow = lBgYResHalf * 0.25;
+		const double lBgPlanDist = max(1.0, static_cast<double>(lFrame.mPlanDist));
+		const double lCenterLineInc = lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lCenterLineInc));
+		const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lCenterLineInc));
+
+		// Cylinder height: map V range to world height on the cylinder
+		// At cylinder distance, planVW maps to yResHalf screen pixels.
+		// The visible vertical angle = atan(planVW / planDist).
+		// We need the cylinder to cover from top of screen to mYRes/8 below horizon.
+		// Top of screen is at (rowsAbove) pixels above horizon.
+		// Cylinder Y at horizon = 0. Y_top = rowsAbove * cylRadius / planDist * planVW / yResHalf
+		// Simplified: Y = screenRows * cylRadius * planVW / (planDist * yResHalf)
+		const double lCylYTop = lRowsAbove * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		const double lCylYBottom = -lRowsBelow * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+
+		// Render cylinder as a quad strip spanning a full 360 degrees
+		// (GL_REPEAT handles the wrapping, and the frustum clips to the visible portion)
 		const int lBgStrips = 64;
+		const double lPI = 3.14159265358979323846;
 		glBegin(GL_QUAD_STRIP);
 		for(int lS = 0; lS <= lBgStrips; lS++) {
-			const GLfloat lNdcX = -1.0f + 2.0f * static_cast<GLfloat>(lS) / static_cast<GLfloat>(lBgStrips);
-			const double lOffset = static_cast<double>(lNdcX) * lBgPlanHW;
-			const GLfloat lAngle = static_cast<GLfloat>(atan(lOffset / lBgPlanDist));
-			const GLfloat lU = lBaseU + lAngle / (2.0f * 3.14159265f);
+			// Angle around the cylinder (full 360 degree sweep)
+			const double lTheta = 2.0 * lPI * static_cast<double>(lS) / static_cast<double>(lBgStrips);
+			// Cylinder vertex position in eye space (camera at origin, looking down -Z)
+			// Angle 0 = directly in front (-Z), sweeps around
+			const GLfloat lX = static_cast<GLfloat>(lCylRadius * sin(lTheta));
+			const GLfloat lZ = static_cast<GLfloat>(-lCylRadius * cos(lTheta));
+			// U maps angle to panorama position
+			const GLfloat lU = lBaseU + static_cast<GLfloat>(lTheta / (2.0 * lPI));
 
-			// Per-column V: compress proportionally with U at edges
-			const double lDistance = sqrt(lBgPlanDist * lBgPlanDist + lOffset * lOffset);
-			const double lLineInc = lBgPlanVW / (lDistance * lBgYResHalf);
-			const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
-			const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
-
-			glTexCoord2f(lU, lVTop);    glVertex3f(lNdcX,  1.0f, 0.999f);
-			glTexCoord2f(lU, lVBottom); glVertex3f(lNdcX, lBgBottom, 0.999f);
+			glTexCoord2f(lU, lVTop);
+			glVertex3f(lX, static_cast<GLfloat>(lCylYTop), lZ);
+			glTexCoord2f(lU, lVBottom);
+			glVertex3f(lX, static_cast<GLfloat>(lCylYBottom), lZ);
 		}
 		glEnd();
 
