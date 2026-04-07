@@ -33,6 +33,13 @@ struct MR_GpuSceneWall
 	const MR_Bitmap *mAlternateBitmap;
 	int mSerialLen;
 	int mSerialStart;
+	// Snapshot of bitmap dimensions at submission time.
+	// MR_VStretchBitmapSurface mutates these per-wall via SetWidthHeight(),
+	// so they may change before GPU rendering runs.
+	int mPrimaryBitmapWidth;
+	int mPrimaryBitmapHeight;
+	int mAlternateBitmapWidth;
+	int mAlternateBitmapHeight;
 };
 
 struct MR_GpuSceneHorizontalSurface

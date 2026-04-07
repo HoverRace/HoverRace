@@ -2876,8 +2876,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		lWorldCorners[3] = MR_3DCoordinate(lWall.mUpperLeft.mX, lWall.mUpperLeft.mY, lWall.mLowerRight.mZ);
 
 		// Compute tiling - match CPU formula exactly (3DViewportRendering.cpp lines 364-366)
-		const int lBitmapWidth = max(1, lWall.mPrimaryBitmap->GetWidth());
-		const int lBitmapHeightMm = max(1, lWall.mPrimaryBitmap->GetHeight());
+		// Use snapshotted dimensions: MR_VStretchBitmapSurface mutates bitmap width/height
+		// per-wall via SetWidthHeight(), so the live values may differ by render time.
+		const int lBitmapWidth = max(1, lWall.mPrimaryBitmapWidth);
+		const int lBitmapHeightMm = max(1, lWall.mPrimaryBitmapHeight);
 		int lBitmapRepeatCount = (lWall.mLen + (lBitmapWidth / 2)) / lBitmapWidth;
 		int lBitmapHeightRepeatCount = (static_cast<int>(lWallHeight) + (lBitmapHeightMm / 2)) / lBitmapHeightMm;
 		const BOOL lUseFittedHeight = (lWallHeight > lBitmapHeightMm);
@@ -2945,7 +2947,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 				MR_GpuSceneProjectedVertex lProj0, lProj3;
 				if(ProjectGpuSceneVertex(lFrame, lWorldCorners[0], lProj0)
 					&& ProjectGpuSceneVertex(lFrame, lWorldCorners[3], lProj3)) {
-					const int lAltBitmapHeightMm = max(1, lWall.mAlternateBitmap->GetHeight());
+					const int lAltBitmapHeightMm = max(1, lWall.mAlternateBitmapHeight);
 					int lProjHeight = max(1, static_cast<int>(
 						fabs(static_cast<double>(lProj3.mY - lProj0.mY))
 						* (lFrame.mViewport.bottom - lFrame.mViewport.top) * 0.5));

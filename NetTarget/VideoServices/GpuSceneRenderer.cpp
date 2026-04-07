@@ -89,6 +89,10 @@ void MR_GpuSceneRenderer::SubmitWall(const MR_3DCoordinate &pUpperLeft,
 	wall.mAlternateBitmap = pBitmap2;
 	wall.mSerialLen = pSerialLen;
 	wall.mSerialStart = pSerialStart;
+	wall.mPrimaryBitmapWidth = pBitmap ? pBitmap->GetWidth() : 0;
+	wall.mPrimaryBitmapHeight = pBitmap ? pBitmap->GetHeight() : 0;
+	wall.mAlternateBitmapWidth = pBitmap2 ? pBitmap2->GetWidth() : 0;
+	wall.mAlternateBitmapHeight = pBitmap2 ? pBitmap2->GetHeight() : 0;
 	mFrame.mWalls.push_back(wall);
 }
 
