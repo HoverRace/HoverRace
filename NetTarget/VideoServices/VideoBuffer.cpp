@@ -2782,10 +2782,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
 		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
 
-		// V range: computed at center column, matching CPU formula.
-		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with lineIncrement
-		// = BACK_Y_RES * planVW / (distance * yRes/2). At center column, distance = planDist.
-		// Using uniform V across all strips avoids wavy distortion on vertical bitmap elements.
+		// V range: per-column angle-dependent, matching CPU formula.
+		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with per-column lineIncrement
+		// = planVW / (distance * yRes/2). Both U and V compress at edges proportionally,
+		// keeping building proportions uniform across the screen.
 		const GLfloat lHorizonV = 1.0f / 9.0f;
 		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
 		const double lBgYResHalf = static_cast<double>(max(1,
@@ -2793,10 +2793,6 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		// Number of screen rows above/below horizon
 		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
 		const double lRowsBelow = lBgYResHalf * 0.25; // mYRes/8 = (mYRes/2)/4
-		// V extent at center column (distance = planDist)
-		const double lLineInc = lBgPlanVW / (lBgPlanDist * lBgYResHalf);
-		const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
-		const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
 
 		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
 		const GLfloat lViewportH = max(1.0f,
@@ -2812,14 +2808,23 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glPushMatrix();
 		glLoadIdentity();
 
-		// Draw as a strip of vertical slices with atan-corrected U for cylindrical projection.
-		// V is uniform across all strips (computed at center column) to keep buildings straight.
-		const int lBgStrips = 32;
+		// Draw as strips with atan-corrected U and per-column V for cylindrical projection.
+		// Both U and V vary per strip to keep proportions correct at edges.
+		// Use 64 strips for smooth V interpolation (avoids visible seams on vertical lines).
+		const int lBgStrips = 64;
 		glBegin(GL_QUAD_STRIP);
 		for(int lS = 0; lS <= lBgStrips; lS++) {
 			const GLfloat lNdcX = -1.0f + 2.0f * static_cast<GLfloat>(lS) / static_cast<GLfloat>(lBgStrips);
-			const GLfloat lAngle = static_cast<GLfloat>(atan(static_cast<double>(lNdcX) * lBgPlanHW / lBgPlanDist));
+			const double lOffset = static_cast<double>(lNdcX) * lBgPlanHW;
+			const GLfloat lAngle = static_cast<GLfloat>(atan(lOffset / lBgPlanDist));
 			const GLfloat lU = lBaseU + lAngle / (2.0f * 3.14159265f);
+
+			// Per-column V: compress proportionally with U at edges
+			const double lDistance = sqrt(lBgPlanDist * lBgPlanDist + lOffset * lOffset);
+			const double lLineInc = lBgPlanVW / (lDistance * lBgYResHalf);
+			const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
+			const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
+
 			glTexCoord2f(lU, lVTop);    glVertex3f(lNdcX,  1.0f, 0.999f);
 			glTexCoord2f(lU, lVBottom); glVertex3f(lNdcX, lBgBottom, 0.999f);
 		}
