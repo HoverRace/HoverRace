@@ -2782,14 +2782,19 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
 		const double lBgPlanDist = static_cast<double>(max(1, lFrame.mPlanDist));
 
-		// V range: full bitmap height, V=0 at bottom (ground), V=1 at top (sky).
-		const GLfloat lVTop = 1.0f;
-		const GLfloat lVBottom = 0.0f;
+		// V range: per-column angle-dependent, matching CPU formula.
+		// CPU uses horizon at bitmap row MR_BACK_Y_RES/9, with per-column lineIncrement
+		// that depends on viewing distance: lineInc = BACK_Y_RES * planVW / (distance * yRes/2).
+		// Columns at screen edges have larger distance, so less bitmap extent.
+		const GLfloat lHorizonV = 1.0f / 9.0f;
+		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
+		const double lBgYResHalf = static_cast<double>(max(1,
+			(lFrame.mViewport.bottom - lFrame.mViewport.top))) * 0.5;
+		// Number of screen rows above/below horizon
+		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
+		const double lRowsBelow = lBgYResHalf * 0.25; // mYRes/8 = (mYRes/2)/4
 
 		// NDC position: background fills from top of screen down to mYRes/8 below horizon.
-		// CPU horizon at viewport row (mYRes/2 - 1 + mScroll).
-		// NDC y = 1 - 2*(mYRes/2 - 1 + mScroll)/mYRes = 2/mYRes - 2*scroll/mYRes.
-		// Bottom extends mYRes/8 further: y_bottom = 2/mYRes - 2*scroll/mYRes - 0.25.
 		const GLfloat lViewportH = max(1.0f,
 			static_cast<GLfloat>(lFrame.mViewport.bottom - lFrame.mViewport.top));
 		const GLfloat lScrollNorm = static_cast<GLfloat>(lFrame.mScroll) / lViewportH;
@@ -2803,13 +2808,22 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glPushMatrix();
 		glLoadIdentity();
 
-		// Draw as a strip of vertical slices with atan-corrected U for cylindrical projection.
+		// Draw as a strip of vertical slices with atan-corrected U and
+		// per-column angle-dependent V for cylindrical projection.
 		const int lBgStrips = 32;
 		glBegin(GL_QUAD_STRIP);
 		for(int lS = 0; lS <= lBgStrips; lS++) {
 			const GLfloat lNdcX = -1.0f + 2.0f * static_cast<GLfloat>(lS) / static_cast<GLfloat>(lBgStrips);
-			const GLfloat lAngle = static_cast<GLfloat>(atan(static_cast<double>(lNdcX) * lBgPlanHW / lBgPlanDist));
+			const double lOffset = static_cast<double>(lNdcX) * lBgPlanHW;
+			const GLfloat lAngle = static_cast<GLfloat>(atan(lOffset / lBgPlanDist));
 			const GLfloat lU = lBaseU + lAngle / (2.0f * 3.14159265f);
+
+			// Per-column V extent: lineInc (bitmap rows per screen row) depends on viewing distance
+			const double lDistance = sqrt(lBgPlanDist * lBgPlanDist + lOffset * lOffset);
+			const double lLineInc = lBgPlanVW / (lDistance * lBgYResHalf); // in fraction of bitmap height
+			const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lLineInc));
+			const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lLineInc));
+
 			glTexCoord2f(lU, lVTop);    glVertex3f(lNdcX,  1.0f, 0.999f);
 			glTexCoord2f(lU, lVBottom); glVertex3f(lNdcX, lBgBottom, 0.999f);
 		}
