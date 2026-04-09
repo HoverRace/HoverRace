@@ -53,6 +53,8 @@ class MR_2DViewPort
 		int mYPitch;
 
 		// ViewportStock
+		int mX0;
+		int mY0;
 		int mXRes;
 		int mYRes;
 

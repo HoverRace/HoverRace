@@ -65,6 +65,7 @@ MR_3DViewPort::MR_3DViewPort()
 	mBackgroundRowIndex_1024 = NULL;
 	mWallSetupTicks = 0;
 	mWallLoopTicks = 0;
+	mCockpitView = FALSE;
 
 }
 
@@ -193,10 +194,10 @@ void MR_3DViewPort::BeginGpuSceneFrame()
 	}
 
 	RECT viewport;
-	viewport.left = 0;
-	viewport.top = 0;
-	viewport.right = mXRes;
-	viewport.bottom = mYRes;
+	viewport.left = mX0;
+	viewport.top = mY0;
+	viewport.right = mX0 + mXRes;
+	viewport.bottom = mY0 + mYRes;
 	renderer->BeginFrame(viewport, mPosition, mOrientation, mScroll,
 		mPlanDist, mPlanHW, mPlanVW);
 }
@@ -213,6 +214,16 @@ void MR_3DViewPort::EndGpuSceneFrame()
 	}
 
 	renderer->EndFrame();
+}
+
+void MR_3DViewPort::SetCockpitView(BOOL pCockpitView)
+{
+	mCockpitView = pCockpitView;
+}
+
+BOOL MR_3DViewPort::GetCockpitView() const
+{
+	return mCockpitView;
 }
 
 void MR_3DViewPort::ResetWallTimingStats()
@@ -350,7 +361,13 @@ BOOL MR_3DViewPort::ComputePositionMatrix(MR_PositionMatrix & pMatrix, const MR_
 
 	ApplyRotationMatrix(pPosition, lPosition);
 
-	if((lPosition.mX < mPlanDist - pMaxObjRay) || (lPosition.mX > (MR_ZBUFFER_LIMIT * MR_ZBUFFER_UNIT) + pMaxObjRay)) {
+	const BOOL lHasGpuRenderer = (mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL);
+	if(lPosition.mX < mPlanDist - pMaxObjRay) {
+		// Behind camera — always cull
+		lReturnValue = FALSE;
+	}
+	else if(!lHasGpuRenderer && (lPosition.mX > (MR_ZBUFFER_LIMIT * MR_ZBUFFER_UNIT) + pMaxObjRay)) {
+		// Beyond CPU Z-buffer limit — only cull when using software renderer
 		lReturnValue = FALSE;
 	}
 	else {

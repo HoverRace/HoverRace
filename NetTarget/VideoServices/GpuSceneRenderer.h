@@ -115,6 +115,7 @@ class MR_GpuSceneRenderer
 		MR_VideoBuffer *mVideoBuffer;
 		BOOL mFrameOpen;
 		MR_GpuSceneFrame mFrame;
+		std::vector<MR_GpuSceneFrame> mFrames;
 
 	public:
 		MR_GpuSceneRenderer(MR_VideoBuffer *pVideoBuffer);
@@ -125,6 +126,7 @@ class MR_GpuSceneRenderer
 			MR_Int32 pPlanHW, MR_Int32 pPlanVW);
 		void EndFrame();
 		void ResetFrame();
+		void ClearAllFrames();
 
 		void SubmitBackground(const MR_UInt8 *pBitmap);
 		void SubmitWall(const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
@@ -138,6 +140,8 @@ class MR_GpuSceneRenderer
 			MR_UInt8 pColor);
 
 		const MR_GpuSceneFrame &GetFrame() const;
+		const std::vector<MR_GpuSceneFrame> &GetFrames() const;
+		size_t GetFrameCount() const;
 };
 
 #endif

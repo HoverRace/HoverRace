@@ -551,6 +551,7 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 	lWallMs = HighResolutionElapsedMs(lStageTick, lStageEndTick);
 
 	// Draw all the elements of the visibles room
+	m3DView.SetCockpitView(mCockpitView);
 	MR_SAMPLE_START(ActorRendering, "Actor Rendering");
 	lStageTick = GetHighResolutionTick();
 

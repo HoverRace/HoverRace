@@ -2532,16 +2532,34 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		return;
 	}
 
-	const MR_GpuSceneFrame &lFrame = mGpuSceneRenderer->GetFrame();
+	const std::vector<MR_GpuSceneFrame> &lAllFrames = mGpuSceneRenderer->GetFrames();
+	if(lAllFrames.empty()) {
+		return;
+	}
+
+	for(size_t lFrameIdx = 0; lFrameIdx < lAllFrames.size(); lFrameIdx++) {
+
+	const MR_GpuSceneFrame &lFrame = lAllFrames[lFrameIdx];
 	if(lFrame.mViewport.right <= lFrame.mViewport.left
 		|| lFrame.mViewport.bottom <= lFrame.mViewport.top) {
-		return;
+		continue;
 	}
 
 	if(lFrame.mWalls.empty() && lFrame.mHorizontalSurfaces.empty()
 		&& lFrame.mBitmapPatches.empty() && lFrame.mColorPatches.empty()
 		&& lFrame.mBackgroundBitmap == NULL) {
-		return;
+		continue;
+	}
+
+	// Set up glViewport and glScissor for this player's quadrant
+	{
+		const int lVpX = lFrame.mViewport.left * mDisplayXRes / mXRes;
+		const int lVpW = (lFrame.mViewport.right - lFrame.mViewport.left) * mDisplayXRes / mXRes;
+		const int lVpH = (lFrame.mViewport.bottom - lFrame.mViewport.top) * mDisplayYRes / mYRes;
+		const int lVpY = mDisplayYRes - lFrame.mViewport.bottom * mDisplayYRes / mYRes;
+		glViewport(lVpX, lVpY, lVpW, lVpH);
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(lVpX, lVpY, lVpW, lVpH);
 	}
 
 	const GLdouble lNearPlane = max(1.0, static_cast<GLdouble>(lFrame.mPlanDist));
@@ -3153,8 +3171,11 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	const BOOL lHasBackground = !lBgVertices.empty() && sBackgroundTexture != 0;
 
 	if(!lHasSceneGeometry && !lHasBackground) {
-		return;
+		continue;
 	}
+
+	// Clear depth buffer for this viewport (each split-screen player needs its own depth)
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	const BOOL lUseSceneShader = (mOpenGLState != NULL) && mOpenGLState->sceneShaderReady
 		&& (mOpenGLState->sceneVbo != 0);
@@ -3379,6 +3400,12 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
+
+	} // end for(lFrameIdx)
+
+	glDisable(GL_SCISSOR_TEST);
+	glViewport(0, 0, mDisplayXRes, mDisplayYRes);
+	mGpuSceneRenderer->ClearAllFrames();
 }
 
 void MR_VideoBuffer::LogPerformanceSample(DWORD pFrameAvgMs, DWORD pCpuAvgMs, DWORD pPresentAvgMs,

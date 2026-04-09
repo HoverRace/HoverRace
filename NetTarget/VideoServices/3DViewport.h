@@ -75,6 +75,7 @@ class MR_3DViewPort:public MR_2DViewPort
 		MR_Int32 *mBackgroundRowIndex_1024;
 		long long mWallSetupTicks;
 		long long mWallLoopTicks;
+		BOOL mCockpitView;
 
 		// Usefull pre-defined constants
 		MR_Int32 mHVarPerDInc_16384;			  // Ray divergence by HPixel
@@ -127,6 +128,8 @@ class MR_3DViewPort:public MR_2DViewPort
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
 		MR_DllDeclare void BeginGpuSceneFrame();
 		MR_DllDeclare void EndGpuSceneFrame();
+		MR_DllDeclare void SetCockpitView(BOOL pCockpitView);
+		MR_DllDeclare BOOL GetCockpitView() const;
 		MR_DllDeclare void ResetWallTimingStats();
 		MR_DllDeclare DWORD GetWallSetupTimingMs() const;
 		MR_DllDeclare DWORD GetWallLoopTimingMs() const;

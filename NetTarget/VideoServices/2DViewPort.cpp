@@ -33,6 +33,8 @@ MR_2DViewPort::MR_2DViewPort()
 	mXPitch = 0;
 	mYPitch = 0;
 
+	mX0 = 0;
+	mY0 = 0;
 	mXRes = 0;
 	mYRes = 0;
 
@@ -71,6 +73,8 @@ void MR_2DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX
 	ASSERT(pBuffer != NULL);
 
 	mVideoBuffer = pBuffer;
+	mX0 = pX0;
+	mY0 = pY0;
 
 	if(pSizeX != mXRes) {
 		mXRes = pSizeX;

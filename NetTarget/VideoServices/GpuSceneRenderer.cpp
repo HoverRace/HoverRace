@@ -34,11 +34,21 @@ void MR_GpuSceneRenderer::BeginFrame(const RECT &pViewport, const MR_3DCoordinat
 
 void MR_GpuSceneRenderer::EndFrame()
 {
+	if(mFrameOpen) {
+		mFrames.push_back(mFrame);
+	}
 	mFrameOpen = FALSE;
 }
 
 void MR_GpuSceneRenderer::ResetFrame()
 {
+	mFrame.Reset();
+	mFrameOpen = FALSE;
+}
+
+void MR_GpuSceneRenderer::ClearAllFrames()
+{
+	mFrames.clear();
 	mFrame.Reset();
 	mFrameOpen = FALSE;
 }
@@ -131,4 +141,14 @@ void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 const MR_GpuSceneFrame &MR_GpuSceneRenderer::GetFrame() const
 {
 	return mFrame;
+}
+
+const std::vector<MR_GpuSceneFrame> &MR_GpuSceneRenderer::GetFrames() const
+{
+	return mFrames;
+}
+
+size_t MR_GpuSceneRenderer::GetFrameCount() const
+{
+	return mFrames.size();
 }

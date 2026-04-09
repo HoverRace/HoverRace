@@ -166,6 +166,11 @@ void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, 
 
 		int lBitmapResId = lPatch->mBitmap->GetResourceId();
 
+		// In cockpit view, skip the driver head and neck to avoid blocking the view
+		if(pDest->GetCockpitView() && (lBitmapResId == MR_CAR_DRIVER_HEAD || lBitmapResId == MR_CAR_DRIVER_NECK)) {
+			continue;
+		}
+
 		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) || (lBitmapResId == MR_EON_COCKPIT) ) {
 		pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
 	}
