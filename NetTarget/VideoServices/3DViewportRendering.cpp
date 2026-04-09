@@ -152,8 +152,7 @@ void MR_3DViewPort::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const 
 
 void MR_3DViewPort::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart)
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitWall(pUpperLeft, pLowerRight, pLen,
 			pBitmap, pBitmap2, pSerialLen, pSerialStart);
 		return;
@@ -769,8 +768,7 @@ void BltColumnFast()
 
 void MR_3DViewPort::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const MR_Bitmap * pBitmap)
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitHorizontalSurface(pNbVertex, pVertexList,
 			pLevel, pTop, pBitmap);
 		return;
@@ -1497,8 +1495,7 @@ static int gsScreenVisibility[MAX_PATCH_RES * MAX_PATCH_RES];
 
 void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap)
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitPatch(pPatch,
 			BuildGpuScenePositionMatrix(pMatrix), pBitmap);
 		return;
@@ -1632,8 +1629,7 @@ void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix
 
 void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor)
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitPatch(pPatch,
 			BuildGpuScenePositionMatrix(pMatrix), pColor);
 		return;
@@ -2123,8 +2119,7 @@ void BltTriangle()
 
 void MR_3DViewPort::RenderBackground(const MR_UInt8 * pBitmap)
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitBackground(pBitmap);
 		// Clear the CPU viewport buffer so the HUD overlay has a clean canvas.
 		// Without this, stale pixels from previous frames remain and get drawn

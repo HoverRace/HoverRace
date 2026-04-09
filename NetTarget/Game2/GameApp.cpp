@@ -662,6 +662,8 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mCurrentMode = e3DView;
 
 	mClrScrTodo = 2;
+	mLastMouseMoveTick = 0;
+	mCursorVisible = TRUE;
 
 	mPaletteChangeAllowed = TRUE;
 
@@ -2627,6 +2629,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				case MRM_VALIDATE_DESKTOP_FULLSCREEN:
 					This->RefreshDesktopFullscreenPlacement();
 					return 0;
+
+				case 42: // cursor hide timer
+					if(This->mCursorVisible && (GetTickCount() - This->mLastMouseMoveTick) >= 2000) {
+						This->mCursorVisible = FALSE;
+						SetCursor(NULL);
+					}
+					KillTimer(pWindow, 42);
+					return 0;
 			}
 			break;
 
@@ -2694,10 +2704,19 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_SETCURSOR:
-			if((This->mVideoBuffer != NULL) && !This->mVideoBuffer->IsWindowMode()) {
+			if(LOWORD(pLParam) == HTCLIENT && !This->mCursorVisible) {
 				SetCursor(NULL);
 				return TRUE;
 			}
+			break;
+
+		case WM_MOUSEMOVE:
+			if(!This->mCursorVisible) {
+				This->mCursorVisible = TRUE;
+				SetCursor(LoadCursor(NULL, IDC_ARROW));
+			}
+			This->mLastMouseMoveTick = GetTickCount();
+			SetTimer(pWindow, 42 /*cursor hide timer*/, 2000, NULL);
 			break;
 
 			// Menu options

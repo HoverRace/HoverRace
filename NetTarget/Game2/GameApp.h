@@ -111,6 +111,8 @@ class MR_GameApp
 		int mRenderPerfSampleCount;
 
 		int mClrScrTodo;
+		DWORD mLastMouseMoveTick;
+		BOOL mCursorVisible;
 
 		BOOL mPaletteChangeAllowed;
 

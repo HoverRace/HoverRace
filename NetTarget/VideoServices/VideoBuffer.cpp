@@ -69,6 +69,14 @@
 #define GL_FRAMEBUFFER_SRGB 0x8DB9
 #endif
 
+#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB 0x20A9
+#define WGL_ALPHA_BITS_ARB               0x201B
+#define WGL_COLOR_BITS_ARB               0x2014
+#define WGL_DEPTH_BITS_ARB               0x2022
+
+typedef BOOL (WINAPI *PFNWGLGETPIXELFORMATATTRIBIVARBPROC)(HDC hdc, int iPixelFormat,
+	int iLayerPlane, UINT nAttributes, const int *piAttributes, int *piValues);
+
 typedef char GLchar;
 typedef ptrdiff_t GLsizeiptr;
 
@@ -115,6 +123,9 @@ namespace {
 		GLuint mTexture;
 		int mStartVertex;
 		int mVertexCount;
+		BOOL mIsFloorCeiling;
+
+		MR_GpuSceneBatch() : mTexture(0), mStartVertex(0), mVertexCount(0), mIsFloorCeiling(FALSE) {}
 	};
 
 	struct MR_GpuSceneProjectedVertex
@@ -763,16 +774,13 @@ struct MR_OpenGLState
 	HGLRC context;
 	GLuint frameTexture;
 	GLuint paletteTexture;
-	GLuint shaderProgram;
-	GLuint vertexShader;
-	GLuint fragmentShader;
-	GLint indexUniform;
-	GLint paletteUniform;
-	GLint clearIdxUniform;
-	int textureWidth;
-	int textureHeight;
-	BOOL shaderReady;
-	std::vector<MR_UInt8> rgbaFallback;
+	GLuint hudShaderProgram;
+	GLuint hudVertexShader;
+	GLuint hudFragmentShader;
+	GLint hudIndexUniform;
+	GLint hudPaletteUniform;
+	GLint hudClearIdxUniform;
+	BOOL hudShaderReady;
 	std::vector<CachedBitmapTexture> cachedBitmapTextures;
 
 	GLuint sceneShaderProgram;
@@ -781,6 +789,9 @@ struct MR_OpenGLState
 	GLint sceneMvpUniform;
 	GLint sceneTextureUniform;
 	GLint sceneUseTextureUniform;
+	GLint sceneCylHalfFovHUniform;
+	GLint sceneLodBiasUniform;
+	GLint sceneLodBiasMaxUniform;
 	GLint scenePositionAttrib;
 	GLint sceneTexCoordAttrib;
 	GLint sceneColorAttrib;
@@ -790,12 +801,12 @@ struct MR_OpenGLState
 	MR_OpenGLState() :
 		windowDc(NULL), context(NULL),
 		frameTexture(0), paletteTexture(0),
-		shaderProgram(0), vertexShader(0), fragmentShader(0),
-		indexUniform(-1), paletteUniform(-1), clearIdxUniform(-1),
-		textureWidth(0), textureHeight(0),
-		shaderReady(FALSE),
+		hudShaderProgram(0), hudVertexShader(0), hudFragmentShader(0),
+		hudIndexUniform(-1), hudPaletteUniform(-1), hudClearIdxUniform(-1),
+		hudShaderReady(FALSE),
 		sceneShaderProgram(0), sceneVertexShader(0), sceneFragmentShader(0),
 		sceneMvpUniform(-1), sceneTextureUniform(-1), sceneUseTextureUniform(-1),
+		sceneCylHalfFovHUniform(-1), sceneLodBiasUniform(-1), sceneLodBiasMaxUniform(-1),
 		scenePositionAttrib(-1), sceneTexCoordAttrib(-1), sceneColorAttrib(-1),
 		sceneVbo(0), sceneShaderReady(FALSE)
 	{
@@ -817,50 +828,6 @@ static MR_UInt8 ApplyLegacyPresentationCurve(MR_UInt8 value)
 }
 
 namespace {
-	enum OpenGLShaderBringupMode
-	{
-		OGL_SHADER_BRINGUP_OFF = 0,
-		OGL_SHADER_BRINGUP_COMPILE = 1,
-		OGL_SHADER_BRINGUP_UPLOADS = 2,
-		OGL_SHADER_BRINGUP_DRAW = 3
-	};
-
-	static OpenGLShaderBringupMode GetOpenGLShaderBringupMode()
-	{
-		static BOOL initialized = FALSE;
-		static OpenGLShaderBringupMode mode = OGL_SHADER_BRINGUP_DRAW;
-		if(!initialized) {
-			char buffer[32] = {0};
-			DWORD len = GetEnvironmentVariableA("HOVERRACE_OPENGL_SHADER_STAGE",
-				buffer, sizeof(buffer));
-			if(len > 0 && len < sizeof(buffer)) {
-				if(_stricmp(buffer, "compile") == 0) {
-					mode = OGL_SHADER_BRINGUP_COMPILE;
-				}
-				else if(_stricmp(buffer, "uploads") == 0) {
-					mode = OGL_SHADER_BRINGUP_UPLOADS;
-				}
-				else if(_stricmp(buffer, "draw") == 0 || _stricmp(buffer, "indexed_shader") == 0) {
-					mode = OGL_SHADER_BRINGUP_DRAW;
-				}
-			}
-			initialized = TRUE;
-		}
-		return mode;
-	}
-
-	static const char *GetOpenGLShaderBringupModeName(OpenGLShaderBringupMode mode)
-	{
-		switch(mode) {
-			case OGL_SHADER_BRINGUP_COMPILE: return "compile";
-			case OGL_SHADER_BRINGUP_UPLOADS: return "uploads";
-			case OGL_SHADER_BRINGUP_DRAW: return "draw";
-			case OGL_SHADER_BRINGUP_OFF:
-			default:
-				return "off";
-		}
-	}
-
 	struct GLFunctions
 	{
 		PFNGLACTIVETEXTUREPROC ActiveTexture;
@@ -964,13 +931,27 @@ namespace {
 			if(pfd.iPixelType != PFD_TYPE_RGBA) {
 				continue;
 			}
+			// Skip HDR/float formats (>32 color bits). They lack sRGB
+			// capability and are unnecessary for this 8-bit palette game.
+			if(pfd.cColorBits > 32) {
+				continue;
+			}
 
 			int score = 0;
 			if((pfd.dwFlags & PFD_DOUBLEBUFFER) != 0) {
 				score += 1000;
 			}
+			// Prefer standard hardware-accelerated formats.
+			if((pfd.dwFlags & PFD_GENERIC_FORMAT) == 0) {
+				score += 500;
+			}
+			// Prefer 32-bit color (8 per channel + 8 alpha).
 			score += pfd.cColorBits;
-			score += pfd.cDepthBits;
+			if(pfd.cAlphaBits >= 8) {
+				score += 50;
+			}
+			// Cap depth bits contribution to avoid picking unusual formats.
+			score += (pfd.cDepthBits <= 24) ? pfd.cDepthBits : 24;
 			if(pfd.iLayerType == PFD_MAIN_PLANE) {
 				score += 100;
 			}
@@ -979,9 +960,9 @@ namespace {
 				bestScore = score;
 				bestFormat = format;
 				if(bestScore > 0) {
-					PRINT_LOG("FindWindowOpenGLPixelFormat candidate format=%d flags=0x%08lx color=%u depth=%u score=%d",
+					PRINT_LOG("FindWindowOpenGLPixelFormat candidate format=%d flags=0x%08lx color=%u alpha=%u depth=%u score=%d",
 						format, (unsigned long) pfd.dwFlags, (unsigned) pfd.cColorBits,
-						(unsigned) pfd.cDepthBits, score);
+						(unsigned) pfd.cAlphaBits, (unsigned) pfd.cDepthBits, score);
 				}
 			}
 		}
@@ -1273,27 +1254,43 @@ namespace {
 	{
 		static const char *VERTEX_SHADER =
 			"uniform mat4 uMVP;\n"
+			"uniform float uCylHalfFovH;\n"
 			"attribute vec3 aPosition;\n"
 			"attribute vec2 aTexCoord;\n"
 			"attribute vec4 aColor;\n"
 			"varying vec2 vTexCoord;\n"
 			"varying vec4 vColor;\n"
+			"varying float vDepth;\n"
 			"void main()\n"
 			"{\n"
-			"    gl_Position = uMVP * vec4(aPosition, 1.0);\n"
+			"    vec4 clipPos = uMVP * vec4(aPosition, 1.0);\n"
+			"    if(uCylHalfFovH > 0.0) {\n"
+			"        float negZ = -aPosition.z;\n"
+			"        float theta = atan(aPosition.x, negZ);\n"
+			"        float ndcX = theta / uCylHalfFovH;\n"
+			"        clipPos.x = ndcX * clipPos.w;\n"
+			"    }\n"
+			"    gl_Position = clipPos;\n"
 			"    vTexCoord = aTexCoord;\n"
 			"    vColor = aColor;\n"
+			"    vDepth = -aPosition.z;\n"
 			"}\n";
 
 		static const char *FRAGMENT_SHADER =
 			"uniform sampler2D uTexture;\n"
 			"uniform float uUseTexture;\n"
+			"uniform float uLodBias;\n"
+			"uniform float uLodBiasMax;\n"
 			"varying vec2 vTexCoord;\n"
 			"varying vec4 vColor;\n"
+			"varying float vDepth;\n"
 			"void main()\n"
 			"{\n"
 			"    if(uUseTexture > 0.5) {\n"
-			"        vec4 texColor = texture2D(uTexture, vTexCoord);\n"
+			"        float t = clamp((vDepth - 20000.0) / 80000.0, 0.0, 1.0);\n"
+			"        float bias = mix(uLodBias, uLodBiasMax * 0.4, t * t);\n"
+			"        if(vDepth > 100000.0) bias = uLodBiasMax;\n"
+			"        vec4 texColor = texture2D(uTexture, vTexCoord, bias);\n"
 			"        if(texColor.a < 0.1) discard;\n"
 			"        gl_FragColor = texColor * vColor;\n"
 			"    } else {\n"
@@ -1336,6 +1333,9 @@ namespace {
 		state->sceneMvpUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uMVP");
 		state->sceneTextureUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uTexture");
 		state->sceneUseTextureUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uUseTexture");
+		state->sceneCylHalfFovHUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uCylHalfFovH");
+		state->sceneLodBiasUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uLodBias");
+		state->sceneLodBiasMaxUniform = gGL.GetUniformLocation(state->sceneShaderProgram, "uLodBiasMax");
 		state->scenePositionAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aPosition");
 		state->sceneTexCoordAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aTexCoord");
 		state->sceneColorAttrib = gGL.GetAttribLocation(state->sceneShaderProgram, "aColor");
@@ -1350,7 +1350,7 @@ namespace {
 		return TRUE;
 	}
 
-	static BOOL BuildPaletteShader(MR_OpenGLState *state)
+	static BOOL BuildHudShader(MR_OpenGLState *state)
 	{
 		static const char *VERTEX_SHADER =
 			"varying vec2 vTexCoord;\n"
@@ -1378,40 +1378,41 @@ namespace {
 			return FALSE;
 		}
 
-		state->vertexShader = CompileShader(GL_VERTEX_SHADER, VERTEX_SHADER);
-		state->fragmentShader = CompileShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER);
-		if(state->vertexShader == 0 || state->fragmentShader == 0) {
+		state->hudVertexShader = CompileShader(GL_VERTEX_SHADER, VERTEX_SHADER);
+		state->hudFragmentShader = CompileShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER);
+		if(state->hudVertexShader == 0 || state->hudFragmentShader == 0) {
 			return FALSE;
 		}
 
-		state->shaderProgram = gGL.CreateProgram();
-		if(state->shaderProgram == 0) {
+		state->hudShaderProgram = gGL.CreateProgram();
+		if(state->hudShaderProgram == 0) {
 			return FALSE;
 		}
 
-		gGL.AttachShader(state->shaderProgram, state->vertexShader);
-		gGL.AttachShader(state->shaderProgram, state->fragmentShader);
-		gGL.LinkProgram(state->shaderProgram);
+		gGL.AttachShader(state->hudShaderProgram, state->hudVertexShader);
+		gGL.AttachShader(state->hudShaderProgram, state->hudFragmentShader);
+		gGL.LinkProgram(state->hudShaderProgram);
 
 		GLint linked = GL_FALSE;
-		gGL.GetProgramiv(state->shaderProgram, GL_LINK_STATUS, &linked);
+		gGL.GetProgramiv(state->hudShaderProgram, GL_LINK_STATUS, &linked);
 		if(linked != GL_TRUE) {
 			GLint logLength = 0;
-			gGL.GetProgramiv(state->shaderProgram, GL_INFO_LOG_LENGTH, &logLength);
+			gGL.GetProgramiv(state->hudShaderProgram, GL_INFO_LOG_LENGTH, &logLength);
 			if(logLength > 1) {
 				std::vector<char> logBuffer(logLength + 1, '\0');
-				gGL.GetProgramInfoLog(state->shaderProgram, logLength, NULL, &logBuffer[0]);
-				PRINT_LOG("OpenGL shader link failed log=%s", &logBuffer[0]);
+				gGL.GetProgramInfoLog(state->hudShaderProgram, logLength, NULL, &logBuffer[0]);
+				PRINT_LOG("OpenGL HUD shader link failed log=%s", &logBuffer[0]);
 			}
 			return FALSE;
 		}
 
-		state->indexUniform = gGL.GetUniformLocation(state->shaderProgram, "uIndexTex");
-		state->paletteUniform = gGL.GetUniformLocation(state->shaderProgram, "uPaletteTex");
-		state->clearIdxUniform = gGL.GetUniformLocation(state->shaderProgram, "uClearIdx");
-		state->shaderReady = TRUE;
+		state->hudIndexUniform = gGL.GetUniformLocation(state->hudShaderProgram, "uIndexTex");
+		state->hudPaletteUniform = gGL.GetUniformLocation(state->hudShaderProgram, "uPaletteTex");
+		state->hudClearIdxUniform = gGL.GetUniformLocation(state->hudShaderProgram, "uClearIdx");
+		state->hudShaderReady = TRUE;
 		return TRUE;
 	}
+
 }
 
 // Computes the run length and shift of the block of ones in a bitmask.
@@ -1481,7 +1482,6 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	mGpuClearColorIndex = 0;
 	mOpenGLPresentFailureLogCount = 0;
 	mOpenGLFrameTraceLogCount = 0;
-	mOpenGLLoggedPresentPath = FALSE;
 	mStagePerfAccumulatedClearMs = 0;
 	mStagePerfAccumulatedBackgroundMs = 0;
 	mStagePerfAccumulatedClearZMs = 0;
@@ -1832,19 +1832,39 @@ BOOL MR_VideoBuffer::InitOpenGL()
 	PRINT_LOG("InitOpenGL current dc=%p context=%p", mOpenGLState->windowDc,
 		mOpenGLState->context);
 
+	// Check if current pixel format supports sRGB via WGL extension.
+	{
+		int currentPf = GetPixelFormat(mOpenGLState->windowDc);
+		PFNWGLGETPIXELFORMATATTRIBIVARBPROC pWglGetPixelFormatAttribivARB =
+			(PFNWGLGETPIXELFORMATATTRIBIVARBPROC)wglGetProcAddress("wglGetPixelFormatAttribivARB");
+		if(pWglGetPixelFormatAttribivARB != NULL) {
+			int attribs[] = { WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, WGL_ALPHA_BITS_ARB,
+				WGL_COLOR_BITS_ARB, WGL_DEPTH_BITS_ARB };
+			int values[4] = { 0, 0, 0, 0 };
+			if(pWglGetPixelFormatAttribivARB(mOpenGLState->windowDc, currentPf, 0, 4, attribs, values)) {
+				PRINT_LOG("InitOpenGL pixel format %d: sRGB_capable=%d alpha_bits=%d color_bits=%d depth_bits=%d",
+					currentPf, values[0], values[1], values[2], values[3]);
+			}
+			else {
+				PRINT_LOG("InitOpenGL wglGetPixelFormatAttribivARB failed err=%lu", GetLastError());
+			}
+		}
+		else {
+			PRINT_LOG("InitOpenGL wglGetPixelFormatAttribivARB not available");
+		}
+	}
+
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 	glDisable(GL_DITHER);
-	glDisable(GL_FRAMEBUFFER_SRGB);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	glEnable(GL_TEXTURE_2D);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glColor4ub(255, 255, 255, 255);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	mOpenGLLoggedPresentPath = FALSE;
-
 	if(mOpenGLState->frameTexture == 0) {
 		glGenTextures(1, &mOpenGLState->frameTexture);
 	}
@@ -1852,30 +1872,23 @@ BOOL MR_VideoBuffer::InitOpenGL()
 		glGenTextures(1, &mOpenGLState->paletteTexture);
 	}
 
-	{
-		const OpenGLShaderBringupMode shaderMode = GetOpenGLShaderBringupMode();
-		PRINT_LOG("InitOpenGL shaderStage=%s", GetOpenGLShaderBringupModeName(shaderMode));
-		if(shaderMode != OGL_SHADER_BRINGUP_OFF && !mOpenGLState->shaderReady) {
-			if(!BuildPaletteShader(mOpenGLState)) {
-				PRINT_LOG("InitOpenGL indexed shader build failed; falling back to cpu_rgb");
-				mOpenGLState->shaderReady = FALSE;
-			}
-		}
-		else if(shaderMode == OGL_SHADER_BRINGUP_OFF) {
-			mOpenGLState->shaderReady = FALSE;
-		}
-
-		if(shaderMode != OGL_SHADER_BRINGUP_OFF && !mOpenGLState->sceneShaderReady) {
-			if(!BuildSceneShader(mOpenGLState)) {
-				PRINT_LOG("InitOpenGL scene shader build failed");
-				mOpenGLState->sceneShaderReady = FALSE;
-			}
+	if(!mOpenGLState->hudShaderReady) {
+		if(!BuildHudShader(mOpenGLState)) {
+			PRINT_LOG("InitOpenGL HUD shader build failed");
+			mOpenGLState->hudShaderReady = FALSE;
 		}
 	}
 
-	PRINT_LOG("InitOpenGL shaderReady=%d sceneShaderReady=%d frameTexture=%u paletteTexture=%u",
+	if(!mOpenGLState->sceneShaderReady) {
+		if(!BuildSceneShader(mOpenGLState)) {
+			PRINT_LOG("InitOpenGL scene shader build failed");
+			mOpenGLState->sceneShaderReady = FALSE;
+		}
+	}
+
+	PRINT_LOG("InitOpenGL hudShaderReady=%d sceneShaderReady=%d frameTexture=%u paletteTexture=%u",
+		(int) mOpenGLState->hudShaderReady,
 		(int) mOpenGLState->sceneShaderReady,
-		(int) mOpenGLState->shaderReady,
 		(unsigned) mOpenGLState->frameTexture,
 		(unsigned) mOpenGLState->paletteTexture);
 	LogOpenGLErrors("InitOpenGL");
@@ -1910,18 +1923,19 @@ void MR_VideoBuffer::ReleaseOpenGL()
 			}
 		}
 		mOpenGLState->cachedBitmapTextures.clear();
-		if(mOpenGLState->shaderProgram != 0 && gGL.DeleteProgram != NULL) {
-			gGL.DeleteProgram(mOpenGLState->shaderProgram);
-			mOpenGLState->shaderProgram = 0;
+		if(mOpenGLState->hudShaderProgram != 0 && gGL.DeleteProgram != NULL) {
+			gGL.DeleteProgram(mOpenGLState->hudShaderProgram);
+			mOpenGLState->hudShaderProgram = 0;
 		}
-		if(mOpenGLState->vertexShader != 0 && gGL.DeleteShader != NULL) {
-			gGL.DeleteShader(mOpenGLState->vertexShader);
-			mOpenGLState->vertexShader = 0;
+		if(mOpenGLState->hudVertexShader != 0 && gGL.DeleteShader != NULL) {
+			gGL.DeleteShader(mOpenGLState->hudVertexShader);
+			mOpenGLState->hudVertexShader = 0;
 		}
-		if(mOpenGLState->fragmentShader != 0 && gGL.DeleteShader != NULL) {
-			gGL.DeleteShader(mOpenGLState->fragmentShader);
-			mOpenGLState->fragmentShader = 0;
+		if(mOpenGLState->hudFragmentShader != 0 && gGL.DeleteShader != NULL) {
+			gGL.DeleteShader(mOpenGLState->hudFragmentShader);
+			mOpenGLState->hudFragmentShader = 0;
 		}
+		mOpenGLState->hudShaderReady = FALSE;
 		if(mOpenGLState->sceneVbo != 0 && gGL.DeleteBuffers != NULL) {
 			gGL.DeleteBuffers(1, &mOpenGLState->sceneVbo);
 			mOpenGLState->sceneVbo = 0;
@@ -1957,11 +1971,6 @@ void MR_VideoBuffer::ReleaseOpenGL()
 
 BOOL MR_VideoBuffer::EnsureOpenGLResources()
 {
-	OpenGLShaderBringupMode shaderMode = GetOpenGLShaderBringupMode();
-	BOOL useShaderUploads = (mOpenGLState != NULL) &&
-		mOpenGLState->shaderReady &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW);
-
 	if(!InitOpenGL()) {
 		return FALSE;
 	}
@@ -1971,296 +1980,98 @@ BOOL MR_VideoBuffer::EnsureOpenGLResources()
 		return FALSE;
 	}
 
+	// Frame texture: indexed pixels uploaded as luminance, palette shader converts
 	glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, mXRes, mYRes, 0,
+		GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
 
-	useShaderUploads = mOpenGLState->shaderReady &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW);
-	if(useShaderUploads) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, mXRes, mYRes, 0,
-			GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
+	// Palette texture: 256-entry RGBA lookup
+	glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0, GL_RGBA,
+		GL_UNSIGNED_BYTE, mPaletteTexture);
 
-		glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0, GL_RGBA,
-			GL_UNSIGNED_BYTE, mPaletteTexture);
-	}
-	else {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		mOpenGLState->rgbaFallback.resize(mXRes * mYRes * 3);
-	}
-
-	mOpenGLState->textureWidth = mXRes;
-	mOpenGLState->textureHeight = mYRes;
 	mPaletteDirty = TRUE;
 	mOpenGLPresentFailureLogCount = 0;
 	mOpenGLFrameTraceLogCount = 0;
-	mOpenGLLoggedPresentPath = FALSE;
-	PRINT_LOG("EnsureOpenGLResources shaderReady=%d shaderUploads=%d render=%dx%d display=%dx%d",
-		(int) mOpenGLState->shaderReady, (int) useShaderUploads,
+	PRINT_LOG("EnsureOpenGLResources hudShaderReady=%d sceneShaderReady=%d render=%dx%d display=%dx%d",
+		(int) mOpenGLState->hudShaderReady,
+		(int) mOpenGLState->sceneShaderReady,
 		mXRes, mYRes, mDisplayXRes, mDisplayYRes);
 	LogOpenGLErrors("EnsureOpenGLResources");
 	ReleaseOpenGLCurrent();
 	return TRUE;
 }
 
-static BOOL IsGpuRenderFullEnabled()
-{
-	static int sResult = -1;
-	if(sResult == -1) {
-		char buffer[8] = { 0 };
-		DWORD len = GetEnvironmentVariableA("HOVERRACE_GPU_RENDER_FULL", buffer, sizeof(buffer));
-		sResult = ((len > 0) && (len < sizeof(buffer)) && (buffer[0] != '0')) ? 1 : 0;
-	}
-	return (sResult == 1);
-}
-
 BOOL MR_VideoBuffer::PresentOpenGL()
 {
-	OpenGLShaderBringupMode shaderMode = GetOpenGLShaderBringupMode();
-	BOOL useShaderPath = mOpenGLState != NULL &&
-		mOpenGLState->shaderReady &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW);
-
-	// Full GPU rendering mode: skip CPU framebuffer entirely
-	if(IsGpuRenderFullEnabled() && (mOpenGLState != NULL)
-		&& (mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled()
-		&& mOpenGLState->sceneShaderReady) {
-
-		if(!MakeOpenGLCurrent(mOpenGLState)) {
-			mOpenGLPresentFailureLogCount++;
-			return FALSE;
-		}
-
-		glViewport(0, 0, mDisplayXRes, mDisplayYRes);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if(mPaletteDirty && mOpenGLState->paletteTexture != 0) {
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
-				GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
-			mPaletteDirty = FALSE;
-		}
-
-		RenderGpuSceneOverlay();
-
-		// Draw CPU framebuffer (HUD/overlay elements) on top of GPU scene.
-		// Convert palette-indexed pixels to RGBA with the clear color as
-		// transparent, then draw with alpha blending.
-		if(mRenderSurface != NULL && mPaletteTexture != NULL) {
-			const size_t lPixelCount = static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes);
-			std::vector<MR_UInt8> lHudRgba(lPixelCount * 4);
-			BOOL lHasHudPixels = FALSE;
-
-			for(size_t i = 0; i < lPixelCount; i++) {
-				const MR_UInt8 lIdx = mRenderSurface[i];
-				const size_t lDest = i * 4;
-				if(lIdx == mGpuClearColorIndex) {
-					lHudRgba[lDest + 0] = 0;
-					lHudRgba[lDest + 1] = 0;
-					lHudRgba[lDest + 2] = 0;
-					lHudRgba[lDest + 3] = 0;
-				}
-				else {
-					lHudRgba[lDest + 0] = mPaletteTexture[lIdx * 4 + 0];
-					lHudRgba[lDest + 1] = mPaletteTexture[lIdx * 4 + 1];
-					lHudRgba[lDest + 2] = mPaletteTexture[lIdx * 4 + 2];
-					lHudRgba[lDest + 3] = 255;
-					lHasHudPixels = TRUE;
-				}
-			}
-
-			if(lHasHudPixels) {
-				if(gGL.UseProgram != NULL) {
-					gGL.UseProgram(0);
-				}
-				glDisable(GL_DEPTH_TEST);
-				glDisable(GL_TEXTURE_2D);
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
-
-				// Use glDrawPixels with pixel zoom to blit the RGBA HUD overlay.
-				// This avoids texture state issues with the shared frameTexture.
-				// Negative Y zoom flips the image vertically since the CPU buffer
-				// is stored top-to-bottom but glDrawPixels draws bottom-to-top.
-				const GLfloat lZoomX = static_cast<GLfloat>(mDisplayXRes) / static_cast<GLfloat>(mXRes);
-				const GLfloat lZoomY = static_cast<GLfloat>(mDisplayYRes) / static_cast<GLfloat>(mYRes);
-				glPixelZoom(lZoomX, -lZoomY);
-				glRasterPos2f(-1.0f, 1.0f);
-				glDrawPixels(mXRes, mYRes, GL_RGBA, GL_UNSIGNED_BYTE, &lHudRgba[0]);
-				glPixelZoom(1.0f, 1.0f);
-
-				glDisable(GL_BLEND);
-			}
-		}
-
-		if(!SwapBuffers(mOpenGLState->windowDc)) {
-			if(mOpenGLPresentFailureLogCount < 10) {
-				PRINT_LOG("PresentOpenGL (full GPU) SwapBuffers failed err=%lu",
-					GetLastError());
-			}
-			mOpenGLPresentFailureLogCount++;
-			ReleaseOpenGLCurrent();
-			return FALSE;
-		}
-
-		mOpenGLPresentFailureLogCount = 0;
-		ReleaseOpenGLCurrent();
-		return TRUE;
-	}
-
-	if((mOpenGLState == NULL) || (mRenderSurface == NULL)) {
+	if((mOpenGLState == NULL) || (mGpuSceneRenderer == NULL)) {
 		if(mOpenGLPresentFailureLogCount < 10) {
-			PRINT_LOG("PresentOpenGL missing state gl=%p render=%p",
-				mOpenGLState, mRenderSurface);
+			PRINT_LOG("PresentOpenGL missing state gl=%p scene=%p",
+				mOpenGLState, mGpuSceneRenderer);
 		}
 		mOpenGLPresentFailureLogCount++;
 		return FALSE;
 	}
-
-	if(!mOpenGLLoggedPresentPath) {
-		PRINT_LOG("OpenGL present path=%s shaderStage=%s",
-			useShaderPath ? "indexed_shader" : "cpu_rgb",
-			GetOpenGLShaderBringupModeName(shaderMode));
-		mOpenGLLoggedPresentPath = TRUE;
-	}
-
-recompute_path:
-	useShaderPath = mOpenGLState->shaderReady &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW);
 
 	if(!MakeOpenGLCurrent(mOpenGLState)) {
-		if(mOpenGLPresentFailureLogCount < 10) {
-			PRINT_LOG("PresentOpenGL wglMakeCurrent failed err=%lu dc=%p context=%p",
-				GetLastError(), mOpenGLState->windowDc, mOpenGLState->context);
-		}
 		mOpenGLPresentFailureLogCount++;
 		return FALSE;
-	}
-
-	if(mPaletteDirty && useShaderPath &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW))
-	{
-		glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
-			GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
-		if(!LogOpenGLErrors("PresentOpenGL palette upload")) {
-			PRINT_LOG("OpenGL present shader fallback -> cpu_rgb reason=palette_upload");
-			mOpenGLState->shaderReady = FALSE;
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
-				GL_RGB, GL_UNSIGNED_BYTE, NULL);
-			mOpenGLState->rgbaFallback.resize(
-				static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * 3);
-			mPaletteDirty = FALSE;
-			if(gGL.UseProgram != NULL) {
-				gGL.UseProgram(0);
-			}
-			mOpenGLLoggedPresentPath = FALSE;
-			ReleaseOpenGLCurrent();
-			goto recompute_path;
-		}
-		mPaletteDirty = FALSE;
-	}
-
-	glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-	if(useShaderPath &&
-		(shaderMode == OGL_SHADER_BRINGUP_UPLOADS || shaderMode == OGL_SHADER_BRINGUP_DRAW))
-	{
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mXRes, mYRes,
-			GL_LUMINANCE, GL_UNSIGNED_BYTE, mRenderSurface);
-		if(!LogOpenGLErrors("PresentOpenGL indexed upload")) {
-			PRINT_LOG("OpenGL present shader fallback -> cpu_rgb reason=indexed_upload");
-			mOpenGLState->shaderReady = FALSE;
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
-				GL_RGB, GL_UNSIGNED_BYTE, NULL);
-			mOpenGLState->rgbaFallback.resize(
-				static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * 3);
-			if(gGL.UseProgram != NULL) {
-				gGL.UseProgram(0);
-			}
-			mOpenGLLoggedPresentPath = FALSE;
-			ReleaseOpenGLCurrent();
-			goto recompute_path;
-		}
-	}
-	else {
-		size_t pixelCount = static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes);
-		if(mOpenGLState->rgbaFallback.size() != pixelCount * 3) {
-			mOpenGLState->rgbaFallback.resize(pixelCount * 3);
-		}
-		for(size_t i = 0; i < pixelCount; i++) {
-			const MR_UInt8 idx = mRenderSurface[i];
-			mOpenGLState->rgbaFallback[(i * 3) + 0] = mPaletteTexture[(idx * 4) + 0];
-			mOpenGLState->rgbaFallback[(i * 3) + 1] = mPaletteTexture[(idx * 4) + 1];
-			mOpenGLState->rgbaFallback[(i * 3) + 2] = mPaletteTexture[(idx * 4) + 2];
-		}
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mXRes, mYRes,
-			GL_RGB, GL_UNSIGNED_BYTE, &mOpenGLState->rgbaFallback[0]);
-		if(!LogOpenGLErrors("PresentOpenGL rgba upload")) {
-			mOpenGLPresentFailureLogCount++;
-			ReleaseOpenGLCurrent();
-			return FALSE;
-		}
 	}
 
 	glViewport(0, 0, mDisplayXRes, mDisplayYRes);
-	glDisable(GL_FRAMEBUFFER_SRGB);
-	glColor4ub(255, 255, 255, 255);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// When GPU scene is active: render 3D scene first, then HUD overlay with transparency.
-	// Without GPU scene: render CPU framebuffer as before (opaque fullscreen quad).
-	const BOOL lGpuSceneActive = (mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled();
+	if(mPaletteDirty && mOpenGLState->paletteTexture != 0) {
+		glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1,
+			GL_RGBA, GL_UNSIGNED_BYTE, mPaletteTexture);
+		mPaletteDirty = FALSE;
+	}
 
-	if(lGpuSceneActive) {
-		// 1. Clear and render GPU scene (background + geometry)
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		RenderGpuSceneOverlay();
+	RenderGpuSceneOverlay();
 
-		// 2. Draw CPU framebuffer (HUD only) on top with clear color as transparent
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	// Draw CPU framebuffer (HUD/overlay elements) on top of GPU scene.
+	// Upload indexed pixels as luminance texture, use palette shader to
+	// convert on GPU with clear color rendered as transparent.
+	if(mRenderSurface != NULL && mOpenGLState->hudShaderReady
+		&& mOpenGLState->frameTexture != 0) {
 
-		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-			gGL.UseProgram(mOpenGLState->shaderProgram);
-			gGL.ActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
-			gGL.ActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
-			gGL.ActiveTexture(GL_TEXTURE0);
-			// Set clear color index so shader outputs alpha=0 for background pixels
-			if(mOpenGLState->clearIdxUniform >= 0) {
-				gGL.Uniform1f(mOpenGLState->clearIdxUniform,
-					static_cast<GLfloat>(mGpuClearColorIndex));
-			}
-		}
-		else {
-			if(gGL.UseProgram != NULL) {
-				gGL.UseProgram(0);
-			}
+		// Upload indexed framebuffer
+		glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mXRes, mYRes,
+			GL_LUMINANCE, GL_UNSIGNED_BYTE, mRenderSurface);
+
+		// Set up HUD shader with palette lookup and clear color transparency
+		gGL.UseProgram(mOpenGLState->hudShaderProgram);
+		gGL.ActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
+		gGL.Uniform1i(mOpenGLState->hudIndexUniform, 0);
+		gGL.ActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
+		gGL.Uniform1i(mOpenGLState->hudPaletteUniform, 1);
+		gGL.ActiveTexture(GL_TEXTURE0);
+		if(mOpenGLState->hudClearIdxUniform >= 0) {
+			gGL.Uniform1f(mOpenGLState->hudClearIdxUniform,
+				static_cast<GLfloat>(mGpuClearColorIndex));
 		}
 
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
 		glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
@@ -2270,79 +2081,34 @@ recompute_path:
 		glEnd();
 
 		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-
-		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-			gGL.UseProgram(0);
-		}
+		gGL.UseProgram(0);
 	}
-	else {
-		// Original path: CPU framebuffer as opaque fullscreen quad, then GPU overlay
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		glClear(GL_COLOR_BUFFER_BIT);
 
-		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-			gGL.UseProgram(mOpenGLState->shaderProgram);
-			gGL.ActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-			gGL.Uniform1i(mOpenGLState->indexUniform, 0);
-			gGL.ActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, mOpenGLState->paletteTexture);
-			gGL.Uniform1i(mOpenGLState->paletteUniform, 1);
-			gGL.ActiveTexture(GL_TEXTURE0);
-			// No clear color transparency in non-GPU mode
-			if(mOpenGLState->clearIdxUniform >= 0) {
-				gGL.Uniform1f(mOpenGLState->clearIdxUniform, -1.0f);
-			}
-		}
-		else {
-			if(gGL.UseProgram != NULL) {
-				gGL.UseProgram(0);
-			}
-		}
-
-		glBegin(GL_TRIANGLE_STRIP);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, 1.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, 1.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, -1.0f);
-		glEnd();
-		if(!LogOpenGLErrors("PresentOpenGL draw")) {
-			if(useShaderPath) {
-				PRINT_LOG("OpenGL present shader fallback -> cpu_rgb reason=draw");
-				mOpenGLState->shaderReady = FALSE;
-				glBindTexture(GL_TEXTURE_2D, mOpenGLState->frameTexture);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mXRes, mYRes, 0,
-					GL_RGB, GL_UNSIGNED_BYTE, NULL);
-				mOpenGLState->rgbaFallback.resize(
-					static_cast<size_t>(mXRes) * static_cast<size_t>(mYRes) * 3);
-				if(gGL.UseProgram != NULL) {
-					gGL.UseProgram(0);
-				}
-				mOpenGLLoggedPresentPath = FALSE;
-				ReleaseOpenGLCurrent();
-				goto recompute_path;
-			}
-			mOpenGLPresentFailureLogCount++;
-			ReleaseOpenGLCurrent();
-			return FALSE;
-		}
-
-		if(useShaderPath && shaderMode == OGL_SHADER_BRINGUP_DRAW) {
-			gGL.UseProgram(0);
-		}
-
-		RenderGpuSceneOverlay();
+	// Reset GL state to defaults before SwapBuffers.
+	// The Steam overlay hooks into SwapBuffers and renders its own UI —
+	// leftover state (textures, shaders, blend modes, texture env) can
+	// interfere with its rendering and cause washed-out/dark appearance.
+	if(gGL.UseProgram != NULL) {
+		gGL.UseProgram(0);
 	}
+	if(gGL.ActiveTexture != NULL) {
+		gGL.ActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+		gGL.ActiveTexture(GL_TEXTURE0);
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_FRAMEBUFFER_SRGB);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glColor4ub(255, 255, 255, 255);
 
 	if(!SwapBuffers(mOpenGLState->windowDc)) {
 		if(mOpenGLPresentFailureLogCount < 10) {
-			PRINT_LOG("PresentOpenGL SwapBuffers failed err=%lu dc=%p",
-				GetLastError(), mOpenGLState->windowDc);
+			PRINT_LOG("PresentOpenGL SwapBuffers failed err=%lu",
+				GetLastError());
 		}
 		mOpenGLPresentFailureLogCount++;
 		ReleaseOpenGLCurrent();
@@ -2530,9 +2296,6 @@ void MR_VideoBuffer::DeleteInternalSurfaces()
 			}
 		}
 		mOpenGLState->cachedBitmapTextures.clear();
-		mOpenGLState->textureWidth = 0;
-		mOpenGLState->textureHeight = 0;
-		mOpenGLState->rgbaFallback.clear();
 	}
 
 	if(mDirectDraw != NULL) {
@@ -2738,10 +2501,11 @@ unsigned int MR_VideoBuffer::GetOrCreateGpuBitmapTexture(const MR_Bitmap *pBitma
 	}
 
 	glBindTexture(GL_TEXTURE_2D, lTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, 0x84FE /*GL_TEXTURE_MAX_ANISOTROPY*/, 16.0f);
 	glTexParameteri(GL_TEXTURE_2D, 0x8191 /*GL_GENERATE_MIPMAP*/, GL_TRUE);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pWidth, pHeight, 0,
@@ -2764,7 +2528,7 @@ unsigned int MR_VideoBuffer::GetOrCreateGpuBitmapTexture(const MR_Bitmap *pBitma
 
 void MR_VideoBuffer::RenderGpuSceneOverlay()
 {
-	if((mGpuSceneRenderer == NULL) || !mGpuSceneRenderer->IsEnabled()) {
+	if(mGpuSceneRenderer == NULL) {
 		return;
 	}
 
@@ -2783,12 +2547,10 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	const GLdouble lNearPlane = max(1.0, static_cast<GLdouble>(lFrame.mPlanDist));
 
 	// --- BACKGROUND PANORAMA ---
-	// Render as a fullscreen quad behind all geometry using fixed-function pipeline.
-	// The background is a 2048x256 column-major paletted bitmap.
+	// Upload background bitmap as a texture if needed.
+	static GLuint sBackgroundTexture = 0;
+	static const MR_UInt8 *sLastBackgroundBitmap = NULL;
 	if(lFrame.mBackgroundBitmap != NULL && mOpenGLState != NULL) {
-		// Upload background as a texture (convert from paletted column-major to RGBA row-major)
-		static GLuint sBackgroundTexture = 0;
-		static const MR_UInt8 *sLastBackgroundBitmap = NULL;
 		if(sBackgroundTexture == 0 || sLastBackgroundBitmap != lFrame.mBackgroundBitmap) {
 			if(sBackgroundTexture == 0) {
 				glGenTextures(1, &sBackgroundTexture);
@@ -2822,8 +2584,8 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 				}
 			}
 			glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MR_BACK_X_RES, MR_BACK_Y_RES, 0,
@@ -2831,98 +2593,62 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			sLastBackgroundBitmap = lFrame.mBackgroundBitmap;
 		}
 
-		// Render background as a 3D cylinder using the scene's perspective projection.
-		// This naturally gives correct cylindrical panorama projection without any
-		// atan hacks or per-strip V correction. The GPU's perspective handles it all.
-		if(gGL.UseProgram != NULL) {
-			gGL.UseProgram(0);
-		}
-		glDisable(GL_DEPTH_TEST);
-		glDepthMask(GL_FALSE);
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
-		glColor4ub(255, 255, 255, 255);
+		// Background will be rendered via the scene shader (with cylindrical projection)
+		// after the texture upload. See background batch generation below.
+	}
 
-		// Set up the same frustum projection used for scene geometry
-		const double lBgNearPlane = max(1.0, static_cast<double>(lFrame.mPlanDist));
-		const double lBgPlanHW = static_cast<double>(lFrame.mPlanHW);
-		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
-
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-		glFrustum(-lBgPlanHW, lBgPlanHW, -lBgPlanVW, lBgPlanVW,
-			lBgNearPlane, 2000000.0);
-		// Apply scroll as vertical translation in projection (same as scene)
-		const double lBgScrollTranslate = -2.0 * static_cast<double>(lFrame.mScroll) /
-			max(1, lFrame.mViewport.bottom - lFrame.mViewport.top);
-		GLfloat lScrollMat[16];
-		memset(lScrollMat, 0, sizeof(lScrollMat));
-		lScrollMat[0] = 1.0f; lScrollMat[5] = 1.0f; lScrollMat[10] = 1.0f; lScrollMat[15] = 1.0f;
-		lScrollMat[13] = static_cast<GLfloat>(lBgScrollTranslate);
-		glMultMatrixf(lScrollMat);
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-
-		// Cylinder parameters
-		const double lCylRadius = 1000000.0; // Far away, behind all geometry
-		// U base: orientation maps to panorama position
+	// --- BACKGROUND 3D CYLINDER ---
+	// Render background as a 3D cylinder using the scene's perspective frustum.
+	// The cylinder naturally gives correct cylindrical panorama projection.
+	// Height scaled to 90% to match CPU rendering proportions.
+	std::vector<MR_GpuSceneBatchVertex> lBgVertices;
+	if(lFrame.mBackgroundBitmap != NULL && mOpenGLState != NULL && sBackgroundTexture != 0) {
+		const double lPI = 3.14159265358979323846;
+		const double lCylRadius = 1000000.0;
 		const GLfloat lBaseU = 0.25f - static_cast<GLfloat>(lFrame.mOrientation) / static_cast<GLfloat>(MR_2PI);
+
 		// V range: horizon at 1/9 of bitmap, extend up/down based on planVW
 		const GLfloat lHorizonV = 1.0f / 9.0f;
+		const double lBgPlanVW = static_cast<double>(lFrame.mPlanVW);
+		const double lBgPlanDist = max(1.0, static_cast<double>(lFrame.mPlanDist));
 		const double lBgYResHalf = static_cast<double>(max(1,
 			(lFrame.mViewport.bottom - lFrame.mViewport.top))) * 0.5;
-		// CPU lineIncrement at center: planVW / (planDist * yResHalf)
-		// Total V extent above horizon = rowsAbove * lineInc = (yResHalf + scroll) * planVW / (planDist * yResHalf)
 		const double lRowsAbove = lBgYResHalf - 1.0 + static_cast<double>(lFrame.mScroll);
 		const double lRowsBelow = lBgYResHalf * 0.25;
-		const double lBgPlanDist = max(1.0, static_cast<double>(lFrame.mPlanDist));
 		const double lCenterLineInc = lBgPlanVW / (lBgPlanDist * lBgYResHalf);
 		const GLfloat lVTop = min(1.0f, lHorizonV + static_cast<GLfloat>(lRowsAbove * lCenterLineInc));
 		const GLfloat lVBottom = max(0.0f, lHorizonV - static_cast<GLfloat>(lRowsBelow * lCenterLineInc));
 
-		// Cylinder height: map V range to world height on the cylinder
-		// At cylinder distance, planVW maps to yResHalf screen pixels.
-		// The visible vertical angle = atan(planVW / planDist).
-		// We need the cylinder to cover from top of screen to mYRes/8 below horizon.
-		// Top of screen is at (rowsAbove) pixels above horizon.
-		// Cylinder Y at horizon = 0. Y_top = rowsAbove * cylRadius / planDist * planVW / yResHalf
-		// Simplified: Y = screenRows * cylRadius * planVW / (planDist * yResHalf)
-		const double lCylYTop = lRowsAbove * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
-		const double lCylYBottom = -lRowsBelow * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		// Cylinder height: map screen rows to world Y on the cylinder.
+		// Keep top anchored, squeeze bottom up to 90% of total height.
+		const double lHeightScale = 0.92;
+		const double lCylYTopFull = lRowsAbove * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		const double lCylYBottomFull = -lRowsBelow * lCylRadius * lBgPlanVW / (lBgPlanDist * lBgYResHalf);
+		const double lCylYTop = lCylYTopFull;
+		const double lCylYBottom = lCylYTopFull - lHeightScale * (lCylYTopFull - lCylYBottomFull);
 
-		// Render cylinder as a quad strip spanning a full 360 degrees
-		// (GL_REPEAT handles the wrapping, and the frustum clips to the visible portion)
 		const int lBgStrips = 64;
-		const double lPI = 3.14159265358979323846;
-		glBegin(GL_QUAD_STRIP);
+		lBgVertices.reserve((lBgStrips + 1) * 2);
+
 		for(int lS = 0; lS <= lBgStrips; lS++) {
-			// Angle around the cylinder (full 360 degree sweep)
 			const double lTheta = 2.0 * lPI * static_cast<double>(lS) / static_cast<double>(lBgStrips);
-			// Cylinder vertex position in eye space (camera at origin, looking down -Z)
-			// Angle 0 = directly in front (-Z), sweeps around
 			const GLfloat lX = static_cast<GLfloat>(lCylRadius * sin(lTheta));
 			const GLfloat lZ = static_cast<GLfloat>(-lCylRadius * cos(lTheta));
-			// U maps angle to panorama position
 			const GLfloat lU = lBaseU + static_cast<GLfloat>(lTheta / (2.0 * lPI));
 
-			glTexCoord2f(lU, lVTop);
-			glVertex3f(lX, static_cast<GLfloat>(lCylYTop), lZ);
-			glTexCoord2f(lU, lVBottom);
-			glVertex3f(lX, static_cast<GLfloat>(lCylYBottom), lZ);
+			MR_GpuSceneBatchVertex lV;
+			lV.mR = 1.0f; lV.mG = 1.0f; lV.mB = 1.0f; lV.mA = 1.0f;
+
+			// Top vertex
+			lV.mX = lX; lV.mY = static_cast<GLfloat>(lCylYTop); lV.mZ = lZ;
+			lV.mU = lU; lV.mV = lVTop;
+			lBgVertices.push_back(lV);
+
+			// Bottom vertex
+			lV.mX = lX; lV.mY = static_cast<GLfloat>(lCylYBottom); lV.mZ = lZ;
+			lV.mU = lU; lV.mV = lVBottom;
+			lBgVertices.push_back(lV);
 		}
-		glEnd();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-
-		glDisable(GL_TEXTURE_2D);
-		glDepthMask(GL_TRUE);
 	}
 
 	// Vertex batch: all triangles for the frame, grouped by texture
@@ -3231,6 +2957,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			lBatch.mTexture = lTexture;
 			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
 			lBatch.mVertexCount = 0;
+			lBatch.mIsFloorCeiling = TRUE;
 
 			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
@@ -3252,6 +2979,7 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			lBatch.mTexture = 0;
 			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
 			lBatch.mVertexCount = 0;
+			lBatch.mIsFloorCeiling = TRUE;
 
 			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
@@ -3421,21 +3149,18 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	#undef PALETTE_B
 
 	// --- DRAW ALL BATCHES ---
-	if(lAllVertices.empty() || lBatches.empty()) {
+	const BOOL lHasSceneGeometry = !lAllVertices.empty() && !lBatches.empty();
+	const BOOL lHasBackground = !lBgVertices.empty() && sBackgroundTexture != 0;
+
+	if(!lHasSceneGeometry && !lHasBackground) {
 		return;
 	}
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
 
 	const BOOL lUseSceneShader = (mOpenGLState != NULL) && mOpenGLState->sceneShaderReady
 		&& (mOpenGLState->sceneVbo != 0);
 
 	if(lUseSceneShader) {
-		// Build and upload MVP matrix
+		// Build and upload MVP matrix (used for both background cylinder and scene geometry)
 		GLfloat lMvp[16];
 		BuildGpuSceneMVP(lFrame, lMvp);
 
@@ -3443,65 +3168,133 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		gGL.UniformMatrix4fv(mOpenGLState->sceneMvpUniform, 1, GL_FALSE, lMvp);
 		gGL.Uniform1i(mOpenGLState->sceneTextureUniform, 0);
 
-		// Upload all vertices to VBO
-		gGL.BindBuffer(GL_ARRAY_BUFFER, mOpenGLState->sceneVbo);
-		gGL.BufferData(GL_ARRAY_BUFFER,
-			static_cast<ptrdiff_t>(lAllVertices.size() * sizeof(MR_GpuSceneBatchVertex)),
-			&lAllVertices[0], GL_DYNAMIC_DRAW);
-
-		// Set up vertex attributes
 		const GLsizei lStride = sizeof(MR_GpuSceneBatchVertex);
-		if(mOpenGLState->scenePositionAttrib >= 0) {
-			gGL.EnableVertexAttribArray(mOpenGLState->scenePositionAttrib);
-			gGL.VertexAttribPointer(mOpenGLState->scenePositionAttrib, 3, GL_FLOAT, GL_FALSE,
-				lStride, reinterpret_cast<const void *>(0));
-		}
-		if(mOpenGLState->sceneTexCoordAttrib >= 0) {
-			gGL.EnableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
-			gGL.VertexAttribPointer(mOpenGLState->sceneTexCoordAttrib, 2, GL_FLOAT, GL_FALSE,
-				lStride, reinterpret_cast<const void *>(3 * sizeof(GLfloat)));
-		}
-		if(mOpenGLState->sceneColorAttrib >= 0) {
-			gGL.EnableVertexAttribArray(mOpenGLState->sceneColorAttrib);
-			gGL.VertexAttribPointer(mOpenGLState->sceneColorAttrib, 4, GL_FLOAT, GL_FALSE,
-				lStride, reinterpret_cast<const void *>(5 * sizeof(GLfloat)));
+
+		if(mOpenGLState->sceneCylHalfFovHUniform >= 0) {
+			gGL.Uniform1f(mOpenGLState->sceneCylHalfFovHUniform, 0.0f);
 		}
 
-		// Draw each batch
-		for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
-			const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
-			if(lBatch.mVertexCount == 0) {
-				continue;
+		// --- Draw background cylinder (no depth test, behind everything) ---
+		if(lHasBackground) {
+			glDisable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
+
+			gGL.BindBuffer(GL_ARRAY_BUFFER, mOpenGLState->sceneVbo);
+			gGL.BufferData(GL_ARRAY_BUFFER,
+				static_cast<ptrdiff_t>(lBgVertices.size() * sizeof(MR_GpuSceneBatchVertex)),
+				&lBgVertices[0], GL_DYNAMIC_DRAW);
+
+			if(mOpenGLState->scenePositionAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->scenePositionAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->scenePositionAttrib, 3, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(0));
+			}
+			if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->sceneTexCoordAttrib, 2, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(3 * sizeof(GLfloat)));
+			}
+			if(mOpenGLState->sceneColorAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->sceneColorAttrib, 4, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(5 * sizeof(GLfloat)));
 			}
 
-			if(lBatch.mTexture != 0) {
-				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
-				gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
+			gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+			gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+			gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 0.0f);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<GLsizei>(lBgVertices.size()));
+
+			if(mOpenGLState->scenePositionAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->scenePositionAttrib);
 			}
-			else {
-				glDisable(GL_TEXTURE_2D);
-				gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 0.0f);
+			if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+			}
+			if(mOpenGLState->sceneColorAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+			}
+		}
+
+		// --- Draw scene geometry with depth test ---
+		if(lHasSceneGeometry) {
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glDepthMask(GL_TRUE);
+			glDisable(GL_BLEND);
+
+			// Upload all vertices to VBO
+			gGL.BindBuffer(GL_ARRAY_BUFFER, mOpenGLState->sceneVbo);
+			gGL.BufferData(GL_ARRAY_BUFFER,
+				static_cast<ptrdiff_t>(lAllVertices.size() * sizeof(MR_GpuSceneBatchVertex)),
+				&lAllVertices[0], GL_DYNAMIC_DRAW);
+
+			// Set up vertex attributes
+			if(mOpenGLState->scenePositionAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->scenePositionAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->scenePositionAttrib, 3, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(0));
+			}
+			if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->sceneTexCoordAttrib, 2, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(3 * sizeof(GLfloat)));
+			}
+			if(mOpenGLState->sceneColorAttrib >= 0) {
+				gGL.EnableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+				gGL.VertexAttribPointer(mOpenGLState->sceneColorAttrib, 4, GL_FLOAT, GL_FALSE,
+					lStride, reinterpret_cast<const void *>(5 * sizeof(GLfloat)));
 			}
 
-			glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+			// Draw each batch
+			for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+				const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+				if(lBatch.mVertexCount == 0) {
+					continue;
+				}
+
+				if(lBatch.mTexture != 0) {
+					glEnable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+					gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+					if(lBatch.mIsFloorCeiling) {
+						gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+						gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 5.0f);
+					} else {
+						gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+						gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 0.0f);
+					}
+				}
+				else {
+					glDisable(GL_TEXTURE_2D);
+					gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 0.0f);
+				}
+
+				glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+			}
+
+			// Cleanup
+			if(mOpenGLState->scenePositionAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->scenePositionAttrib);
+			}
+			if(mOpenGLState->sceneTexCoordAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
+			}
+			if(mOpenGLState->sceneColorAttrib >= 0) {
+				gGL.DisableVertexAttribArray(mOpenGLState->sceneColorAttrib);
+			}
 		}
 
-		// Cleanup
-		if(mOpenGLState->scenePositionAttrib >= 0) {
-			gGL.DisableVertexAttribArray(mOpenGLState->scenePositionAttrib);
-		}
-		if(mOpenGLState->sceneTexCoordAttrib >= 0) {
-			gGL.DisableVertexAttribArray(mOpenGLState->sceneTexCoordAttrib);
-		}
-		if(mOpenGLState->sceneColorAttrib >= 0) {
-			gGL.DisableVertexAttribArray(mOpenGLState->sceneColorAttrib);
-		}
 		gGL.BindBuffer(GL_ARRAY_BUFFER, 0);
 		gGL.UseProgram(0);
 	}
 	else {
-		// Fallback: immediate mode rendering (legacy path)
+		// Fallback: immediate mode rendering (when scene shader is unavailable)
+
+		// Set up frustum projection (shared by background and scene geometry)
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -3519,40 +3312,68 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		glPushMatrix();
 		glLoadIdentity();
 
-		for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
-			const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
-			if(lBatch.mVertexCount == 0) {
-				continue;
-			}
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.01f);
 
-			if(lBatch.mTexture != 0) {
-				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
-				glColor4ub(255, 255, 255, 255);
-			}
-			else {
-				glDisable(GL_TEXTURE_2D);
-			}
-
-			glBegin(GL_TRIANGLES);
-			for(int lV = lBatch.mStartVertex; lV < lBatch.mStartVertex + lBatch.mVertexCount; lV++) {
-				const MR_GpuSceneBatchVertex &lVert = lAllVertices[lV];
-				if(lBatch.mTexture != 0) {
-					glTexCoord2f(lVert.mU, lVert.mV);
-				}
-				else {
-					glColor4f(lVert.mR, lVert.mG, lVert.mB, lVert.mA);
-				}
-				glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
+		// Draw background cylinder (no depth test)
+		if(lHasBackground) {
+			glDisable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, sBackgroundTexture);
+			glColor4ub(255, 255, 255, 255);
+			glBegin(GL_TRIANGLE_STRIP);
+			for(size_t lV = 0; lV < lBgVertices.size(); lV++) {
+				glTexCoord2f(lBgVertices[lV].mU, lBgVertices[lV].mV);
+				glVertex3f(lBgVertices[lV].mX, lBgVertices[lV].mY, lBgVertices[lV].mZ);
 			}
 			glEnd();
 		}
 
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
+		// Draw scene geometry (with depth test)
+		if(lHasSceneGeometry) {
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glDepthMask(GL_TRUE);
+
+			for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+				const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+				if(lBatch.mVertexCount == 0) {
+					continue;
+				}
+
+				if(lBatch.mTexture != 0) {
+					glEnable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+					glTexParameterf(GL_TEXTURE_2D, 0x8501 /*GL_TEXTURE_LOD_BIAS*/,
+						0.0f);
+				}
+				else {
+					glDisable(GL_TEXTURE_2D);
+				}
+
+				glBegin(GL_TRIANGLES);
+				for(int lV = lBatch.mStartVertex; lV < lBatch.mStartVertex + lBatch.mVertexCount; lV++) {
+					const MR_GpuSceneBatchVertex &lVert = lAllVertices[lV];
+					glColor4f(lVert.mR, lVert.mG, lVert.mB, lVert.mA);
+					if(lBatch.mTexture != 0) {
+						glTexCoord2f(lVert.mU, lVert.mV);
+					}
+					glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
+				}
+				glEnd();
+			}
+
+			glMatrixMode(GL_MODELVIEW);
+			glPopMatrix();
+			glMatrixMode(GL_PROJECTION);
+			glPopMatrix();
+			glMatrixMode(GL_MODELVIEW);
+		}
+
+		glDisable(GL_ALPHA_TEST);
 	}
 
 	glDisable(GL_TEXTURE_2D);
@@ -4048,7 +3869,7 @@ void MR_VideoBuffer::Flip()
 void MR_VideoBuffer::Clear(MR_UInt8 pColor)
 {
 	// Always track the clear color when GPU scene is active (needed for HUD transparency)
-	if((mGpuSceneRenderer != NULL) && mGpuSceneRenderer->IsEnabled()) {
+	if(mGpuSceneRenderer != NULL) {
 		mGpuClearColorIndex = pColor;
 	}
 

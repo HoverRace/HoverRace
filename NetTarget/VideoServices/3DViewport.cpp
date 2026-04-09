@@ -188,7 +188,7 @@ void MR_3DViewPort::BeginGpuSceneFrame()
 	}
 
 	MR_GpuSceneRenderer *renderer = mVideoBuffer->GetGpuSceneRenderer();
-	if(renderer == NULL || !renderer->IsEnabled()) {
+	if(renderer == NULL) {
 		return;
 	}
 
@@ -208,7 +208,7 @@ void MR_3DViewPort::EndGpuSceneFrame()
 	}
 
 	MR_GpuSceneRenderer *renderer = mVideoBuffer->GetGpuSceneRenderer();
-	if(renderer == NULL || !renderer->IsEnabled()) {
+	if(renderer == NULL) {
 		return;
 	}
 
@@ -399,8 +399,7 @@ void MR_3DViewPort::ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const
 
 void MR_3DViewPort::ClearZ()
 {
-	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)
-		&& mVideoBuffer->GetGpuSceneRenderer()->IsEnabled()) {
+	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
 		return;
 	}
 

@@ -104,7 +104,6 @@ class MR_VideoBuffer
 		MR_UInt8 mGpuClearColorIndex;
 		int mOpenGLPresentFailureLogCount;
 		int mOpenGLFrameTraceLogCount;
-		BOOL mOpenGLLoggedPresentPath;
 		DWORD mStagePerfAccumulatedClearMs;
 		DWORD mStagePerfAccumulatedBackgroundMs;
 		DWORD mStagePerfAccumulatedClearZMs;

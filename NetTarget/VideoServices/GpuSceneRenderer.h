@@ -113,16 +113,12 @@ class MR_GpuSceneRenderer
 {
 	private:
 		MR_VideoBuffer *mVideoBuffer;
-		BOOL mEnabled;
 		BOOL mFrameOpen;
 		MR_GpuSceneFrame mFrame;
 
 	public:
 		MR_GpuSceneRenderer(MR_VideoBuffer *pVideoBuffer);
 		~MR_GpuSceneRenderer();
-
-		BOOL IsEnabled() const;
-		void SetEnabled(BOOL pEnabled);
 
 		void BeginFrame(const RECT &pViewport, const MR_3DCoordinate &pCameraPosition,
 			MR_Angle pOrientation, int pScroll, MR_Int32 pPlanDist,

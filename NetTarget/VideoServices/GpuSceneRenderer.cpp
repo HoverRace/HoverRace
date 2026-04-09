@@ -9,38 +9,18 @@
 
 MR_GpuSceneRenderer::MR_GpuSceneRenderer(MR_VideoBuffer *pVideoBuffer) :
 	mVideoBuffer(pVideoBuffer),
-	mEnabled(FALSE),
 	mFrameOpen(FALSE)
 {
-	char buffer[8] = { 0 };
-	DWORD len = GetEnvironmentVariableA("HOVERRACE_GPU_SCENE", buffer, sizeof(buffer));
-	if((len > 0) && (len < sizeof(buffer)) && (buffer[0] != '0')) {
-		mEnabled = TRUE;
-	}
 }
 
 MR_GpuSceneRenderer::~MR_GpuSceneRenderer()
 {
 }
 
-BOOL MR_GpuSceneRenderer::IsEnabled() const
-{
-	return mEnabled;
-}
-
-void MR_GpuSceneRenderer::SetEnabled(BOOL pEnabled)
-{
-	mEnabled = pEnabled;
-}
-
 void MR_GpuSceneRenderer::BeginFrame(const RECT &pViewport, const MR_3DCoordinate &pCameraPosition,
 	MR_Angle pOrientation, int pScroll, MR_Int32 pPlanDist,
 	MR_Int32 pPlanHW, MR_Int32 pPlanVW)
 {
-	if(!mEnabled) {
-		return;
-	}
-
 	mFrame.Reset();
 	mFrameOpen = TRUE;
 	mFrame.mViewport = pViewport;
@@ -65,7 +45,7 @@ void MR_GpuSceneRenderer::ResetFrame()
 
 void MR_GpuSceneRenderer::SubmitBackground(const MR_UInt8 *pBitmap)
 {
-	if(!mEnabled || !mFrameOpen) {
+	if(!mFrameOpen) {
 		return;
 	}
 
@@ -77,7 +57,7 @@ void MR_GpuSceneRenderer::SubmitWall(const MR_3DCoordinate &pUpperLeft,
 	const MR_Bitmap *pBitmap, const MR_Bitmap *pBitmap2,
 	int pSerialLen, int pSerialStart)
 {
-	if(!mEnabled || !mFrameOpen) {
+	if(!mFrameOpen) {
 		return;
 	}
 
@@ -100,7 +80,7 @@ void MR_GpuSceneRenderer::SubmitHorizontalSurface(int pNbVertex,
 	const MR_2DCoordinate *pVertexList, MR_Int32 pLevel, BOOL pTop,
 	const MR_Bitmap *pBitmap)
 {
-	if(!mEnabled || !mFrameOpen) {
+	if(!mFrameOpen) {
 		return;
 	}
 
@@ -123,7 +103,7 @@ void MR_GpuSceneRenderer::SubmitHorizontalSurface(int pNbVertex,
 void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 	const MR_GpuScenePositionMatrix &pMatrix, const MR_Bitmap *pBitmap)
 {
-	if(!mEnabled || !mFrameOpen) {
+	if(!mFrameOpen) {
 		return;
 	}
 
@@ -137,7 +117,7 @@ void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 	const MR_GpuScenePositionMatrix &pMatrix, MR_UInt8 pColor)
 {
-	if(!mEnabled || !mFrameOpen) {
+	if(!mFrameOpen) {
 		return;
 	}
 
