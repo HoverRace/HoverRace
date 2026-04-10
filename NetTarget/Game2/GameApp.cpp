@@ -543,7 +543,9 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		MR_SAMPLE_END(Process);
 
-		if(lRefreshView) {
+		// Always render — decouple rendering from physics simulation timestep.
+		// Physics still ticks in 15ms slices, but rendering runs at display rate.
+		{
 			MR_SAMPLE_START(Refresh, "Refresh");
 			lThis->mGameApp->RefreshView();
 			lThis->mGameApp->mNbFrames++;
@@ -2398,20 +2400,31 @@ void MR_GameApp::ResolveInitialWindowRect(RECT *pRect)
 
 void MR_GameApp::ApplyDesktopFullscreenRect(const RECT &rect)
 {
+	// Inflate 1px on every edge so the WS_BORDER frame (set in
+	// EnterDesktopFullscreen) sits off-screen. The visible client
+	// rect ends up exactly covering the monitor.
+	RECT adjustedRect = rect;
+	adjustedRect.left -= 1;
+	adjustedRect.top -= 1;
+	adjustedRect.right += 1;
+	adjustedRect.bottom += 1;
+
 	WINDOWPLACEMENT placement;
 	memset(&placement, 0, sizeof(placement));
 	placement.length = sizeof(placement);
 	if(GetWindowPlacement(mMainWindow, &placement)) {
 		placement.flags = 0;
 		placement.showCmd = IsIconic(mMainWindow) ? SW_RESTORE : SW_SHOWNORMAL;
-		placement.rcNormalPosition = rect;
+		placement.rcNormalPosition = adjustedRect;
 		SetWindowPlacement(mMainWindow, &placement);
 	}
 
-	SetWindowPos(mMainWindow, HWND_TOPMOST,
-		rect.left, rect.top,
-		rect.right - rect.left,
-		rect.bottom - rect.top,
+	// HWND_TOP instead of HWND_TOPMOST — topmost + borderless + full monitor
+	// is a strong FSO trigger.
+	SetWindowPos(mMainWindow, HWND_TOP,
+		adjustedRect.left, adjustedRect.top,
+		adjustedRect.right - adjustedRect.left,
+		adjustedRect.bottom - adjustedRect.top,
 		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
 }
 
@@ -2444,7 +2457,20 @@ void MR_GameApp::EnterDesktopFullscreen()
 	GetWindowRect(mMainWindow, &mWindowedRect);
 
 	SetMenu(mMainWindow, NULL);
-	SetWindowLong(mMainWindow, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+	// Use WS_BORDER (not WS_POPUP) so the OpenGL ICD does not classify
+	// the window as "borderless fullscreen" and switch the present path
+	// to "Hardware: Legacy Flip" (true exclusive fullscreen, bypassing
+	// DWM entirely, invisible to OBS Display Capture). WS_BORDER adds a
+	// thin 1px frame around the client area; we compensate by inflating
+	// the window rect by 1px on all sides so the border lands
+	// off-screen and the visible client is still exactly the monitor.
+	//
+	// We deliberately do NOT use WS_POPUP here. Diagnostic confirmed
+	// that in Hardware: Legacy Flip mode DWM is completely bypassed —
+	// any overlay/anchor window becomes invisible regardless of z-order
+	// because DWM isn't compositing. The only defeat is to prevent the
+	// ICD from entering that path in the first place.
+	SetWindowLong(mMainWindow, GWL_STYLE, WS_VISIBLE | WS_BORDER);
 	SetWindowLong(mMainWindow, GWL_EXSTYLE, WS_EX_APPWINDOW);
 	ApplyDesktopFullscreenRect(monitorRect);
 
@@ -2609,7 +2635,11 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_ENTERMENULOOP:
-			This->SetVideoMode(0, 0);
+			// Don't fall out of borderless fullscreen when the menu is
+			// invoked (Alt / F10). Only F11 / ESC should exit fullscreen.
+			if(!This->mDesktopFullscreen) {
+				This->SetVideoMode(0, 0);
+			}
 			This->UpdateMenuItems();
 			break;
 
@@ -2631,7 +2661,11 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					return 0;
 
 				case 42: // cursor hide timer
-					if(This->mCursorVisible && (GetTickCount() - This->mLastMouseMoveTick) >= 2000) {
+					// Only auto-hide the cursor during active gameplay.
+					// In menus / lobby the cursor must stay visible so the
+					// user can click UI elements.
+					if(This->mCursorVisible && This->IsGameRunning()
+						&& (GetTickCount() - This->mLastMouseMoveTick) >= 2000) {
 						This->mCursorVisible = FALSE;
 						SetCursor(NULL);
 					}
@@ -2691,7 +2725,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 			if(pWParam && (This->mVideoBuffer != NULL) && (This->mMainWindow == GetForegroundWindow())) {
 				if(!This->mVideoBuffer->IsModeSettingInProgress()) {
-					if(This->mVideoBuffer->IsWindowMode()) {
+					// Don't kick the user out of borderless fullscreen just
+					// because they alt-tabbed back in or clicked the window.
+					// Only F11 / ESC should exit fullscreen.
+					if(This->mVideoBuffer->IsWindowMode() && !This->mDesktopFullscreen) {
 						//TRACE("SetMode\n");
 
 						This->SetVideoMode(0, 0);
@@ -2716,7 +2753,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				SetCursor(LoadCursor(NULL, IDC_ARROW));
 			}
 			This->mLastMouseMoveTick = GetTickCount();
-			SetTimer(pWindow, 42 /*cursor hide timer*/, 2000, NULL);
+			// Only arm the auto-hide timer during active gameplay.
+			if(This->IsGameRunning()) {
+				SetTimer(pWindow, 42 /*cursor hide timer*/, 2000, NULL);
+			}
 			break;
 
 			// Menu options

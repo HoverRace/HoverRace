@@ -176,6 +176,7 @@ class MR_VideoBuffer
 		MR_DllDeclare BOOL TryToSetColorMode(int colorBits);
 
 		MR_DllDeclare BOOL IsWindowMode() const;
+		BOOL IsEffectiveFullscreen() const;
 		MR_DllDeclare BOOL IsIconMode() const;
 		MR_DllDeclare BOOL IsModeSettingInProgress() const;
 

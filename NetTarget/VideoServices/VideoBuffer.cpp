@@ -798,6 +798,12 @@ struct MR_OpenGLState
 	GLuint sceneVbo;
 	BOOL sceneShaderReady;
 
+	// Vsync control
+	typedef BOOL (WINAPI *PFN_wglSwapIntervalEXT)(int interval);
+	PFN_wglSwapIntervalEXT wglSwapIntervalEXT;
+	int currentSwapInterval;
+	BOOL isIntelGpu;
+
 	MR_OpenGLState() :
 		windowDc(NULL), context(NULL),
 		frameTexture(0), paletteTexture(0),
@@ -808,7 +814,9 @@ struct MR_OpenGLState
 		sceneMvpUniform(-1), sceneTextureUniform(-1), sceneUseTextureUniform(-1),
 		sceneCylHalfFovHUniform(-1), sceneLodBiasUniform(-1), sceneLodBiasMaxUniform(-1),
 		scenePositionAttrib(-1), sceneTexCoordAttrib(-1), sceneColorAttrib(-1),
-		sceneVbo(0), sceneShaderReady(FALSE)
+		sceneVbo(0), sceneShaderReady(FALSE),
+		wglSwapIntervalEXT(NULL), currentSwapInterval(-1),
+		isIntelGpu(FALSE)
 	{
 	}
 };
@@ -1886,6 +1894,25 @@ BOOL MR_VideoBuffer::InitOpenGL()
 		}
 	}
 
+	// Load vsync extension and set initial state
+	mOpenGLState->wglSwapIntervalEXT =
+		(MR_OpenGLState::PFN_wglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
+	if(mOpenGLState->wglSwapIntervalEXT != NULL) {
+		mOpenGLState->wglSwapIntervalEXT(0);
+		mOpenGLState->currentSwapInterval = 0;
+		PRINT_LOG("InitOpenGL wglSwapIntervalEXT=%p vsync disabled", mOpenGLState->wglSwapIntervalEXT);
+	} else {
+		PRINT_LOG("InitOpenGL wglSwapIntervalEXT not available");
+	}
+
+	// Detect Intel GPU — needs glFinish workaround for DWM tearing
+	const char *lVendor = (const char *)glGetString(GL_VENDOR);
+	if(lVendor != NULL && strstr(lVendor, "Intel") != NULL) {
+		mOpenGLState->isIntelGpu = TRUE;
+	}
+	PRINT_LOG("InitOpenGL vendor=%s isIntel=%d", lVendor ? lVendor : "(null)",
+		(int)mOpenGLState->isIntelGpu);
+
 	PRINT_LOG("InitOpenGL hudShaderReady=%d sceneShaderReady=%d frameTexture=%u paletteTexture=%u",
 		(int) mOpenGLState->hudShaderReady,
 		(int) mOpenGLState->sceneShaderReady,
@@ -2026,6 +2053,20 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 		return FALSE;
 	}
 
+	// Vsync OFF always — vsync in borderless fullscreen triggers Fullscreen
+	// Optimizations (FSO) which bypasses DWM and breaks OBS desktop capture.
+	// DwmFlush handles frame pacing instead.
+	if(mOpenGLState->wglSwapIntervalEXT != NULL && mOpenGLState->currentSwapInterval != 0) {
+		mOpenGLState->wglSwapIntervalEXT(0);
+		mOpenGLState->currentSwapInterval = 0;
+	}
+
+	// Intel integrated GPUs need glFinish to prevent tearing in borderless
+	// fullscreen — their drivers don't properly sync with DWM composition.
+	if(mOpenGLState->isIntelGpu && IsEffectiveFullscreen()) {
+		glFinish();
+	}
+
 	glViewport(0, 0, mDisplayXRes, mDisplayYRes);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -2117,6 +2158,26 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 
 	mOpenGLPresentFailureLogCount = 0;
 	ReleaseOpenGLCurrent();
+
+	// DwmFlush AFTER SwapBuffers: paces to the monitor's refresh rate
+	// and keeps DWM actively compositing (prevents FSO which breaks
+	// OBS desktop capture in borderless fullscreen).
+	{
+		typedef HRESULT (WINAPI *PFN_DwmFlush)(void);
+		static PFN_DwmFlush sDwmFlush = NULL;
+		static BOOL sLoaded = FALSE;
+		if(!sLoaded) {
+			HMODULE hDwm = LoadLibraryA("dwmapi.dll");
+			if(hDwm != NULL) {
+				sDwmFlush = (PFN_DwmFlush)GetProcAddress(hDwm, "DwmFlush");
+			}
+			sLoaded = TRUE;
+		}
+		if(sDwmFlush != NULL) {
+			sDwmFlush();
+		}
+	}
+
 	return TRUE;
 }
 
@@ -3739,6 +3800,52 @@ BOOL MR_VideoBuffer::PrepareDesktopFullscreen(POINT *pResolution)
 BOOL MR_VideoBuffer::IsWindowMode() const
 {
 	return !mFullScreen;
+}
+
+BOOL MR_VideoBuffer::IsEffectiveFullscreen() const
+{
+	if(mFullScreen) {
+		return TRUE;
+	}
+	// Detect desktop/borderless fullscreen: GameApp's desktop fullscreen
+	// path uses WS_BORDER (not WS_POPUP — WS_POPUP causes the OpenGL ICD
+	// to classify the window as borderless fullscreen and switch to
+	// "Hardware: Legacy Flip", which bypasses DWM entirely and hides the
+	// window from OBS Display Capture). Detect it by checking that no
+	// title bar / resize frame is present and that the client area
+	// exactly covers a monitor.
+	if(mWindow == NULL) {
+		return FALSE;
+	}
+	LONG style = GetWindowLong(mWindow, GWL_STYLE);
+	if(style & (WS_CAPTION | WS_THICKFRAME)) {
+		return FALSE;
+	}
+	RECT clientRect;
+	if(!GetClientRect(mWindow, &clientRect)) {
+		return FALSE;
+	}
+	POINT topLeft = { clientRect.left, clientRect.top };
+	ClientToScreen(mWindow, &topLeft);
+	RECT screenClient = {
+		topLeft.x, topLeft.y,
+		topLeft.x + (clientRect.right - clientRect.left),
+		topLeft.y + (clientRect.bottom - clientRect.top)
+	};
+	HMONITOR monitor = MonitorFromRect(&screenClient, MONITOR_DEFAULTTONEAREST);
+	if(monitor == NULL) {
+		return FALSE;
+	}
+	MONITORINFO mi;
+	memset(&mi, 0, sizeof(mi));
+	mi.cbSize = sizeof(mi);
+	if(!GetMonitorInfo(monitor, &mi)) {
+		return FALSE;
+	}
+	return (screenClient.left == mi.rcMonitor.left &&
+		screenClient.top == mi.rcMonitor.top &&
+		screenClient.right == mi.rcMonitor.right &&
+		screenClient.bottom == mi.rcMonitor.bottom);
 }
 
 BOOL MR_VideoBuffer::IsIconMode() const
