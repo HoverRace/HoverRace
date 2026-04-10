@@ -636,6 +636,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	safeMode = false;
 	allowMultipleInstances = false;
 	mDesktopFullscreen = false;
+	mInResizeLoop = false;
 	SetRectEmpty(&mWindowedRect);
 	mWindowedStyle = 0;
 	mWindowedExStyle = 0;
@@ -2619,9 +2620,35 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			}
 			break;
 
+		case WM_ENTERSIZEMOVE:
+			// Windows enters a modal resize/move loop. Pause the game
+			// thread so the world doesn't keep running (and, more
+			// importantly, so we don't keep tearing down and rebuilding
+			// the video mode on every pixel of drag — that's what makes
+			// live resize sluggish). We'll do a single OnDisplayChange
+			// when the user releases the mouse in WM_EXITSIZEMOVE.
+			if(!This->mInResizeLoop) {
+				This->mInResizeLoop = true;
+				This->PauseGameThread();
+			}
+			break;
+
+		case WM_EXITSIZEMOVE:
+			if(This->mInResizeLoop) {
+				This->mInResizeLoop = false;
+				This->RestartGameThread();
+				// Now apply the final window size in one shot.
+				This->OnDisplayChange();
+			}
+			break;
+
 		case WM_SIZE:
 		case WM_MOVE:
-			This->OnDisplayChange();
+			// Skip per-pixel video mode resets during a live drag.
+			// WM_EXITSIZEMOVE will call OnDisplayChange() once at the end.
+			if(!This->mInResizeLoop) {
+				This->OnDisplayChange();
+			}
 			break;
 
 		case WM_QUERYNEWPALETTE:

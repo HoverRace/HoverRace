@@ -85,6 +85,7 @@ class MR_GameApp
 		bool safeMode;
 		bool allowMultipleInstances;
 		bool mDesktopFullscreen;
+		bool mInResizeLoop;
 		RECT mWindowedRect;
 		LONG mWindowedStyle;
 		LONG mWindowedExStyle;
