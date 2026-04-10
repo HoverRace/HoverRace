@@ -35,6 +35,7 @@
 #include <stddef.h>
 #include <math.h>
 #include <gl/GL.h>
+#include <dxgi.h>
 
 #pragma comment(lib, "opengl32.lib")
 
@@ -804,6 +805,17 @@ struct MR_OpenGLState
 	int currentSwapInterval;
 	BOOL isIntelGpu;
 
+	// Multi-monitor refresh-rate pacing via DXGI. DwmFlush() paces to DWM's
+	// global composition clock (typically the primary monitor's rate), which
+	// caps the frame rate to the primary's refresh when the game window is
+	// on a higher-refresh secondary. IDXGIOutput::WaitForVBlank waits on the
+	// actual output containing the window, so the game can run at that
+	// monitor's native refresh rate.
+	HMODULE dxgiLibrary;
+	IDXGIFactory *dxgiFactory;
+	IDXGIOutput *cachedDxgiOutput;
+	HMONITOR cachedDxgiOutputMonitor;
+
 	MR_OpenGLState() :
 		windowDc(NULL), context(NULL),
 		frameTexture(0), paletteTexture(0),
@@ -816,7 +828,9 @@ struct MR_OpenGLState
 		scenePositionAttrib(-1), sceneTexCoordAttrib(-1), sceneColorAttrib(-1),
 		sceneVbo(0), sceneShaderReady(FALSE),
 		wglSwapIntervalEXT(NULL), currentSwapInterval(-1),
-		isIntelGpu(FALSE)
+		isIntelGpu(FALSE),
+		dxgiLibrary(NULL), dxgiFactory(NULL),
+		cachedDxgiOutput(NULL), cachedDxgiOutputMonitor(NULL)
 	{
 	}
 };
@@ -1913,6 +1927,31 @@ BOOL MR_VideoBuffer::InitOpenGL()
 	PRINT_LOG("InitOpenGL vendor=%s isIntel=%d", lVendor ? lVendor : "(null)",
 		(int)mOpenGLState->isIntelGpu);
 
+	// Load DXGI for per-output vblank pacing. We only need the factory;
+	// IDXGIOutput::WaitForVBlank does not require a D3D device.
+	if(mOpenGLState->dxgiFactory == NULL) {
+		mOpenGLState->dxgiLibrary = LoadLibraryA("dxgi.dll");
+		if(mOpenGLState->dxgiLibrary != NULL) {
+			typedef HRESULT (WINAPI *PFN_CreateDXGIFactory)(REFIID, void**);
+			PFN_CreateDXGIFactory createFn = (PFN_CreateDXGIFactory)
+				GetProcAddress(mOpenGLState->dxgiLibrary, "CreateDXGIFactory");
+			if(createFn != NULL) {
+				IDXGIFactory *factory = NULL;
+				HRESULT hr = createFn(__uuidof(IDXGIFactory), (void**)&factory);
+				if(SUCCEEDED(hr) && factory != NULL) {
+					mOpenGLState->dxgiFactory = factory;
+					PRINT_LOG("InitOpenGL DXGI factory created, per-output vblank pacing available");
+				} else {
+					PRINT_LOG("InitOpenGL CreateDXGIFactory failed hr=0x%08lx", (unsigned long)hr);
+				}
+			} else {
+				PRINT_LOG("InitOpenGL CreateDXGIFactory entry not found");
+			}
+		} else {
+			PRINT_LOG("InitOpenGL dxgi.dll not loadable, falling back to DwmFlush pacing");
+		}
+	}
+
 	PRINT_LOG("InitOpenGL hudShaderReady=%d sceneShaderReady=%d frameTexture=%u paletteTexture=%u",
 		(int) mOpenGLState->hudShaderReady,
 		(int) mOpenGLState->sceneShaderReady,
@@ -1992,6 +2031,20 @@ void MR_VideoBuffer::ReleaseOpenGL()
 		mOpenGLState->windowDc = NULL;
 	}
 
+	if(mOpenGLState->cachedDxgiOutput != NULL) {
+		mOpenGLState->cachedDxgiOutput->Release();
+		mOpenGLState->cachedDxgiOutput = NULL;
+	}
+	mOpenGLState->cachedDxgiOutputMonitor = NULL;
+	if(mOpenGLState->dxgiFactory != NULL) {
+		mOpenGLState->dxgiFactory->Release();
+		mOpenGLState->dxgiFactory = NULL;
+	}
+	if(mOpenGLState->dxgiLibrary != NULL) {
+		FreeLibrary(mOpenGLState->dxgiLibrary);
+		mOpenGLState->dxgiLibrary = NULL;
+	}
+
 	delete mOpenGLState;
 	mOpenGLState = NULL;
 }
@@ -2035,6 +2088,54 @@ BOOL MR_VideoBuffer::EnsureOpenGLResources()
 	LogOpenGLErrors("EnsureOpenGLResources");
 	ReleaseOpenGLCurrent();
 	return TRUE;
+}
+
+// Return an IDXGIOutput corresponding to the monitor currently containing
+// the game window. Caches the pointer keyed on HMONITOR so we only
+// re-enumerate adapters/outputs when the window crosses monitor boundaries.
+// Returned pointer is owned by MR_OpenGLState::cachedDxgiOutput — do NOT
+// release it here.
+static IDXGIOutput *GetDxgiOutputForWindow(MR_OpenGLState *state, HWND window)
+{
+	if(state == NULL || state->dxgiFactory == NULL || window == NULL) {
+		return NULL;
+	}
+	HMONITOR monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
+	if(monitor == NULL) {
+		return NULL;
+	}
+	if(monitor == state->cachedDxgiOutputMonitor && state->cachedDxgiOutput != NULL) {
+		return state->cachedDxgiOutput;
+	}
+	if(state->cachedDxgiOutput != NULL) {
+		state->cachedDxgiOutput->Release();
+		state->cachedDxgiOutput = NULL;
+	}
+	state->cachedDxgiOutputMonitor = NULL;
+	for(UINT adapterIdx = 0; ; ++adapterIdx) {
+		IDXGIAdapter *adapter = NULL;
+		HRESULT hr = state->dxgiFactory->EnumAdapters(adapterIdx, &adapter);
+		if(hr == DXGI_ERROR_NOT_FOUND || FAILED(hr) || adapter == NULL) {
+			break;
+		}
+		for(UINT outputIdx = 0; ; ++outputIdx) {
+			IDXGIOutput *output = NULL;
+			HRESULT ohr = adapter->EnumOutputs(outputIdx, &output);
+			if(ohr == DXGI_ERROR_NOT_FOUND || FAILED(ohr) || output == NULL) {
+				break;
+			}
+			DXGI_OUTPUT_DESC desc;
+			if(SUCCEEDED(output->GetDesc(&desc)) && desc.Monitor == monitor) {
+				state->cachedDxgiOutput = output; // transfer ownership
+				state->cachedDxgiOutputMonitor = monitor;
+				adapter->Release();
+				return output;
+			}
+			output->Release();
+		}
+		adapter->Release();
+	}
+	return NULL;
 }
 
 BOOL MR_VideoBuffer::PresentOpenGL()
@@ -2159,22 +2260,34 @@ BOOL MR_VideoBuffer::PresentOpenGL()
 	mOpenGLPresentFailureLogCount = 0;
 	ReleaseOpenGLCurrent();
 
-	// DwmFlush AFTER SwapBuffers: paces to the monitor's refresh rate
-	// and keeps DWM actively compositing (prevents FSO which breaks
-	// OBS desktop capture in borderless fullscreen).
+	// Frame pacing AFTER SwapBuffers. We want two things:
+	//   1. Sync to the vblank of whichever monitor the window is on, so
+	//      the game can actually run at 144Hz on a 144Hz secondary while
+	//      the primary is 60/85Hz.
+	//   2. Keep DWM actively compositing so OBS Display Capture keeps
+	//      seeing the window (avoids the Hardware: Legacy Flip trap).
+	// IDXGIOutput::WaitForVBlank does (1) properly per-output. DwmFlush
+	// paces to DWM's global composition clock which is effectively the
+	// primary monitor's rate — wrong for multi-monitor mixed refresh.
+	// Fall back to DwmFlush only if DXGI is unavailable.
 	{
-		typedef HRESULT (WINAPI *PFN_DwmFlush)(void);
-		static PFN_DwmFlush sDwmFlush = NULL;
-		static BOOL sLoaded = FALSE;
-		if(!sLoaded) {
-			HMODULE hDwm = LoadLibraryA("dwmapi.dll");
-			if(hDwm != NULL) {
-				sDwmFlush = (PFN_DwmFlush)GetProcAddress(hDwm, "DwmFlush");
+		IDXGIOutput *output = GetDxgiOutputForWindow(mOpenGLState, mWindow);
+		if(output != NULL) {
+			output->WaitForVBlank();
+		} else {
+			typedef HRESULT (WINAPI *PFN_DwmFlush)(void);
+			static PFN_DwmFlush sDwmFlush = NULL;
+			static BOOL sLoaded = FALSE;
+			if(!sLoaded) {
+				HMODULE hDwm = LoadLibraryA("dwmapi.dll");
+				if(hDwm != NULL) {
+					sDwmFlush = (PFN_DwmFlush)GetProcAddress(hDwm, "DwmFlush");
+				}
+				sLoaded = TRUE;
 			}
-			sLoaded = TRUE;
-		}
-		if(sDwmFlush != NULL) {
-			sDwmFlush();
+			if(sDwmFlush != NULL) {
+				sDwmFlush();
+			}
 		}
 	}
 
