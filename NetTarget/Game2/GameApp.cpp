@@ -1110,7 +1110,11 @@ BOOL MR_GameApp::CreateMainWindow()
 	}
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, windowPosX, windowPosY, windowSizeX, windowSizeY, NULL, NULL, mInstance, NULL);
+	// WS_OVERLAPPEDWINDOW already includes WS_MAXIMIZEBOX — keep it enabled
+	// so the user can click the maximize button for a regular maximized
+	// window (keeps title bar + taskbar). F11 remains the toggle for
+	// borderless fullscreen (no title bar, covers entire monitor).
+	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE, windowPosX, windowPosY, windowSizeX, windowSizeY, NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
