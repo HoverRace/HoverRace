@@ -21,12 +21,16 @@
 
 #include "stdafx.h"
 #include "TrackSelect.h"
+#include "Banner.h"
+#include "TrackDownloadDialog.h"
 #include "../Util/Cursor.h"
 #include "resource.h"
 #include "io.h"
 #include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/StrRes.h"
 #include "../Util/Config.h"
+#include "../Util/Net/Agent.h"
+#include "../Util/Net/NetExn.h"
 #include "../VideoServices/ColorPalette.h"
 
 #include <algorithm>
@@ -37,6 +41,13 @@ namespace {
 	const int TRACK_MAP_RECORD = 3;
 	const COLORREF TRACK_PREVIEW_BACKGROUND = GetSysColor(COLOR_3DFACE);
 	const DWORD TRACK_SEARCH_TIMEOUT = 1500;
+	const UINT_PTR REMOTE_TRACK_SEARCH_TIMER = 2401;
+	const UINT REMOTE_TRACK_SEARCH_DELAY = 500;
+	const size_t REMOTE_TRACK_SEARCH_MIN_CHARS = 3;
+	const UINT WM_REMOTE_TRACK_SEARCH_COMPLETE = WM_APP + 201;
+	const UINT WM_REMOTE_TRACK_PREVIEW_COMPLETE = WM_APP + 202;
+	const char *REMOTE_TRACK_SEARCH_URL =
+		"http://www.hoverrace.com/tracks/search.php?json=1&search=";
 	const int ALLOWED_CRAFT_MODELS[] = { 0, 1, 2, 7 };
 	const size_t ALLOWED_CRAFT_MODEL_COUNT =
 		sizeof(ALLOWED_CRAFT_MODELS) / sizeof(ALLOWED_CRAFT_MODELS[0]);
@@ -145,19 +156,32 @@ namespace {
 		int mWidth;
 		int mHeight;
 		std::vector<MR_UInt8> mBitmap;
+		HBITMAP mBitmapHandle;
+		bool mLoading;
 
-		TrackPreviewData() : mWidth(0), mHeight(0) { }
+		TrackPreviewData() :
+			mWidth(0), mHeight(0), mBitmapHandle(NULL), mLoading(false) { }
+
+		~TrackPreviewData()
+		{
+			Reset();
+		}
 
 		void Reset()
 		{
+			if(mBitmapHandle != NULL) {
+				DeleteObject(mBitmapHandle);
+				mBitmapHandle = NULL;
+			}
 			mWidth = 0;
 			mHeight = 0;
+			mLoading = false;
 			mBitmap.clear();
 		}
 
 		bool IsAvailable() const
 		{
-			return !mBitmap.empty();
+			return (mBitmapHandle != NULL) || !mBitmap.empty();
 		}
 	};
 }
@@ -165,11 +189,20 @@ namespace {
 class TrackEntry
 {
 	public:
+		TrackEntry() :
+			mRegistrationMode(0), mSortingIndex(0), mIsRemote(false)
+		{
+		}
+
 		std::string mFileName;
 		std::string mPath;
 		std::string mDescription;
 		int mRegistrationMode;
 		int mSortingIndex;
+		bool mIsRemote;
+		std::string mDownloadName;
+		std::string mMapGifUrl;
+		std::string mPageUrl;
 
 		bool operator<(const TrackEntry &elem2) const
 		{
@@ -199,15 +232,25 @@ static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, cons
 static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static void ClearTrackPreview();
 static void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem);
+static void DrawTrackListItem(const DRAWITEMSTRUCT *pDrawItem);
 static COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex);
 static void InitTrackPreviewPalette();
 static bool LoadTrackPreview(const TrackEntry &pEntry);
+static void LoadRemoteTrackPreview(HWND pWindow, const TrackEntry &pEntry);
 static LRESULT CALLBACK TrackListProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static void SortList();
 static void RebuildVisibleTrackList();
 static void RefreshTrackList(HWND pWindow);
 static void UpdateSelectedTrackInfo(HWND pWindow);
+static void SetTrackDescriptionText(HWND pWindow, const char *pText);
+static void UpdateTrackDescriptionScrollbar(HWND pWindow);
+static bool FinishRemoteTrackSelection(HWND pWindow);
 static int HandleTrackListChar(HWND pWindow, UINT pChar);
+static void ScheduleRemoteTrackSearch(HWND pWindow);
+static void ClearRemoteTrackSearch(HWND pWindow);
+static void StartRemoteTrackSearch(HWND pWindow);
+static void HandleRemoteTrackSearchComplete(HWND pWindow, LPARAM pLParam);
+static void HandleRemoteTrackPreviewComplete(HWND pWindow, LPARAM pLParam);
 static void ReadTrackList();
 static void ReadTrackListDir(const std::string &dir);
 static void CleanList();
@@ -222,6 +265,7 @@ typedef std::vector<TrackEntry> tracklist_t;
 typedef std::vector<TrackEntry*> sorted_t;
 
 static tracklist_t gsTrackList;
+static tracklist_t gsRemoteTrackList;
 static sorted_t gsSortedTrackList;
 static sorted_t gsVisibleTrackList;
 static int gsNbLaps;
@@ -236,6 +280,23 @@ static std::string gsTrackSearchPrefix;
 static std::string gsTrackFilter;
 static DWORD gsTrackSearchTick = 0;
 static WNDPROC gsTrackListWndProc = NULL;
+static unsigned gsRemoteSearchSerial = 0;
+static unsigned gsRemotePreviewSerial = 0;
+
+struct RemoteTrackSearchPayload
+{
+	unsigned mSerial;
+	std::string mFilter;
+	tracklist_t mTracks;
+};
+
+struct RemoteTrackPreviewPayload
+{
+	unsigned mSerial;
+	HBITMAP mBitmap;
+
+	RemoteTrackPreviewPayload() : mSerial(0), mBitmap(NULL) { }
+};
 
 /**
  * Open a track file.
@@ -477,6 +538,296 @@ std::string MR_FormatPowerupDisplay(bool pAllowWeapons, bool pAllowCans,
 	return lOutput.str();
 }
 
+static bool IsUrlSafeChar(unsigned char ch)
+{
+	return std::isalnum(ch) || (ch == '-') || (ch == '_') ||
+		(ch == '.') || (ch == '~');
+}
+
+static std::string UrlEncode(const std::string &value)
+{
+	static const char HEX[] = "0123456789ABCDEF";
+	std::string lReturnValue;
+
+	for(size_t lIndex = 0; lIndex < value.length(); ++lIndex) {
+		unsigned char ch = (unsigned char) value[lIndex];
+		if(IsUrlSafeChar(ch)) {
+			lReturnValue += (char) ch;
+		}
+		else {
+			lReturnValue += '%';
+			lReturnValue += HEX[(ch >> 4) & 0x0f];
+			lReturnValue += HEX[ch & 0x0f];
+		}
+	}
+
+	return lReturnValue;
+}
+
+static void SkipJsonWhitespace(const std::string &json, size_t &pos)
+{
+	while((pos < json.length()) &&
+		((json[pos] == ' ') || (json[pos] == '\t') ||
+		(json[pos] == '\r') || (json[pos] == '\n')))
+	{
+		++pos;
+	}
+}
+
+static bool ParseJsonString(const std::string &json, size_t &pos, std::string &value)
+{
+	value.clear();
+	SkipJsonWhitespace(json, pos);
+	if((pos >= json.length()) || (json[pos] != '"')) {
+		return false;
+	}
+	++pos;
+
+	while(pos < json.length()) {
+		char ch = json[pos++];
+		if(ch == '"') {
+			return true;
+		}
+		if(ch != '\\') {
+			value += ch;
+			continue;
+		}
+		if(pos >= json.length()) {
+			return false;
+		}
+		ch = json[pos++];
+		switch(ch) {
+			case '"':
+			case '\\':
+			case '/':
+				value += ch;
+				break;
+			case 'b':
+				value += '\b';
+				break;
+			case 'f':
+				value += '\f';
+				break;
+			case 'n':
+				value += '\n';
+				break;
+			case 'r':
+				value += '\r';
+				break;
+			case 't':
+				value += '\t';
+				break;
+			case 'u':
+				if((pos + 4) > json.length()) {
+					return false;
+				}
+				value += '?';
+				pos += 4;
+				break;
+			default:
+				return false;
+		}
+	}
+
+	return false;
+}
+
+static bool SkipJsonValue(const std::string &json, size_t &pos)
+{
+	SkipJsonWhitespace(json, pos);
+	if(pos >= json.length()) {
+		return false;
+	}
+
+	if(json[pos] == '"') {
+		std::string ignored;
+		return ParseJsonString(json, pos, ignored);
+	}
+
+	if((json[pos] == '{') || (json[pos] == '[')) {
+		std::vector<char> stack;
+		stack.push_back((json[pos] == '{') ? '}' : ']');
+		++pos;
+		while((pos < json.length()) && !stack.empty()) {
+			if(json[pos] == '"') {
+				std::string ignored;
+				if(!ParseJsonString(json, pos, ignored)) {
+					return false;
+				}
+			}
+			else {
+				if(json[pos] == '{') {
+					stack.push_back('}');
+				}
+				else if(json[pos] == '[') {
+					stack.push_back(']');
+				}
+				else if(json[pos] == stack.back()) {
+					stack.pop_back();
+				}
+				++pos;
+			}
+		}
+		return stack.empty();
+	}
+
+	while((pos < json.length()) && (json[pos] != ',') &&
+		(json[pos] != '}') && (json[pos] != ']'))
+	{
+		++pos;
+	}
+	return true;
+}
+
+static bool ParseRemoteTrackObject(const std::string &json, size_t &pos, TrackEntry &entry)
+{
+	SkipJsonWhitespace(json, pos);
+	if((pos >= json.length()) || (json[pos] != '{')) {
+		return false;
+	}
+	++pos;
+
+	entry = TrackEntry();
+	entry.mIsRemote = true;
+	entry.mSortingIndex = 1000000;
+
+	for(;;) {
+		std::string key;
+		std::string value;
+
+		SkipJsonWhitespace(json, pos);
+		if((pos < json.length()) && (json[pos] == '}')) {
+			++pos;
+			break;
+		}
+		if(!ParseJsonString(json, pos, key)) {
+			return false;
+		}
+		SkipJsonWhitespace(json, pos);
+		if((pos >= json.length()) || (json[pos] != ':')) {
+			return false;
+		}
+		++pos;
+
+		if((key == "name") || (key == "downloadName") ||
+			(key == "description") || (key == "mapGifUrl") ||
+			(key == "pageUrl"))
+		{
+			if(!ParseJsonString(json, pos, value)) {
+				return false;
+			}
+			if(key == "name") {
+				entry.mFileName = value;
+			}
+			else if(key == "downloadName") {
+				entry.mDownloadName = value;
+			}
+			else if(key == "description") {
+				entry.mDescription = value;
+			}
+			else if(key == "mapGifUrl") {
+				entry.mMapGifUrl = value;
+			}
+			else if(key == "pageUrl") {
+				entry.mPageUrl = value;
+			}
+		}
+		else if(!SkipJsonValue(json, pos)) {
+			return false;
+		}
+
+		SkipJsonWhitespace(json, pos);
+		if((pos < json.length()) && (json[pos] == ',')) {
+			++pos;
+			continue;
+		}
+		if((pos < json.length()) && (json[pos] == '}')) {
+			++pos;
+			break;
+		}
+		return false;
+	}
+
+	if(entry.mDownloadName.empty()) {
+		entry.mDownloadName = entry.mFileName;
+	}
+	return !entry.mFileName.empty() && !entry.mDownloadName.empty();
+}
+
+static bool ParseRemoteTrackSearchJson(const std::string &json, tracklist_t &tracks)
+{
+	size_t pos = 0;
+	tracks.clear();
+
+	SkipJsonWhitespace(json, pos);
+	if((pos >= json.length()) || (json[pos] != '{')) {
+		return false;
+	}
+	++pos;
+
+	for(;;) {
+		std::string key;
+
+		SkipJsonWhitespace(json, pos);
+		if((pos < json.length()) && (json[pos] == '}')) {
+			return true;
+		}
+		if(!ParseJsonString(json, pos, key)) {
+			return false;
+		}
+		SkipJsonWhitespace(json, pos);
+		if((pos >= json.length()) || (json[pos] != ':')) {
+			return false;
+		}
+		++pos;
+
+		if(key == "tracks") {
+			SkipJsonWhitespace(json, pos);
+			if((pos >= json.length()) || (json[pos] != '[')) {
+				return false;
+			}
+			++pos;
+			for(;;) {
+				TrackEntry entry;
+				SkipJsonWhitespace(json, pos);
+				if((pos < json.length()) && (json[pos] == ']')) {
+					++pos;
+					break;
+				}
+				if(ParseRemoteTrackObject(json, pos, entry)) {
+					tracks.push_back(entry);
+				}
+				else {
+					return false;
+				}
+				SkipJsonWhitespace(json, pos);
+				if((pos < json.length()) && (json[pos] == ',')) {
+					++pos;
+					continue;
+				}
+				if((pos < json.length()) && (json[pos] == ']')) {
+					++pos;
+					break;
+				}
+				return false;
+			}
+		}
+		else if(!SkipJsonValue(json, pos)) {
+			return false;
+		}
+
+		SkipJsonWhitespace(json, pos);
+		if((pos < json.length()) && (json[pos] == ',')) {
+			++pos;
+			continue;
+		}
+		if((pos < json.length()) && (json[pos] == '}')) {
+			return true;
+		}
+		return false;
+	}
+}
+
 unsigned MR_ParseAllowedCraftMask(const char *pAllowedCrafts)
 {
 	static const char *CRAFT_DISPLAY_NAMES[] = {
@@ -573,6 +924,23 @@ static bool ContainsNoCase(const std::string &value, const std::string &needle)
 	return false;
 }
 
+static bool EqualsNoCase(const std::string &left, const std::string &right)
+{
+	if(left.length() != right.length()) {
+		return false;
+	}
+
+	for(size_t i = 0; i < left.length(); ++i) {
+		if(std::tolower((unsigned char) left[i]) !=
+			std::tolower((unsigned char) right[i]))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 static int FindTrackPrefixMatch(const std::string &prefix)
 {
 	if(prefix.empty()) {
@@ -624,6 +992,22 @@ static void RebuildVisibleTrackList()
 	for(size_t i = 0; i < gsSortedTrackList.size(); ++i) {
 		if(ContainsNoCase(gsSortedTrackList[i]->mFileName, gsTrackFilter)) {
 			gsVisibleTrackList.push_back(gsSortedTrackList[i]);
+		}
+	}
+
+	for(size_t i = 0; i < gsRemoteTrackList.size(); ++i) {
+		bool duplicate = false;
+		for(size_t j = 0; j < gsVisibleTrackList.size(); ++j) {
+			if(EqualsNoCase(gsRemoteTrackList[i].mFileName,
+				gsVisibleTrackList[j]->mFileName))
+			{
+				duplicate = true;
+				break;
+			}
+		}
+
+		if(!duplicate) {
+			gsVisibleTrackList.push_back(&gsRemoteTrackList[i]);
 		}
 	}
 }
@@ -704,6 +1088,52 @@ static int HandleTrackListChar(HWND pWindow, UINT pChar)
 	return -1;
 }
 
+bool FinishRemoteTrackSelection(HWND pWindow)
+{
+	if((gsSelectedEntry < 0) ||
+		((size_t) gsSelectedEntry >= gsVisibleTrackList.size()) ||
+		!gsVisibleTrackList[gsSelectedEntry]->mIsRemote)
+	{
+		return true;
+	}
+
+	std::string downloadName = gsVisibleTrackList[gsSelectedEntry]->mDownloadName;
+	std::string displayName = gsVisibleTrackList[gsSelectedEntry]->mFileName;
+
+	if(downloadName.empty()) {
+		downloadName = displayName;
+	}
+
+	if(!TrackDownloadDialog(downloadName).ShowModal(GetModuleHandle(NULL), pWindow)) {
+		return false;
+	}
+
+	std::string currentFilter = gsTrackFilter;
+	ReadTrackList();
+	SortList();
+	gsTrackFilter = currentFilter;
+	gsRemoteTrackList.clear();
+	RefreshTrackList(pWindow);
+
+	gsSelectedEntry = FindVisibleTrackByName(displayName);
+	if(gsSelectedEntry == -1) {
+		gsSelectedEntry = FindVisibleTrackByName(downloadName);
+	}
+	if(gsSelectedEntry != -1) {
+		SelectTrackEntry(pWindow, gsSelectedEntry);
+	}
+
+	MR_RecordFile *trackFile = MR_TrackOpen(pWindow, downloadName.c_str());
+	if(trackFile == NULL) {
+		MessageBox(pWindow, MR_LoadString(IDS_TRACK_NOTINSTALL),
+			MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+		return false;
+	}
+	delete trackFile;
+
+	return gsSelectedEntry != -1;
+}
+
 static LRESULT CALLBACK TrackListProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	switch(pMsgId) {
@@ -764,6 +1194,9 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			gsTrackSearchPrefix.clear();
 			gsTrackFilter.clear();
 			gsTrackSearchTick = 0;
+			gsRemoteTrackList.clear();
+			++gsRemoteSearchSerial;
+			++gsRemotePreviewSerial;
 			RefreshTrackList(pWindow);
 			SetFocus(GetDlgItem(pWindow, IDC_TRACK_FILTER));
 			lReturnValue = FALSE;
@@ -780,7 +1213,9 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							gsTrackFilter = buffer;
 							gsTrackSearchPrefix.clear();
 							gsTrackSearchTick = 0;
+							gsRemoteTrackList.clear();
 							RefreshTrackList(pWindow);
+							ScheduleRemoteTrackSearch(pWindow);
 							break;
 						}
 					}
@@ -801,6 +1236,11 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					break;
 				case IDOK:
 					if(gsSelectedEntry != -1) {
+						if(!FinishRemoteTrackSelection(pWindow)) {
+							lReturnValue = TRUE;
+							break;
+						}
+
 						gsNbLaps = GetDlgItemInt(pWindow, IDC_NB_LAP, NULL, FALSE);
 						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 						gsAllowCans = (SendDlgItemMessage(pWindow, IDC_TRACK_CANS, BM_GETCHECK, 0, 0) == BST_CHECKED);
@@ -830,11 +1270,34 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					break;
 			}
 			break;
-		case WM_DRAWITEM:
-			if ((pWParam == IDC_TRACK_PREVIEW) && (pLParam != 0)) {
-				DrawTrackPreview((const DRAWITEMSTRUCT *) pLParam);
+		case WM_TIMER:
+			if(pWParam == REMOTE_TRACK_SEARCH_TIMER) {
+				StartRemoteTrackSearch(pWindow);
 				lReturnValue = TRUE;
 			}
+			break;
+		case WM_DRAWITEM:
+			if(pLParam != 0) {
+				if(pWParam == IDC_TRACK_PREVIEW) {
+					DrawTrackPreview((const DRAWITEMSTRUCT *) pLParam);
+					lReturnValue = TRUE;
+				}
+				else if(pWParam == IDC_LIST) {
+					DrawTrackListItem((const DRAWITEMSTRUCT *) pLParam);
+					lReturnValue = TRUE;
+				}
+			}
+			break;
+		case WM_REMOTE_TRACK_SEARCH_COMPLETE:
+			HandleRemoteTrackSearchComplete(pWindow, pLParam);
+			lReturnValue = TRUE;
+			break;
+		case WM_REMOTE_TRACK_PREVIEW_COMPLETE:
+			HandleRemoteTrackPreviewComplete(pWindow, pLParam);
+			lReturnValue = TRUE;
+			break;
+		case WM_DESTROY:
+			ClearRemoteTrackSearch(pWindow);
 			break;
 	}
 	return lReturnValue;
@@ -951,7 +1414,30 @@ void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
 	InflateRect(&lInnerRect, -2, -2);
 	FillRect(lDc, &lInnerRect, lWindowBrush);
 
-	if(gsTrackPreview.IsAvailable()) {
+	if(gsTrackPreview.mBitmapHandle != NULL) {
+		HDC lBitmapDc = CreateCompatibleDC(lDc);
+		HBITMAP lOldBitmap = (HBITMAP) SelectObject(lBitmapDc,
+			gsTrackPreview.mBitmapHandle);
+		BITMAP lBitmap;
+
+		memset(&lBitmap, 0, sizeof(lBitmap));
+		GetObject(gsTrackPreview.mBitmapHandle, sizeof(lBitmap), &lBitmap);
+
+		SetStretchBltMode(lDc, COLORONCOLOR);
+		StretchBlt(lDc,
+			lInnerRect.left, lInnerRect.top,
+			lInnerRect.right - lInnerRect.left,
+			lInnerRect.bottom - lInnerRect.top,
+			lBitmapDc,
+			0, 0,
+			lBitmap.bmWidth,
+			lBitmap.bmHeight,
+			SRCCOPY);
+
+		SelectObject(lBitmapDc, lOldBitmap);
+		DeleteDC(lBitmapDc);
+	}
+	else if(!gsTrackPreview.mBitmap.empty()) {
 		BITMAPINFO lBitmapInfo;
 
 		memset(&lBitmapInfo, 0, sizeof(lBitmapInfo));
@@ -978,6 +1464,7 @@ void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
 	else {
 		const char *lMessage =
 			(gsSelectedEntry == -1) ? MR_LoadString(IDS_NO_SELECT) :
+			gsTrackPreview.mLoading ? "Loading preview..." :
 			"No preview available";
 
 		SetBkMode(lDc, TRANSPARENT);
@@ -985,6 +1472,49 @@ void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
 		DrawText(lDc, lMessage, -1, &lInnerRect,
 			DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_NOPREFIX);
 	}
+}
+
+void DrawTrackListItem(const DRAWITEMSTRUCT *pDrawItem)
+{
+	if(pDrawItem->itemID == (UINT) -1) {
+		return;
+	}
+
+	HDC lDc = pDrawItem->hDC;
+	RECT lRect = pDrawItem->rcItem;
+	bool selected = (pDrawItem->itemState & ODS_SELECTED) != 0;
+	bool focused = (pDrawItem->itemState & ODS_FOCUS) != 0;
+	TrackEntry *entry = NULL;
+
+	if(pDrawItem->itemID < gsVisibleTrackList.size()) {
+		entry = gsVisibleTrackList[pDrawItem->itemID];
+	}
+
+	COLORREF oldTextColor = SetTextColor(lDc,
+		selected ? GetSysColor(COLOR_HIGHLIGHTTEXT) :
+		((entry != NULL) && entry->mIsRemote) ? GetSysColor(COLOR_GRAYTEXT) :
+		GetSysColor(COLOR_WINDOWTEXT));
+	COLORREF oldBkColor = SetBkColor(lDc,
+		selected ? GetSysColor(COLOR_HIGHLIGHT) : GetSysColor(COLOR_WINDOW));
+	HBRUSH brush = CreateSolidBrush(
+		selected ? GetSysColor(COLOR_HIGHLIGHT) : GetSysColor(COLOR_WINDOW));
+
+	FillRect(lDc, &lRect, brush);
+	DeleteObject(brush);
+
+	if(entry != NULL) {
+		RECT textRect = lRect;
+		InflateRect(&textRect, -2, 0);
+		DrawText(lDc, entry->mFileName.c_str(), -1, &textRect,
+			DT_SINGLELINE | DT_VCENTER | DT_LEFT | DT_NOPREFIX);
+	}
+
+	if(focused) {
+		DrawFocusRect(lDc, &lRect);
+	}
+
+	SetTextColor(lDc, oldTextColor);
+	SetBkColor(lDc, oldBkColor);
 }
 
 COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex)
@@ -1124,6 +1654,166 @@ bool LoadTrackPreview(const TrackEntry &pEntry)
 	return true;
 }
 
+static void RemoteTrackSearchThread(HWND pWindow, unsigned serial,
+	const std::string filter)
+{
+	RemoteTrackSearchPayload *payload = new RemoteTrackSearchPayload();
+	payload->mSerial = serial;
+	payload->mFilter = filter;
+
+	try {
+		std::string json;
+		HoverRace::Net::Agent agent(std::string(REMOTE_TRACK_SEARCH_URL) +
+			UrlEncode(filter));
+		agent.Get(json);
+		ParseRemoteTrackSearchJson(json, payload->mTracks);
+	}
+	catch(HoverRace::Net::NetExn&) {
+		payload->mTracks.clear();
+	}
+	catch(std::exception&) {
+		payload->mTracks.clear();
+	}
+
+	if(!PostMessage(pWindow, WM_REMOTE_TRACK_SEARCH_COMPLETE, 0,
+		(LPARAM) payload))
+	{
+		delete payload;
+	}
+}
+
+static void RemoteTrackPreviewThread(HWND pWindow, unsigned serial,
+	const std::string url)
+{
+	RemoteTrackPreviewPayload *payload = new RemoteTrackPreviewPayload();
+	payload->mSerial = serial;
+
+	try {
+		std::string data;
+		HoverRace::Net::Agent agent(url);
+		agent.Get(data);
+
+		if(!data.empty()) {
+			MR_GifDecoder decoder;
+			if(decoder.Decode((const unsigned char *) data.data(), (int) data.length())) {
+				HBITMAP bitmap = decoder.GetImage(0);
+				if(bitmap != NULL) {
+					payload->mBitmap = (HBITMAP) CopyImage(bitmap, IMAGE_BITMAP,
+						0, 0, LR_CREATEDIBSECTION);
+				}
+			}
+		}
+	}
+	catch(HoverRace::Net::NetExn&) {
+	}
+	catch(std::exception&) {
+	}
+
+	if(!PostMessage(pWindow, WM_REMOTE_TRACK_PREVIEW_COMPLETE, 0,
+		(LPARAM) payload))
+	{
+		if(payload->mBitmap != NULL) {
+			DeleteObject(payload->mBitmap);
+		}
+		delete payload;
+	}
+}
+
+void LoadRemoteTrackPreview(HWND pWindow, const TrackEntry &pEntry)
+{
+	ClearTrackPreview();
+
+	if(pEntry.mMapGifUrl.empty()) {
+		return;
+	}
+
+	++gsRemotePreviewSerial;
+	gsTrackPreview.mLoading = true;
+	boost::thread(boost::bind(&RemoteTrackPreviewThread, pWindow,
+		gsRemotePreviewSerial, pEntry.mMapGifUrl)).detach();
+}
+
+void ScheduleRemoteTrackSearch(HWND pWindow)
+{
+	std::string filter = TrimCopy(gsTrackFilter);
+	KillTimer(pWindow, REMOTE_TRACK_SEARCH_TIMER);
+
+	++gsRemotePreviewSerial;
+	if(filter.length() < REMOTE_TRACK_SEARCH_MIN_CHARS) {
+		++gsRemoteSearchSerial;
+		gsRemoteTrackList.clear();
+		RefreshTrackList(pWindow);
+		return;
+	}
+
+	SetTimer(pWindow, REMOTE_TRACK_SEARCH_TIMER, REMOTE_TRACK_SEARCH_DELAY, NULL);
+}
+
+void ClearRemoteTrackSearch(HWND pWindow)
+{
+	KillTimer(pWindow, REMOTE_TRACK_SEARCH_TIMER);
+	++gsRemoteSearchSerial;
+	++gsRemotePreviewSerial;
+	gsRemoteTrackList.clear();
+}
+
+void StartRemoteTrackSearch(HWND pWindow)
+{
+	std::string filter = TrimCopy(gsTrackFilter);
+	KillTimer(pWindow, REMOTE_TRACK_SEARCH_TIMER);
+
+	if(filter.length() < REMOTE_TRACK_SEARCH_MIN_CHARS) {
+		return;
+	}
+
+	++gsRemoteSearchSerial;
+	boost::thread(boost::bind(&RemoteTrackSearchThread, pWindow,
+		gsRemoteSearchSerial, filter)).detach();
+}
+
+void HandleRemoteTrackSearchComplete(HWND pWindow, LPARAM pLParam)
+{
+	RemoteTrackSearchPayload *payload =
+		reinterpret_cast<RemoteTrackSearchPayload *>(pLParam);
+	if(payload == NULL) {
+		return;
+	}
+
+	if((payload->mSerial == gsRemoteSearchSerial) &&
+		(payload->mFilter == TrimCopy(gsTrackFilter)))
+	{
+		gsRemoteTrackList = payload->mTracks;
+		RefreshTrackList(pWindow);
+	}
+
+	delete payload;
+}
+
+void HandleRemoteTrackPreviewComplete(HWND pWindow, LPARAM pLParam)
+{
+	RemoteTrackPreviewPayload *payload =
+		reinterpret_cast<RemoteTrackPreviewPayload *>(pLParam);
+	HWND lPreviewWindow = GetDlgItem(pWindow, IDC_TRACK_PREVIEW);
+
+	if(payload == NULL) {
+		return;
+	}
+
+	if(payload->mSerial == gsRemotePreviewSerial) {
+		ClearTrackPreview();
+		gsTrackPreview.mBitmapHandle = payload->mBitmap;
+		payload->mBitmap = NULL;
+		if(lPreviewWindow != NULL) {
+			InvalidateRect(lPreviewWindow, NULL, TRUE);
+		}
+	}
+
+	if(payload->mBitmap != NULL) {
+		DeleteObject(payload->mBitmap);
+	}
+	delete payload;
+}
+
 void SortList()
 {
 	// Init pointer list
@@ -1211,11 +1901,67 @@ void CleanList()
 {
 	ClearTrackPreview();
 	gsTrackList.clear();
+	gsRemoteTrackList.clear();
 	gsSortedTrackList.clear();
 	gsVisibleTrackList.clear();
 	gsTrackSearchPrefix.clear();
 	gsTrackFilter.clear();
 	gsTrackSearchTick = 0;
+	++gsRemoteSearchSerial;
+	++gsRemotePreviewSerial;
+}
+
+void SetTrackDescriptionText(HWND pWindow, const char *pText)
+{
+	std::string text = (pText != NULL) ? pText : "";
+	std::string normalized;
+
+	for(size_t i = 0; i < text.length(); ++i) {
+		if(text[i] == '\n') {
+			if((i == 0) || (text[i - 1] != '\r')) {
+				normalized += '\r';
+			}
+			normalized += '\n';
+		}
+		else {
+			normalized += text[i];
+		}
+	}
+
+	SetDlgItemText(pWindow, IDC_DESCRIPTION, normalized.c_str());
+	SendDlgItemMessage(pWindow, IDC_DESCRIPTION, EM_SETSEL, 0, 0);
+	SendDlgItemMessage(pWindow, IDC_DESCRIPTION, EM_SCROLLCARET, 0, 0);
+	UpdateTrackDescriptionScrollbar(pWindow);
+}
+
+void UpdateTrackDescriptionScrollbar(HWND pWindow)
+{
+	HWND desc = GetDlgItem(pWindow, IDC_DESCRIPTION);
+	if(desc == NULL) {
+		return;
+	}
+
+	HDC dc = GetDC(desc);
+	if(dc == NULL) {
+		return;
+	}
+
+	TEXTMETRIC tm;
+	memset(&tm, 0, sizeof(tm));
+	GetTextMetrics(dc, &tm);
+	ReleaseDC(desc, dc);
+
+	RECT rect;
+	GetClientRect(desc, &rect);
+
+	const int lineHeight = (tm.tmHeight > 0) ? tm.tmHeight : 1;
+	int visibleLines = (rect.bottom - rect.top) / lineHeight;
+	if(visibleLines < 1) {
+		visibleLines = 1;
+	}
+	const int lineCount = (int) SendMessage(desc, EM_GETLINECOUNT, 0, 0);
+
+	ShowScrollBar(desc, SB_VERT, lineCount > visibleLines);
 }
 
 void UpdateSelectedTrackInfo(HWND pWindow)
@@ -1224,14 +1970,20 @@ void UpdateSelectedTrackInfo(HWND pWindow)
 
 	if (gsVisibleTrackList.empty() || (gsSelectedEntry == -1)) {
 		SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-		SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
+		SetTrackDescriptionText(pWindow, MR_LoadString(IDS_NO_SELECT));
 		ClearTrackPreview();
 	}
 	else {
 		SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-		SetDlgItemText(pWindow, IDC_DESCRIPTION,
+		SetTrackDescriptionText(pWindow,
 			gsVisibleTrackList[gsSelectedEntry]->mDescription.c_str());
-		LoadTrackPreview(*gsVisibleTrackList[gsSelectedEntry]);
+		if(gsVisibleTrackList[gsSelectedEntry]->mIsRemote) {
+			LoadRemoteTrackPreview(pWindow, *gsVisibleTrackList[gsSelectedEntry]);
+		}
+		else {
+			++gsRemotePreviewSerial;
+			LoadTrackPreview(*gsVisibleTrackList[gsSelectedEntry]);
+		}
 	}
 
 	lPreviewWindow = GetDlgItem(pWindow, IDC_TRACK_PREVIEW);
