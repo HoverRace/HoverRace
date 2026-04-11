@@ -642,6 +642,7 @@ int DDrawCall(int pFuncResult, int pLine)
 static FILE *gOutputFile = NULL;
 static char gOutputPath[MAX_PATH] = { 0 };
 static BOOL gLogSessionOpen = FALSE;
+static const BOOL gWriteVideoLog = FALSE;
 
 static void BuildDebugLogPath(char *buffer, size_t bufferSize)
 {
@@ -673,6 +674,10 @@ static void BuildDebugLogPath(char *buffer, size_t bufferSize)
 
 static void EnsureDebugLog()
 {
+	if(!gWriteVideoLog) {
+		return;
+	}
+
 	if(gOutputFile == NULL) {
 		if(gOutputPath[0] == '\0') {
 			BuildDebugLogPath(gOutputPath, sizeof(gOutputPath));
