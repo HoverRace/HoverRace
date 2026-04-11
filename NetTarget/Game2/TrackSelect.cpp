@@ -43,7 +43,7 @@ namespace {
 	const DWORD TRACK_SEARCH_TIMEOUT = 1500;
 	const UINT_PTR REMOTE_TRACK_SEARCH_TIMER = 2401;
 	const UINT REMOTE_TRACK_SEARCH_DELAY = 500;
-	const size_t REMOTE_TRACK_SEARCH_MIN_CHARS = 3;
+	const size_t REMOTE_TRACK_SEARCH_MIN_CHARS = 2;
 	const UINT WM_REMOTE_TRACK_SEARCH_COMPLETE = WM_APP + 201;
 	const UINT WM_REMOTE_TRACK_PREVIEW_COMPLETE = WM_APP + 202;
 	const char *REMOTE_TRACK_SEARCH_URL =
@@ -87,6 +87,80 @@ namespace {
 		}
 
 		return lReturnValue;
+	}
+
+	std::string Utf8ToAnsi(const std::string &value)
+	{
+		if(value.empty()) {
+			return value;
+		}
+
+		int wideLen = MultiByteToWideChar(CP_UTF8, 0, value.c_str(),
+			(int) value.length(), NULL, 0);
+		if(wideLen <= 0) {
+			return value;
+		}
+
+		std::vector<wchar_t> wide((size_t) wideLen);
+		if(MultiByteToWideChar(CP_UTF8, 0, value.c_str(), (int) value.length(),
+			&wide[0], wideLen) <= 0)
+		{
+			return value;
+		}
+
+		int ansiLen = WideCharToMultiByte(CP_ACP, 0, &wide[0], wideLen,
+			NULL, 0, NULL, NULL);
+		if(ansiLen <= 0) {
+			return value;
+		}
+
+		std::string ansi((size_t) ansiLen, '\0');
+		if(WideCharToMultiByte(CP_ACP, 0, &wide[0], wideLen, &ansi[0],
+			ansiLen, NULL, NULL) <= 0)
+		{
+			return value;
+		}
+
+		return ansi;
+	}
+
+	void AppendUtf8CodePoint(std::string &value, unsigned codePoint)
+	{
+		if(codePoint <= 0x7f) {
+			value += (char) codePoint;
+		}
+		else if(codePoint <= 0x7ff) {
+			value += (char) (0xc0 | ((codePoint >> 6) & 0x1f));
+			value += (char) (0x80 | (codePoint & 0x3f));
+		}
+		else if(codePoint <= 0xffff) {
+			value += (char) (0xe0 | ((codePoint >> 12) & 0x0f));
+			value += (char) (0x80 | ((codePoint >> 6) & 0x3f));
+			value += (char) (0x80 | (codePoint & 0x3f));
+		}
+		else {
+			value += (char) (0xf0 | ((codePoint >> 18) & 0x07));
+			value += (char) (0x80 | ((codePoint >> 12) & 0x3f));
+			value += (char) (0x80 | ((codePoint >> 6) & 0x3f));
+			value += (char) (0x80 | (codePoint & 0x3f));
+		}
+	}
+
+	bool ParseHexDigit(char ch, unsigned &value)
+	{
+		if((ch >= '0') && (ch <= '9')) {
+			value = (unsigned) (ch - '0');
+			return true;
+		}
+		if((ch >= 'a') && (ch <= 'f')) {
+			value = (unsigned) (ch - 'a' + 10);
+			return true;
+		}
+		if((ch >= 'A') && (ch <= 'F')) {
+			value = (unsigned) (ch - 'A' + 10);
+			return true;
+		}
+		return false;
 	}
 
 	bool IsInternetMeetingRoomWindow(HWND wnd)
@@ -158,9 +232,11 @@ namespace {
 		std::vector<MR_UInt8> mBitmap;
 		HBITMAP mBitmapHandle;
 		bool mLoading;
+		bool mSmoothScale;
 
 		TrackPreviewData() :
-			mWidth(0), mHeight(0), mBitmapHandle(NULL), mLoading(false) { }
+			mWidth(0), mHeight(0), mBitmapHandle(NULL), mLoading(false),
+			mSmoothScale(false) { }
 
 		~TrackPreviewData()
 		{
@@ -176,6 +252,7 @@ namespace {
 			mWidth = 0;
 			mHeight = 0;
 			mLoading = false;
+			mSmoothScale = false;
 			mBitmap.clear();
 		}
 
@@ -628,12 +705,49 @@ static bool ParseJsonString(const std::string &json, size_t &pos, std::string &v
 				value += '\t';
 				break;
 			case 'u':
+			{
+				unsigned codePoint = 0;
 				if((pos + 4) > json.length()) {
 					return false;
 				}
-				value += '?';
+				for(int i = 0; i < 4; ++i) {
+					unsigned digit;
+					if(!ParseHexDigit(json[pos + i], digit)) {
+						return false;
+					}
+					codePoint = (codePoint << 4) | digit;
+				}
 				pos += 4;
+
+				if((codePoint >= 0xd800) && (codePoint <= 0xdbff)) {
+					unsigned low = 0;
+					if((pos + 6) > json.length() ||
+						(json[pos] != '\\') || (json[pos + 1] != 'u'))
+					{
+						return false;
+					}
+					pos += 2;
+					for(int i = 0; i < 4; ++i) {
+						unsigned digit;
+						if(!ParseHexDigit(json[pos + i], digit)) {
+							return false;
+						}
+						low = (low << 4) | digit;
+					}
+					pos += 4;
+					if((low < 0xdc00) || (low > 0xdfff)) {
+						return false;
+					}
+					codePoint = 0x10000 +
+						(((codePoint - 0xd800) << 10) | (low - 0xdc00));
+				}
+				else if((codePoint >= 0xdc00) && (codePoint <= 0xdfff)) {
+					return false;
+				}
+
+				AppendUtf8CodePoint(value, codePoint);
 				break;
+			}
 			default:
 				return false;
 		}
@@ -727,13 +841,13 @@ static bool ParseRemoteTrackObject(const std::string &json, size_t &pos, TrackEn
 				return false;
 			}
 			if(key == "name") {
-				entry.mFileName = value;
+				entry.mFileName = Utf8ToAnsi(value);
 			}
 			else if(key == "downloadName") {
-				entry.mDownloadName = value;
+				entry.mDownloadName = Utf8ToAnsi(value);
 			}
 			else if(key == "description") {
-				entry.mDescription = value;
+				entry.mDescription = Utf8ToAnsi(value);
 			}
 			else if(key == "mapGifUrl") {
 				entry.mMapGifUrl = value;
@@ -1458,7 +1572,8 @@ void DrawTrackPreview(const DRAWITEMSTRUCT *pDrawItem)
 		lBitmapInfo.bmiHeader.biBitCount = 32;
 		lBitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-		SetStretchBltMode(lDc, COLORONCOLOR);
+		SetStretchBltMode(lDc, gsTrackPreview.mSmoothScale ? HALFTONE : COLORONCOLOR);
+		SetBrushOrgEx(lDc, 0, 0, NULL);
 		StretchDIBits(lDc,
 			lInnerRect.left, lInnerRect.top,
 			lInnerRect.right - lInnerRect.left,
@@ -1867,6 +1982,7 @@ void HandleRemoteTrackPreviewComplete(HWND pWindow, LPARAM pLParam)
 		ClearTrackPreview();
 		gsTrackPreview.mWidth = payload->mPreview.mWidth;
 		gsTrackPreview.mHeight = payload->mPreview.mHeight;
+		gsTrackPreview.mSmoothScale = true;
 		gsTrackPreview.mBitmap.swap(payload->mPreview.mBitmap);
 		if(lPreviewWindow != NULL) {
 			InvalidateRect(lPreviewWindow, NULL, TRUE);
