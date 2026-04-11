@@ -41,6 +41,16 @@
 class MR_MainCharacter:public MR_FreeElement
 {
 	public:
+		class HitEntry
+		{
+			public:
+				HitEntry(int pHoverId = -1, int pElementId = -1) :
+					mHoverId(pHoverId), mElementId(pElementId) {}
+
+				int mHoverId;
+				int mElementId;
+		};
+
 		enum {
 			eMotorOn = 1,
 			eRight = 2,
@@ -115,6 +125,7 @@ class MR_MainCharacter:public MR_FreeElement
 
 		eWeapon mCurrentWeapon;
 		MR_SimulationTime mMissileRefillDuration;  // Countdown
+		int mMissileFireCount;
 		MR_FixedFastFifo < int, 2 > mMineList;
 		MR_FixedFastFifo < int, 4 > mPowerUpList;
 		MR_SimulationTime mPowerUpLeft;
@@ -144,7 +155,7 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL mCheckPoint1;
 		BOOL mCheckPoint2;
 
-		MR_FixedFastFifo < int, 6 > mLastHits;
+		MR_FixedFastFifo < HitEntry, 6 > mLastHits;
 
 		// Sound events list
 		MR_FixedFastFifo < MR_ShortSound *, 6 > mInternalSoundList;
@@ -216,7 +227,7 @@ class MR_MainCharacter:public MR_FreeElement
 		MR_DllDeclare BOOL HasFinish() const;
 
 		MR_DllDeclare int HitQueueCount() const;
-		MR_DllDeclare int GetHitQueue();
+		MR_DllDeclare HitEntry GetHitQueue();
 
 	protected:
 		// Logic interface

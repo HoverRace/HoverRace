@@ -48,7 +48,7 @@ class MR_LostOfControl:public MR_ContactEffect
 	public:
 		enum mType { eMissile, eMine };
 		int mType;
-		int mElementId;							  // Used for mines only
+		int mElementId;							  // Permanent mine ID or transient missile ID
 		int mHoverId;							  // Craft that created the effect
 };
 

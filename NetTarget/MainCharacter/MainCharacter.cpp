@@ -257,6 +257,7 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mFireDone = FALSE;
 
 	mCurrentWeapon = eMissile;
+	mMissileFireCount = 0;
 	mPowerUpLeft = 0;
 
 	mFuelLevel = eFuelCapacity;
@@ -649,7 +650,10 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 						MR_FreeElement *lMissile = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
 
 						if(lMissile != NULL) {
+							int lMissileId = ((mHoverId & 0xff) << 24) | (mMissileFireCount++ & 0x00ffffff);
+
 							lMissile->SetOwnerId(mHoverId);
+							lMissile->SetNetworkId(lMissileId);
 							lMissile->mPosition = mPosition;
 							lMissile->mPosition.mZ += 1100;
 							lMissile->mOrientation = mCabinOrientation;
@@ -963,7 +967,7 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 
 		if((lLostOfControl != NULL) && mMasterMode) {
 			if(mOutOfControlDuration < 1750)
-				mLastHits.Add(lLostOfControl->mHoverId);
+				mLastHits.Add(HitEntry(lLostOfControl->mHoverId, lLostOfControl->mElementId));
 
 			mOutOfControlDuration = 2000;
 
@@ -1219,9 +1223,9 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		return mLastHits.Used();
 	}
 
-	int MR_MainCharacter::GetHitQueue()
+	MR_MainCharacter::HitEntry MR_MainCharacter::GetHitQueue()
 	{
-		int lReturnValue = mLastHits.GetHead();
+		HitEntry lReturnValue = mLastHits.GetHead();
 		mLastHits.Remove();
 		return lReturnValue;
 	}

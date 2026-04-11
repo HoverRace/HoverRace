@@ -58,6 +58,13 @@ class MR_PlayerStats
 		MR_SimulationTime mSecondSplitDifference;
 };
 
+class MR_HitMessage
+{
+	public:
+		MR_Int8 mHoverIdSrc;
+		MR_Int32 mElementId;
+};
+
 /**
  * Initializes the MR_NetworkSession.  Sets default values; main character
  * creation will be sent at least 5 seconds before the game starts.
@@ -607,7 +614,22 @@ void MR_NetworkSession::ReadNet()
 				break;
 
 			case MRNM_HIT_MESSAGE:
-				AddHitEntry(lClientId, (char) lMessage[0]);
+				{
+					int lHoverIdSrc = -1;
+					int lElementId = -1;
+
+					if(lMessageLen >= (int) sizeof(MR_HitMessage)) {
+						const MR_HitMessage *lHitMessage = (const MR_HitMessage *) lMessage;
+						lHoverIdSrc = lHitMessage->mHoverIdSrc;
+						lElementId = lHitMessage->mElementId;
+					}
+					else if(lMessageLen >= 1) {
+						lHoverIdSrc = (char) lMessage[0];
+					}
+
+					AddHitEntry(lClientId, lHoverIdSrc);
+					DestroyElementByNetworkId(lElementId);
+				}
 				break;
 
 		}
@@ -710,7 +732,8 @@ void MR_NetworkSession::WriteNet()
 
 		// Broadcast hits
 		while(mMainCharacter1->HitQueueCount() > 0) {
-			BroadcastHit(mMainCharacter1->GetHitQueue());
+			MR_MainCharacter::HitEntry lHit = mMainCharacter1->GetHitQueue();
+			BroadcastHit(lHit.mHoverId, lHit.mElementId);
 		}
 	}
 
@@ -1373,27 +1396,52 @@ void MR_NetworkSession::BroadcastChatMessage(const char *pMessage)
  *
  * @param pHoverIdSrc Who we have been hit by
  */
-void MR_NetworkSession::BroadcastHit(int pHoverIdSrc)
+void MR_NetworkSession::BroadcastHit(int pHoverIdSrc, int pElementId)
 {
 	MR_NetMessageBuffer lMessage;
+	MR_HitMessage lHitMessage;
 
 	// lMessage.mSendingTime    = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_HIT_MESSAGE;
-	lMessage.mDataLen = 1;
-	lMessage.mData[0] = (char) pHoverIdSrc;
+	lMessage.mDataLen = sizeof(lHitMessage);
+	lHitMessage.mHoverIdSrc = (char) pHoverIdSrc;
+	lHitMessage.mElementId = pElementId;
+	memcpy(lMessage.mData, &lHitMessage, sizeof(lHitMessage));
 
 	mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
 
 	// Add locally
 	AddHitEntry(-1, pHoverIdSrc);
+	DestroyElementByNetworkId(pElementId);
 }
 
-/**
- * Record a hit.
- *
- * @param pPlayerIndex Player that was hit
- * @param pPlayerFromId Player who shot him
- */
+void MR_NetworkSession::DestroyElementByNetworkId(int pElementId)
+{
+	if(pElementId < 0) {
+		return;
+	}
+
+	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	if(lCurrentLevel == NULL) {
+		return;
+	}
+
+	for(int lRoom = MR_Level::eNonClassified; lRoom < lCurrentLevel->GetRoomCount(); lRoom++) {
+		MR_FreeElementHandle lCurrent = lCurrentLevel->GetFirstFreeElement(lRoom);
+		while(lCurrent != NULL) {
+			MR_FreeElementHandle lNext = MR_Level::GetNextFreeElement(lCurrent);
+			MR_FreeElement *lElement = MR_Level::GetFreeElement(lCurrent);
+
+			if(lElement->GetNetworkId() == pElementId) {
+				lCurrentLevel->DeleteElement(lCurrent);
+				return;
+			}
+
+			lCurrent = lNext;
+		}
+	}
+}
+
 void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 {
 	// We assume that a result entry exist for both players

@@ -165,3 +165,12 @@ BOOL MR_FreeElement::AssignPermNumber(int /*pNumber */ )
 void MR_FreeElement::SetOwnerId(int /*pOwnerId */ )
 {
 }
+
+void MR_FreeElement::SetNetworkId(int /*pNetworkId */ )
+{
+}
+
+int MR_FreeElement::GetNetworkId() const
+{
+	return -1;
+}

@@ -141,6 +141,8 @@ class MR_DllDeclare MR_FreeElement:public MR_Element
 												  // object must return TRUE only if it accept the permanent hook number
 		virtual BOOL AssignPermNumber(int pNumber);
 		virtual void SetOwnerId(int pOwnerId);
+		virtual void SetNetworkId(int pNetworkId);
+		virtual int GetNetworkId() const;
 };
 
 #undef MR_DllDeclare

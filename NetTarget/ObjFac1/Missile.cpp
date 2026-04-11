@@ -99,6 +99,16 @@ void MR_Missile::SetOwnerId(int pHoverId)
 	mLostOfControlEffect.mHoverId = mHoverId;
 }
 
+void MR_Missile::SetNetworkId(int pNetworkId)
+{
+	mLostOfControlEffect.mElementId = pNetworkId;
+}
+
+int MR_Missile::GetNetworkId() const
+{
+	return mLostOfControlEffect.mElementId;
+}
+
 const MR_ContactEffectList *MR_Missile::GetEffectList()
 {
 
@@ -303,6 +313,7 @@ class MR_MissileState
 
 		MR_Angle mOrientation;					  // 2   12
 		MR_Int8 mHoverId;						  // 1   14
+		MR_Int32 mElementId;					  // 4   18
 };
 
 MR_ElementNetState MR_Missile::GetNetState() const
@@ -321,6 +332,7 @@ MR_ElementNetState MR_Missile::GetNetState() const
 	lsState.mOrientation = mOrientation;
 
 	lsState.mHoverId = mHoverId;
+	lsState.mElementId = mLostOfControlEffect.mElementId;
 
 	return lReturnValue;
 
@@ -338,6 +350,7 @@ MR_ElementNetState MR_Missile::GetNetState() const
 	if(pDataLen >= sizeof(MR_MissileState)) {
 		mHoverId = lState->mHoverId;
 		mLostOfControlEffect.mHoverId = mHoverId;
+		mLostOfControlEffect.mElementId = lState->mElementId;
 	}
 
 }
