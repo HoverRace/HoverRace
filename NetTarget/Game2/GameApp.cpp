@@ -637,6 +637,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	allowMultipleInstances = false;
 	mDesktopFullscreen = false;
 	mInResizeLoop = false;
+	mInMenuLoop = false;
 	SetRectEmpty(&mWindowedRect);
 	mWindowedStyle = 0;
 	mWindowedExStyle = 0;
@@ -2666,12 +2667,22 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_ENTERMENULOOP:
+			This->mInMenuLoop = true;
+			KillTimer(pWindow, 42 /*cursor hide timer*/);
+			if(!This->mCursorVisible) {
+				This->mCursorVisible = TRUE;
+				SetCursor(LoadCursor(NULL, IDC_ARROW));
+			}
 			// Don't fall out of borderless fullscreen when the menu is
 			// invoked (Alt / F10). Only F11 / ESC should exit fullscreen.
 			if(!This->mDesktopFullscreen) {
 				This->SetVideoMode(0, 0);
 			}
 			This->UpdateMenuItems();
+			break;
+
+		case WM_EXITMENULOOP:
+			This->mInMenuLoop = false;
 			break;
 
 		case WM_TIMER:
@@ -2695,7 +2706,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					// Only auto-hide the cursor during active gameplay.
 					// In menus / lobby the cursor must stay visible so the
 					// user can click UI elements.
-					if(This->mCursorVisible && This->IsGameRunning()
+					if(This->mCursorVisible && !This->mInMenuLoop && This->IsGameRunning()
 						&& (GetTickCount() - This->mLastMouseMoveTick) >= 2000) {
 						This->mCursorVisible = FALSE;
 						SetCursor(NULL);
@@ -2772,7 +2783,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_SETCURSOR:
-			if(LOWORD(pLParam) == HTCLIENT && !This->mCursorVisible) {
+			if(LOWORD(pLParam) == HTCLIENT && !This->mCursorVisible && !This->mInMenuLoop) {
 				SetCursor(NULL);
 				return TRUE;
 			}
@@ -2785,7 +2796,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			}
 			This->mLastMouseMoveTick = GetTickCount();
 			// Only arm the auto-hide timer during active gameplay.
-			if(This->IsGameRunning()) {
+			if(!This->mInMenuLoop && This->IsGameRunning()) {
 				SetTimer(pWindow, 42 /*cursor hide timer*/, 2000, NULL);
 			}
 			break;
