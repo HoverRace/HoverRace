@@ -25,6 +25,7 @@
 #include "Observer.h"
 #include "ClientSession.h"
 #include "NetInterface.h"
+#include "../../include/LocalPlayer.h"
 
 class ISteamUser;
 
@@ -72,10 +73,7 @@ class MR_GameApp
 		char mDesktopFullscreenDevice[CCHDEVICENAME];
 		HACCEL mAccelerators;
 		MR_VideoBuffer *mVideoBuffer;
-		MR_Observer *mObserver1;
-		MR_Observer *mObserver2;
-		MR_Observer *mObserver3;
-		MR_Observer *mObserver4;
+		MR_Observer *mObservers[MR_MAX_LOCAL_PLAYER];
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
 		CSteamID mSteamIDLocalUser;

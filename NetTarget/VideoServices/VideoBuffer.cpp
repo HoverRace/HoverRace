@@ -2712,11 +2712,12 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	}
 
 	const std::vector<MR_GpuSceneFrame> &lAllFrames = mGpuSceneRenderer->GetFrames();
-	if(lAllFrames.empty()) {
+	const size_t lFrameCount = mGpuSceneRenderer->GetFrameCount();
+	if(lFrameCount == 0) {
 		return;
 	}
 
-	for(size_t lFrameIdx = 0; lFrameIdx < lAllFrames.size(); lFrameIdx++) {
+	for(size_t lFrameIdx = 0; lFrameIdx < lFrameCount; lFrameIdx++) {
 
 	const MR_GpuSceneFrame &lFrame = lAllFrames[lFrameIdx];
 	if(lFrame.mViewport.right <= lFrame.mViewport.left

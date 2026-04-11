@@ -27,21 +27,10 @@
 #include "ClientSession.h"
 #include "../MainCharacter/MainCharacter.h"
 #include "../ObjFacTools/SpriteHandle.h"
+#include "SplitScreenLayout.h"
 
 class MR_Observer
 {
-
-	public:
-		enum eSplitMode
-		{
-			eNotSplit,
-			eUpperSplit,
-			eLowerSplit,
-			eUpperLeftSplit,
-			eUpperRightSplit,
-			eLowerLeftSplit,
-			eLowerRightSplit,
-		};
 
 	private:
 		BOOL mLastCameraPosValid;
@@ -52,7 +41,7 @@ class MR_Observer
 		MR_3DViewPort mWireFrameView;
 		MR_3DViewPort m3DView;
 
-		eSplitMode mSplitMode;
+		MR_SplitScreenViewport mViewport;
 
 		int mScroll;
 		MR_Angle mApperture;
@@ -102,7 +91,7 @@ class MR_Observer
 		void SetCockpitView(BOOL pOn);
 		void InvalidateViewportMetrics();
 
-		void SetSplitMode(eSplitMode pMode);
+		void SetViewport(const MR_SplitScreenViewport &pViewport);
 
 		// Rendering function
 		void RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);

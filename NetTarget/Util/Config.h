@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include "../../include/LocalPlayer.h"
 
 #ifdef MR_UTIL
 #define MR_DllDeclare   __declspec( dllexport )
@@ -116,7 +117,7 @@ class MR_Config
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} net;
 
-		static const int MAX_PLAYERS = 4;
+		static const int MAX_PLAYERS = MR_MAX_LOCAL_PLAYER;
 		struct cfg_controls_t {
 			int motorOn;
 			int right;

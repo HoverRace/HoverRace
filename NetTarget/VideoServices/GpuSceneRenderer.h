@@ -116,6 +116,7 @@ class MR_GpuSceneRenderer
 		BOOL mFrameOpen;
 		MR_GpuSceneFrame mFrame;
 		std::vector<MR_GpuSceneFrame> mFrames;
+		size_t mActiveFrameCount;
 
 	public:
 		MR_GpuSceneRenderer(MR_VideoBuffer *pVideoBuffer);

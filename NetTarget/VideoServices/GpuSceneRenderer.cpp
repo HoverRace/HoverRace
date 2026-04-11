@@ -9,8 +9,10 @@
 
 MR_GpuSceneRenderer::MR_GpuSceneRenderer(MR_VideoBuffer *pVideoBuffer) :
 	mVideoBuffer(pVideoBuffer),
-	mFrameOpen(FALSE)
+	mFrameOpen(FALSE),
+	mActiveFrameCount(0)
 {
+	mFrames.reserve(16);
 }
 
 MR_GpuSceneRenderer::~MR_GpuSceneRenderer()
@@ -35,7 +37,24 @@ void MR_GpuSceneRenderer::BeginFrame(const RECT &pViewport, const MR_3DCoordinat
 void MR_GpuSceneRenderer::EndFrame()
 {
 	if(mFrameOpen) {
-		mFrames.push_back(mFrame);
+		if(mActiveFrameCount >= mFrames.size()) {
+			mFrames.push_back(MR_GpuSceneFrame());
+		}
+
+		MR_GpuSceneFrame &lStoredFrame = mFrames[mActiveFrameCount++];
+		lStoredFrame.Reset();
+		lStoredFrame.mViewport = mFrame.mViewport;
+		lStoredFrame.mCameraPosition = mFrame.mCameraPosition;
+		lStoredFrame.mOrientation = mFrame.mOrientation;
+		lStoredFrame.mScroll = mFrame.mScroll;
+		lStoredFrame.mPlanDist = mFrame.mPlanDist;
+		lStoredFrame.mPlanHW = mFrame.mPlanHW;
+		lStoredFrame.mPlanVW = mFrame.mPlanVW;
+		lStoredFrame.mBackgroundBitmap = mFrame.mBackgroundBitmap;
+		lStoredFrame.mWalls.swap(mFrame.mWalls);
+		lStoredFrame.mHorizontalSurfaces.swap(mFrame.mHorizontalSurfaces);
+		lStoredFrame.mBitmapPatches.swap(mFrame.mBitmapPatches);
+		lStoredFrame.mColorPatches.swap(mFrame.mColorPatches);
 	}
 	mFrameOpen = FALSE;
 }
@@ -48,9 +67,12 @@ void MR_GpuSceneRenderer::ResetFrame()
 
 void MR_GpuSceneRenderer::ClearAllFrames()
 {
-	mFrames.clear();
+	for(size_t i = 0; i < mActiveFrameCount; i++) {
+		mFrames[i].Reset();
+	}
 	mFrame.Reset();
 	mFrameOpen = FALSE;
+	mActiveFrameCount = 0;
 }
 
 void MR_GpuSceneRenderer::SubmitBackground(const MR_UInt8 *pBitmap)
@@ -150,5 +172,5 @@ const std::vector<MR_GpuSceneFrame> &MR_GpuSceneRenderer::GetFrames() const
 
 size_t MR_GpuSceneRenderer::GetFrameCount() const
 {
-	return mFrames.size();
+	return mActiveFrameCount;
 }

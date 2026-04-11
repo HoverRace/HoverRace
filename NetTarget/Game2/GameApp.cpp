@@ -421,7 +421,13 @@ static const int gControlButtonIds[MR_Config::MAX_PLAYERS][NB_CONTROL_ACTIONS] =
 	{ IDC_MOTOR_ON1, IDC_BREAK1, IDC_LEFT1, IDC_RIGHT1, IDC_JUMP1, IDC_FIRE1, IDC_SELWEAPON1, IDC_LOOKBACK1 },
 	{ IDC_MOTOR_ON2, IDC_BREAK2, IDC_LEFT2, IDC_RIGHT2, IDC_JUMP2, IDC_FIRE2, IDC_SELWEAPON2, IDC_LOOKBACK2 },
 	{ IDC_MOTOR_ON3, IDC_BREAK3, IDC_LEFT3, IDC_RIGHT3, IDC_JUMP3, IDC_FIRE3, IDC_SELWEAPON3, IDC_LOOKBACK3 },
-	{ IDC_MOTOR_ON4, IDC_BREAK4, IDC_LEFT4, IDC_RIGHT4, IDC_JUMP4, IDC_FIRE4, IDC_SELWEAPON4, IDC_LOOKBACK4 }
+	{ IDC_MOTOR_ON4, IDC_BREAK4, IDC_LEFT4, IDC_RIGHT4, IDC_JUMP4, IDC_FIRE4, IDC_SELWEAPON4, IDC_LOOKBACK4 },
+	{ IDC_MOTOR_ON5, IDC_BREAK5, IDC_LEFT5, IDC_RIGHT5, IDC_JUMP5, IDC_FIRE5, IDC_SELWEAPON5, IDC_LOOKBACK5 },
+	{ IDC_MOTOR_ON6, IDC_BREAK6, IDC_LEFT6, IDC_RIGHT6, IDC_JUMP6, IDC_FIRE6, IDC_SELWEAPON6, IDC_LOOKBACK6 },
+	{ IDC_MOTOR_ON7, IDC_BREAK7, IDC_LEFT7, IDC_RIGHT7, IDC_JUMP7, IDC_FIRE7, IDC_SELWEAPON7, IDC_LOOKBACK7 },
+	{ IDC_MOTOR_ON8, IDC_BREAK8, IDC_LEFT8, IDC_RIGHT8, IDC_JUMP8, IDC_FIRE8, IDC_SELWEAPON8, IDC_LOOKBACK8 },
+	{ IDC_MOTOR_ON9, IDC_BREAK9, IDC_LEFT9, IDC_RIGHT9, IDC_JUMP9, IDC_FIRE9, IDC_SELWEAPON9, IDC_LOOKBACK9 },
+	{ IDC_MOTOR_ON10, IDC_BREAK10, IDC_LEFT10, IDC_RIGHT10, IDC_JUMP10, IDC_FIRE10, IDC_SELWEAPON10, IDC_LOOKBACK10 }
 };
 
 static const int gSetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
@@ -429,7 +435,13 @@ static const int gSetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
 	IDC_SET_PLAYER1,
 	IDC_SET_PLAYER2,
 	IDC_SET_PLAYER3,
-	IDC_SET_PLAYER4
+	IDC_SET_PLAYER4,
+	IDC_SET_PLAYER5,
+	IDC_SET_PLAYER6,
+	IDC_SET_PLAYER7,
+	IDC_SET_PLAYER8,
+	IDC_SET_PLAYER9,
+	IDC_SET_PLAYER10
 };
 
 static const int gResetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
@@ -437,7 +449,13 @@ static const int gResetPlayerButtonIds[MR_Config::MAX_PLAYERS] =
 	IDC_RESET_PLAYER1,
 	IDC_RESET_PLAYER2,
 	IDC_RESET_PLAYER3,
-	IDC_RESET_PLAYER4
+	IDC_RESET_PLAYER4,
+	IDC_RESET_PLAYER5,
+	IDC_RESET_PLAYER6,
+	IDC_RESET_PLAYER7,
+	IDC_RESET_PLAYER8,
+	IDC_RESET_PLAYER9,
+	IDC_RESET_PLAYER10
 };
 
 static const char *gControlActionNames[NB_CONTROL_ACTIONS] =
@@ -457,17 +475,7 @@ static const UINT CONTROL_CAPTURE_TIMER_INTERVAL_MS = 50;
 
 static int GetPlayerKeyCount(int playerIdx)
 {
-	switch(playerIdx) {
-		case 0:
-			return NB_KEY_PLAYER_1;
-		case 1:
-			return NB_KEY_PLAYER_2;
-		case 2:
-			return NB_KEY_PLAYER_3;
-		case 3:
-		default:
-			return NB_KEY_PLAYER_4;
-	}
+	return (playerIdx == 0) ? NB_KEY_PLAYER_1 : NB_KEY_PLAYER_2;
 }
 
 static int ClampKeyChoiceIndex(int playerIdx, int keyIndex)
@@ -750,8 +758,9 @@ static void LoadDefaultControls(MR_Config::cfg_controls_t *controls)
 	controls[1].weapon = 77;
 	controls[1].lookBack = 65;
 
-	memset(&controls[2], 0, sizeof(MR_Config::cfg_controls_t));
-	memset(&controls[3], 0, sizeof(MR_Config::cfg_controls_t));
+	for(int i = 2; i < MR_Config::MAX_PLAYERS; ++i) {
+		memset(&controls[i], 0, sizeof(MR_Config::cfg_controls_t));
+	}
 }
 
 static int FindResetPlayerButton(int controlId)
@@ -976,10 +985,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mDesktopFullscreenDevice[0] = '\0';
 	mAccelerators = NULL;
 	mVideoBuffer = NULL;
-	mObserver1 = NULL;
-	mObserver2 = NULL;
-	mObserver3 = NULL;
-	mObserver4 = NULL;
+	memset(mObservers, 0, sizeof(mObservers));
 	mCurrentSession = NULL;
 	mGameThread = NULL;
 
@@ -1097,15 +1103,12 @@ void MR_GameApp::Clean()
 	delete mCurrentSession;
 	mCurrentSession = NULL;
 
-	mObserver1->Delete();
-	mObserver2->Delete();
-	mObserver3->Delete();
-	mObserver4->Delete();
-
-	mObserver1 = NULL;
-	mObserver2 = NULL;
-	mObserver3 = NULL;
-	mObserver4 = NULL;
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if(mObservers[i] != NULL) {
+			mObservers[i]->Delete();
+			mObservers[i] = NULL;
+		}
+	}
 
 	MR_DllObjectFactory::Clean(TRUE);
 
@@ -1151,11 +1154,12 @@ void MR_GameApp::LoadRegistry()
 		&lProgramKey);
 
 	if(lError == ERROR_SUCCESS) { // opened key successfully
-		MR_UInt8 lControlBuffer[32];
+		MR_UInt8 lControlBuffer[MR_Config::MAX_PLAYERS * 8];
 		DWORD lControlBufferSize = sizeof(lControlBuffer);
 
 		if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
-			for (int p = 0, i = 0; p < MR_Config::MAX_PLAYERS; ++p) {
+			const int lControlCount = min((int) (lControlBufferSize / 8), MR_Config::MAX_PLAYERS);
+			for (int p = 0, i = 0; p < lControlCount; ++p) {
 				MR_Config::cfg_controls_t &ctl = cfg->controls[p];
 				ctl.motorOn = lControlBuffer[i++];
 				ctl.right = lControlBuffer[i++];
@@ -1214,32 +1218,11 @@ BOOL MR_GameApp::IsGameRunning()
 	BOOL lReturnValue = FALSE;
 
 	if(mCurrentSession != NULL) {
-		MR_MainCharacter *lPlayer = mCurrentSession->GetMainCharacter();
-
-		if(lPlayer != NULL) {
-			if(!(lPlayer->GetTotalLap() <= lPlayer->GetLap())) {
-				lPlayer = mCurrentSession->GetMainCharacter2();
-
-				if(lPlayer == NULL) {
-					lReturnValue = TRUE;
-				}
-
-				lPlayer = mCurrentSession->GetMainCharacter3();
-
-				if(lPlayer == NULL) {
-					lReturnValue = TRUE;
-				}
-
-				lPlayer = mCurrentSession->GetMainCharacter4();
-
-				if(lPlayer == NULL) {
-					lReturnValue = TRUE;
-				}
-				else {
-					if(lPlayer->GetTotalLap() <= lPlayer->GetLap()) {
-						lReturnValue = TRUE;
-					}
-				}
+		for(int i = 0; i < mCurrentSession->GetNbPlayers(); ++i) {
+			MR_MainCharacter *lPlayer = mCurrentSession->GetMainCharacter(i);
+			if((lPlayer != NULL) && !(lPlayer->GetTotalLap() <= lPlayer->GetLap())) {
+				lReturnValue = TRUE;
+				break;
 			}
 		}
 	}
@@ -1881,6 +1864,20 @@ void MR_GameApp::RefreshView()
 		if(mVideoBuffer->Lock()) {
 			if(mCurrentSession != NULL) {
 				MR_SimulationTime lTime = mCurrentSession->GetSimulationTime();
+				int lObserverCount = 0;
+				for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+					if(mObservers[i] != NULL) {
+						lObserverCount++;
+					}
+				}
+				for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+					if(mObservers[i] != NULL) {
+						MR_SplitScreenViewport lViewport = { 0, 0, mVideoBuffer->GetXRes(), mVideoBuffer->GetYRes() };
+						MR_GetSplitScreenViewport(lObserverCount, i,
+							mVideoBuffer->GetXRes(), mVideoBuffer->GetYRes(), lViewport);
+						mObservers[i]->SetViewport(lViewport);
+					}
+				}
 
 				switch (mCurrentMode) {
 					case e3DView:
@@ -1889,26 +1886,23 @@ void MR_GameApp::RefreshView()
 							DrawBackground();
 						}
 
-						if(mObserver1 != NULL)
-							mObserver1->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver2 != NULL)
-							mObserver2->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter2(), lTime, mCurrentSession->GetBackImage());
-
-						if(mObserver3 != NULL)
-							mObserver3->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter3(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver4 != NULL)
-							mObserver4->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
+						for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+							if((mObservers[i] != NULL) && (mCurrentSession->GetMainCharacter(i) != NULL)) {
+								mObservers[i]->RenderNormalDisplay(mVideoBuffer, mCurrentSession,
+									mCurrentSession->GetMainCharacter(i), lTime,
+									mCurrentSession->GetBackImage());
+							}
+						}
 						break;
 
 					case eDebugView:
-						if(mObserver1 != NULL)
-							mObserver1->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver2 != NULL)
-							mObserver2->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter2(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver3 != NULL)
-							mObserver3->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter3(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver4 != NULL)
-							mObserver4->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
+						for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+							if((mObservers[i] != NULL) && (mCurrentSession->GetMainCharacter(i) != NULL)) {
+								mObservers[i]->RenderDebugDisplay(mVideoBuffer, mCurrentSession,
+									mCurrentSession->GetMainCharacter(i), lTime,
+									mCurrentSession->GetBackImage());
+							}
+						}
 						break;
 				}
 
@@ -1931,14 +1925,12 @@ void MR_GameApp::RefreshView()
 	}
 	// Sound refresh
 	if(mCurrentSession != NULL) {
-		if(mObserver1 != NULL)
-			mObserver1->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter());
-		if(mObserver2 != NULL)
-			mObserver2->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter2());
-		if(mObserver3 != NULL)
-			mObserver3->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter3());
-		if(mObserver4 != NULL)
-			mObserver4->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter4());
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			if((mObservers[i] != NULL) && (mCurrentSession->GetMainCharacter(i) != NULL)) {
+				mObservers[i]->PlaySounds(mCurrentSession->GetCurrentLevel(),
+					mCurrentSession->GetMainCharacter(i));
+			}
+		}
 
 		MR_SoundServer::ApplyContinuousPlay();
 	}
@@ -2011,28 +2003,18 @@ void MR_GameApp::ReadAsyncInputController()
 		if(GetForegroundWindow() == mMainWindow)
 		{
 			static BOOL lFirstCall = TRUE;
-			int lControlState1 = 0;
-			int lControlState2 = 0;
-			int lControlState3 = 0;
-			int lControlState4 = 0;
+			int lControlStates[MR_MAX_LOCAL_PLAYER] = { 0 };
 
-			lControlState1 = ReadAsyncInputControllerPlayer(0);
-
-			// If we're in multiplayer mode we need to check those keys too
-			if(mCurrentSession->GetMainCharacter2() != NULL) {
-				lControlState2 = ReadAsyncInputControllerPlayer(1);
-			}
-			if(mCurrentSession->GetMainCharacter3() != NULL) {
-				lControlState3 = ReadAsyncInputControllerPlayer(2);
-			}
-			if(mCurrentSession->GetMainCharacter4() != NULL) {
-				lControlState4 = ReadAsyncInputControllerPlayer(3);
+			for(int playerIdx = 0; playerIdx < MR_MAX_LOCAL_PLAYER; ++playerIdx) {
+				if(mCurrentSession->GetMainCharacter(playerIdx) != NULL) {
+					lControlStates[playerIdx] = ReadAsyncInputControllerPlayer(playerIdx);
+				}
 			}
 
 			if(lFirstCall)
 				lFirstCall = FALSE;
 			else
-				mCurrentSession->SetControlState(lControlState1, lControlState2, lControlState3, lControlState4);
+				mCurrentSession->SetControlState(lControlStates, MR_MAX_LOCAL_PLAYER);
 		}
 	}
 }
@@ -2235,7 +2217,9 @@ void MR_GameApp::NewLocalSession()
 	if(lSuccess) {
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
-		mObserver1 = MR_Observer::New();
+		MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
+		mObservers[0] = MR_Observer::New();
+		mObservers[0]->SetViewport(lViewport);
 
 		// Create the new session
 		MR_ClientSession *lCurrentSession = new MR_ClientSession();
@@ -2253,7 +2237,7 @@ void MR_GameApp::NewLocalSession()
 
 		// Create the main character
 		if(lSuccess)
-			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+			lSuccess = (lCurrentSession->CreateMainCharacter(0) != FALSE);
 
 		if(lSuccess) {
 			mCurrentSession = lCurrentSession;
@@ -2301,27 +2285,10 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
 
-		mObserver1 = MR_Observer::New();
-		mObserver2 = MR_Observer::New();
-		if(pSplitPlayers > 2)
-			mObserver3 = MR_Observer::New();
-		if(pSplitPlayers > 3)
-			mObserver4 = MR_Observer::New();
-
-		if(pSplitPlayers == 2) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperSplit);
-			mObserver2->SetSplitMode(MR_Observer::eLowerSplit);
-		}
-		if(pSplitPlayers == 3) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
-			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
-		}
-		if(pSplitPlayers == 4) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
-			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
-			mObserver4->SetSplitMode(MR_Observer::eLowerRightSplit);
+		for(int i = 0; i < pSplitPlayers; ++i) {
+			MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
+			mObservers[i] = MR_Observer::New();
+			mObservers[i]->SetViewport(lViewport);
 		}
 
 		MR_ClientSession *lCurrentSession = new MR_ClientSession;
@@ -2338,15 +2305,13 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 			lCurrentSession->SetSimulationTime(-8000);
 
 			// Create the main character2
-			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+			lSuccess = (lCurrentSession->CreateMainCharacter(0) != FALSE);
 		}
 
 		if(lSuccess) {
-			lSuccess = (lCurrentSession->CreateMainCharacter2() != FALSE);
-			if(pSplitPlayers > 2)
-				lSuccess = (lCurrentSession->CreateMainCharacter3() != FALSE);
-			if(pSplitPlayers > 3)
-				lSuccess = (lCurrentSession->CreateMainCharacter4() != FALSE);
+			for(int i = 1; lSuccess && (i < pSplitPlayers); ++i) {
+				lSuccess = (lCurrentSession->CreateMainCharacter(i) != FALSE);
+			}
 		}
 
 		if(!lSuccess) {
@@ -2418,7 +2383,9 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	MR_RecordFile *lTrackFile;
 	if(lSuccess) {
-		mObserver1 = MR_Observer::New();
+		MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
+		mObservers[0] = MR_Observer::New();
+		mObservers[0]->SetViewport(lViewport);
 
 		// Load the track
 		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
@@ -2553,7 +2520,9 @@ void MR_GameApp::NewInternetSession()
 	}
 
 	if(lSuccess) {
-		mObserver1 = MR_Observer::New();
+		MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
+		mObservers[0] = MR_Observer::New();
+		mObservers[0]->SetViewport(lViewport);
 		lSuccess = lCurrentSession->CreateMainCharacter();
 	}
 
@@ -3226,6 +3195,36 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					This->NewSplitSession(4);
 					return 0;
 
+				case ID_GAME_SPLITSCREEN5:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(5);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN6:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(6);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN7:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(7);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN8:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(8);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN9:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(9);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN10:
+					This->SetVideoMode(0, 0);
+					This->NewSplitSession(10);
+					return 0;
+
 				case ID_GAME_NETWORK_SERVER:
 					This->SetVideoMode(0, 0);
 					This->NewNetworkSession(TRUE);
@@ -3345,33 +3344,19 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 				case ID_VIEW_3DACTION:
 					This->mCurrentMode = e3DView;
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->SetCockpitView(FALSE);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->SetCockpitView(FALSE);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->SetCockpitView(FALSE);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->SetCockpitView(FALSE);
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->SetCockpitView(FALSE);
+						}
 					}
 					return 0;
 
 				case ID_VIEW_COCKPIT:
 					This->mCurrentMode = e3DView;
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->SetCockpitView(TRUE);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->SetCockpitView(TRUE);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->SetCockpitView(TRUE);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->SetCockpitView(TRUE);
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->SetCockpitView(TRUE);
+						}
 					}
 					return 0;
 
@@ -3422,32 +3407,18 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						 */
 	
 					case ID_VIEW_PLAYERSLIST:
-						if(This->mObserver1 != NULL) {
-							This->mObserver1->PlayersListPageDn();
-						}
-						if(This->mObserver2 != NULL) {
-							This->mObserver2->PlayersListPageDn();
-						}
-						if(This->mObserver3 != NULL) {
-							This->mObserver3->PlayersListPageDn();
-						}
-						if(This->mObserver4 != NULL) {
-							This->mObserver4->PlayersListPageDn();
+						for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+							if(This->mObservers[i] != NULL) {
+								This->mObservers[i]->PlayersListPageDn();
+							}
 						}
 						return 0;
 	
 					case ID_VIEW_MOREMESSAGES:
-						if(This->mObserver1 != NULL) {
-							This->mObserver1->MoreMessages();
-						}
-						if(This->mObserver2 != NULL) {
-							This->mObserver2->MoreMessages();
-						}
-						if(This->mObserver3 != NULL) {
-							This->mObserver3->MoreMessages();
-						}
-						if(This->mObserver4 != NULL) {
-							This->mObserver4->MoreMessages();
+						for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+							if(This->mObservers[i] != NULL) {
+								This->mObservers[i]->MoreMessages();
+							}
 						}
 						return 0;
 	
@@ -3480,77 +3451,42 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			switch (pWParam) {
 				// Camera control
 				case VK_HOME:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Home();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Home();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Home();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Home();
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->Home();
+						}
 					}
 					return 0;
 
 				case VK_PRIOR:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Scroll(1);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Scroll(1);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Scroll(1);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Scroll(1);
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->Scroll(1);
+						}
 					}
 					return 0;
 
 				case VK_NEXT:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Scroll(-1);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Scroll(-1);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Scroll(-1);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Scroll(-1);
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->Scroll(-1);
+						}
 					}
 					return 0;
 
 				case VK_INSERT:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->ZoomIn();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->ZoomIn();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->ZoomIn();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->ZoomIn();
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->ZoomIn();
+						}
 					}
 					return 0;
 
 				case VK_DELETE:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->ZoomOut();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->ZoomOut();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->ZoomOut();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->ZoomOut();
+					for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+						if(This->mObservers[i] != NULL) {
+							This->mObservers[i]->ZoomOut();
+						}
 					}
 					return 0;
 
@@ -3959,10 +3895,11 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							This->mVideoBuffer != NULL &&
 							!This->mVideoBuffer->IsModeSettingInProgress())
 						{
-							if(This->mObserver1 != NULL) This->mObserver1->InvalidateViewportMetrics();
-							if(This->mObserver2 != NULL) This->mObserver2->InvalidateViewportMetrics();
-							if(This->mObserver3 != NULL) This->mObserver3->InvalidateViewportMetrics();
-							if(This->mObserver4 != NULL) This->mObserver4->InvalidateViewportMetrics();
+							for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+								if(This->mObservers[i] != NULL) {
+									This->mObservers[i]->InvalidateViewportMetrics();
+								}
+							}
 
 							This->PauseGameThread();
 							This->mClrScrTodo = 2;

@@ -260,8 +260,9 @@ void MR_Config::ResetToDefaults()
 	controls[1].weapon = 77;
 	controls[1].lookBack = 65;
 
-	memset(&controls[2], 0, sizeof(cfg_controls_t));
-	memset(&controls[3], 0, sizeof(cfg_controls_t));
+	for(int i = 2; i < MAX_PLAYERS; ++i) {
+		memset(&controls[i], 0, sizeof(cfg_controls_t));
+	}
 
 }
 

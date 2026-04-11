@@ -88,8 +88,10 @@ MR_Observer::MR_Observer()
 
 	mMoreMessages = FALSE;
 	mDispPlayers = 1;
-
-	mSplitMode = eNotSplit;
+	mViewport.mX = 0;
+	mViewport.mY = 0;
+	mViewport.mWidth = 0;
+	mViewport.mHeight = 0;
 
 	mCockpitView = FALSE;
 	mForceViewportMetricsRefresh = FALSE;
@@ -202,9 +204,9 @@ void MR_Observer::ReduceMargin()
 	}
 }
 
-void MR_Observer::SetSplitMode(eSplitMode pMode)
+void MR_Observer::SetViewport(const MR_SplitScreenViewport &pViewport)
 {
-	mSplitMode = pMode;
+	mViewport = pViewport;
 }
 
 void MR_Observer::MoreMessages()
@@ -1049,26 +1051,15 @@ void MR_Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_Section
 
 void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
-	int lXRes = pDest->GetXRes();
-	int lYRes = pDest->GetYRes();
-	int lYOffset = 0;
-	int lXOffset = 0;
-
-	switch (mSplitMode) {
-		case eUpperSplit:
-			lYRes /= 2;
-			break;
-
-		case eLowerSplit:
-			lYRes /= 2;
-			lYOffset = lYRes;
-			break;
-	}
+	int lXRes = (mViewport.mWidth > 0) ? mViewport.mWidth : pDest->GetXRes();
+	int lYRes = (mViewport.mHeight > 0) ? mViewport.mHeight : pDest->GetYRes();
+	int lYOffset = mViewport.mY;
+	int lXOffset = mViewport.mX;
 
 	const int lForceMetrics = mForceViewportMetricsRefresh ? 8 : 0;
-	mWireFrameView.Setup(pDest, 0, lYOffset, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
-	m3DView.Setup(pDest, 0, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
-	m2DDebugView.Setup(pDest, lXRes / 2, lYOffset, lXRes / 2, lYRes, lForceMetrics);
+	mWireFrameView.Setup(pDest, lXOffset, lYOffset, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
+	m3DView.Setup(pDest, lXOffset, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture, lForceMetrics);
+	m2DDebugView.Setup(pDest, lXOffset + lXRes / 2, lYOffset, lXRes / 2, lYRes, lForceMetrics);
 	mForceViewportMetricsRefresh = FALSE;
 
 	if(pViewingCharacter->mRoom != -1) {
@@ -1085,94 +1076,29 @@ void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const MR_ClientSes
 {
 	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
 
-	int lXRes = pDest->GetXRes();
-	int lYRes = pDest->GetYRes();
-	int lYOffset = 0;
-	int lXOffset = 0;
+	int lXRes = (mViewport.mWidth > 0) ? mViewport.mWidth : pDest->GetXRes();
+	int lYRes = (mViewport.mHeight > 0) ? mViewport.mHeight : pDest->GetYRes();
+	int lYOffset = mViewport.mY;
+	int lXOffset = mViewport.mX;
 	int lYMargin_1024 = mYMargin_1024;
 	int lXMargin_1024 = mXMargin_1024;
+	const BOOL lIsSplitViewport =
+		(lXOffset != 0) || (lYOffset != 0) ||
+		(lXRes != pDest->GetXRes()) || (lYRes != pDest->GetYRes());
 
-	switch (mSplitMode) {
-		case eUpperSplit:
-			lYRes /= 2;
-			lYMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-
-			break;
-
-		case eLowerSplit:
-			lYRes /= 2;
-			lYOffset = lYRes;
-			lYMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-
-			break;
-
-		case eUpperLeftSplit:
-			lYRes /= 2;
-			lXRes /= 2;
-			lYMargin_1024 -= 200;
-			lXMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-			if(lXMargin_1024 < 0) {
-				lXMargin_1024 = 0;
-			}
-
-			break;
-
-		case eUpperRightSplit:
-			lYRes /= 2;
-			lXRes /= 2;
-			lXOffset = lXRes;
-			lYMargin_1024 -= 200;
-			lXMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-			if(lXMargin_1024 < 0) {
-				lXMargin_1024 = 0;
-			}
-
-			break;
-
-		case eLowerLeftSplit:
-			lYRes /= 2;
-			lXRes /= 2;
-			lYOffset = lYRes;
-			lYMargin_1024 -= 200;
-			lXMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-			if(lXMargin_1024 < 0) {
-				lXMargin_1024 = 0;
-			}
-			break;
-
-		case eLowerRightSplit:
-			lYRes /= 2;
-			lXRes /= 2;
-			lYOffset = lYRes;
-			lXOffset = lXRes;
-			lYMargin_1024 -= 200;
-			lXMargin_1024 -= 200;
-			if(lYMargin_1024 < 0) {
-				lYMargin_1024 = 0;
-			}
-			if(lXMargin_1024 < 0) {
-				lXMargin_1024 = 0;
-			}
-			break;
+	if(lIsSplitViewport) {
+		lYMargin_1024 -= 200;
+		lXMargin_1024 -= 200;
+		if(lYMargin_1024 < 0) {
+			lYMargin_1024 = 0;
+		}
+		if(lXMargin_1024 < 0) {
+			lXMargin_1024 = 0;
+		}
 	}
 
 												  // rounded to 32 bit boundary for best performances
-	int lXMargin = (mXMargin_1024 * lXRes / 1024) & 0xFFFFFFFC;
+	int lXMargin = (lXMargin_1024 * lXRes / 1024) & 0xFFFFFFFC;
 	int lYMargin = lYMargin_1024 * lYRes / 1024;
 
 	m3DView.Setup(pDest, lXOffset + lXMargin, lYOffset + lYMargin, lXRes - 2 * lXMargin, lYRes - 2 * lYMargin,

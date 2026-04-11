@@ -28,6 +28,7 @@
 MR_ClientSession::MR_ClientSession()
 :mSession(TRUE)
 {
+	memset(mMainCharacters, 0, sizeof(mMainCharacters));
 	mMainCharacter1 = NULL;
 	mMainCharacter2 = NULL;
 	mMainCharacter3 = NULL;
@@ -41,6 +42,14 @@ MR_ClientSession::MR_ClientSession()
 	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
 
 	InitializeCriticalSection(&mChatMutex);
+}
+
+void MR_ClientSession::SyncLegacyMainCharacterPointers()
+{
+	mMainCharacter1 = mMainCharacters[0];
+	mMainCharacter2 = mMainCharacters[1];
+	mMainCharacter3 = mMainCharacters[2];
+	mMainCharacter4 = mMainCharacters[3];
 }
 
 MR_ClientSession::~MR_ClientSession()
@@ -180,139 +189,53 @@ const MR_UInt8 *MR_ClientSession::GetBackImage() const
 
 // Main character controll and interogation
 
+BOOL MR_ClientSession::CreateMainCharacter(int pPlayerIndex)
+{
+	ASSERT(mSession.GetCurrentLevel() != NULL);
+
+	if((pPlayerIndex < 0) || (pPlayerIndex >= MR_MAX_LOCAL_PLAYER)) {
+		return FALSE;
+	}
+
+	ASSERT(mMainCharacters[pPlayerIndex] == NULL);			  // why creating it twice?
+
+	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	if(pPlayerIndex >= lCurrentLevel->GetPlayerCount()) {
+		return FALSE;
+	}
+
+	mMainCharacters[pPlayerIndex] = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
+		mAllowMines, mAllowedCraftMask);
+
+	mMainCharacters[pPlayerIndex]->mRoom = lCurrentLevel->GetStartingRoom(pPlayerIndex);
+	mMainCharacters[pPlayerIndex]->mPosition = lCurrentLevel->GetStartingPos(pPlayerIndex);
+	mMainCharacters[pPlayerIndex]->SetOrientation(lCurrentLevel->GetStartingOrientation(pPlayerIndex));
+	mMainCharacters[pPlayerIndex]->SetHoverId(pPlayerIndex);
+
+	lCurrentLevel->InsertElement(mMainCharacters[pPlayerIndex],
+		lCurrentLevel->GetStartingRoom(pPlayerIndex));
+	SyncLegacyMainCharacterPointers();
+
+	return TRUE;
+}
+
 BOOL MR_ClientSession::CreateMainCharacter()
 {
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter1 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
-		mAllowMines, mAllowedCraftMask);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter1->mRoom = lCurrentLevel->GetStartingRoom(0);
-	mMainCharacter1->mPosition = lCurrentLevel->GetStartingPos(0);
-	mMainCharacter1->SetOrientation(lCurrentLevel->GetStartingOrientation(0));
-	mMainCharacter1->SetHoverId(0);
-
-	lCurrentLevel->InsertElement(mMainCharacter1, lCurrentLevel->GetStartingRoom(0));
-
-	// Insert two dummy (TEST)
-	/*
-	   MR_MainCharacter* lMainCharacter;
-
-	   lMainCharacter = MR_MainCharacter::New();
-	   lMainCharacter->SetAsSlave();
-
-	   lMainCharacter->mPosition    = lCurrentLevel->GetStartingPos( 1 );
-	   lMainCharacter->mOrientation = lCurrentLevel->GetStartingOrientation( 1 );
-	   lCurrentLevel->InsertElement( lMainCharacter, lCurrentLevel->GetStartingRoom( 1 ) );
-
-	   lMainCharacter = MR_MainCharacter::New();
-	   lMainCharacter->SetAsSlave();
-
-	   lMainCharacter->mPosition    = lCurrentLevel->GetStartingPos( 2 );
-	   lMainCharacter->mOrientation = lCurrentLevel->GetStartingOrientation( 2 );
-	   lCurrentLevel->InsertElement( lMainCharacter, lCurrentLevel->GetStartingRoom( 2 ) );
-	 */
-
-	return TRUE;
-}
-
-BOOL MR_ClientSession::CreateMainCharacter2()
-{
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter2 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
-		mAllowMines, mAllowedCraftMask);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter2->mRoom = lCurrentLevel->GetStartingRoom(1);
-	mMainCharacter2->mPosition = lCurrentLevel->GetStartingPos(1);
-	mMainCharacter2->SetOrientation(lCurrentLevel->GetStartingOrientation(1));
-	mMainCharacter2->SetHoverId(1);
-
-	lCurrentLevel->InsertElement(mMainCharacter2, lCurrentLevel->GetStartingRoom(1));
-
-	return TRUE;
-}
-
-BOOL MR_ClientSession::CreateMainCharacter3()
-{
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter3 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
-		mAllowMines, mAllowedCraftMask);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter3->mRoom = lCurrentLevel->GetStartingRoom(2);
-	mMainCharacter3->mPosition = lCurrentLevel->GetStartingPos(2);
-	mMainCharacter3->SetOrientation(lCurrentLevel->GetStartingOrientation(2));
-	mMainCharacter3->SetHoverId(2);
-
-	lCurrentLevel->InsertElement(mMainCharacter3, lCurrentLevel->GetStartingRoom(2));
-
-	return TRUE;
-}
-
-BOOL MR_ClientSession::CreateMainCharacter4()
-{
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter4 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
-		mAllowMines, mAllowedCraftMask);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter4->mRoom = lCurrentLevel->GetStartingRoom(3);
-	mMainCharacter4->mPosition = lCurrentLevel->GetStartingPos(3);
-	mMainCharacter4->SetOrientation(lCurrentLevel->GetStartingOrientation(3));
-	mMainCharacter4->SetHoverId(3);
-
-	lCurrentLevel->InsertElement(mMainCharacter4, lCurrentLevel->GetStartingRoom(3));
-
-	return TRUE;
+	return CreateMainCharacter(0);
 }
 
 MR_MainCharacter *MR_ClientSession::GetMainCharacter() const
 {
-	return mMainCharacter1;
+	return GetMainCharacter(0);
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter2() const
+MR_MainCharacter *MR_ClientSession::GetMainCharacter(int pPlayerIndex) const
 {
-	return mMainCharacter2;
-}
+	if((pPlayerIndex < 0) || (pPlayerIndex >= MR_MAX_LOCAL_PLAYER)) {
+		return NULL;
+	}
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter3() const
-{
-	return mMainCharacter3;
-}
-
-MR_MainCharacter *MR_ClientSession::GetMainCharacter4() const
-{
-	return mMainCharacter4;
+	return mMainCharacters[pPlayerIndex];
 }
 
 void MR_ClientSession::SetSimulationTime(MR_SimulationTime pTime)
@@ -325,22 +248,17 @@ MR_SimulationTime MR_ClientSession::GetSimulationTime() const
 	return mSession.GetSimulationTime();
 }
 
-void MR_ClientSession::SetControlState(int pState1, int pState2, int pState3, int pState4)
+void MR_ClientSession::SetControlState(const int *pStates, int pStateCount)
 {
-	if(mMainCharacter1 != NULL) {
-		mMainCharacter1->SetControlState(pState1, mSession.GetSimulationTime());
+	if(pStates == NULL) {
+		return;
 	}
 
-	if(mMainCharacter2 != NULL) {
-		mMainCharacter2->SetControlState(pState2, mSession.GetSimulationTime());
-	}
-
-	if(mMainCharacter3 != NULL) {
-		mMainCharacter3->SetControlState(pState3, mSession.GetSimulationTime());
-	}
-
-	if(mMainCharacter4 != NULL) {
-		mMainCharacter4->SetControlState(pState4, mSession.GetSimulationTime());
+	const int lCount = min(pStateCount, MR_MAX_LOCAL_PLAYER);
+	for(int i = 0; i < lCount; ++i) {
+		if(mMainCharacters[i] != NULL) {
+			mMainCharacters[i]->SetControlState(pStates[i], mSession.GetSimulationTime());
+		}
 	}
 }
 
@@ -370,20 +288,14 @@ void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int
 
 int MR_ClientSession::GetNbPlayers() const
 {
-	BOOL lReturnValue = 0;
+	int lReturnValue = 0;
 
-	if(mMainCharacter1 != NULL) {
-		lReturnValue++;
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if(mMainCharacters[i] != NULL) {
+			lReturnValue++;
+		}
 	}
-	if(mMainCharacter2 != NULL) {
-		lReturnValue++;
-	}
-	if(mMainCharacter3 != NULL) {
-		lReturnValue++;
-	}
-	if(mMainCharacter4 != NULL) {
-		lReturnValue++;
-	}
+
 	return lReturnValue;
 }
 
@@ -391,77 +303,13 @@ int MR_ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
 {
 	int lReturnValue = 1;
 
-	if(pPlayer == mMainCharacter1) {
-		if(mMainCharacter2 != NULL && mMainCharacter2->HasFinish()) {
-			if(mMainCharacter2->GetTotalTime() < mMainCharacter1->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter3 != NULL && mMainCharacter3->HasFinish()) {
-			if(mMainCharacter3->GetTotalTime() < mMainCharacter1->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter4 != NULL && mMainCharacter4->HasFinish()) {
-			if(mMainCharacter4->GetTotalTime() < mMainCharacter1->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-	}
-	if(pPlayer == mMainCharacter2) {
-		lReturnValue = 1;
-
-		if(mMainCharacter1 != NULL && mMainCharacter1->HasFinish()) {
-			if(mMainCharacter1->GetTotalTime() < mMainCharacter2->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter3 != NULL && mMainCharacter3->HasFinish()) {
-			if(mMainCharacter3->GetTotalTime() < mMainCharacter2->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter4 != NULL && mMainCharacter4->HasFinish()) {
-			if(mMainCharacter4->GetTotalTime() < mMainCharacter2->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-	}
-	if(pPlayer == mMainCharacter3) {
-		lReturnValue = 1;
-
-		if(mMainCharacter1 != NULL && mMainCharacter1->HasFinish()) {
-			if(mMainCharacter1->GetTotalTime() < mMainCharacter3->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter2 != NULL && mMainCharacter2->HasFinish()) {
-			if(mMainCharacter2->GetTotalTime() < mMainCharacter3->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter4 != NULL && mMainCharacter4->HasFinish()) {
-			if(mMainCharacter4->GetTotalTime() < mMainCharacter3->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-	}
-	if(pPlayer == mMainCharacter4) {
-		lReturnValue = 1;
-
-		if(mMainCharacter1 != NULL && mMainCharacter1->HasFinish()) {
-			if(mMainCharacter1->GetTotalTime() < mMainCharacter4->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter2 != NULL && mMainCharacter2->HasFinish()) {
-			if(mMainCharacter2->GetTotalTime() < mMainCharacter4->GetTotalTime()) {
-				lReturnValue++;
-			}
-		}
-		if(mMainCharacter3 != NULL && mMainCharacter3->HasFinish()) {
-			if(mMainCharacter3->GetTotalTime() < mMainCharacter4->GetTotalTime()) {
-				lReturnValue++;
+	if((pPlayer != NULL) && pPlayer->HasFinish()) {
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			MR_MainCharacter *lOtherPlayer = mMainCharacters[i];
+			if((lOtherPlayer != NULL) && (lOtherPlayer != pPlayer) && lOtherPlayer->HasFinish()) {
+				if(lOtherPlayer->GetTotalTime() < pPlayer->GetTotalTime()) {
+					lReturnValue++;
+				}
 			}
 		}
 	}
@@ -498,22 +346,7 @@ void MR_ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 
 const MR_MainCharacter *MR_ClientSession::GetPlayer(int pPlayerIndex) const
 {
-	const MR_MainCharacter *lReturnValue = NULL;
-
-	switch (pPlayerIndex) {
-		case 0:
-			lReturnValue = mMainCharacter1;
-			break;
-
-		case 1:lReturnValue = mMainCharacter2;
-		break;
-
-		case 2:lReturnValue = mMainCharacter3;
-		break;
-
-		case 3:lReturnValue = mMainCharacter4;
-		break;
-	}
+	const MR_MainCharacter *lReturnValue = GetMainCharacter(pPlayerIndex);
 	ASSERT(lReturnValue != NULL);
 
 	return lReturnValue;

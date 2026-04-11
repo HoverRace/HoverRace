@@ -905,6 +905,8 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	mMainCharacter1->SetHoverId(mNetInterface.GetId());
 
 	lCurrentLevel->InsertElement(mMainCharacter1, mMainCharacter1->mRoom);
+	mMainCharacters[0] = mMainCharacter1;
+	SyncLegacyMainCharacterPointers();
 
 	// Make the hovercraft visible for the full countdown so the other clients
 	// can see pre-race craft changes as they happen.

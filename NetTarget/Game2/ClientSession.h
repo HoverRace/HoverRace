@@ -27,6 +27,7 @@
 #include "../Model/GameSession.h"
 #include "../MainCharacter/MainCharacter.h"
 #include "../VideoServices/Sprite.h"
+#include "../../include/LocalPlayer.h"
 
 #define MR_CHAT_MESSAGE_STACK   12
 
@@ -44,6 +45,7 @@ class MR_ClientSession
 		ChatMessage mMessageStack[MR_CHAT_MESSAGE_STACK];
 
 		MR_GameSession mSession;
+		MR_MainCharacter *mMainCharacters[MR_MAX_LOCAL_PLAYER];
 		MR_MainCharacter *mMainCharacter1;
 		MR_MainCharacter *mMainCharacter2;
 		MR_MainCharacter *mMainCharacter3;
@@ -81,20 +83,18 @@ class MR_ClientSession
 			unsigned pAllowedCraftMask,
 			MR_VideoBuffer * pVideo);
 
+		BOOL CreateMainCharacter(int pPlayerIndex);
+		void SyncLegacyMainCharacterPointers();
+
 		// Main character control and interrogation
 		BOOL CreateMainCharacter();
-		BOOL CreateMainCharacter2();
-		BOOL CreateMainCharacter3();
-		BOOL CreateMainCharacter4();
 
 		MR_MainCharacter *GetMainCharacter() const;
-		MR_MainCharacter *GetMainCharacter2() const;
-		MR_MainCharacter *GetMainCharacter3() const;
-		MR_MainCharacter *GetMainCharacter4() const;
+		MR_MainCharacter *GetMainCharacter(int pPlayerIndex) const;
 
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
-		void SetControlState(int pState1, int pState2, int pState3, int pState4);
+		void SetControlState(const int *pStates, int pStateCount);
 
 		const MR_UInt8 *GetBackImage() const;
 
