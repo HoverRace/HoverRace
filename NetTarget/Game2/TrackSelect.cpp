@@ -184,6 +184,15 @@ namespace {
 			return (mBitmapHandle != NULL) || !mBitmap.empty();
 		}
 	};
+
+	struct BitmapPixels
+	{
+		int mWidth;
+		int mHeight;
+		std::vector<MR_UInt8> mBitmap;
+
+		BitmapPixels() : mWidth(0), mHeight(0) { }
+	};
 }
 
 class TrackEntry
@@ -237,6 +246,7 @@ static COLORREF GetTrackPreviewColor(MR_UInt8 pColorIndex);
 static void InitTrackPreviewPalette();
 static bool LoadTrackPreview(const TrackEntry &pEntry);
 static void LoadRemoteTrackPreview(HWND pWindow, const TrackEntry &pEntry);
+static bool CopyRemotePreviewBitmap(HBITMAP pBitmap, BitmapPixels &pPreview);
 static LRESULT CALLBACK TrackListProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static void SortList();
 static void RebuildVisibleTrackList();
@@ -293,9 +303,9 @@ struct RemoteTrackSearchPayload
 struct RemoteTrackPreviewPayload
 {
 	unsigned mSerial;
-	HBITMAP mBitmap;
+	BitmapPixels mPreview;
 
-	RemoteTrackPreviewPayload() : mSerial(0), mBitmap(NULL) { }
+	RemoteTrackPreviewPayload() : mSerial(0) { }
 };
 
 /**
@@ -1698,8 +1708,7 @@ static void RemoteTrackPreviewThread(HWND pWindow, unsigned serial,
 			if(decoder.Decode((const unsigned char *) data.data(), (int) data.length())) {
 				HBITMAP bitmap = decoder.GetImage(0);
 				if(bitmap != NULL) {
-					payload->mBitmap = (HBITMAP) CopyImage(bitmap, IMAGE_BITMAP,
-						0, 0, LR_CREATEDIBSECTION);
+					CopyRemotePreviewBitmap(bitmap, payload->mPreview);
 				}
 			}
 		}
@@ -1712,11 +1721,66 @@ static void RemoteTrackPreviewThread(HWND pWindow, unsigned serial,
 	if(!PostMessage(pWindow, WM_REMOTE_TRACK_PREVIEW_COMPLETE, 0,
 		(LPARAM) payload))
 	{
-		if(payload->mBitmap != NULL) {
-			DeleteObject(payload->mBitmap);
-		}
 		delete payload;
 	}
+}
+
+bool CopyRemotePreviewBitmap(HBITMAP pBitmap, BitmapPixels &pPreview)
+{
+	BITMAP bitmap;
+	HDC dc;
+	BITMAPINFO bitmapInfo;
+
+	memset(&bitmap, 0, sizeof(bitmap));
+	if(GetObject(pBitmap, sizeof(bitmap), &bitmap) == 0) {
+		return false;
+	}
+	if((bitmap.bmWidth <= 0) || (bitmap.bmHeight <= 0)) {
+		return false;
+	}
+
+	pPreview.mWidth = bitmap.bmWidth;
+	pPreview.mHeight = bitmap.bmHeight;
+	pPreview.mBitmap.resize((size_t) pPreview.mWidth *
+		(size_t) pPreview.mHeight * 4, 0);
+
+	memset(&bitmapInfo, 0, sizeof(bitmapInfo));
+	bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bitmapInfo.bmiHeader.biWidth = pPreview.mWidth;
+	bitmapInfo.bmiHeader.biHeight = -pPreview.mHeight;
+	bitmapInfo.bmiHeader.biPlanes = 1;
+	bitmapInfo.bmiHeader.biBitCount = 32;
+	bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+	dc = GetDC(NULL);
+	if(dc == NULL) {
+		return false;
+	}
+	if(GetDIBits(dc, pBitmap, 0, pPreview.mHeight, &pPreview.mBitmap[0],
+		&bitmapInfo, DIB_RGB_COLORS) == 0)
+	{
+		ReleaseDC(NULL, dc);
+		pPreview.mBitmap.clear();
+		pPreview.mWidth = 0;
+		pPreview.mHeight = 0;
+		return false;
+	}
+	ReleaseDC(NULL, dc);
+
+	for(size_t offset = 0; offset < pPreview.mBitmap.size(); offset += 4) {
+		MR_UInt8 blue = pPreview.mBitmap[offset + 0];
+		MR_UInt8 green = pPreview.mBitmap[offset + 1];
+		MR_UInt8 red = pPreview.mBitmap[offset + 2];
+		if((red >= 248) && (green >= 248) && (blue >= 248)) {
+			COLORREF bg = TRACK_PREVIEW_BACKGROUND;
+			pPreview.mBitmap[offset + 0] = GetBValue(bg);
+			pPreview.mBitmap[offset + 1] = GetGValue(bg);
+			pPreview.mBitmap[offset + 2] = GetRValue(bg);
+		}
+		pPreview.mBitmap[offset + 3] = 0;
+	}
+
+	return true;
 }
 
 void LoadRemoteTrackPreview(HWND pWindow, const TrackEntry &pEntry)
@@ -1801,16 +1865,14 @@ void HandleRemoteTrackPreviewComplete(HWND pWindow, LPARAM pLParam)
 
 	if(payload->mSerial == gsRemotePreviewSerial) {
 		ClearTrackPreview();
-		gsTrackPreview.mBitmapHandle = payload->mBitmap;
-		payload->mBitmap = NULL;
+		gsTrackPreview.mWidth = payload->mPreview.mWidth;
+		gsTrackPreview.mHeight = payload->mPreview.mHeight;
+		gsTrackPreview.mBitmap.swap(payload->mPreview.mBitmap);
 		if(lPreviewWindow != NULL) {
 			InvalidateRect(lPreviewWindow, NULL, TRUE);
 		}
 	}
 
-	if(payload->mBitmap != NULL) {
-		DeleteObject(payload->mBitmap);
-	}
 	delete payload;
 }
 
