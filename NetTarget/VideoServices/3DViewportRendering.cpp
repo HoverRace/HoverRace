@@ -145,16 +145,17 @@ namespace {
 //
 // Floor and Ceiling rendering
 //
-void MR_3DViewPort::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap)
+void MR_3DViewPort::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, float pOpacity)
 {
-	RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, pBitmap, pBitmap, 1, 0);
+	RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, pBitmap, pBitmap, 1, 0, pOpacity);
 }
 
-void MR_3DViewPort::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart)
+void MR_3DViewPort::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart, float pOpacity)
 {
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
+		const int lTranslucentGroupId = ResolveTranslucentGroupId(pOpacity);
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitWall(pUpperLeft, pLowerRight, pLen,
-			pBitmap, pBitmap2, pSerialLen, pSerialStart);
+			pBitmap, pBitmap2, pSerialLen, pSerialStart, pOpacity, lTranslucentGroupId);
 		return;
 	}
 
@@ -766,11 +767,12 @@ void BltColumnFast()
 // Floor and Ceiling rendering
 //
 
-void MR_3DViewPort::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const MR_Bitmap * pBitmap)
+void MR_3DViewPort::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const MR_Bitmap * pBitmap, float pOpacity)
 {
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
+		const int lTranslucentGroupId = ResolveTranslucentGroupId(pOpacity);
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitHorizontalSurface(pNbVertex, pVertexList,
-			pLevel, pTop, pBitmap);
+			pLevel, pTop, pBitmap, pOpacity, lTranslucentGroupId);
 		return;
 	}
 
@@ -1493,11 +1495,12 @@ static int gsScreenXPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenYPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenVisibility[MAX_PATCH_RES * MAX_PATCH_RES];
 
-void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap)
+void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap, float pOpacity)
 {
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
+		const int lTranslucentGroupId = ResolveTranslucentGroupId(pOpacity);
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitPatch(pPatch,
-			BuildGpuScenePositionMatrix(pMatrix), pBitmap);
+			BuildGpuScenePositionMatrix(pMatrix), pBitmap, pOpacity, lTranslucentGroupId);
 		return;
 	}
 
@@ -1627,11 +1630,12 @@ void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix
 
 }
 
-void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor)
+void MR_3DViewPort::RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor, float pOpacity)
 {
 	if((mVideoBuffer != NULL) && (mVideoBuffer->GetGpuSceneRenderer() != NULL)) {
+		const int lTranslucentGroupId = ResolveTranslucentGroupId(pOpacity);
 		mVideoBuffer->GetGpuSceneRenderer()->SubmitPatch(pPatch,
-			BuildGpuScenePositionMatrix(pMatrix), pColor);
+			BuildGpuScenePositionMatrix(pMatrix), pColor, pOpacity, lTranslucentGroupId);
 		return;
 	}
 }

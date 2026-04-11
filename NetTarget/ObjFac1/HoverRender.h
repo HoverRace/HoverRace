@@ -57,7 +57,7 @@ class MR_HoverRender:public MR_MainCharacterRenderer
 		MR_HoverRender(const MR_ObjectFromFactoryId & pId);
 		~MR_HoverRender();
 
-		void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+		void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel, float pOpacity = 1.0f);
 
 		MR_ShortSound *GetLineCrossingSound();
 		MR_ShortSound *GetStartSound();

@@ -40,6 +40,8 @@ struct MR_GpuSceneWall
 	int mPrimaryBitmapHeight;
 	int mAlternateBitmapWidth;
 	int mAlternateBitmapHeight;
+	float mOpacity;
+	int mTranslucentGroupId;
 };
 
 struct MR_GpuSceneHorizontalSurface
@@ -49,6 +51,8 @@ struct MR_GpuSceneHorizontalSurface
 	MR_Int32 mLevel;
 	BOOL mTop;
 	const MR_Bitmap *mBitmap;
+	float mOpacity;
+	int mTranslucentGroupId;
 };
 
 struct MR_GpuScenePatchBitmap
@@ -56,6 +60,8 @@ struct MR_GpuScenePatchBitmap
 	const MR_Patch *mPatch;
 	MR_GpuScenePositionMatrix mMatrix;
 	const MR_Bitmap *mBitmap;
+	float mOpacity;
+	int mTranslucentGroupId;
 };
 
 struct MR_GpuScenePatchColor
@@ -63,6 +69,8 @@ struct MR_GpuScenePatchColor
 	const MR_Patch *mPatch;
 	MR_GpuScenePositionMatrix mMatrix;
 	MR_UInt8 mColor;
+	float mOpacity;
+	int mTranslucentGroupId;
 };
 
 struct MR_GpuSceneFrame
@@ -132,13 +140,13 @@ class MR_GpuSceneRenderer
 		void SubmitBackground(const MR_UInt8 *pBitmap);
 		void SubmitWall(const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
 			MR_Int32 pLen, const MR_Bitmap *pBitmap, const MR_Bitmap *pBitmap2,
-			int pSerialLen, int pSerialStart);
+			int pSerialLen, int pSerialStart, float pOpacity = 1.0f, int pTranslucentGroupId = 0);
 		void SubmitHorizontalSurface(int pNbVertex, const MR_2DCoordinate *pVertexList,
-			MR_Int32 pLevel, BOOL pTop, const MR_Bitmap *pBitmap);
+			MR_Int32 pLevel, BOOL pTop, const MR_Bitmap *pBitmap, float pOpacity = 1.0f, int pTranslucentGroupId = 0);
 		void SubmitPatch(const MR_Patch &pPatch, const MR_GpuScenePositionMatrix &pMatrix,
-			const MR_Bitmap *pBitmap);
+			const MR_Bitmap *pBitmap, float pOpacity = 1.0f, int pTranslucentGroupId = 0);
 		void SubmitPatch(const MR_Patch &pPatch, const MR_GpuScenePositionMatrix &pMatrix,
-			MR_UInt8 pColor);
+			MR_UInt8 pColor, float pOpacity = 1.0f, int pTranslucentGroupId = 0);
 
 		const MR_GpuSceneFrame &GetFrame() const;
 		const std::vector<MR_GpuSceneFrame> &GetFrames() const;

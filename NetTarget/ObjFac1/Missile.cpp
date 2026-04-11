@@ -86,6 +86,7 @@ MR_Int32 MR_Missile::RayLen() const
 	mLostOfControlEffect.mType = MR_LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;
 	mLostOfControlEffect.mHoverId = mHoverId;
+	mCollisionEffect.mHoverId = mHoverId;
 
 }
 
@@ -97,6 +98,7 @@ void MR_Missile::SetOwnerId(int pHoverId)
 {
 	mHoverId = pHoverId;
 	mLostOfControlEffect.mHoverId = mHoverId;
+	mCollisionEffect.mHoverId = mHoverId;
 }
 
 void MR_Missile::SetNetworkId(int pNetworkId)

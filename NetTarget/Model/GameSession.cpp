@@ -317,6 +317,7 @@ void MR_GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement
 		MR_FreeElement *lObstacleElem = MR_Level::GetFreeElement(lObstacleHandle);
 
 		if(lObstacleElem != pActor) {
+			lObstacleElem->SetContactHoverId(pActor->GetActorHoverId());
 
 			if(MR_DetectActorContact(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lSpec)) {
 				// Ok Compute the directiion of the collision

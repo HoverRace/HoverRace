@@ -43,7 +43,7 @@ void MR_FreeElementBase::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime
 	MR_PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, mPosition, mOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
-	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame, GetRenderOpacity());
 }
 
 }

@@ -49,7 +49,8 @@ class MR_DllDeclare MR_InertialMoment
 
 class MR_PhysicalCollision:public MR_ContactEffect, public MR_InertialMoment
 {
-
+	public:
+		int mHoverId;
 };
 
 #undef MR_DllDeclare

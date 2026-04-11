@@ -37,6 +37,36 @@ const MR_Int32 cGateHeightMax = 3000;
 
 const MR_Int32 cGateWeight = MR_PhysicalCollision::eInfiniteWeight;
 
+int MR_BumperGate::GetHoverSlot(int pHoverId) const
+{
+	if((pHoverId >= 0) && (pHoverId < MR_MAX_LOCAL_PLAYER)) {
+		return pHoverId;
+	}
+	return eStateCount - 1;
+}
+
+void MR_BumperGate::UpdateFrameForSlot(int pSlot)
+{
+	if(mTimeSinceLastCollision[pSlot] < 1500) {
+		mFrameByHover[pSlot] = (1500 - mTimeSinceLastCollision[pSlot]) * mLastState / 1500;
+	}
+	else if(mTimeSinceLastCollision[pSlot] < 9000) {
+		mFrameByHover[pSlot] = 0;
+	}
+	else if(mTimeSinceLastCollision[pSlot] < 13000) {
+		mFrameByHover[pSlot] = (mTimeSinceLastCollision[pSlot] - 9000) * mLastState / 4000;
+	}
+	else {
+		mFrameByHover[pSlot] = mLastState;
+	}
+}
+
+void MR_BumperGate::SelectHoverSlot(int pHoverId)
+{
+	mActiveHoverSlot = GetHoverSlot(pHoverId);
+	mCurrentFrame = mFrameByHover[mActiveHoverSlot];
+}
+
 MR_Int32 MR_BumperGate::ZMin() const
 {
 	return mPosition.mZ + 2;					  // the 2 reduce computing because the shape dont touch the floor
@@ -64,12 +94,14 @@ MR_Int32 MR_BumperGate::RayLen() const
 :MR_FreeElementBase(pId)
 {
 	mActor = gObjectFactoryData->mResourceLib.GetActor(MR_BUMPERGATE);
-
-	mTimeSinceLastCollision = +1000000;
 	mLastState = mActor->GetFrameCount(0) - 1;
-
-	mCurrentFrame = mLastState;
+	mActiveHoverSlot = eStateCount - 1;
 	mCurrentSequence = 0;
+	for(int lCounter = 0; lCounter < eStateCount; lCounter++) {
+		mTimeSinceLastCollision[lCounter] = +1000000;
+		mFrameByHover[lCounter] = mLastState;
+	}
+	mCurrentFrame = mFrameByHover[mActiveHoverSlot];
 
 	mEffectList.AddTail(&mCollisionEffect);
 
@@ -86,6 +118,7 @@ const MR_ContactEffectList *MR_BumperGate::GetEffectList()
 	mCollisionEffect.mXSpeed = 0;
 	mCollisionEffect.mYSpeed = 0;
 	mCollisionEffect.mZSpeed = 0;
+	mCollisionEffect.mHoverId = -1;
 
 	return &mEffectList;
 }
@@ -102,26 +135,24 @@ const MR_ShapeInterface *MR_BumperGate::GetGivingContactEffectShape()
 	return NULL;
 }
 
+void MR_BumperGate::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
+{
+	SelectHoverSlot(pDest->GetViewingHoverId());
+	MR_FreeElementBase::Render(pDest, pTime);
+}
+
 // Simulation
 int MR_BumperGate::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
 
 	if(pDuration >= 0) {
-		mTimeSinceLastCollision += pDuration;
-
-		if(mTimeSinceLastCollision < 1500) {
-			mCurrentFrame = (1500 - mTimeSinceLastCollision) * mLastState / 1500;
-		}
-		else if(mTimeSinceLastCollision < 9000) {
-			mCurrentFrame = 0;
-		}
-		else if(mTimeSinceLastCollision < 13000) {
-			mCurrentFrame = (mTimeSinceLastCollision - 9000) * mLastState / 4000;
-		}
-		else {
-			mCurrentFrame = mLastState;
+		for(int lCounter = 0; lCounter < eStateCount; lCounter++) {
+			mTimeSinceLastCollision[lCounter] += pDuration;
+			UpdateFrameForSlot(lCounter);
 		}
 	}
+
+	mCurrentFrame = mFrameByHover[mActiveHoverSlot];
 
 	return pRoom;
 }
@@ -132,11 +163,20 @@ void MR_BumperGate::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
 
 	if(lPhysCollision != NULL) {
-		if(mCurrentFrame >= mLastState) {
-			mTimeSinceLastCollision = 0;
+		for(int lHoverSlot = 0; lHoverSlot < eStateCount; lHoverSlot++) {
+			if(mFrameByHover[lHoverSlot] >= mLastState) {
+				mTimeSinceLastCollision[lHoverSlot] = 0;
+			}
+			else {
+				mTimeSinceLastCollision[lHoverSlot] = 1500 - 1500 * mFrameByHover[lHoverSlot] / mLastState;
+			}
+			UpdateFrameForSlot(lHoverSlot);
 		}
-		else {
-			mTimeSinceLastCollision = 1500 - 1500 * mCurrentFrame / mLastState;
-		}
+		mCurrentFrame = mFrameByHover[mActiveHoverSlot];
 	}
+}
+
+void MR_BumperGate::SetContactHoverId(int pHoverId)
+{
+	SelectHoverSlot(pHoverId);
 }

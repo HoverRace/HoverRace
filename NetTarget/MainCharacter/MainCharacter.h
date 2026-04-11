@@ -242,6 +242,8 @@ class MR_MainCharacter:public MR_FreeElement
 
 		const MR_ShapeInterface *GetReceivingContactEffectShape();
 		const MR_ShapeInterface *GetGivingContactEffectShape();
+		BOOL IsCraft() const { return TRUE; }
+		int GetActorHoverId() const { return mHoverId; }
 
 	public:
 		// Sounds

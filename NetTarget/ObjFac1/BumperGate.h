@@ -26,6 +26,7 @@
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/PhysicalCollision.h"
+#include "../../include/LocalPlayer.h"
 
 class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
 {
@@ -39,15 +40,21 @@ class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_Int32 RayLen() const;
 
 	private:
-
-		MR_SimulationTime mTimeSinceLastCollision;
+		enum { eStateCount = MR_MAX_LOCAL_PLAYER + 1 };
+		MR_SimulationTime mTimeSinceLastCollision[eStateCount];
+		int mFrameByHover[eStateCount];
+		int mActiveHoverSlot;
 		int mLastState;
 		MR_PhysicalCollision mCollisionEffect;
 		MR_ContactEffectList mEffectList;
+		int GetHoverSlot(int pHoverId) const;
+		void UpdateFrameForSlot(int pSlot);
+		void SelectHoverSlot(int pHoverId);
 
 	public:
 		MR_BumperGate(const MR_ObjectFromFactoryId & pId);
 		~MR_BumperGate();
+		void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 
 	protected:
 
@@ -59,6 +66,7 @@ class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
 		int Simulate(MR_SimulationTime pTimeSlice, MR_Level * pLevel, int pRoom);
 
 		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		void SetContactHoverId(int pHoverId);
 
 };
 #endif

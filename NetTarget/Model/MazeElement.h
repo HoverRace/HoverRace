@@ -74,6 +74,9 @@ class MR_ElementNetState
 
 class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 {
+	protected:
+		float mRenderOpacity;
+
 	public:
 		MR_Element(const MR_ObjectFromFactoryId & pId);
 
@@ -91,6 +94,11 @@ class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 
 		// Helper functions
 		void ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		void SetRenderOpacity(float pOpacity);
+		float GetRenderOpacity() const;
+		virtual BOOL IsCraft() const { return FALSE; }
+		virtual int GetActorHoverId() const { return -1; }
+		virtual void SetContactHoverId(int /*pHoverId */ ) { }
 
 	private:
 												  // Prevent overriding of the Serialize function

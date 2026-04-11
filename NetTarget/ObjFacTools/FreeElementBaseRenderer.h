@@ -51,7 +51,7 @@ class MR_FreeElementBaseRenderer:public MR_ObjectFromFactory
 		MR_DllDeclare ~ MR_FreeElementBaseRenderer();
 
 		// Rendering stuff
-		MR_DllDeclare void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
+		MR_DllDeclare void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, float pOpacity = 1.0f);
 
 };
 

@@ -74,11 +74,11 @@ int MR_ResActor::GetFrameCount(int pSequence) const
 
 }
 
-void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const
+void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, float pOpacity) const
 {
 	ASSERT(pSequence < mNbSequence);
 
-	mSequenceList[pSequence].Draw(pDest, pMatrix, pFrame);
+	mSequenceList[pSequence].Draw(pDest, pMatrix, pFrame, pOpacity);
 }
 
 // Sequence 
@@ -114,11 +114,11 @@ void MR_ResActor::Sequence::Serialize(CArchive & pArchive, MR_ResourceLib * pLib
 	}
 }
 
-void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const
+void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame, float pOpacity) const
 {
 	ASSERT(pFrame < mNbFrame);
 
-	mFrameList[pFrame].Draw(pDest, pMatrix);
+	mFrameList[pFrame].Draw(pDest, pMatrix, pOpacity);
 }
 
 // Frame 
@@ -187,11 +187,11 @@ void MR_ResActor::Frame::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 	}
 }
 
-void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
+void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, float pOpacity) const
 {
 	// Draw each component of the frame
 	for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
-		mComponentList[lCounter]->Draw(pDest, pMatrix);
+		mComponentList[lCounter]->Draw(pDest, pMatrix, pOpacity);
 	}
 }
 
@@ -251,9 +251,9 @@ void MR_ResActor::Patch::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 	}
 }
 
-void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
+void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, float pOpacity) const
 {
-	pDest->RenderPatch(*this, pMatrix, mBitmap);
+	pDest->RenderPatch(*this, pMatrix, mBitmap, pOpacity);
 }
 
 int MR_ResActor::Patch::GetURes() const

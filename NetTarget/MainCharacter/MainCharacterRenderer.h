@@ -43,7 +43,7 @@ class MR_DllDeclare MR_MainCharacterRenderer:public MR_ObjectFromFactory
 		MR_MainCharacterRenderer(const MR_ObjectFromFactoryId & pId);
 		~MR_MainCharacterRenderer();
 
-		virtual void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
+		virtual void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel, float pOpacity = 1.0f) = 0;
 
 		// Sound list
 		virtual MR_ShortSound *GetLineCrossingSound() = 0;

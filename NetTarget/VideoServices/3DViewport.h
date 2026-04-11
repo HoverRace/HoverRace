@@ -76,6 +76,9 @@ class MR_3DViewPort:public MR_2DViewPort
 		long long mWallSetupTicks;
 		long long mWallLoopTicks;
 		BOOL mCockpitView;
+		int mViewingHoverId;
+		int mActiveTranslucentGroupId;
+		int mNextTranslucentGroupId;
 
 		// Usefull pre-defined constants
 		MR_Int32 mHVarPerDInc_16384;			  // Ray divergence by HPixel
@@ -90,6 +93,7 @@ class MR_3DViewPort:public MR_2DViewPort
 
 		MR_Int32 mRotationMatrix[3][3];
 		MR_GpuScenePositionMatrix BuildGpuScenePositionMatrix(const MR_PositionMatrix &pMatrix) const;
+		int ResolveTranslucentGroupId(float pOpacity);
 
 		void ComputeRotationMatrix();
 		void ComputeBackgroundConst();
@@ -117,19 +121,23 @@ class MR_3DViewPort:public MR_2DViewPort
 		MR_DllDeclare void DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinate & pP1, MR_UInt8 pColor);
 
 		// Rendering services ( availlable in the file 3DViewportRendering.cpp )
-		MR_DllDeclare void RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap);
-		MR_DllDeclare void RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart);
+		MR_DllDeclare void RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, float pOpacity = 1.0f);
+		MR_DllDeclare void RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart, float pOpacity = 1.0f);
 
-		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const MR_Bitmap * pBitmap);
+		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const MR_Bitmap * pBitmap, float pOpacity = 1.0f);
 
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap);
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor);
+		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap, float pOpacity = 1.0f);
+		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor, float pOpacity = 1.0f);
 
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
 		MR_DllDeclare void BeginGpuSceneFrame();
 		MR_DllDeclare void EndGpuSceneFrame();
+		MR_DllDeclare void BeginTranslucentGroup();
+		MR_DllDeclare void EndTranslucentGroup();
 		MR_DllDeclare void SetCockpitView(BOOL pCockpitView);
 		MR_DllDeclare BOOL GetCockpitView() const;
+		MR_DllDeclare void SetViewingHoverId(int pViewingHoverId);
+		MR_DllDeclare int GetViewingHoverId() const;
 		MR_DllDeclare void ResetWallTimingStats();
 		MR_DllDeclare DWORD GetWallSetupTimingMs() const;
 		MR_DllDeclare DWORD GetWallLoopTimingMs() const;

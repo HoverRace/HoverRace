@@ -109,11 +109,12 @@ void MR_BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoord
 			else {
 				lStartPos = (lStartPos) % mRotationLen;
 			}
-			pDest->RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, mBitmap, mBitmap2, mRotationLen, lStartPos);
+			pDest->RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, mBitmap, mBitmap2, mRotationLen, lStartPos,
+				GetRenderOpacity());
 
 		}
 		else {
-			pDest->RenderWallSurface(pUpperLeft, pLowerRight, pLen, mBitmap);
+			pDest->RenderWallSurface(pUpperLeft, pLowerRight, pLen, mBitmap, GetRenderOpacity());
 		}
 	}
 }
@@ -121,7 +122,7 @@ void MR_BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoord
 void MR_BitmapSurface::RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
 {
 	if(mBitmap != NULL) {
-		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel, pTop, mBitmap);
+		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel, pTop, mBitmap, GetRenderOpacity());
 	}
 }
 

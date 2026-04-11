@@ -266,6 +266,7 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mContactShape.mRay = eCharacterContactRay;
 
 	mContactEffectList.AddTail(&mContactEffect);
+	mContactEffect.mHoverId = -1;
 
 	mNbLapForRace = 5;							  // Hard coded default
 	mLapCount = 0;
@@ -298,6 +299,7 @@ void MR_MainCharacter::SetAsSlave()
 void MR_MainCharacter::SetHoverId(int pId)
 {
 	mHoverId = pId;
+	mContactEffect.mHoverId = pId;
 }
 
 void MR_MainCharacter::SetHoverModel(int pModel)
@@ -333,7 +335,7 @@ int MR_MainCharacter::GetHoverId() const
 void MR_MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
 {
 	if(mRenderer != NULL)
-		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);
+		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel, GetRenderOpacity());
 }
 
 MR_ObjectFromFactory *MR_MainCharacter::FactoryFunc(MR_UInt16)

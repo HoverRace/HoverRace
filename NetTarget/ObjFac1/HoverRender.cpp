@@ -31,7 +31,7 @@
 class MR_ResActorFriend
 {
 	public:
-		static void Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap);
+		static void Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap, float pOpacity);
 };
 
 MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId & pId)
@@ -68,7 +68,7 @@ MR_HoverRender::~MR_HoverRender()
 
 }
 
-void MR_HoverRender::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
+void MR_HoverRender::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel, float pOpacity)
 {
 
 	// Compute the required rotation matrix
@@ -85,16 +85,16 @@ void MR_HoverRender::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosi
 	}
 
 	if(pModel == 1) {
-		MR_ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10]);
+		MR_ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10], pOpacity);
 	}
 	else if(pModel == 2) {
-		MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10], pOpacity);
 	}
 	else if(pModel == 7) {
-		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
+		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10], pOpacity);
 	}
 	else {
-		MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10], pOpacity);
 	}
 }
 
@@ -155,7 +155,7 @@ MR_ContinuousSound *MR_HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap)
+void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap, float pOpacity)
 {
 	MR_ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 
@@ -172,10 +172,10 @@ void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, 
 		}
 
 		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) || (lBitmapResId == MR_EON_COCKPIT) ) {
-		pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
+		pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap, pOpacity);
 	}
 	else {
-		pDest->RenderPatch(*lPatch, pMatrix, lPatch->mBitmap);
+		pDest->RenderPatch(*lPatch, pMatrix, lPatch->mBitmap, pOpacity);
 	}
 }
 

@@ -66,6 +66,9 @@ MR_3DViewPort::MR_3DViewPort()
 	mWallSetupTicks = 0;
 	mWallLoopTicks = 0;
 	mCockpitView = FALSE;
+	mViewingHoverId = -1;
+	mActiveTranslucentGroupId = 0;
+	mNextTranslucentGroupId = 1;
 
 }
 
@@ -87,6 +90,17 @@ MR_GpuScenePositionMatrix MR_3DViewPort::BuildGpuScenePositionMatrix(const MR_Po
 	matrix.mRotation[1][1] = pMatrix.mRotation[1][1];
 	matrix.mDisplacement = pMatrix.mDisplacement;
 	return matrix;
+}
+
+int MR_3DViewPort::ResolveTranslucentGroupId(float pOpacity)
+{
+	if(pOpacity >= 1.0f) {
+		return 0;
+	}
+	if(mActiveTranslucentGroupId != 0) {
+		return mActiveTranslucentGroupId;
+	}
+	return mNextTranslucentGroupId++;
 }
 
 void MR_3DViewPort::OnMetricsChange(int pMetrics)
@@ -200,6 +214,8 @@ void MR_3DViewPort::BeginGpuSceneFrame()
 	viewport.bottom = mY0 + mYRes;
 	renderer->BeginFrame(viewport, mPosition, mOrientation, mScroll,
 		mPlanDist, mPlanHW, mPlanVW);
+	mActiveTranslucentGroupId = 0;
+	mNextTranslucentGroupId = 1;
 }
 
 void MR_3DViewPort::EndGpuSceneFrame()
@@ -216,6 +232,18 @@ void MR_3DViewPort::EndGpuSceneFrame()
 	renderer->EndFrame();
 }
 
+void MR_3DViewPort::BeginTranslucentGroup()
+{
+	if(mActiveTranslucentGroupId == 0) {
+		mActiveTranslucentGroupId = mNextTranslucentGroupId++;
+	}
+}
+
+void MR_3DViewPort::EndTranslucentGroup()
+{
+	mActiveTranslucentGroupId = 0;
+}
+
 void MR_3DViewPort::SetCockpitView(BOOL pCockpitView)
 {
 	mCockpitView = pCockpitView;
@@ -224,6 +252,16 @@ void MR_3DViewPort::SetCockpitView(BOOL pCockpitView)
 BOOL MR_3DViewPort::GetCockpitView() const
 {
 	return mCockpitView;
+}
+
+void MR_3DViewPort::SetViewingHoverId(int pViewingHoverId)
+{
+	mViewingHoverId = pViewingHoverId;
+}
+
+int MR_3DViewPort::GetViewingHoverId() const
+{
+	return mViewingHoverId;
 }
 
 void MR_3DViewPort::ResetWallTimingStats()

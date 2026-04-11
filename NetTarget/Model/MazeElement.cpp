@@ -29,6 +29,7 @@
 MR_Element::MR_Element(const MR_ObjectFromFactoryId & pId)
 :MR_ObjectFromFactory(pId)
 {
+	mRenderOpacity = 1.0f;
 }
 
 void MR_Element::AddRenderer()
@@ -82,6 +83,24 @@ void MR_Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationT
 			ApplyEffect(lEffect, pTime, pDuration, pValidDirection, pHorizontalDirection, pZMin, pZMax, pLevel);
 		}
 	}
+}
+
+void MR_Element::SetRenderOpacity(float pOpacity)
+{
+	if(pOpacity < 0.0f) {
+		mRenderOpacity = 0.0f;
+	}
+	else if(pOpacity > 1.0f) {
+		mRenderOpacity = 1.0f;
+	}
+	else {
+		mRenderOpacity = pOpacity;
+	}
+}
+
+float MR_Element::GetRenderOpacity() const
+{
+	return mRenderOpacity;
 }
 
 // MR_SurfaceElement default behavior

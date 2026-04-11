@@ -62,6 +62,7 @@ class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 		void SetOwnerId(int pOwner);
 		void SetNetworkId(int pNetworkId);
 		int GetNetworkId() const;
+		int GetActorHoverId() const { return mHoverId; }
 
 		// ContactEffectShapeInterface
 		const MR_ContactEffectList *GetEffectList();

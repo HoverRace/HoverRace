@@ -34,6 +34,10 @@
 
 namespace
 {
+	const float VIEWED_CRAFT_OPACITY = 1.0f;
+	const float OPPONENT_CRAFT_NEAR_OPACITY = 1.0f;
+	const double OPPONENT_CRAFT_FADE_DISTANCE = 30000.0;
+
 	LONGLONG GetHighResolutionTick()
 	{
 		LARGE_INTEGER counter;
@@ -55,6 +59,25 @@ namespace
 		}
 
 		return static_cast<DWORD>(((pEndTick - pStartTick) * 1000 + (sFrequency / 2)) / sFrequency);
+	}
+
+	float ComputeOpponentCraftOpacity(const MR_MainCharacter *pViewingCharacter, const MR_MainCharacter *pOpponentCharacter)
+	{
+		double lDeltaX = static_cast<double>(pOpponentCharacter->mPosition.mX - pViewingCharacter->mPosition.mX);
+		double lDeltaY = static_cast<double>(pOpponentCharacter->mPosition.mY - pViewingCharacter->mPosition.mY);
+		double lDeltaZ = static_cast<double>(pOpponentCharacter->mPosition.mZ - pViewingCharacter->mPosition.mZ);
+		double lDistance = sqrt((lDeltaX * lDeltaX) + (lDeltaY * lDeltaY) + (lDeltaZ * lDeltaZ));
+		double lFade = lDistance / OPPONENT_CRAFT_FADE_DISTANCE;
+
+		if(lFade < 0.0) {
+			lFade = 0.0;
+		}
+		else if(lFade > 1.0) {
+			lFade = 1.0;
+		}
+
+		return static_cast<float>(OPPONENT_CRAFT_NEAR_OPACITY +
+			(lFade * (VIEWED_CRAFT_OPACITY - OPPONENT_CRAFT_NEAR_OPACITY)));
 	}
 }
 
@@ -470,6 +493,7 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 
 	m3DView.SetupCameraPosition(lCameraPos, lOrientation, mScroll);
 	m3DView.BeginGpuSceneFrame();
+	m3DView.SetViewingHoverId(pViewingCharacter->GetHoverId());
 
 	MR_SAMPLE_START(Clear, "ClearScreen");
 	// Clear background
@@ -571,8 +595,28 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 
 		while(lHandle != NULL) {
 			MR_FreeElement *lElement = MR_Level::GetFreeElement(lHandle);
+			MR_MainCharacter *lMainCharacter = dynamic_cast<MR_MainCharacter*>(lElement);
+			float lPreviousOpacity = 1.0f;
+			BOOL lOpacityChanged = FALSE;
 
+			if(lMainCharacter != NULL) {
+				lPreviousOpacity = lMainCharacter->GetRenderOpacity();
+				lMainCharacter->SetRenderOpacity((lMainCharacter == pViewingCharacter) ?
+					VIEWED_CRAFT_OPACITY :
+					ComputeOpponentCraftOpacity(pViewingCharacter, lMainCharacter));
+				lOpacityChanged = TRUE;
+			}
+
+			if(lElement->GetRenderOpacity() < 1.0f) {
+				m3DView.BeginTranslucentGroup();
+			}
 			lElement->Render(&m3DView, pTime);
+			if(lElement->GetRenderOpacity() < 1.0f) {
+				m3DView.EndTranslucentGroup();
+			}
+			if(lOpacityChanged) {
+				lMainCharacter->SetRenderOpacity(lPreviousOpacity);
+			}
 
 			lHandle = MR_Level::GetNextFreeElement(lHandle);
 		}

@@ -32,6 +32,7 @@
 #include "../Util/Config.h"
 #include "../Util/WorldCoordinates.h"
 
+#include <algorithm>
 #include <stddef.h>
 #include <math.h>
 #include <gl/GL.h>
@@ -125,8 +126,13 @@ namespace {
 		int mStartVertex;
 		int mVertexCount;
 		BOOL mIsFloorCeiling;
+		BOOL mIsTranslucent;
+		GLfloat mSortDepth;
+		int mTranslucentGroupId;
 
-		MR_GpuSceneBatch() : mTexture(0), mStartVertex(0), mVertexCount(0), mIsFloorCeiling(FALSE) {}
+		MR_GpuSceneBatch() : mTexture(0), mStartVertex(0), mVertexCount(0),
+			mIsFloorCeiling(FALSE), mIsTranslucent(FALSE), mSortDepth(0.0f),
+			mTranslucentGroupId(0) {}
 	};
 
 	struct MR_GpuSceneProjectedVertex
@@ -2869,13 +2875,28 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	#define PALETTE_R(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 0] / 255.0f) : ((idx) / 255.0f))
 	#define PALETTE_G(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 1] / 255.0f) : ((idx) / 255.0f))
 	#define PALETTE_B(idx) (mPaletteTexture ? (mPaletteTexture[(idx) * 4 + 2] / 255.0f) : ((idx) / 255.0f))
+	#define INIT_BATCH(batch, translucent) \
+		(batch).mStartVertex = static_cast<int>(lAllVertices.size()); \
+		(batch).mVertexCount = 0; \
+		(batch).mIsFloorCeiling = FALSE; \
+		(batch).mIsTranslucent = (translucent); \
+		(batch).mSortDepth = 0.0f
+	#define ACCUM_BATCH_DEPTH(batch, z0, z1, z2) \
+		(batch).mSortDepth += static_cast<GLfloat>((z0) + (z1) + (z2))
+	#define FINALIZE_BATCH_DEPTH(batch) \
+		if((batch).mVertexCount > 0) { \
+			(batch).mSortDepth /= static_cast<GLfloat>((batch).mVertexCount); \
+		}
 
 	// --- WALLS ---
 	for(size_t lWallIndex = 0; lWallIndex < lFrame.mWalls.size(); lWallIndex++) {
 		const MR_GpuSceneWall &lWall = lFrame.mWalls[lWallIndex];
 		const double lWallHeight = static_cast<double>(lWall.mUpperLeft.mZ - lWall.mLowerRight.mZ);
+		const GLfloat lOpacity = (lWall.mOpacity <= 0.0f) ? 0.0f :
+			((lWall.mOpacity >= 1.0f) ? 1.0f : lWall.mOpacity);
+		const int lTranslucentGroupId = (lOpacity < 1.0f) ? lWall.mTranslucentGroupId : 0;
 
-		if((lWall.mPrimaryBitmap == NULL) || (lWallHeight <= 0.0)) {
+		if((lWall.mPrimaryBitmap == NULL) || (lWallHeight <= 0.0) || (lOpacity <= 0.0f)) {
 			continue;
 		}
 
@@ -3017,40 +3038,47 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 				if(lTexture != 0) {
 					MR_GpuSceneBatch lBatch;
 					lBatch.mTexture = lTexture;
-					lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-					lBatch.mVertexCount = 0;
+					INIT_BATCH(lBatch, lOpacity < 1.0f);
+					lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 					for(size_t lV = 1; lV + 1 < lTileClipVerts.size(); lV++) {
 						PUSH_TRI_VERTEX(lTileClipVerts[0].mCamera.mX, lTileClipVerts[0].mCamera.mY, lTileClipVerts[0].mCamera.mZ,
-							lTileClipVerts[0].mU, lTileClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+							lTileClipVerts[0].mU, lTileClipVerts[0].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 						PUSH_TRI_VERTEX(lTileClipVerts[lV].mCamera.mX, lTileClipVerts[lV].mCamera.mY, lTileClipVerts[lV].mCamera.mZ,
-							lTileClipVerts[lV].mU, lTileClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+							lTileClipVerts[lV].mU, lTileClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 						PUSH_TRI_VERTEX(lTileClipVerts[lV+1].mCamera.mX, lTileClipVerts[lV+1].mCamera.mY, lTileClipVerts[lV+1].mCamera.mZ,
-							lTileClipVerts[lV+1].mU, lTileClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+							lTileClipVerts[lV+1].mU, lTileClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 						lBatch.mVertexCount += 3;
+						ACCUM_BATCH_DEPTH(lBatch, lTileClipVerts[0].mCamera.mZ, lTileClipVerts[lV].mCamera.mZ,
+							lTileClipVerts[lV+1].mCamera.mZ);
 					}
 
+					FINALIZE_BATCH_DEPTH(lBatch);
 					lBatches.push_back(lBatch);
 				}
 				else {
 					MR_UInt8 lColor = lTileBitmap->GetPlainColor();
 					GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+					const GLfloat lColorAlpha = 0.375f * lOpacity;
 
 					MR_GpuSceneBatch lBatch;
 					lBatch.mTexture = 0;
-					lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-					lBatch.mVertexCount = 0;
+					INIT_BATCH(lBatch, lColorAlpha < 1.0f);
+					lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 					for(size_t lV = 1; lV + 1 < lTileClipVerts.size(); lV++) {
 						PUSH_TRI_VERTEX(lTileClipVerts[0].mCamera.mX, lTileClipVerts[0].mCamera.mY, lTileClipVerts[0].mCamera.mZ,
-							0.0f, 0.0f, lR, lG, lB, 0.375f);
+							0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 						PUSH_TRI_VERTEX(lTileClipVerts[lV].mCamera.mX, lTileClipVerts[lV].mCamera.mY, lTileClipVerts[lV].mCamera.mZ,
-							0.0f, 0.0f, lR, lG, lB, 0.375f);
+							0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 						PUSH_TRI_VERTEX(lTileClipVerts[lV+1].mCamera.mX, lTileClipVerts[lV+1].mCamera.mY, lTileClipVerts[lV+1].mCamera.mZ,
-							0.0f, 0.0f, lR, lG, lB, 0.375f);
+							0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 						lBatch.mVertexCount += 3;
+						ACCUM_BATCH_DEPTH(lBatch, lTileClipVerts[0].mCamera.mZ, lTileClipVerts[lV].mCamera.mZ,
+							lTileClipVerts[lV+1].mCamera.mZ);
 					}
 
+					FINALIZE_BATCH_DEPTH(lBatch);
 					lBatches.push_back(lBatch);
 				}
 			}
@@ -3063,42 +3091,49 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			if(lTexture != 0) {
 				MR_GpuSceneBatch lBatch;
 				lBatch.mTexture = lTexture;
-				lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-				lBatch.mVertexCount = 0;
+				INIT_BATCH(lBatch, lOpacity < 1.0f);
+				lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 				// Triangulate clipped polygon as fan
 				for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-						lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-						lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					lBatch.mVertexCount += 3;
+					ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lV].mCamera.mZ,
+						lClipVerts[lV+1].mCamera.mZ);
 				}
 
+				FINALIZE_BATCH_DEPTH(lBatch);
 				lBatches.push_back(lBatch);
 			}
 			else {
 				// Solid color fallback
 				MR_UInt8 lColor = lWall.mPrimaryBitmap->GetPlainColor();
 				GLfloat lR = PALETTE_R(lColor), lG = PALETTE_G(lColor), lB = PALETTE_B(lColor);
+				const GLfloat lColorAlpha = 0.375f * lOpacity;
 
 				MR_GpuSceneBatch lBatch;
 				lBatch.mTexture = 0;
-				lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-				lBatch.mVertexCount = 0;
+				INIT_BATCH(lBatch, lColorAlpha < 1.0f);
+				lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 				for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 0.375f);
+						0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 					PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 0.375f);
+						0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 					PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 0.375f);
+						0.0f, 0.0f, lR, lG, lB, lColorAlpha);
 					lBatch.mVertexCount += 3;
+					ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lV].mCamera.mZ,
+						lClipVerts[lV+1].mCamera.mZ);
 				}
 
+				FINALIZE_BATCH_DEPTH(lBatch);
 				lBatches.push_back(lBatch);
 			}
 		}
@@ -3107,7 +3142,13 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	// --- HORIZONTAL SURFACES (floors/ceilings) ---
 	for(size_t lSurfIndex = 0; lSurfIndex < lFrame.mHorizontalSurfaces.size(); lSurfIndex++) {
 		const MR_GpuSceneHorizontalSurface &lSurface = lFrame.mHorizontalSurfaces[lSurfIndex];
+		const GLfloat lOpacity = (lSurface.mOpacity <= 0.0f) ? 0.0f :
+			((lSurface.mOpacity >= 1.0f) ? 1.0f : lSurface.mOpacity);
+		const int lTranslucentGroupId = (lOpacity < 1.0f) ? lSurface.mTranslucentGroupId : 0;
 		if((lSurface.mNbVertex < 3) || (lSurface.mBitmap == NULL)) {
+			continue;
+		}
+		if(lOpacity <= 0.0f) {
 			continue;
 		}
 
@@ -3153,20 +3194,23 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 		if(lTexture != 0) {
 			MR_GpuSceneBatch lBatch;
 			lBatch.mTexture = lTexture;
-			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-			lBatch.mVertexCount = 0;
+			INIT_BATCH(lBatch, lOpacity < 1.0f);
 			lBatch.mIsFloorCeiling = TRUE;
+			lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-					lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-					lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					lClipVerts[lV].mU, lClipVerts[lV].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-					lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+					lClipVerts[lV+1].mU, lClipVerts[lV+1].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 				lBatch.mVertexCount += 3;
+				ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lV].mCamera.mZ,
+					lClipVerts[lV+1].mCamera.mZ);
 			}
 
+			FINALIZE_BATCH_DEPTH(lBatch);
 			lBatches.push_back(lBatch);
 		}
 		else {
@@ -3175,20 +3219,23 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 			MR_GpuSceneBatch lBatch;
 			lBatch.mTexture = 0;
-			lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-			lBatch.mVertexCount = 0;
+			INIT_BATCH(lBatch, lOpacity < 1.0f);
 			lBatch.mIsFloorCeiling = TRUE;
+			lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 			for(size_t lV = 1; lV + 1 < lClipVerts.size(); lV++) {
 				PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 1.0f);
+					0.0f, 0.0f, lR, lG, lB, lOpacity);
 				PUSH_TRI_VERTEX(lClipVerts[lV].mCamera.mX, lClipVerts[lV].mCamera.mY, lClipVerts[lV].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 1.0f);
+					0.0f, 0.0f, lR, lG, lB, lOpacity);
 				PUSH_TRI_VERTEX(lClipVerts[lV+1].mCamera.mX, lClipVerts[lV+1].mCamera.mY, lClipVerts[lV+1].mCamera.mZ,
-					0.0f, 0.0f, lR, lG, lB, 1.0f);
+					0.0f, 0.0f, lR, lG, lB, lOpacity);
 				lBatch.mVertexCount += 3;
+				ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lV].mCamera.mZ,
+					lClipVerts[lV+1].mCamera.mZ);
 			}
 
+			FINALIZE_BATCH_DEPTH(lBatch);
 			lBatches.push_back(lBatch);
 		}
 	}
@@ -3196,7 +3243,13 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	// --- TEXTURED PATCHES ---
 	for(size_t lPatchIndex = 0; lPatchIndex < lFrame.mBitmapPatches.size(); lPatchIndex++) {
 		const MR_GpuScenePatchBitmap &lPatch = lFrame.mBitmapPatches[lPatchIndex];
+		const GLfloat lOpacity = (lPatch.mOpacity <= 0.0f) ? 0.0f :
+			((lPatch.mOpacity >= 1.0f) ? 1.0f : lPatch.mOpacity);
+		const int lTranslucentGroupId = (lOpacity < 1.0f) ? lPatch.mTranslucentGroupId : 0;
 		if((lPatch.mPatch == NULL) || (lPatch.mBitmap == NULL)) {
+			continue;
+		}
+		if(lOpacity <= 0.0f) {
 			continue;
 		}
 
@@ -3219,8 +3272,8 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 		MR_GpuSceneBatch lBatch;
 		lBatch.mTexture = lTexture;
-		lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-		lBatch.mVertexCount = 0;
+		INIT_BATCH(lBatch, lOpacity < 1.0f);
+		lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 		for(int lPV = 0; lPV < (lVRes - 1); lPV++) {
 			for(int lPU = 0; lPU < (lURes - 1); lPU++) {
@@ -3260,17 +3313,20 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 				for(size_t lCV = 1; lCV + 1 < lClipVerts.size(); lCV++) {
 					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[0].mU, lClipVerts[0].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lCV].mCamera.mX, lClipVerts[lCV].mCamera.mY, lClipVerts[lCV].mCamera.mZ,
-						lClipVerts[lCV].mU, lClipVerts[lCV].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[lCV].mU, lClipVerts[lCV].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lCV+1].mCamera.mX, lClipVerts[lCV+1].mCamera.mY, lClipVerts[lCV+1].mCamera.mZ,
-						lClipVerts[lCV+1].mU, lClipVerts[lCV+1].mV, 1.0f, 1.0f, 1.0f, 1.0f);
+						lClipVerts[lCV+1].mU, lClipVerts[lCV+1].mV, 1.0f, 1.0f, 1.0f, lOpacity);
 					lBatch.mVertexCount += 3;
+					ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lCV].mCamera.mZ,
+						lClipVerts[lCV+1].mCamera.mZ);
 				}
 			}
 		}
 
 		if(lBatch.mVertexCount > 0) {
+			FINALIZE_BATCH_DEPTH(lBatch);
 			lBatches.push_back(lBatch);
 		}
 	}
@@ -3278,7 +3334,13 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	// --- COLOR PATCHES ---
 	for(size_t lPatchIndex = 0; lPatchIndex < lFrame.mColorPatches.size(); lPatchIndex++) {
 		const MR_GpuScenePatchColor &lPatch = lFrame.mColorPatches[lPatchIndex];
+		const GLfloat lOpacity = (lPatch.mOpacity <= 0.0f) ? 0.0f :
+			((lPatch.mOpacity >= 1.0f) ? 1.0f : lPatch.mOpacity);
+		const int lTranslucentGroupId = (lOpacity < 1.0f) ? lPatch.mTranslucentGroupId : 0;
 		if(lPatch.mPatch == NULL) {
+			continue;
+		}
+		if(lOpacity <= 0.0f) {
 			continue;
 		}
 
@@ -3299,8 +3361,8 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 		MR_GpuSceneBatch lBatch;
 		lBatch.mTexture = 0;
-		lBatch.mStartVertex = static_cast<int>(lAllVertices.size());
-		lBatch.mVertexCount = 0;
+		INIT_BATCH(lBatch, lOpacity < 1.0f);
+		lBatch.mTranslucentGroupId = lTranslucentGroupId;
 
 		for(int lPV = 0; lPV < (lVRes - 1); lPV++) {
 			for(int lPU = 0; lPU < (lURes - 1); lPU++) {
@@ -3326,17 +3388,20 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 
 				for(size_t lCV = 1; lCV + 1 < lClipVerts.size(); lCV++) {
 					PUSH_TRI_VERTEX(lClipVerts[0].mCamera.mX, lClipVerts[0].mCamera.mY, lClipVerts[0].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 1.0f);
+						0.0f, 0.0f, lR, lG, lB, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lCV].mCamera.mX, lClipVerts[lCV].mCamera.mY, lClipVerts[lCV].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 1.0f);
+						0.0f, 0.0f, lR, lG, lB, lOpacity);
 					PUSH_TRI_VERTEX(lClipVerts[lCV+1].mCamera.mX, lClipVerts[lCV+1].mCamera.mY, lClipVerts[lCV+1].mCamera.mZ,
-						0.0f, 0.0f, lR, lG, lB, 1.0f);
+						0.0f, 0.0f, lR, lG, lB, lOpacity);
 					lBatch.mVertexCount += 3;
+					ACCUM_BATCH_DEPTH(lBatch, lClipVerts[0].mCamera.mZ, lClipVerts[lCV].mCamera.mZ,
+						lClipVerts[lCV+1].mCamera.mZ);
 				}
 			}
 		}
 
 		if(lBatch.mVertexCount > 0) {
+			FINALIZE_BATCH_DEPTH(lBatch);
 			lBatches.push_back(lBatch);
 		}
 	}
@@ -3345,10 +3410,45 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 	#undef PALETTE_R
 	#undef PALETTE_G
 	#undef PALETTE_B
+	#undef INIT_BATCH
+	#undef ACCUM_BATCH_DEPTH
+	#undef FINALIZE_BATCH_DEPTH
 
 	// --- DRAW ALL BATCHES ---
 	const BOOL lHasSceneGeometry = !lAllVertices.empty() && !lBatches.empty();
 	const BOOL lHasBackground = !lBgVertices.empty() && sBackgroundTexture != 0;
+	struct MR_GpuSceneTranslucentGroup
+	{
+		int mGroupId;
+		GLfloat mSortDepth;
+	};
+	std::vector<MR_GpuSceneTranslucentGroup> lSortedTranslucentGroups;
+	for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+		const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+		if(!lBatch.mIsTranslucent || (lBatch.mTranslucentGroupId == 0)) {
+			continue;
+		}
+		BOOL lFound = FALSE;
+		for(size_t lGroupIndex = 0; lGroupIndex < lSortedTranslucentGroups.size(); lGroupIndex++) {
+			if(lSortedTranslucentGroups[lGroupIndex].mGroupId == lBatch.mTranslucentGroupId) {
+				if(lBatch.mSortDepth < lSortedTranslucentGroups[lGroupIndex].mSortDepth) {
+					lSortedTranslucentGroups[lGroupIndex].mSortDepth = lBatch.mSortDepth;
+				}
+				lFound = TRUE;
+				break;
+			}
+		}
+		if(!lFound) {
+			MR_GpuSceneTranslucentGroup lGroup;
+			lGroup.mGroupId = lBatch.mTranslucentGroupId;
+			lGroup.mSortDepth = lBatch.mSortDepth;
+			lSortedTranslucentGroups.push_back(lGroup);
+		}
+	}
+	std::sort(lSortedTranslucentGroups.begin(), lSortedTranslucentGroups.end(),
+		[](const MR_GpuSceneTranslucentGroup &pLeft, const MR_GpuSceneTranslucentGroup &pRight) {
+			return pLeft.mSortDepth < pRight.mSortDepth;
+		});
 
 	if(!lHasSceneGeometry && !lHasBackground) {
 		continue;
@@ -3453,6 +3553,9 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			// Draw each batch
 			for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
 				const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+				if(lBatch.mIsTranslucent) {
+					continue;
+				}
 				if(lBatch.mVertexCount == 0) {
 					continue;
 				}
@@ -3475,6 +3578,84 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 				}
 
 				glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+			}
+
+			if(!lSortedTranslucentGroups.empty()) {
+				glDepthFunc(GL_LEQUAL);
+				glDisable(GL_BLEND);
+				glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+				glDepthMask(GL_TRUE);
+
+				for(size_t lGroupIndex = 0; lGroupIndex < lSortedTranslucentGroups.size(); lGroupIndex++) {
+					const int lGroupId = lSortedTranslucentGroups[lGroupIndex].mGroupId;
+
+					for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+						const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+						if(!lBatch.mIsTranslucent || (lBatch.mTranslucentGroupId != lGroupId)
+							|| (lBatch.mVertexCount == 0)) {
+							continue;
+						}
+
+						if(lBatch.mTexture != 0) {
+							glEnable(GL_TEXTURE_2D);
+							glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+							gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+							if(lBatch.mIsFloorCeiling) {
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 5.0f);
+							} else {
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 0.0f);
+							}
+						}
+						else {
+							glDisable(GL_TEXTURE_2D);
+							gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 0.0f);
+						}
+
+						glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+					}
+
+					glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					glDepthMask(GL_FALSE);
+
+					for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+						const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+						if(!lBatch.mIsTranslucent || (lBatch.mTranslucentGroupId != lGroupId)
+							|| (lBatch.mVertexCount == 0)) {
+							continue;
+						}
+
+						if(lBatch.mTexture != 0) {
+							glEnable(GL_TEXTURE_2D);
+							glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+							gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 1.0f);
+							if(lBatch.mIsFloorCeiling) {
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 5.0f);
+							} else {
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasUniform, 0.0f);
+								gGL.Uniform1f(mOpenGLState->sceneLodBiasMaxUniform, 0.0f);
+							}
+						}
+						else {
+							glDisable(GL_TEXTURE_2D);
+							gGL.Uniform1f(mOpenGLState->sceneUseTextureUniform, 0.0f);
+						}
+
+						glDrawArrays(GL_TRIANGLES, lBatch.mStartVertex, lBatch.mVertexCount);
+					}
+
+					glDisable(GL_BLEND);
+					glDepthMask(GL_TRUE);
+					glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+				}
+
+				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+				glDepthMask(GL_TRUE);
+				glDisable(GL_BLEND);
 			}
 
 			// Cleanup
@@ -3538,9 +3719,13 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 			glDepthMask(GL_TRUE);
+			glDisable(GL_BLEND);
 
 			for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
 				const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+				if(lBatch.mIsTranslucent) {
+					continue;
+				}
 				if(lBatch.mVertexCount == 0) {
 					continue;
 				}
@@ -3565,6 +3750,88 @@ void MR_VideoBuffer::RenderGpuSceneOverlay()
 					glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
 				}
 				glEnd();
+			}
+
+			if(!lSortedTranslucentGroups.empty()) {
+				glDepthFunc(GL_LEQUAL);
+				glDisable(GL_BLEND);
+				glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+				glDepthMask(GL_TRUE);
+
+				for(size_t lGroupIndex = 0; lGroupIndex < lSortedTranslucentGroups.size(); lGroupIndex++) {
+					const int lGroupId = lSortedTranslucentGroups[lGroupIndex].mGroupId;
+
+					for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+						const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+						if(!lBatch.mIsTranslucent || (lBatch.mTranslucentGroupId != lGroupId)
+							|| (lBatch.mVertexCount == 0)) {
+							continue;
+						}
+
+						if(lBatch.mTexture != 0) {
+							glEnable(GL_TEXTURE_2D);
+							glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+							glTexParameterf(GL_TEXTURE_2D, 0x8501 /*GL_TEXTURE_LOD_BIAS*/,
+								0.0f);
+						}
+						else {
+							glDisable(GL_TEXTURE_2D);
+						}
+
+						glBegin(GL_TRIANGLES);
+						for(int lV = lBatch.mStartVertex; lV < lBatch.mStartVertex + lBatch.mVertexCount; lV++) {
+							const MR_GpuSceneBatchVertex &lVert = lAllVertices[lV];
+							glColor4f(lVert.mR, lVert.mG, lVert.mB, lVert.mA);
+							if(lBatch.mTexture != 0) {
+								glTexCoord2f(lVert.mU, lVert.mV);
+							}
+							glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
+						}
+						glEnd();
+					}
+
+					glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					glDepthMask(GL_FALSE);
+
+					for(size_t lBatchIndex = 0; lBatchIndex < lBatches.size(); lBatchIndex++) {
+						const MR_GpuSceneBatch &lBatch = lBatches[lBatchIndex];
+						if(!lBatch.mIsTranslucent || (lBatch.mTranslucentGroupId != lGroupId)
+							|| (lBatch.mVertexCount == 0)) {
+							continue;
+						}
+
+						if(lBatch.mTexture != 0) {
+							glEnable(GL_TEXTURE_2D);
+							glBindTexture(GL_TEXTURE_2D, lBatch.mTexture);
+							glTexParameterf(GL_TEXTURE_2D, 0x8501 /*GL_TEXTURE_LOD_BIAS*/,
+								0.0f);
+						}
+						else {
+							glDisable(GL_TEXTURE_2D);
+						}
+
+						glBegin(GL_TRIANGLES);
+						for(int lV = lBatch.mStartVertex; lV < lBatch.mStartVertex + lBatch.mVertexCount; lV++) {
+							const MR_GpuSceneBatchVertex &lVert = lAllVertices[lV];
+							glColor4f(lVert.mR, lVert.mG, lVert.mB, lVert.mA);
+							if(lBatch.mTexture != 0) {
+								glTexCoord2f(lVert.mU, lVert.mV);
+							}
+							glVertex3f(lVert.mX, lVert.mY, lVert.mZ);
+						}
+						glEnd();
+					}
+
+					glDisable(GL_BLEND);
+					glDepthMask(GL_TRUE);
+					glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+				}
+
+				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+				glDepthMask(GL_TRUE);
+				glDisable(GL_BLEND);
 			}
 
 			glMatrixMode(GL_MODELVIEW);

@@ -87,7 +87,7 @@ void MR_GpuSceneRenderer::SubmitBackground(const MR_UInt8 *pBitmap)
 void MR_GpuSceneRenderer::SubmitWall(const MR_3DCoordinate &pUpperLeft,
 	const MR_3DCoordinate &pLowerRight, MR_Int32 pLen,
 	const MR_Bitmap *pBitmap, const MR_Bitmap *pBitmap2,
-	int pSerialLen, int pSerialStart)
+	int pSerialLen, int pSerialStart, float pOpacity, int pTranslucentGroupId)
 {
 	if(!mFrameOpen) {
 		return;
@@ -105,12 +105,14 @@ void MR_GpuSceneRenderer::SubmitWall(const MR_3DCoordinate &pUpperLeft,
 	wall.mPrimaryBitmapHeight = pBitmap ? pBitmap->GetHeight() : 0;
 	wall.mAlternateBitmapWidth = pBitmap2 ? pBitmap2->GetWidth() : 0;
 	wall.mAlternateBitmapHeight = pBitmap2 ? pBitmap2->GetHeight() : 0;
+	wall.mOpacity = pOpacity;
+	wall.mTranslucentGroupId = pTranslucentGroupId;
 	mFrame.mWalls.push_back(wall);
 }
 
 void MR_GpuSceneRenderer::SubmitHorizontalSurface(int pNbVertex,
 	const MR_2DCoordinate *pVertexList, MR_Int32 pLevel, BOOL pTop,
-	const MR_Bitmap *pBitmap)
+	const MR_Bitmap *pBitmap, float pOpacity, int pTranslucentGroupId)
 {
 	if(!mFrameOpen) {
 		return;
@@ -129,11 +131,13 @@ void MR_GpuSceneRenderer::SubmitHorizontalSurface(int pNbVertex,
 	surface.mLevel = pLevel;
 	surface.mTop = pTop;
 	surface.mBitmap = pBitmap;
+	surface.mOpacity = pOpacity;
+	surface.mTranslucentGroupId = pTranslucentGroupId;
 	mFrame.mHorizontalSurfaces.push_back(surface);
 }
 
 void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
-	const MR_GpuScenePositionMatrix &pMatrix, const MR_Bitmap *pBitmap)
+	const MR_GpuScenePositionMatrix &pMatrix, const MR_Bitmap *pBitmap, float pOpacity, int pTranslucentGroupId)
 {
 	if(!mFrameOpen) {
 		return;
@@ -143,11 +147,13 @@ void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 	patch.mPatch = &pPatch;
 	patch.mMatrix = pMatrix;
 	patch.mBitmap = pBitmap;
+	patch.mOpacity = pOpacity;
+	patch.mTranslucentGroupId = pTranslucentGroupId;
 	mFrame.mBitmapPatches.push_back(patch);
 }
 
 void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
-	const MR_GpuScenePositionMatrix &pMatrix, MR_UInt8 pColor)
+	const MR_GpuScenePositionMatrix &pMatrix, MR_UInt8 pColor, float pOpacity, int pTranslucentGroupId)
 {
 	if(!mFrameOpen) {
 		return;
@@ -157,6 +163,8 @@ void MR_GpuSceneRenderer::SubmitPatch(const MR_Patch &pPatch,
 	patch.mPatch = &pPatch;
 	patch.mMatrix = pMatrix;
 	patch.mColor = pColor;
+	patch.mOpacity = pOpacity;
+	patch.mTranslucentGroupId = pTranslucentGroupId;
 	mFrame.mColorPatches.push_back(patch);
 }
 
