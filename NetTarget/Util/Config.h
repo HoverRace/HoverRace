@@ -74,6 +74,7 @@ class MR_Config
 			int windowPosY;
 			int windowSizeX;
 			int windowSizeY;
+			bool windowMaximized;
 
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);

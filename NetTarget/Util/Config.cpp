@@ -227,6 +227,7 @@ void MR_Config::ResetToDefaults()
 	video.windowPosY = CW_USEDEFAULT;
 	video.windowSizeX = GetSystemMetrics(SM_CXSCREEN) / 2;
 	video.windowSizeY = GetSystemMetrics(SM_CYSCREEN) / 2;
+	video.windowMaximized = false;
 
 	audio.sfxVolume = 0.2;
 
@@ -441,6 +442,7 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("windowSizeY"));
 		if (_scalar != NULL) windowSizeY = _scalar->AsInt(windowSizeY, 240, INT_MAX);
 	}
+	READ_BOOL(root, windowMaximized);
 }
 
 void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
@@ -465,6 +467,7 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, windowSizeX);
 	EMIT_VAR(emitter, windowSizeY);
+	EMIT_VAR(emitter, windowMaximized);
 
 	emitter->EndMap();
 }

@@ -641,6 +641,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	SetRectEmpty(&mWindowedRect);
 	mWindowedStyle = 0;
 	mWindowedExStyle = 0;
+	mWindowedShowCmd = SW_SHOWNORMAL;
 	mAdaptiveRenderScalePercent = 100;
 	mAppliedRenderScalePercent = 100;
 	mAdaptiveRenderScaleMaxPercent = 100;
@@ -1120,6 +1121,9 @@ BOOL MR_GameApp::CreateMainWindow()
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
 	else {
+		if(cfg->video.windowMaximized) {
+			ShowWindow(mMainWindow, SW_SHOWMAXIMIZED);
+		}
 		InvalidateRect(mMainWindow, NULL, FALSE);
 		UpdateWindow(mMainWindow);
 		SetFocus(mMainWindow);
@@ -2460,7 +2464,18 @@ void MR_GameApp::EnterDesktopFullscreen()
 	mWindowedStyle = GetWindowLong(mMainWindow, GWL_STYLE);
 	mWindowedExStyle = GetWindowLong(mMainWindow, GWL_EXSTYLE);
 	mWindowedMenu = GetMenu(mMainWindow);
-	GetWindowRect(mMainWindow, &mWindowedRect);
+	WINDOWPLACEMENT windowedPlacement;
+	memset(&windowedPlacement, 0, sizeof(windowedPlacement));
+	windowedPlacement.length = sizeof(windowedPlacement);
+	if(GetWindowPlacement(mMainWindow, &windowedPlacement)) {
+		mWindowedShowCmd = (windowedPlacement.showCmd == SW_SHOWMAXIMIZED) ?
+			SW_SHOWMAXIMIZED : SW_SHOWNORMAL;
+		mWindowedRect = windowedPlacement.rcNormalPosition;
+	}
+	else {
+		mWindowedShowCmd = IsZoomed(mMainWindow) ? SW_SHOWMAXIMIZED : SW_SHOWNORMAL;
+		GetWindowRect(mMainWindow, &mWindowedRect);
+	}
 
 	SetMenu(mMainWindow, NULL);
 	// Use WS_BORDER (not WS_POPUP) so the OpenGL ICD does not classify
@@ -2514,16 +2529,24 @@ void MR_GameApp::ExitDesktopFullscreen()
 	placement.length = sizeof(placement);
 	if(GetWindowPlacement(mMainWindow, &placement)) {
 		placement.flags = 0;
-		placement.showCmd = SW_SHOWNORMAL;
+		placement.showCmd = mWindowedShowCmd;
 		placement.rcNormalPosition = mWindowedRect;
 		SetWindowPlacement(mMainWindow, &placement);
 	}
 
-	SetWindowPos(mMainWindow, HWND_NOTOPMOST,
-		mWindowedRect.left, mWindowedRect.top,
-		mWindowedRect.right - mWindowedRect.left,
-		mWindowedRect.bottom - mWindowedRect.top,
-		SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+	if(mWindowedShowCmd == SW_SHOWMAXIMIZED) {
+		SetWindowPos(mMainWindow, HWND_NOTOPMOST,
+			0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+		ShowWindow(mMainWindow, SW_SHOWMAXIMIZED);
+	}
+	else {
+		SetWindowPos(mMainWindow, HWND_NOTOPMOST,
+			mWindowedRect.left, mWindowedRect.top,
+			mWindowedRect.right - mWindowedRect.left,
+			mWindowedRect.bottom - mWindowedRect.top,
+			SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+	}
 
 	mDesktopFullscreenDevice[0] = '\0';
 	RememberAdaptiveRenderScaleForSize(
@@ -3236,11 +3259,23 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->mVideoBuffer = NULL;
 
 			RECT rect;
+			BOOL windowMaximized = FALSE;
 			if(This->mDesktopFullscreen) {
 				rect = This->mWindowedRect;
+				windowMaximized = (This->mWindowedShowCmd == SW_SHOWMAXIMIZED);
 			}
 			else {
-				GetWindowRect(This->mMainWindow, &rect);
+				WINDOWPLACEMENT placement;
+				memset(&placement, 0, sizeof(placement));
+				placement.length = sizeof(placement);
+				if(GetWindowPlacement(This->mMainWindow, &placement)) {
+					windowMaximized = (placement.showCmd == SW_SHOWMAXIMIZED);
+					rect = placement.rcNormalPosition;
+				}
+				else {
+					windowMaximized = IsZoomed(This->mMainWindow);
+					GetWindowRect(This->mMainWindow, &rect);
+				}
 			}
 
 			MR_Config *cfg = MR_Config::GetInstance();
@@ -3263,6 +3298,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			cfg->video.windowPosY = rect.top;
 			cfg->video.windowSizeX = rect.right - rect.left;
 			cfg->video.windowSizeY = rect.bottom - rect.top;
+			cfg->video.windowMaximized = (windowMaximized != FALSE);
 
 			cfg->Save();
 

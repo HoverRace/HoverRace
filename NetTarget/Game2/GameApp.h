@@ -90,6 +90,7 @@ class MR_GameApp
 		RECT mWindowedRect;
 		LONG mWindowedStyle;
 		LONG mWindowedExStyle;
+		UINT mWindowedShowCmd;
 		int mAdaptiveRenderScalePercent;
 		int mAppliedRenderScalePercent;
 		int mAdaptiveRenderScaleMaxPercent;
