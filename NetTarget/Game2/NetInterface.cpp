@@ -730,6 +730,9 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
 		summary.erase(craftsPos);
 	}
 
+	MR_GameRuleSettings lRuleSettings;
+	MR_ParseGameRuleSummary(summary, lRuleSettings);
+
 	if(summary.length() > minesOn.length() &&
 		summary.compare(summary.length() - minesOn.length(), minesOn.length(), minesOn) == 0)
 	{
@@ -766,7 +769,9 @@ static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
 		summary.erase(summary.length() - noWeapons.length());
 	}
 
-	powerupsText = MR_FormatPowerupDisplay(allowWeapons, allowCans, allowMines).c_str();
+	powerupsText = MR_GetGameRuleDisplayName(lRuleSettings.mModeId);
+	powerupsText += " / ";
+	powerupsText += MR_FormatPowerupDisplay(allowWeapons, allowCans, allowMines).c_str();
 
 	lapsPos = summary.rfind(" laps");
 	if(lapsPos == std::string::npos) {
@@ -919,6 +924,7 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mHasGameMines = FALSE;
 	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
 	mHasGameCrafts = FALSE;
+	mGameRuleSettings = MR_GameRuleSettings();
 
 	mAllPreLoguedRecv = FALSE;
 
@@ -1080,6 +1086,9 @@ void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 	mHasGameCans = FALSE;
 	mAllowMines = FALSE;
 	mHasGameMines = FALSE;
+	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
+	mHasGameCrafts = FALSE;
+	mGameRuleSettings = MR_GameRuleSettings();
 
 	sSteamID = CSteamID();
 	sBuffer = NULL;
@@ -1347,7 +1356,7 @@ const char *MR_NetworkInterface::GetPlayerName() const
 void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap,
 	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
 	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
-	unsigned pAllowedCraftMask)
+	unsigned pAllowedCraftMask, const MR_GameRuleSettings *pGameRuleSettings)
 {
 	mTrackName = (pTrackName != NULL) ? pTrackName : "";
 	mNbLap = pNbLap;
@@ -1362,6 +1371,9 @@ void MR_NetworkInterface::SetGameDetails(const char *pTrackName, int pNbLap,
 	mAllowedCraftMask = pHasCrafts ?
 		MR_NormalizeAllowedCraftMask(pAllowedCraftMask) :
 		MR_GetDefaultAllowedCraftMask();
+	mGameRuleSettings = (pGameRuleSettings != NULL) ? *pGameRuleSettings :
+		MR_GameRuleSettings();
+	MR_NormalizeGameRuleSettings(mGameRuleSettings);
 }
 
 /**
@@ -1383,7 +1395,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 	return MasterConnect(pWindow, pGameName, pPromptForPort, pDefaultPort,
 		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
 		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
-		FALSE, MR_GetDefaultAllowedCraftMask());
+		FALSE, MR_GetDefaultAllowedCraftMask(), MR_GameRuleSettings());
 }
 
 BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
@@ -1393,6 +1405,20 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
 	unsigned pAllowedCraftMask)
 {
+	return MasterConnect(pWindow, pGameName, pPromptForPort, pDefaultPort,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		pHasCrafts, pAllowedCraftMask, MR_GameRuleSettings());
+}
+
+BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings)
+{
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
 
@@ -1401,7 +1427,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 	mGameName = pGameName;
 	SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
 		pHasCans, pAllowCans, pHasMines, pAllowMines, pHasCrafts,
-		pAllowedCraftMask);
+		pAllowedCraftMask, &pGameRuleSettings);
 	mServerMode = TRUE;
 	mId = 0; // we are client 0 (the host)
 
@@ -1553,7 +1579,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
 	return SlaveConnect(pWindow, pServerIP, pDefaultPort, pSteamID, pGameName,
 		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
 		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
-		FALSE, MR_GetDefaultAllowedCraftMask());
+		FALSE, MR_GetDefaultAllowedCraftMask(), MR_GameRuleSettings());
 }
 
 BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
@@ -1562,6 +1588,20 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
 	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
 	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
 	unsigned pAllowedCraftMask)
+{
+	return SlaveConnect(pWindow, pServerIP, pDefaultPort, pSteamID, pGameName,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		pHasCrafts, pAllowedCraftMask, MR_GameRuleSettings());
+}
+
+BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
+	unsigned pDefaultPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings)
 {
 	ASSERT(!mServerMode);
 
@@ -1577,7 +1617,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP,
 	{
 		SetGameDetails(pTrackName, pNbLap, pHasWeapons, pAllowWeapons,
 			pHasCans, pAllowCans, pHasMines, pAllowMines, pHasCrafts,
-			pAllowedCraftMask);
+			pAllowedCraftMask, &pGameRuleSettings);
 	}
 
 	if(pServerIP != NULL) {
@@ -1944,10 +1984,14 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 								CString lPowerupsText;
 								CString lCraftsText;
 
-								if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName,
-									lLapText, lPowerupsText, lCraftsText))
-								{
-									mActiveInterface->mTrackName = lTrackName;
+				if(ParseTcpGameSummary(mActiveInterface->mGameName, lTrackName,
+					lLapText, lPowerupsText, lCraftsText))
+				{
+					std::string lSummary((const char *) mActiveInterface->mGameName);
+
+					MR_ParseGameRuleSummary(lSummary,
+						mActiveInterface->mGameRuleSettings);
+					mActiveInterface->mTrackName = lTrackName;
 									if(!lLapText.IsEmpty()) {
 										mActiveInterface->mNbLap = atoi((const char *) lLapText);
 										mActiveInterface->mHasGameLaps = TRUE;
@@ -2173,7 +2217,10 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				if(mActiveInterface->mHasGameWeapons || mActiveInterface->mHasGameCans ||
 					mActiveInterface->mHasGameMines)
 				{
-					gsTcpPowerupsText = MR_FormatPowerupDisplay(
+					gsTcpPowerupsText = MR_GetGameRuleDisplayName(
+						mActiveInterface->mGameRuleSettings.mModeId);
+					gsTcpPowerupsText += " / ";
+					gsTcpPowerupsText += MR_FormatPowerupDisplay(
 						mActiveInterface->mHasGameWeapons && (mActiveInterface->mAllowWeapons != FALSE),
 						mActiveInterface->mHasGameCans && (mActiveInterface->mAllowCans != FALSE),
 						mActiveInterface->mHasGameMines && (mActiveInterface->mAllowMines != FALSE)).c_str();

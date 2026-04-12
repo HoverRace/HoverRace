@@ -28,6 +28,7 @@
 #include "../MainCharacter/MainCharacter.h"
 #include "../VideoServices/Sprite.h"
 #include "../../include/LocalPlayer.h"
+#include "GameRules.h"
 
 #define MR_CHAT_MESSAGE_STACK   12
 
@@ -50,6 +51,11 @@ class MR_ClientSession
 		MR_MainCharacter *mMainCharacter2;
 		MR_MainCharacter *mMainCharacter3;
 		MR_MainCharacter *mMainCharacter4;
+		MR_GameRuleSettings mGameRuleSettings;
+		MR_GameRuleRuntime *mGameRuleRuntime;
+		BOOL mRuleBasedMatchFinished;
+		int mLocalHitByOthers[MR_MAX_LOCAL_PLAYER];
+		int mLocalGoodShots[MR_MAX_LOCAL_PLAYER];
 
 		MR_UInt8 *mBackImage;
 
@@ -69,6 +75,16 @@ class MR_ClientSession
 
 		void ReadLevelAttrib(MR_RecordFile * pFile, MR_VideoBuffer * pVideo);
 		void ApplyGameOptions();
+		void ResetRuleRuntime();
+		void ResetLocalHitStats();
+		void DisableAllWeapons();
+		void DestroyMissiles();
+		virtual BOOL ShouldProcessLocalHitQueues() const;
+		int GetLocalPlayerIndexByHoverId(int pHoverId) const;
+		void NotifyRuleCheckpoint(int pHoverId, int pCheckpointIndex);
+		void NotifyRuleLapComplete(int pHoverId, int pLapNumber);
+		void NotifyRuleHit(int pVictimHoverId, int pSourceHoverId,
+			int pElementId);
 	public:
 		// Creation and destruction
 		MR_ClientSession();
@@ -81,6 +97,7 @@ class MR_ClientSession
 		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap,
 			BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
 			unsigned pAllowedCraftMask,
+			const MR_GameRuleSettings &pGameRuleSettings,
 			MR_VideoBuffer * pVideo);
 
 		BOOL CreateMainCharacter(int pPlayerIndex);
@@ -95,6 +112,26 @@ class MR_ClientSession
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
 		void SetControlState(const int *pStates, int pStateCount);
+		const MR_GameRuleSettings &GetGameRuleSettings() const;
+		BOOL UsesHitResults() const;
+		virtual void SetPlayerCraftCollision(int pHoverId, BOOL pEnabled);
+		virtual void SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled);
+		virtual void SetPlayerRenderOpacity(int pHoverId, float pOpacity);
+		virtual void SetLapCount(int pNbLap);
+		virtual BOOL IsLocalHoverId(int pHoverId) const;
+		void EndRuleBasedMatch();
+		BOOL IsRuleBasedMatchFinished() const;
+		BOOL GetGameRulePlayerState(int pHoverId,
+			MR_GameRulePlayerState &pState) const;
+		virtual const MR_MainCharacter *FindPlayerByHoverId(int pHoverId) const;
+		float GetRemotePlayerOpacityForView(
+			const MR_MainCharacter *pViewingCharacter,
+			const MR_MainCharacter *pTargetCharacter) const;
+		BOOL IsStandardGameRule() const;
+		int GetHitRank(int pHoverId) const;
+		BOOL FormatRuleHudText(const MR_MainCharacter *pViewingCharacter,
+			MR_SimulationTime pTime, char *pMainBuffer, int pMainBufferLen,
+			char *pSecondaryBuffer, int pSecondaryBufferLen) const;
 
 		const MR_UInt8 *GetBackImage() const;
 

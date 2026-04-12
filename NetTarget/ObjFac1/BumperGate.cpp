@@ -26,6 +26,7 @@
 #include "../ObjFacTools/ObjectFactoryData.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
+#include "../MainCharacter/MainCharacter.h"
 
 #define NB_STATE 10
 
@@ -163,15 +164,34 @@ void MR_BumperGate::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
 
 	if(lPhysCollision != NULL) {
-		for(int lHoverSlot = 0; lHoverSlot < eStateCount; lHoverSlot++) {
-			if(mFrameByHover[lHoverSlot] >= mLastState) {
-				mTimeSinceLastCollision[lHoverSlot] = 0;
-			}
-			else {
-				mTimeSinceLastCollision[lHoverSlot] = 1500 - 1500 * mFrameByHover[lHoverSlot] / mLastState;
-			}
-			UpdateFrameForSlot(lHoverSlot);
+		const int lSourceHoverId = mActiveHoverSlot;
+
+		if(mFrameByHover[lSourceHoverId] >= mLastState) {
+			mTimeSinceLastCollision[lSourceHoverId] = 0;
 		}
+		else {
+			mTimeSinceLastCollision[lSourceHoverId] =
+				1500 - 1500 * mFrameByHover[lSourceHoverId] / mLastState;
+		}
+		UpdateFrameForSlot(lSourceHoverId);
+
+		if(MR_MainCharacter::IsHoverColumnInteractionTracked(lSourceHoverId) &&
+			MR_MainCharacter::IsHoverColumnInteractionEnabled(lSourceHoverId))
+		{
+			for(int lHoverId = 0; lHoverId < MR_MAX_LOCAL_PLAYER; lHoverId++) {
+				if((lHoverId == lSourceHoverId) ||
+					!MR_MainCharacter::IsHoverColumnInteractionTracked(lHoverId) ||
+					!MR_MainCharacter::IsHoverColumnInteractionEnabled(lHoverId))
+				{
+					continue;
+				}
+
+				mTimeSinceLastCollision[lHoverId] =
+					mTimeSinceLastCollision[lSourceHoverId];
+				UpdateFrameForSlot(lHoverId);
+			}
+		}
+
 		mCurrentFrame = mFrameByHover[mActiveHoverSlot];
 	}
 }

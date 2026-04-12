@@ -32,6 +32,7 @@ msbuild NetTarget.sln /p:Configuration=Debug /p:Platform=Win32
 ```
 
 - For changes centered on the main game executable, prefer validating `Game2` in `Release|Win32`. Kill any running `HoverRace.exe` before building to avoid link or manifest embedding locks:
+  - After a successful `Game2` `Release|Win32` build, launch `D:\code\HoverRace\NetTarget\Release\HoverRace.exe` unless the user asks not to.
 
 ```powershell
 Get-Process HoverRace -ErrorAction SilentlyContinue | Stop-Process

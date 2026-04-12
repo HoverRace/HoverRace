@@ -250,6 +250,13 @@
 #define IDC_RESET_PLAYER8               1175
 #define IDC_RESET_PLAYER9               1176
 #define IDC_RESET_PLAYER10              1177
+#define IDC_RULE_MODE                   1178
+#define IDC_RULE_OPACITY                1179
+#define IDC_RULE_WAR_TARGET             1180
+#define IDC_RULE_WAR_WINBY              1181
+#define IDC_RULE_NEAR_OPACITY           1182
+#define IDC_RULE_FADE_DISTANCE          1183
+#define IDC_RULE_NEAR_DISTANCE          1184
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -534,7 +541,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        165
 #define _APS_NEXT_COMMAND_VALUE         40245
-#define _APS_NEXT_CONTROL_VALUE         1178
+#define _APS_NEXT_CONTROL_VALUE         1185
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

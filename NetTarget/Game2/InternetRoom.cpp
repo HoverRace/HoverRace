@@ -66,6 +66,24 @@ static bool IsInternetMeetingRoomWindow(HWND wnd)
 		(GetDlgItem(wnd, IDC_USER_LIST) != NULL);
 }
 
+static std::string BuildGameSummary(const std::string &trackName, int nbLap,
+	BOOL allowWeapons, BOOL allowCans, BOOL allowMines,
+	unsigned allowedCraftMask, const MR_GameRuleSettings &gameRuleSettings)
+{
+	CString lSummary;
+	std::string lAllowedCrafts = MR_FormatAllowedCraftMask(allowedCraftMask);
+	std::string lRuleSummary = MR_FormatGameRuleSummary(gameRuleSettings);
+
+	lSummary.Format("%s %d %s %s cans %s mines %s%s crafts %s",
+		trackName.c_str(), nbLap, nbLap > 1 ? "laps" : "lap",
+		allowWeapons ? "with weapons" : "no weapons",
+		allowCans ? "on" : "off",
+		allowMines ? "on" : "off",
+		lRuleSummary.c_str(), lAllowedCrafts.c_str());
+
+	return (const char *) lSummary;
+}
+
 static void PositionDialogToRightOfOwner(HWND dialog, int gap = 3)
 {
 	const int MIN_SIDE_BY_SIDE_WIDTH = 1200;
@@ -495,12 +513,20 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							mGameList[lEntry].mAllowMines = TRUE;
 							mGameList[lEntry].mAllowedCraftMask =
 								MR_GetDefaultAllowedCraftMask();
+							mGameList[lEntry].mGameRuleSettings =
+								MR_GameRuleSettings();
 							mGameList[lEntry].mAllowedCrafts =
 								MR_FormatAllowedCraftDisplayMask(
 									mGameList[lEntry].mAllowedCraftMask).c_str();
 							mGameList[lEntry].mPort = (unsigned) -1;
 							mGameList[lEntry].mRaceHash = "";
 							mGameList[lEntry].mName = GetLine(lLinePtr);
+							{
+								std::string lSummary((const char *)
+									mGameList[lEntry].mName);
+								MR_ParseGameRuleSummary(lSummary,
+									mGameList[lEntry].mGameRuleSettings);
+							}
 
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mTrack = GetLine(lLinePtr);
@@ -947,7 +973,10 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 
 		SetDlgItemText(pWindow, IDC_TRACK_NAME, mGameList[lGameIndex].mTrack);
 		SetDlgItemInt(pWindow, IDC_NB_LAP, mGameList[lGameIndex].mNbLap, FALSE);
-		const std::string lPowerups = MR_FormatPowerupDisplay(
+		std::string lPowerups = MR_GetGameRuleDisplayName(
+			mGameList[lGameIndex].mGameRuleSettings.mModeId);
+		lPowerups += " / ";
+		lPowerups += MR_FormatPowerupDisplay(
 			mGameList[lGameIndex].mAllowWeapons != FALSE,
 			mGameList[lGameIndex].mAllowCans != FALSE,
 			mGameList[lGameIndex].mAllowMines != FALSE);
@@ -1891,6 +1920,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 										mThis->mGameList[lFocus].mAllowCans,
 										mThis->mGameList[lFocus].mAllowMines,
 										mThis->mGameList[lFocus].mAllowedCraftMask,
+										mThis->mGameList[lFocus].mGameRuleSettings,
 										mThis->mVideoBuffer);
 									TRACE("LoadNew\n");
 								}
@@ -1915,7 +1945,8 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 										TRUE,
 										mThis->mGameList[lFocus].mAllowMines,
 										TRUE,
-										mThis->mGameList[lFocus].mAllowedCraftMask);
+										mThis->mGameList[lFocus].mAllowedCraftMask,
+										mThis->mGameList[lFocus].mGameRuleSettings);
 
 									TRACE("ConnectToServer 2\n");
 								}
@@ -1944,47 +1975,39 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						bool lAllowCans;
 						bool lAllowMines;
 						unsigned lAllowedCraftMask;
+						MR_GameRuleSettings lGameRuleSettings;
 
 						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap,
 							lAllowWeapons, lAllowCans, lAllowMines,
-							lAllowedCraftMask);
+							lAllowedCraftMask, lGameRuleSettings);
 
 						if(lSuccess) {
 							// Load the track
 							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
 							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(),
 								lTrackFile, lNbLap, lAllowWeapons, lAllowCans,
-								lAllowMines, lAllowedCraftMask,
+								lAllowMines, lAllowedCraftMask, lGameRuleSettings,
 								mThis->mVideoBuffer) != FALSE);
 						}
 
 						if(lSuccess) {
+							std::string lGameSummary = BuildGameSummary(lCurrentTrack,
+								lNbLap, lAllowWeapons, lAllowCans, lAllowMines,
+								lAllowedCraftMask, lGameRuleSettings);
 							// Register to the InternetServer
-							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(),
+							lSuccess = (mThis->AddGameOp(pWindow, lGameSummary.c_str(),
 								lCurrentTrack.c_str(), lNbLap, lAllowWeapons,
 								lAllowCans, lAllowMines, lAllowedCraftMask,
 								MR_Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
-								CString lTrackName;
-								std::string lAllowedCrafts =
-									MR_FormatAllowedCraftMask(lAllowedCraftMask);
-
-								lTrackName.Format("%s %d %s %s cans %s mines %s crafts %s",
-									lCurrentTrack.c_str(), lNbLap,
-									lNbLap > 1 ? "laps" : "lap",
-									lAllowWeapons ? "with weapons" : "no weapons",
-									lAllowCans ? "on" : "off",
-									lAllowMines ? "on" : "off",
-									lAllowedCrafts.c_str());
-
-								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName,
+								lSuccess = (mThis->mSession->WaitConnections(pWindow, lGameSummary.c_str(),
 									FALSE, MR_Config::GetInstance()->net.tcpServPort,
 									&mThis->mModelessDlg, MRM_DLG_END_ADD,
 									lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
 									TRUE, lAllowCans, TRUE, lAllowMines, TRUE,
-									lAllowedCraftMask) != FALSE);
+									lAllowedCraftMask, lGameRuleSettings) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game

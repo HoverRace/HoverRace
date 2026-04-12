@@ -24,6 +24,7 @@
 #include <math.h>
 
 #include "MainCharacter.h"
+#include "../../include/LocalPlayer.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/FreeElementMovingHelper.h"
 #include "../Util/FuzzyLogic.h"
@@ -57,6 +58,13 @@ class MR_MainCharacterState:private MR_BitPack
 	public:
 
 };
+
+namespace {
+	BOOL gsSharedCraftCollisionEnabled[MR_MAX_LOCAL_PLAYER] = { TRUE };
+	BOOL gsSharedCraftCollisionTracked[MR_MAX_LOCAL_PLAYER] = { FALSE };
+	BOOL gsSharedColumnInteractionEnabled[MR_MAX_LOCAL_PLAYER] = { TRUE };
+	BOOL gsSharedColumnInteractionTracked[MR_MAX_LOCAL_PLAYER] = { FALSE };
+}
 
 // Local constants
 #define TIME_SLICE                     5
@@ -243,6 +251,8 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mAllowCans = TRUE;
 	mAllowMines = TRUE;
 	mAllowedCraftMask = GetDefaultAllowedCraftMask();
+	mCraftCollisionEnabled = TRUE;
+	mColumnInteractionEnabled = TRUE;
 
 	mXSpeed = 0;
 	mYSpeed = 0;
@@ -283,6 +293,12 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 
 MR_MainCharacter::~MR_MainCharacter()
 {
+	if((mHoverId >= 0) && (mHoverId < MR_MAX_LOCAL_PLAYER)) {
+		gsSharedCraftCollisionTracked[mHoverId] = FALSE;
+		gsSharedCraftCollisionEnabled[mHoverId] = TRUE;
+		gsSharedColumnInteractionTracked[mHoverId] = FALSE;
+		gsSharedColumnInteractionEnabled[mHoverId] = TRUE;
+	}
 	delete mRenderer;
 }
 
@@ -298,8 +314,22 @@ void MR_MainCharacter::SetAsSlave()
 
 void MR_MainCharacter::SetHoverId(int pId)
 {
+	if((mHoverId >= 0) && (mHoverId < MR_MAX_LOCAL_PLAYER)) {
+		gsSharedCraftCollisionTracked[mHoverId] = FALSE;
+		gsSharedCraftCollisionEnabled[mHoverId] = TRUE;
+		gsSharedColumnInteractionTracked[mHoverId] = FALSE;
+		gsSharedColumnInteractionEnabled[mHoverId] = TRUE;
+	}
+
 	mHoverId = pId;
 	mContactEffect.mHoverId = pId;
+
+	if((mHoverId >= 0) && (mHoverId < MR_MAX_LOCAL_PLAYER)) {
+		gsSharedCraftCollisionTracked[mHoverId] = TRUE;
+		gsSharedCraftCollisionEnabled[mHoverId] = mCraftCollisionEnabled;
+		gsSharedColumnInteractionTracked[mHoverId] = TRUE;
+		gsSharedColumnInteractionEnabled[mHoverId] = mColumnInteractionEnabled;
+	}
 }
 
 void MR_MainCharacter::SetHoverModel(int pModel)
@@ -330,6 +360,77 @@ int MR_MainCharacter::GetHoverId() const
 		MR_ObjectFromFactoryId lId = { 1, 100 };
 		mRenderer = (MR_MainCharacterRenderer *) MR_DllObjectFactory::CreateObject(lId);
 	}
+}
+
+void MR_MainCharacter::SetCraftCollisionEnabled(BOOL pEnabled)
+{
+	mCraftCollisionEnabled = pEnabled;
+	if((mHoverId >= 0) && (mHoverId < MR_MAX_LOCAL_PLAYER)) {
+		gsSharedCraftCollisionTracked[mHoverId] = TRUE;
+		gsSharedCraftCollisionEnabled[mHoverId] = pEnabled;
+	}
+}
+
+BOOL MR_MainCharacter::GetCraftCollisionEnabled() const
+{
+	return mCraftCollisionEnabled;
+}
+
+void MR_MainCharacter::SetColumnInteractionEnabled(BOOL pEnabled)
+{
+	mColumnInteractionEnabled = pEnabled;
+	if((mHoverId >= 0) && (mHoverId < MR_MAX_LOCAL_PLAYER)) {
+		gsSharedColumnInteractionTracked[mHoverId] = TRUE;
+		gsSharedColumnInteractionEnabled[mHoverId] = pEnabled;
+	}
+}
+
+BOOL MR_MainCharacter::GetColumnInteractionEnabled() const
+{
+	return mColumnInteractionEnabled;
+}
+
+BOOL MR_MainCharacter::IsHoverCraftCollisionEnabled(int pHoverId)
+{
+	if((pHoverId < 0) || (pHoverId >= MR_MAX_LOCAL_PLAYER) ||
+		!gsSharedCraftCollisionTracked[pHoverId])
+	{
+		return TRUE;
+	}
+
+	return gsSharedCraftCollisionEnabled[pHoverId];
+}
+
+BOOL MR_MainCharacter::IsHoverCraftCollisionTracked(int pHoverId)
+{
+	return (pHoverId >= 0) && (pHoverId < MR_MAX_LOCAL_PLAYER) &&
+		gsSharedCraftCollisionTracked[pHoverId];
+}
+
+BOOL MR_MainCharacter::IsHoverColumnInteractionEnabled(int pHoverId)
+{
+	if((pHoverId < 0) || (pHoverId >= MR_MAX_LOCAL_PLAYER) ||
+		!gsSharedColumnInteractionTracked[pHoverId])
+	{
+		return TRUE;
+	}
+
+	return gsSharedColumnInteractionEnabled[pHoverId];
+}
+
+BOOL MR_MainCharacter::IsHoverColumnInteractionTracked(int pHoverId)
+{
+	return (pHoverId >= 0) && (pHoverId < MR_MAX_LOCAL_PLAYER) &&
+		gsSharedColumnInteractionTracked[pHoverId];
+}
+
+void MR_MainCharacter::SetWeaponAvailability(BOOL pAllowWeapons,
+	BOOL pAllowCans, BOOL pAllowMines)
+{
+	mAllowWeapons = pAllowWeapons;
+	mAllowCans = pAllowCans;
+	mAllowMines = pAllowMines;
+	NormalizeCurrentWeapon();
 }
 
 void MR_MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
@@ -1003,6 +1104,7 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 						mCheckPoint1 = TRUE;
 						mCheckPoint2 = FALSE;
 						mLastFirstSplitDuration = pTime - mLastLapCompletion;
+						mRaceEvents.Add(RaceEvent(RaceEvent::eCheckpoint, 1));
 					}
 					break;
 				case MR_CheckPoint::eCheck2:
@@ -1010,6 +1112,7 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 					{
 						mCheckPoint2 = TRUE;
 						mLastSecondSplitDuration = pTime - mLastLapCompletion;
+						mRaceEvents.Add(RaceEvent(RaceEvent::eCheckpoint, 2));
 					}
 					break;
 				case MR_CheckPoint::eFinishLine:
@@ -1027,6 +1130,8 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 							mBestFirstSplitDuration = mLastFirstSplitDuration;
 							mBestSecondSplitDuration = mLastSecondSplitDuration;
 						}
+						mRaceEvents.Add(RaceEvent(RaceEvent::eLapComplete,
+							mLapCount));
 
 						// Just to put them out of range
 						mLastFirstSplitDuration = -10000;
@@ -1058,11 +1163,11 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 		return &mContactEffectList;
 	}
 
-	const MR_ShapeInterface *MR_MainCharacter::GetReceivingContactEffectShape()
-	{
-		mCollisionShape.mPosition = mPosition;
-		return &mCollisionShape;
-	}
+const MR_ShapeInterface *MR_MainCharacter::GetReceivingContactEffectShape()
+{
+	mCollisionShape.mPosition = mPosition;
+	return &mCollisionShape;
+}
 
 	const MR_ShapeInterface *MR_MainCharacter::GetGivingContactEffectShape()
 	{
@@ -1229,6 +1334,18 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	{
 		HitEntry lReturnValue = mLastHits.GetHead();
 		mLastHits.Remove();
+		return lReturnValue;
+	}
+
+	int MR_MainCharacter::RaceEventQueueCount() const
+	{
+		return mRaceEvents.Used();
+	}
+
+	MR_MainCharacter::RaceEvent MR_MainCharacter::GetRaceEvent()
+	{
+		RaceEvent lReturnValue = mRaceEvents.GetHead();
+		mRaceEvents.Remove();
 		return lReturnValue;
 	}
 

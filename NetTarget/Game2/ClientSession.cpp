@@ -40,6 +40,9 @@ MR_ClientSession::MR_ClientSession()
 	mAllowCans = TRUE;
 	mAllowMines = TRUE;
 	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
+	mGameRuleRuntime = NULL;
+	mRuleBasedMatchFinished = FALSE;
+	ResetLocalHitStats();
 
 	InitializeCriticalSection(&mChatMutex);
 }
@@ -54,6 +57,7 @@ void MR_ClientSession::SyncLegacyMainCharacterPointers()
 
 MR_ClientSession::~MR_ClientSession()
 {
+	delete mGameRuleRuntime;
 	delete[]mBackImage;
 	delete mMap;
 
@@ -62,7 +66,40 @@ MR_ClientSession::~MR_ClientSession()
 
 BOOL MR_ClientSession::Process(int pSpeedFactor)
 {
-	return mSession.Simulate();
+	BOOL lReturnValue = mSession.Simulate();
+
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		MR_MainCharacter *lPlayer = mMainCharacters[i];
+
+		if(lPlayer == NULL) {
+			continue;
+		}
+
+		while(lPlayer->RaceEventQueueCount() > 0) {
+			MR_MainCharacter::RaceEvent lEvent = lPlayer->GetRaceEvent();
+
+			if(lEvent.mType == MR_MainCharacter::RaceEvent::eCheckpoint) {
+				NotifyRuleCheckpoint(lPlayer->GetHoverId(), lEvent.mValue);
+			}
+			else if(lEvent.mType == MR_MainCharacter::RaceEvent::eLapComplete) {
+				NotifyRuleLapComplete(lPlayer->GetHoverId(), lEvent.mValue);
+			}
+		}
+
+		if(ShouldProcessLocalHitQueues()) {
+			while(lPlayer->HitQueueCount() > 0) {
+				MR_MainCharacter::HitEntry lHit = lPlayer->GetHitQueue();
+				NotifyRuleHit(lPlayer->GetHoverId(), lHit.mHoverId,
+					lHit.mElementId);
+			}
+		}
+	}
+
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnProcessTick(*this);
+	}
+
+	return lReturnValue;
 }
 
 void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuffer * pVideo)
@@ -127,6 +164,7 @@ void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuff
 BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile,
 	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
 	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings,
 	MR_VideoBuffer * pVideo)
 {
 	BOOL lReturnValue;
@@ -135,11 +173,23 @@ BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile,
 	mAllowCans = pAllowCans;
 	mAllowMines = pAllowMines;
 	mAllowedCraftMask = MR_NormalizeAllowedCraftMask(pAllowedCraftMask);
+	mGameRuleSettings = pGameRuleSettings;
+	MR_NormalizeGameRuleSettings(mGameRuleSettings);
+	ResetRuleRuntime();
+	mGameRuleRuntime = MR_GameRuleRuntime::Create(mGameRuleSettings);
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->ApplySessionOptions(mAllowWeapons, mAllowCans, mAllowMines);
+	}
+	mRuleBasedMatchFinished = FALSE;
+	ResetLocalHitStats();
 	lReturnValue = mSession.LoadNew(pTitle, pMazeFile);
 
 	if(lReturnValue) {
 		ReadLevelAttrib(pMazeFile, pVideo);
 		ApplyGameOptions();
+		if(mGameRuleRuntime != NULL) {
+			mGameRuleRuntime->OnInit(*this);
+		}
 	}
 
 	return lReturnValue;
@@ -182,6 +232,13 @@ void MR_ClientSession::ApplyGameOptions()
 	}
 }
 
+void MR_ClientSession::SetLapCount(int pNbLap)
+{
+	if(pNbLap >= 1) {
+		mNbLap = pNbLap;
+	}
+}
+
 const MR_UInt8 *MR_ClientSession::GetBackImage() const
 {
 	return mBackImage;
@@ -207,9 +264,19 @@ BOOL MR_ClientSession::CreateMainCharacter(int pPlayerIndex)
 	mMainCharacters[pPlayerIndex] = MR_MainCharacter::New(mNbLap, mAllowWeapons, mAllowCans,
 		mAllowMines, mAllowedCraftMask);
 
-	mMainCharacters[pPlayerIndex]->mRoom = lCurrentLevel->GetStartingRoom(pPlayerIndex);
-	mMainCharacters[pPlayerIndex]->mPosition = lCurrentLevel->GetStartingPos(pPlayerIndex);
-	mMainCharacters[pPlayerIndex]->SetOrientation(lCurrentLevel->GetStartingOrientation(pPlayerIndex));
+	MR_GameRuleSpawnContext lSpawnContext;
+	lSpawnContext.mHoverId = pPlayerIndex;
+	lSpawnContext.mSpawnSlot = pPlayerIndex;
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnPreSpawn(*this, lSpawnContext);
+	}
+
+	mMainCharacters[pPlayerIndex]->mRoom =
+		lCurrentLevel->GetStartingRoom(lSpawnContext.mSpawnSlot);
+	mMainCharacters[pPlayerIndex]->mPosition =
+		lCurrentLevel->GetStartingPos(lSpawnContext.mSpawnSlot);
+	mMainCharacters[pPlayerIndex]->SetOrientation(
+		lCurrentLevel->GetStartingOrientation(lSpawnContext.mSpawnSlot));
 	mMainCharacters[pPlayerIndex]->SetHoverId(pPlayerIndex);
 
 	lCurrentLevel->InsertElement(mMainCharacters[pPlayerIndex],
@@ -238,6 +305,175 @@ MR_MainCharacter *MR_ClientSession::GetMainCharacter(int pPlayerIndex) const
 	return mMainCharacters[pPlayerIndex];
 }
 
+const MR_GameRuleSettings &MR_ClientSession::GetGameRuleSettings() const
+{
+	return mGameRuleSettings;
+}
+
+BOOL MR_ClientSession::UsesHitResults() const
+{
+	return (mGameRuleRuntime != NULL) && mGameRuleRuntime->UsesHitScoring();
+}
+
+void MR_ClientSession::SetPlayerCraftCollision(int pHoverId, BOOL pEnabled)
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			mMainCharacters[i]->SetCraftCollisionEnabled(pEnabled);
+		}
+	}
+}
+
+void MR_ClientSession::SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled)
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			mMainCharacters[i]->SetColumnInteractionEnabled(pEnabled);
+		}
+	}
+}
+
+void MR_ClientSession::SetPlayerRenderOpacity(int pHoverId, float pOpacity)
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			mMainCharacters[i]->SetRenderOpacity(pOpacity);
+		}
+	}
+}
+
+BOOL MR_ClientSession::IsLocalHoverId(int pHoverId) const
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL MR_ClientSession::GetGameRulePlayerState(int pHoverId,
+	MR_GameRulePlayerState &pState) const
+{
+	const MR_MainCharacter *lPlayer = FindPlayerByHoverId(pHoverId);
+	const int lPlayerIndex = GetLocalPlayerIndexByHoverId(pHoverId);
+
+	pState = MR_GameRulePlayerState();
+	pState.mHoverId = pHoverId;
+
+	if(lPlayer == NULL) {
+		return FALSE;
+	}
+
+	pState.mLapNumber = lPlayer->GetLap();
+	pState.mCheckpointIndex = lPlayer->GetCurrentCheckpoint();
+	pState.mHasFinished = lPlayer->HasFinish();
+	pState.mCraftCollisionEnabled = lPlayer->GetCraftCollisionEnabled();
+	pState.mColumnInteractionEnabled = lPlayer->GetColumnInteractionEnabled();
+	pState.mBaseOpacity = lPlayer->GetRenderOpacity();
+
+	if(lPlayerIndex >= 0) {
+		pState.mHitOtherCount = mLocalGoodShots[lPlayerIndex];
+		pState.mHitByOtherCount = mLocalHitByOthers[lPlayerIndex];
+	}
+
+	return TRUE;
+}
+
+const MR_MainCharacter *MR_ClientSession::FindPlayerByHoverId(int pHoverId) const
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			return mMainCharacters[i];
+		}
+	}
+
+	return NULL;
+}
+
+float MR_ClientSession::GetRemotePlayerOpacityForView(
+	const MR_MainCharacter *pViewingCharacter,
+	const MR_MainCharacter *pTargetCharacter) const
+{
+	if((pViewingCharacter == NULL) || (pTargetCharacter == NULL)) {
+		return 1.0f;
+	}
+
+	if(mGameRuleRuntime != NULL) {
+		return mGameRuleRuntime->GetRemotePlayerOpacityForView(*this,
+			pViewingCharacter, pTargetCharacter,
+			pTargetCharacter->GetRenderOpacity());
+	}
+
+	return pTargetCharacter->GetRenderOpacity();
+}
+
+BOOL MR_ClientSession::FormatRuleHudText(
+	const MR_MainCharacter *pViewingCharacter, MR_SimulationTime pTime,
+	char *pMainBuffer, int pMainBufferLen, char *pSecondaryBuffer,
+	int pSecondaryBufferLen) const
+{
+	if((pMainBuffer == NULL) || (pMainBufferLen <= 0) ||
+		(pSecondaryBuffer == NULL) || (pSecondaryBufferLen <= 0))
+	{
+		return FALSE;
+	}
+
+	pMainBuffer[0] = 0;
+	pSecondaryBuffer[0] = 0;
+
+	return (mGameRuleRuntime != NULL) &&
+		mGameRuleRuntime->FormatHudText(*this, pViewingCharacter, pTime,
+			pMainBuffer, pMainBufferLen, pSecondaryBuffer, pSecondaryBufferLen);
+}
+
+BOOL MR_ClientSession::IsStandardGameRule() const
+{
+	return (mGameRuleRuntime == NULL) || mGameRuleRuntime->IsStandardRule();
+}
+
+int MR_ClientSession::GetHitRank(int pHoverId) const
+{
+	for(int lPosition = 0; lPosition < ResultAvaillable(); lPosition++) {
+		const char *lPlayerName;
+		int lResultHoverId;
+		BOOL lConnected;
+		int lNbFor;
+		int lNbAgainst;
+
+		GetHitResult(lPosition, lPlayerName, lResultHoverId, lConnected,
+			lNbFor, lNbAgainst);
+		if(lResultHoverId == pHoverId) {
+			return lPosition + 1;
+		}
+	}
+
+	return 0;
+}
+
+void MR_ClientSession::EndRuleBasedMatch()
+{
+	mRuleBasedMatchFinished = TRUE;
+	DisableAllWeapons();
+	DestroyMissiles();
+}
+
+BOOL MR_ClientSession::IsRuleBasedMatchFinished() const
+{
+	return mRuleBasedMatchFinished;
+}
+
 void MR_ClientSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mSession.SetSimulationTime(pTime);
@@ -257,7 +493,8 @@ void MR_ClientSession::SetControlState(const int *pStates, int pStateCount)
 	const int lCount = min(pStateCount, MR_MAX_LOCAL_PLAYER);
 	for(int i = 0; i < lCount; ++i) {
 		if(mMainCharacters[i] != NULL) {
-			mMainCharacters[i]->SetControlState(pStates[i], mSession.GetSimulationTime());
+			mMainCharacters[i]->SetControlState(pStates[i],
+				mSession.GetSimulationTime());
 		}
 	}
 }
@@ -271,19 +508,127 @@ const MR_Level *MR_ClientSession::GetCurrentLevel() const
 
 int MR_ClientSession::ResultAvaillable() const
 {
-	return 0;
+	return GetNbPlayers();
 }
 
-void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &, int &, MR_SimulationTime &, MR_SimulationTime &, MR_SimulationTime &, MR_SimulationTime &) const
+void MR_ClientSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap, int &pNbSplit, MR_SimulationTime &pFinishFirstSplit, MR_SimulationTime &pFirstSplitDifference, MR_SimulationTime &pFinishSecondSplit, MR_SimulationTime &pSecondSplitDifference) const
 {
-	pPlayerName = "?";
-	ASSERT(FALSE);
+	int lSorted[MR_MAX_LOCAL_PLAYER];
+	int lSortedCount = 0;
+
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if(mMainCharacters[i] != NULL) {
+			lSorted[lSortedCount++] = i;
+		}
+	}
+
+	for(int i = 0; i < lSortedCount; ++i) {
+		for(int j = i + 1; j < lSortedCount; ++j) {
+			MR_MainCharacter *lLeft = mMainCharacters[lSorted[i]];
+			MR_MainCharacter *lRight = mMainCharacters[lSorted[j]];
+			const int lLeftLap = lLeft->HasFinish() ? -1 : lLeft->GetLap();
+			const int lRightLap = lRight->HasFinish() ? -1 : lRight->GetLap();
+			const int lLeftCheckpoint = lLeft->GetCurrentCheckpoint();
+			const int lRightCheckpoint = lRight->GetCurrentCheckpoint();
+			BOOL lSwap = FALSE;
+
+			if(((unsigned) lRightLap) > ((unsigned) lLeftLap)) {
+				lSwap = TRUE;
+			}
+			else if(lRightLap == lLeftLap) {
+				if(lRightCheckpoint > lLeftCheckpoint) {
+					lSwap = TRUE;
+				}
+				else if((lRightCheckpoint == lLeftCheckpoint) &&
+					(lRight->GetTotalTime() < lLeft->GetTotalTime()))
+				{
+					lSwap = TRUE;
+				}
+			}
+
+			if(lSwap) {
+				int lTemp = lSorted[i];
+				lSorted[i] = lSorted[j];
+				lSorted[j] = lTemp;
+			}
+		}
+	}
+
+	if((pPosition < 0) || (pPosition >= lSortedCount)) {
+		pPlayerName = "?";
+		pId = -1;
+		pConnected = FALSE;
+		pNbLap = 0;
+		pFinishTime = 0;
+		pBestLap = 0;
+		pNbSplit = 0;
+		pFinishFirstSplit = 0;
+		pFirstSplitDifference = 0;
+		pFinishSecondSplit = 0;
+		pSecondSplitDifference = 0;
+		return;
+	}
+
+	MR_MainCharacter *lPlayer = mMainCharacters[lSorted[pPosition]];
+	static char lNameBuffer[16];
+
+	sprintf(lNameBuffer, "Player %d", lPlayer->GetHoverId() + 1);
+	pPlayerName = lNameBuffer;
+	pId = lPlayer->GetHoverId();
+	pConnected = TRUE;
+	pNbLap = lPlayer->HasFinish() ? -1 : lPlayer->GetLap();
+	pFinishTime = lPlayer->GetTotalTime();
+	pBestLap = lPlayer->GetBestLapDuration();
+	pNbSplit = lPlayer->GetCurrentCheckpoint();
+	pFinishFirstSplit = lPlayer->GetFirstSplitCompletion();
+	pFirstSplitDifference = lPlayer->GetFirstSplitDifference();
+	pFinishSecondSplit = lPlayer->GetSecondSplitCompletion();
+	pSecondSplitDifference = lPlayer->GetSecondSplitDifference();
 }
 
 void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
-	pPlayerName = "?";
-	ASSERT(FALSE);
+	int lSorted[MR_MAX_LOCAL_PLAYER];
+	int lSortedCount = 0;
+
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if(mMainCharacters[i] != NULL) {
+			lSorted[lSortedCount++] = i;
+		}
+	}
+
+	for(int i = 0; i < lSortedCount; ++i) {
+		for(int j = i + 1; j < lSortedCount; ++j) {
+			const int lLeftScore =
+				mLocalGoodShots[lSorted[i]] - mLocalHitByOthers[lSorted[i]];
+			const int lRightScore =
+				mLocalGoodShots[lSorted[j]] - mLocalHitByOthers[lSorted[j]];
+			if(lRightScore > lLeftScore) {
+				int lTemp = lSorted[i];
+				lSorted[i] = lSorted[j];
+				lSorted[j] = lTemp;
+			}
+		}
+	}
+
+	if((pPosition < 0) || (pPosition >= lSortedCount)) {
+		pPlayerName = "?";
+		pId = -1;
+		pConnected = FALSE;
+		pNbHitOther = 0;
+		pNbHitHimself = 0;
+		return;
+	}
+
+	MR_MainCharacter *lPlayer = mMainCharacters[lSorted[pPosition]];
+	static char lNameBuffer[16];
+
+	sprintf(lNameBuffer, "Player %d", lPlayer->GetHoverId() + 1);
+	pPlayerName = lNameBuffer;
+	pId = lPlayer->GetHoverId();
+	pConnected = TRUE;
+	pNbHitOther = mLocalGoodShots[lSorted[pPosition]];
+	pNbHitHimself = mLocalHitByOthers[lSorted[pPosition]];
 }
 
 int MR_ClientSession::GetNbPlayers() const
@@ -394,3 +739,106 @@ void MR_ClientSession::AddMessage(const char *pMessage)
 	LeaveCriticalSection(&mChatMutex);
 
 }
+
+void MR_ClientSession::ResetRuleRuntime()
+{
+	delete mGameRuleRuntime;
+	mGameRuleRuntime = NULL;
+}
+
+void MR_ClientSession::ResetLocalHitStats()
+{
+	memset(mLocalHitByOthers, 0, sizeof(mLocalHitByOthers));
+	memset(mLocalGoodShots, 0, sizeof(mLocalGoodShots));
+}
+
+void MR_ClientSession::DisableAllWeapons()
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if(mMainCharacters[i] != NULL) {
+			mMainCharacters[i]->SetWeaponAvailability(FALSE, mAllowCans, mAllowMines);
+		}
+	}
+}
+
+void MR_ClientSession::DestroyMissiles()
+{
+	static const MR_UInt16 TRACK_OBJECT_DLL_ID = 1;
+	static const MR_UInt16 MISSILE_CLASS_ID = 150;
+	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+
+	if(lCurrentLevel == NULL) {
+		return;
+	}
+
+	for(int lRoom = MR_Level::eNonClassified; lRoom < lCurrentLevel->GetRoomCount(); lRoom++) {
+		MR_FreeElementHandle lCurrent = lCurrentLevel->GetFirstFreeElement(lRoom);
+		while(lCurrent != NULL) {
+			MR_FreeElementHandle lNext = MR_Level::GetNextFreeElement(lCurrent);
+			MR_FreeElement *lElement = MR_Level::GetFreeElement(lCurrent);
+			const MR_ObjectFromFactoryId &lTypeId = lElement->GetTypeId();
+
+			if((lTypeId.mDllId == TRACK_OBJECT_DLL_ID) &&
+				(lTypeId.mClassId == MISSILE_CLASS_ID))
+			{
+				MR_Level::DeleteElement(lCurrent);
+			}
+
+			lCurrent = lNext;
+		}
+	}
+}
+
+BOOL MR_ClientSession::ShouldProcessLocalHitQueues() const
+{
+	return TRUE;
+}
+
+int MR_ClientSession::GetLocalPlayerIndexByHoverId(int pHoverId) const
+{
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		if((mMainCharacters[i] != NULL) &&
+			(mMainCharacters[i]->GetHoverId() == pHoverId))
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void MR_ClientSession::NotifyRuleCheckpoint(int pHoverId, int pCheckpointIndex)
+{
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnCheckpoint(*this, pHoverId, pCheckpointIndex);
+	}
+}
+
+void MR_ClientSession::NotifyRuleLapComplete(int pHoverId, int pLapNumber)
+{
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnLapComplete(*this, pHoverId, pLapNumber);
+	}
+}
+
+void MR_ClientSession::NotifyRuleHit(int pVictimHoverId, int pSourceHoverId,
+	int pElementId)
+{
+	const int lVictimIndex = GetLocalPlayerIndexByHoverId(pVictimHoverId);
+	const int lSourceIndex = GetLocalPlayerIndexByHoverId(pSourceHoverId);
+
+	if(lVictimIndex >= 0) {
+		mLocalHitByOthers[lVictimIndex]++;
+	}
+	if((lSourceIndex >= 0) && (lSourceIndex != lVictimIndex)) {
+		mLocalGoodShots[lSourceIndex]++;
+	}
+
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnHit(*this, pVictimHoverId, pSourceHoverId,
+			pElementId);
+	}
+}
+
+
+

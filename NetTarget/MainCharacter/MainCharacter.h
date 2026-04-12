@@ -51,6 +51,22 @@ class MR_MainCharacter:public MR_FreeElement
 				int mElementId;
 		};
 
+		class RaceEvent
+		{
+			public:
+				enum eType
+				{
+					eCheckpoint,
+					eLapComplete
+				};
+
+				RaceEvent(eType pType = eCheckpoint, int pValue = 0) :
+					mType(pType), mValue(pValue) { }
+
+				eType mType;
+				int mValue;
+		};
+
 		enum {
 			eMotorOn = 1,
 			eRight = 2,
@@ -110,6 +126,8 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL mAllowCans;
 		BOOL mAllowMines;
 		unsigned mAllowedCraftMask;
+		BOOL mCraftCollisionEnabled;
+		BOOL mColumnInteractionEnabled;
 
 		double mXSpeed;
 		double mYSpeed;
@@ -156,6 +174,7 @@ class MR_MainCharacter:public MR_FreeElement
 		BOOL mCheckPoint2;
 
 		MR_FixedFastFifo < HitEntry, 6 > mLastHits;
+		MR_FixedFastFifo < RaceEvent, 8 > mRaceEvents;
 
 		// Sound events list
 		MR_FixedFastFifo < MR_ShortSound *, 6 > mInternalSoundList;
@@ -184,9 +203,19 @@ class MR_MainCharacter:public MR_FreeElement
 
 		MR_DllDeclare void SetHoverId(int pId);
 		MR_DllDeclare int GetHoverId() const;
+		MR_DllDeclare static BOOL IsHoverCraftCollisionEnabled(int pHoverId);
+		MR_DllDeclare static BOOL IsHoverCraftCollisionTracked(int pHoverId);
+		MR_DllDeclare static BOOL IsHoverColumnInteractionEnabled(int pHoverId);
+		MR_DllDeclare static BOOL IsHoverColumnInteractionTracked(int pHoverId);
 
 		MR_DllDeclare void SetHoverModel(int pModel);
 		MR_DllDeclare int GetHoverModel() const;
+		MR_DllDeclare void SetCraftCollisionEnabled(BOOL pEnabled);
+		MR_DllDeclare BOOL GetCraftCollisionEnabled() const;
+		MR_DllDeclare void SetColumnInteractionEnabled(BOOL pEnabled);
+		MR_DllDeclare BOOL GetColumnInteractionEnabled() const;
+		MR_DllDeclare void SetWeaponAvailability(BOOL pAllowWeapons,
+			BOOL pAllowCans, BOOL pAllowMines);
 
 		MR_DllDeclare void SetOrientation(MR_Angle pOrientation);
 
@@ -228,6 +257,8 @@ class MR_MainCharacter:public MR_FreeElement
 
 		MR_DllDeclare int HitQueueCount() const;
 		MR_DllDeclare HitEntry GetHitQueue();
+		MR_DllDeclare int RaceEventQueueCount() const;
+		MR_DllDeclare RaceEvent GetRaceEvent();
 
 	protected:
 		// Logic interface
@@ -244,6 +275,7 @@ class MR_MainCharacter:public MR_FreeElement
 		const MR_ShapeInterface *GetGivingContactEffectShape();
 		BOOL IsCraft() const { return TRUE; }
 		int GetActorHoverId() const { return mHoverId; }
+		BOOL IsCraftCollisionEnabled() const { return mCraftCollisionEnabled; }
 
 	public:
 		// Sounds

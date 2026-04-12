@@ -28,6 +28,7 @@
 
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
+#include "GameRules.h"
 
 #define MR_ID_NOT_SET				255
 
@@ -171,6 +172,7 @@ class MR_NetworkInterface
 		BOOL mHasGameMines;
 		unsigned mAllowedCraftMask;
 		BOOL mHasGameCrafts;
+		MR_GameRuleSettings mGameRuleSettings;
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
@@ -230,13 +232,16 @@ class MR_NetworkInterface
 			BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE,
 			BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE,
 			BOOL pHasCrafts = FALSE,
-			unsigned pAllowedCraftMask = 0);
+			unsigned pAllowedCraftMask = 0,
+			const MR_GameRuleSettings *pGameRuleSettings = NULL);
 
 		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask);
+		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask, const MR_GameRuleSettings &pGameRuleSettings);
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
 		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 		BOOL SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask);
+		BOOL SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask, const MR_GameRuleSettings &pGameRuleSettings);
 
 		int Connect(SOCKET pS, const sockaddr *pName, int pNamelen, CSteamID pSteamID, UINT lMsg, long lEvent);
 		SOCKET MR_NetworkInterface::Accept(SOCKET pS, sockaddr *pAddr, int *pAddrlen, CSteamID pSteamID, UINT lMsg, long lEvent, int lClient);

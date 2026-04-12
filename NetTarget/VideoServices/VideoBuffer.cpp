@@ -2622,6 +2622,25 @@ MR_GpuSceneRenderer *MR_VideoBuffer::GetGpuSceneRenderer() const
 	return mGpuSceneRenderer;
 }
 
+void MR_VideoBuffer::ClearGpuResourceCache()
+{
+	if(mGpuSceneRenderer != NULL) {
+		mGpuSceneRenderer->ClearAllFrames();
+	}
+
+	if((mOpenGLState == NULL) || !MakeOpenGLCurrent(mOpenGLState)) {
+		return;
+	}
+
+	for(size_t lIndex = 0; lIndex < mOpenGLState->cachedBitmapTextures.size(); lIndex++) {
+		if(mOpenGLState->cachedBitmapTextures[lIndex].texture != 0) {
+			glDeleteTextures(1, &mOpenGLState->cachedBitmapTextures[lIndex].texture);
+		}
+	}
+	mOpenGLState->cachedBitmapTextures.clear();
+	ReleaseOpenGLCurrent();
+}
+
 void MR_VideoBuffer::SetOpenGLColorFromPaletteIndex(MR_UInt8 pColorIndex, unsigned char pAlpha) const
 {
 	if(mPaletteTexture != NULL) {

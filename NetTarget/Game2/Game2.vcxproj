@@ -135,6 +135,7 @@
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="CommonDialog.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="GameRules.cpp" />
     <ClCompile Include="InternetRoom.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MatchReport.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="CommonDialog.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="GameRules.h" />
     <ClInclude Include="InternetRoom.h" />
     <ClInclude Include="MatchReport.h" />
     <ClInclude Include="NetInterface.h" />

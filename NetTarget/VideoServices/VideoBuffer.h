@@ -188,6 +188,7 @@ class MR_VideoBuffer
 			DWORD pFrameMaxMs, DWORD pCpuMaxMs, DWORD pPresentMaxMs, int pSampleCount);
 		MR_DllDeclare void LogRenderStageSample(DWORD pClearMs, DWORD pBackgroundMs, DWORD pClearZMs, DWORD pFloorMs,
 			DWORD pWallMs, DWORD pWallSetupMs, DWORD pWallLoopMs, DWORD pActorMs);
+		MR_DllDeclare void ClearGpuResourceCache();
 
 		// Buffers manipulation
 		MR_DllDeclare BOOL Lock();				  // Must be called before drawing

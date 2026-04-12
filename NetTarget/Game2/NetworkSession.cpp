@@ -105,7 +105,7 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
  */
 MR_NetworkSession::~MR_NetworkSession()
 {
-	if(mInternetGame && (mMainCharacter1 != NULL)) {
+	if(mInternetGame && (mMainCharacter1 != NULL) && IsStandardGameRule()) {
 		int lCurrentModel = mMainCharacter1->GetHoverModel();
 
 		// Send results to the record server
@@ -347,6 +347,72 @@ const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
 	return lReturnValue;
 }
 
+void MR_NetworkSession::SetPlayerCraftCollision(int pHoverId, BOOL pEnabled)
+{
+	MR_ClientSession::SetPlayerCraftCollision(pHoverId, pEnabled);
+
+	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+		if((mClientCharacter[lCounter] != NULL) &&
+			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
+		{
+			mClientCharacter[lCounter]->SetCraftCollisionEnabled(pEnabled);
+		}
+	}
+}
+
+void MR_NetworkSession::SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled)
+{
+	MR_ClientSession::SetPlayerColumnInteraction(pHoverId, pEnabled);
+
+	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+		if((mClientCharacter[lCounter] != NULL) &&
+			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
+		{
+			mClientCharacter[lCounter]->SetColumnInteractionEnabled(pEnabled);
+		}
+	}
+}
+
+void MR_NetworkSession::SetPlayerRenderOpacity(int pHoverId, float pOpacity)
+{
+	MR_ClientSession::SetPlayerRenderOpacity(pHoverId, pOpacity);
+
+	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+		if((mClientCharacter[lCounter] != NULL) &&
+			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
+		{
+			mClientCharacter[lCounter]->SetRenderOpacity(pOpacity);
+		}
+	}
+}
+
+BOOL MR_NetworkSession::IsLocalHoverId(int pHoverId) const
+{
+	return (mMainCharacter1 != NULL) && (mMainCharacter1->GetHoverId() == pHoverId);
+}
+
+const MR_MainCharacter *MR_NetworkSession::FindPlayerByHoverId(int pHoverId) const
+{
+	if((mMainCharacter1 != NULL) && (mMainCharacter1->GetHoverId() == pHoverId)) {
+		return mMainCharacter1;
+	}
+
+	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+		if((mClientCharacter[lCounter] != NULL) &&
+			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
+		{
+			return mClientCharacter[lCounter];
+		}
+	}
+
+	return NULL;
+}
+
+BOOL MR_NetworkSession::ShouldProcessLocalHitQueues() const
+{
+	return FALSE;
+}
+
 /**
  * Returns the rank (position) of the main character.  The parameter is ignored if provided, as this function makes the assumption that the position of the main player is the one being found.
  *
@@ -390,10 +456,12 @@ BOOL MR_NetworkSession::Process(int pSpeedFactor)
 BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile,
 	int pNbLap, BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
 	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings,
 	MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap,
-		pAllowWeapons, pAllowCans, pAllowMines, pAllowedCraftMask, pVideo);
+		pAllowWeapons, pAllowCans, pAllowMines, pAllowedCraftMask,
+		pGameRuleSettings, pVideo);
 
 	if(lReturnValue) {
 		mSession.GetCurrentLevel()->SetBroadcastHook(ElementCreationHook, PermElementStateHook, this);
@@ -617,6 +685,7 @@ void MR_NetworkSession::ReadNet()
 				{
 					int lHoverIdSrc = -1;
 					int lElementId = -1;
+					int lVictimHoverId = -1;
 
 					if(lMessageLen >= (int) sizeof(MR_HitMessage)) {
 						const MR_HitMessage *lHitMessage = (const MR_HitMessage *) lMessage;
@@ -627,7 +696,14 @@ void MR_NetworkSession::ReadNet()
 						lHoverIdSrc = (char) lMessage[0];
 					}
 
+					if((lClientId >= 0) &&
+						(lClientId < MR_NetworkInterface::eMaxClient) &&
+						(mClientCharacter[lClientId] != NULL))
+					{
+						lVictimHoverId = mClientCharacter[lClientId]->GetHoverId();
+					}
 					AddHitEntry(lClientId, lHoverIdSrc);
+					NotifyRuleHit(lVictimHoverId, lHoverIdSrc, lElementId);
 					DestroyElementByNetworkId(lElementId);
 				}
 				break;
@@ -819,7 +895,7 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	return WaitConnections(pWindow, pGameName, pPromptForPort, pDefaultPort,
 		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
 		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
-		FALSE, MR_GetDefaultAllowedCraftMask());
+		FALSE, MR_GetDefaultAllowedCraftMask(), mGameRuleSettings);
 }
 
 BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
@@ -829,6 +905,20 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
 	unsigned pAllowedCraftMask)
 {
+	return WaitConnections(pWindow, pGameName, pPromptForPort, pDefaultPort,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		pHasCrafts, pAllowedCraftMask, mGameRuleSettings);
+}
+
+BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
+	BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg,
+	int pReturnMessage, const char *pTrackName, int pNbLap,
+	BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans,
+	BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings)
+{
 	mMasterMode = TRUE;
 	mSended12SecClockUpdate = FALSE;
 	mSended8SecClockUpdate = FALSE;
@@ -836,7 +926,8 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort,
 		pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
-		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask);
+		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask,
+		pGameRuleSettings);
 }
 
 /**
@@ -873,7 +964,7 @@ BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
 	return ConnectToServer(pWindow, pServerIP, pPort, pSteamID, pGameName,
 		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
 		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
-		FALSE, MR_GetDefaultAllowedCraftMask());
+		FALSE, MR_GetDefaultAllowedCraftMask(), mGameRuleSettings);
 }
 
 BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
@@ -883,12 +974,27 @@ BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
 	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
 	unsigned pAllowedCraftMask)
 {
+	return ConnectToServer(pWindow, pServerIP, pPort, pSteamID, pGameName,
+		pModalessDlg, pReturnMessage, pTrackName, pNbLap, pHasWeapons,
+		pAllowWeapons, pHasCans, pAllowCans, pHasMines, pAllowMines,
+		pHasCrafts, pAllowedCraftMask, mGameRuleSettings);
+}
+
+BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
+	unsigned pPort, uint64 pSteamID, const char *pGameName,
+	HWND *pModalessDlg, int pReturnMessage, const char *pTrackName,
+	int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans,
+	BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts,
+	unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings)
+{
 	mMasterMode = FALSE;
 
 	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID,
 		pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
-		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask);
+		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask,
+		pGameRuleSettings);
 }
 
 /**
@@ -919,12 +1025,22 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons,
 		mAllowCans, mAllowMines, mAllowedCraftMask);
 
+	MR_GameRuleSpawnContext lSpawnContext;
+	lSpawnContext.mHoverId = mNetInterface.GetId();
+	lSpawnContext.mSpawnSlot = mNetInterface.GetId();
+	if(mGameRuleRuntime != NULL) {
+		mGameRuleRuntime->OnPreSpawn(*this, lSpawnContext);
+	}
+
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
 
-	mMainCharacter1->mPosition = lCurrentLevel->GetStartingPos(mNetInterface.GetId());
-	mMainCharacter1->SetOrientation(lCurrentLevel->GetStartingOrientation(mNetInterface.GetId()));
-	mMainCharacter1->mRoom = lCurrentLevel->GetStartingRoom(mNetInterface.GetId());
+	mMainCharacter1->mPosition =
+		lCurrentLevel->GetStartingPos(lSpawnContext.mSpawnSlot);
+	mMainCharacter1->SetOrientation(
+		lCurrentLevel->GetStartingOrientation(lSpawnContext.mSpawnSlot));
+	mMainCharacter1->mRoom =
+		lCurrentLevel->GetStartingRoom(lSpawnContext.mSpawnSlot);
 	mMainCharacter1->SetHoverId(mNetInterface.GetId());
 
 	lCurrentLevel->InsertElement(mMainCharacter1, mMainCharacter1->mRoom);
@@ -1411,7 +1527,11 @@ void MR_NetworkSession::BroadcastHit(int pHoverIdSrc, int pElementId)
 	mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
 
 	// Add locally
-	AddHitEntry(-1, pHoverIdSrc);
+	const int lVictimHoverId =
+		(mMainCharacter1 != NULL) ? mMainCharacter1->GetHoverId() : -1;
+	AddHitEntry(-1, (pHoverIdSrc == lVictimHoverId) ? -1 : pHoverIdSrc);
+	NotifyRuleHit(lVictimHoverId,
+		pHoverIdSrc, pElementId);
 	DestroyElementByNetworkId(pElementId);
 }
 
@@ -1609,6 +1729,12 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 	lEntry->mNext = *lPtr;
 
 	*lPtr = lEntry;
+
+	const int lHoverId = lEntry->mPlayerId;
+	NotifyRuleCheckpoint(lHoverId, pNbSplits);
+	if(pNbLap > 0) {
+		NotifyRuleLapComplete(lHoverId, pNbLap);
+	}
 }
 
 /**

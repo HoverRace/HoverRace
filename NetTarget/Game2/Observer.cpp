@@ -35,8 +35,6 @@
 namespace
 {
 	const float VIEWED_CRAFT_OPACITY = 1.0f;
-	const float OPPONENT_CRAFT_NEAR_OPACITY = 1.0f;
-	const double OPPONENT_CRAFT_FADE_DISTANCE = 30000.0;
 
 	LONGLONG GetHighResolutionTick()
 	{
@@ -61,24 +59,6 @@ namespace
 		return static_cast<DWORD>(((pEndTick - pStartTick) * 1000 + (sFrequency / 2)) / sFrequency);
 	}
 
-	float ComputeOpponentCraftOpacity(const MR_MainCharacter *pViewingCharacter, const MR_MainCharacter *pOpponentCharacter)
-	{
-		double lDeltaX = static_cast<double>(pOpponentCharacter->mPosition.mX - pViewingCharacter->mPosition.mX);
-		double lDeltaY = static_cast<double>(pOpponentCharacter->mPosition.mY - pViewingCharacter->mPosition.mY);
-		double lDeltaZ = static_cast<double>(pOpponentCharacter->mPosition.mZ - pViewingCharacter->mPosition.mZ);
-		double lDistance = sqrt((lDeltaX * lDeltaX) + (lDeltaY * lDeltaY) + (lDeltaZ * lDeltaZ));
-		double lFade = lDistance / OPPONENT_CRAFT_FADE_DISTANCE;
-
-		if(lFade < 0.0) {
-			lFade = 0.0;
-		}
-		else if(lFade > 1.0) {
-			lFade = 1.0;
-		}
-
-		return static_cast<float>(OPPONENT_CRAFT_NEAR_OPACITY +
-			(lFade * (VIEWED_CRAFT_OPACITY - OPPONENT_CRAFT_NEAR_OPACITY)));
-	}
 }
 
 CString gRankTitle = Ascii2Simple(MR_LoadString(IDS_RANK_TITLE));
@@ -580,7 +560,6 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 	m3DView.SetCockpitView(mCockpitView);
 	MR_SAMPLE_START(ActorRendering, "Actor Rendering");
 	lStageTick = GetHighResolutionTick();
-
 	for(lCounter = -1; lCounter < lRoomCount; lCounter++) {
 		int lRoomId;
 
@@ -601,9 +580,14 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 
 			if(lMainCharacter != NULL) {
 				lPreviousOpacity = lMainCharacter->GetRenderOpacity();
-				lMainCharacter->SetRenderOpacity((lMainCharacter == pViewingCharacter) ?
-					VIEWED_CRAFT_OPACITY :
-					ComputeOpponentCraftOpacity(pViewingCharacter, lMainCharacter));
+				if(lMainCharacter == pViewingCharacter) {
+					lMainCharacter->SetRenderOpacity(VIEWED_CRAFT_OPACITY);
+				}
+				else {
+					lMainCharacter->SetRenderOpacity(
+						pSession->GetRemotePlayerOpacityForView(
+							pViewingCharacter, lMainCharacter));
+				}
 				lOpacityChanged = TRUE;
 			}
 
@@ -762,15 +746,16 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 
 		int lNbResultAvail = pSession->ResultAvaillable();
 		int lNbPages = (lNbResultAvail + NB_PLAYER_PAGE - 1) / NB_PLAYER_PAGE;
-
-		int lCurrentPage = mDispPlayers = mDispPlayers % (lNbPages * 2 + 1);
+		const BOOL lForceHitPages = pSession->UsesHitResults();
+		const int lPageSpan = lForceHitPages ? (lNbPages + 1) : (lNbPages * 2 + 1);
+		int lCurrentPage = mDispPlayers = mDispPlayers % lPageSpan;
 
 		if(mDispPlayers != 0) {
-			BOOL lShowHits = FALSE;
+			BOOL lShowHits = lForceHitPages;
 
 			lCurrentPage--;
 
-			if(lCurrentPage >= lNbPages) {
+			if(!lForceHitPages && (lCurrentPage >= lNbPages)) {
 				lShowHits = TRUE;
 				lCurrentPage -= lNbPages;
 			}
@@ -855,10 +840,15 @@ void MR_Observer::Render3DView(MR_VideoBuffer * pDest, const MR_ClientSession * 
 		// Display timers
 		char lMainLineBuffer[80];
 		char lLapLineBuffer[80];
+		const BOOL lShowHitHud = pSession->UsesHitResults();
 
 		lLapLineBuffer[0] = 0;
 
-		if(pTime < 0) {
+		if(pSession->FormatRuleHudText(pViewingCharacter, pTime, lMainLineBuffer,
+			sizeof(lMainLineBuffer), lLapLineBuffer, sizeof(lLapLineBuffer)))
+		{
+		}
+		else if(pTime < 0) {
 			pTime = -pTime;
 			sprintf(lMainLineBuffer, gCountdownStr, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
 		}

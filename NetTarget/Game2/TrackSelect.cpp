@@ -369,6 +369,10 @@ static DWORD gsTrackSearchTick = 0;
 static WNDPROC gsTrackListWndProc = NULL;
 static unsigned gsRemoteSearchSerial = 0;
 static unsigned gsRemotePreviewSerial = 0;
+static MR_GameRuleSettings gsGameRuleSettings;
+static bool gsPracticeMode = false;
+static MR_GameRuleId gsVisibleRuleModes[MR_GR_WAR + 1];
+static int gsVisibleRuleModeCount = 0;
 
 struct RemoteTrackSearchPayload
 {
@@ -435,7 +439,8 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
  */
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines,
-	unsigned &pAllowedCraftMask)
+	unsigned &pAllowedCraftMask, MR_GameRuleSettings &pGameRuleSettings,
+	bool pPracticeMode)
 {
 	bool lReturnValue = true;
 	gsSelectedEntry = -1;
@@ -452,6 +457,8 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 	gsAllowCans = TRUE;
 	gsAllowMines = TRUE;
 	gsAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
+	gsGameRuleSettings = MR_GameRuleSettings();
+	gsPracticeMode = pPracticeMode;
 
 	if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsVisibleTrackList[gsSelectedEntry]->mFileName;
@@ -460,6 +467,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 		pAllowCans = (gsAllowCans != FALSE);
 		pAllowMines = (gsAllowMines != FALSE);
 		pAllowedCraftMask = gsAllowedCraftMask;
+		pGameRuleSettings = gsGameRuleSettings;
 		lReturnValue = true;
 	} else
 	lReturnValue = false;
@@ -649,6 +657,99 @@ static std::string UrlEncode(const std::string &value)
 	}
 
 	return lReturnValue;
+}
+
+static int GetSelectedRuleMode(HWND pWindow)
+{
+	int lSelection = (int) SendDlgItemMessage(pWindow, IDC_RULE_MODE,
+		CB_GETCURSEL, 0, 0);
+
+	if((lSelection >= 0) && (lSelection < gsVisibleRuleModeCount)) {
+		return gsVisibleRuleModes[lSelection];
+	}
+
+	return MR_GR_NORMAL_RACE;
+}
+
+static void SetSelectedRuleMode(HWND pWindow, MR_GameRuleId pModeId)
+{
+	int lSelection = 0;
+
+	for(int lIndex = 0; lIndex < gsVisibleRuleModeCount; lIndex++) {
+		if(gsVisibleRuleModes[lIndex] == pModeId) {
+			lSelection = lIndex;
+			break;
+		}
+	}
+
+	SendDlgItemMessage(pWindow, IDC_RULE_MODE, CB_SETCURSEL, lSelection, 0);
+}
+
+static void PopulateRuleModeList(HWND pWindow)
+{
+	static const MR_GameRuleId ALL_RULE_MODES[] = {
+		MR_GR_NORMAL_RACE,
+		MR_GR_NO_COLLISION_RACE,
+		MR_GR_FIRST_LAP_GHOST_RACE,
+		MR_GR_WAR
+	};
+
+	gsVisibleRuleModeCount = 0;
+	SendDlgItemMessage(pWindow, IDC_RULE_MODE, CB_RESETCONTENT, 0, 0);
+
+	for(size_t lIndex = 0;
+		lIndex < (sizeof(ALL_RULE_MODES) / sizeof(ALL_RULE_MODES[0]));
+		lIndex++)
+	{
+		MR_GameRuleSettings lRuleSettings;
+		lRuleSettings.mModeId = ALL_RULE_MODES[lIndex];
+		MR_NormalizeGameRuleSettings(lRuleSettings);
+
+		if(gsPracticeMode && !MR_IsGameRuleAvailableInPractice(lRuleSettings)) {
+			continue;
+		}
+
+		gsVisibleRuleModes[gsVisibleRuleModeCount++] = ALL_RULE_MODES[lIndex];
+		SendDlgItemMessage(pWindow, IDC_RULE_MODE, CB_ADDSTRING, 0,
+			(LPARAM) MR_GetGameRuleDisplayName(ALL_RULE_MODES[lIndex]));
+	}
+
+	if(gsVisibleRuleModeCount <= 0) {
+		gsVisibleRuleModes[0] = MR_GR_NORMAL_RACE;
+		gsVisibleRuleModeCount = 1;
+		SendDlgItemMessage(pWindow, IDC_RULE_MODE, CB_ADDSTRING, 0,
+			(LPARAM) MR_GetGameRuleDisplayName(MR_GR_NORMAL_RACE));
+	}
+}
+
+static void UpdateRuleControlState(HWND pWindow)
+{
+	MR_GameRuleSettings lRuleSettings;
+	MR_GameRuleSetupOptions lSetupOptions;
+
+	lRuleSettings.mModeId = (MR_GameRuleId) GetSelectedRuleMode(pWindow);
+	MR_NormalizeGameRuleSettings(lRuleSettings);
+	MR_GetGameRuleSetupOptions(lRuleSettings, lSetupOptions);
+
+	EnableWindow(GetDlgItem(pWindow, IDC_NB_LAP), lSetupOptions.mLapCountEditable);
+	EnableWindow(GetDlgItem(pWindow, IDC_NB_LAP_SPIN),
+		lSetupOptions.mLapCountEditable);
+	if(lSetupOptions.mWeaponsForcedOn) {
+		SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_SETCHECK, BST_CHECKED, 0);
+	}
+	EnableWindow(GetDlgItem(pWindow, IDC_WEAPONS), lSetupOptions.mWeaponsEditable);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_OPACITY),
+		lSetupOptions.mUsesGhostTransparencySettings);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_NEAR_OPACITY),
+		lSetupOptions.mUsesGhostTransparencySettings);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_NEAR_DISTANCE),
+		lSetupOptions.mUsesGhostTransparencySettings);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_FADE_DISTANCE),
+		lSetupOptions.mUsesGhostTransparencySettings);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_WAR_TARGET),
+		lSetupOptions.mUsesWarScoreSettings);
+	EnableWindow(GetDlgItem(pWindow, IDC_RULE_WAR_WINBY),
+		lSetupOptions.mUsesWarScoreSettings);
 }
 
 static void SkipJsonWhitespace(const std::string &json, size_t &pos)
@@ -1311,6 +1412,23 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				MR_IsCraftAllowed(gsAllowedCraftMask, 2) ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT7, BM_SETCHECK,
 				MR_IsCraftAllowed(gsAllowedCraftMask, 7) ? BST_CHECKED : BST_UNCHECKED, 0);
+			PopulateRuleModeList(pWindow);
+			SetSelectedRuleMode(pWindow, gsGameRuleSettings.mModeId);
+			SetDlgItemInt(pWindow, IDC_RULE_OPACITY,
+				(int) (gsGameRuleSettings.mRemoteCraftOpacity * 100.0f + 0.5f),
+				FALSE);
+			SetDlgItemInt(pWindow, IDC_RULE_NEAR_OPACITY,
+				(int) (gsGameRuleSettings.mGhostNearOpacity * 100.0f + 0.5f),
+				FALSE);
+			SetDlgItemInt(pWindow, IDC_RULE_NEAR_DISTANCE,
+				(int) (gsGameRuleSettings.mGhostNearDistance + 0.5f), FALSE);
+			SetDlgItemInt(pWindow, IDC_RULE_FADE_DISTANCE,
+				(int) (gsGameRuleSettings.mGhostFadeDistance + 0.5f), FALSE);
+			SetDlgItemInt(pWindow, IDC_RULE_WAR_TARGET,
+				gsGameRuleSettings.mWarTargetScore, FALSE);
+			SetDlgItemInt(pWindow, IDC_RULE_WAR_WINBY,
+				gsGameRuleSettings.mWarWinBy, FALSE);
+			UpdateRuleControlState(pWindow);
 			SendDlgItemMessage(pWindow, IDC_NB_LAP_SPIN, UDM_SETRANGE, 0, MAKELONG(99, 1));
 			SetDlgItemText(pWindow, IDC_TRACK_FILTER, "");
 			SendDlgItemMessage(pWindow, IDC_TRACK_FILTER, EM_SETCUEBANNER, FALSE,
@@ -1354,6 +1472,11 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							break;
 					}
 					break;
+				case IDC_RULE_MODE:
+					if(HIWORD(pWParam) == CBN_SELCHANGE) {
+						UpdateRuleControlState(pWindow);
+					}
+					break;
 				case IDCANCEL:
 					EndDialog(pWindow, IDCANCEL);
 					lReturnValue = TRUE;
@@ -1382,11 +1505,33 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						if(SendDlgItemMessage(pWindow, IDC_TRACK_CRAFT7, BM_GETCHECK, 0, 0) == BST_CHECKED) {
 							gsAllowedCraftMask |= (1u << 7);
 						}
+						const int lWarTargetScore =
+							GetDlgItemInt(pWindow, IDC_RULE_WAR_TARGET, NULL, FALSE);
+						const int lWarWinBy =
+							GetDlgItemInt(pWindow, IDC_RULE_WAR_WINBY, NULL, FALSE);
+
+						gsGameRuleSettings.mModeId =
+							(MR_GameRuleId) GetSelectedRuleMode(pWindow);
+						gsGameRuleSettings.mRemoteCraftOpacity =
+							GetDlgItemInt(pWindow, IDC_RULE_OPACITY, NULL, FALSE) / 100.0f;
+						gsGameRuleSettings.mGhostNearOpacity =
+							GetDlgItemInt(pWindow, IDC_RULE_NEAR_OPACITY, NULL, FALSE) / 100.0f;
+						gsGameRuleSettings.mGhostNearDistance =
+							(float) GetDlgItemInt(pWindow, IDC_RULE_NEAR_DISTANCE, NULL, FALSE);
+						gsGameRuleSettings.mGhostFadeDistance =
+							(float) GetDlgItemInt(pWindow, IDC_RULE_FADE_DISTANCE, NULL, FALSE);
+						gsGameRuleSettings.mWarTargetScore = lWarTargetScore;
+						gsGameRuleSettings.mWarWinBy = lWarWinBy;
+						MR_NormalizeGameRuleSettings(gsGameRuleSettings);
+						char lRuleError[128];
 
 						if(gsNbLaps < 1)
 							MessageBox(pWindow, MR_LoadString(IDS_LAP_RANGE), MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						else if(!MR_HasAllowedCraft(gsAllowedCraftMask))
 							MessageBox(pWindow, "At least one hovercraft must be enabled.", MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+						else if(!MR_ValidateGameRuleSettings(gsGameRuleSettings,
+							lRuleError, sizeof(lRuleError)))
+							MessageBox(pWindow, lRuleError, MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						else
 							EndDialog(pWindow, IDOK);
 					}
@@ -2193,3 +2338,4 @@ std::string FindTrack(const std::string &name)
 
 	return "";
 }
+

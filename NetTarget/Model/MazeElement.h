@@ -99,6 +99,7 @@ class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 		virtual BOOL IsCraft() const { return FALSE; }
 		virtual int GetActorHoverId() const { return -1; }
 		virtual void SetContactHoverId(int /*pHoverId */ ) { }
+		virtual BOOL IsCraftCollisionEnabled() const { return TRUE; }
 
 	private:
 												  // Prevent overriding of the Serialize function

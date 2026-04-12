@@ -63,7 +63,8 @@ namespace {
 	}
 
 	bool ParseTcpGameSummary(std::string &summary, int &nbLap, bool &allowWeapons,
-		bool &allowCans, bool &allowMines, unsigned &allowedCraftMask)
+		bool &allowCans, bool &allowMines, unsigned &allowedCraftMask,
+		MR_GameRuleSettings &gameRuleSettings)
 	{
 		const std::string craftsTag = " crafts ";
 		const std::string minesOn = " mines on";
@@ -78,6 +79,7 @@ namespace {
 		allowCans = true;
 		allowMines = true;
 		allowedCraftMask = MR_GetDefaultAllowedCraftMask();
+		gameRuleSettings = MR_GameRuleSettings();
 
 		const std::string::size_type craftsPos = summary.rfind(craftsTag);
 		if((craftsPos != std::string::npos) &&
@@ -87,6 +89,8 @@ namespace {
 				summary.c_str() + craftsPos + craftsTag.length());
 			summary.erase(craftsPos);
 		}
+
+		MR_ParseGameRuleSummary(summary, gameRuleSettings);
 
 		if(summary.length() > minesOn.length() &&
 			summary.compare(summary.length() - minesOn.length(), minesOn.length(), minesOn) == 0)
@@ -145,6 +149,26 @@ namespace {
 		}
 
 		return !summary.empty();
+	}
+
+	std::string BuildGameSummary(const std::string &trackName, int nbLap,
+		bool allowWeapons, bool allowCans, bool allowMines,
+		unsigned allowedCraftMask, const MR_GameRuleSettings &gameRuleSettings)
+	{
+		CString lSummary;
+		std::string lAllowedCrafts =
+			MR_FormatAllowedCraftMask(allowedCraftMask);
+		std::string lRuleSummary = MR_FormatGameRuleSummary(gameRuleSettings);
+
+		lSummary.Format("%s %d %s %s cans %s mines %s%s crafts %s",
+			trackName.c_str(), nbLap, nbLap > 1 ? "laps" : "lap",
+			allowWeapons ? "with weapons" : "no weapons",
+			allowCans ? "on" : "off",
+			allowMines ? "on" : "off",
+			lRuleSummary.c_str(),
+			lAllowedCrafts.c_str());
+
+		return (const char *) lSummary;
 	}
 
 	BOOL GetMonitorRectFromWindowCenter(HWND window, RECT *rect, char *deviceName = NULL)
@@ -1108,6 +1132,10 @@ void MR_GameApp::Clean()
 			mObservers[i]->Delete();
 			mObservers[i] = NULL;
 		}
+	}
+
+	if(mVideoBuffer != NULL) {
+		mVideoBuffer->ClearGpuResourceCache();
 	}
 
 	MR_DllObjectFactory::Clean(TRUE);
@@ -2210,9 +2238,11 @@ void MR_GameApp::NewLocalSession()
 	bool lAllowCans;
 	bool lAllowMines;
 	unsigned lAllowedCraftMask;
+	MR_GameRuleSettings lGameRuleSettings;
 
 	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
-		lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask);
+		lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask,
+		lGameRuleSettings, true);
 
 	if(lSuccess) {
 		DeleteMovieWnd();
@@ -2229,7 +2259,7 @@ void MR_GameApp::NewLocalSession()
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
 				lNbLap, lAllowWeapons, lAllowCans, lAllowMines,
-				lAllowedCraftMask, mVideoBuffer) != FALSE);
+				lAllowedCraftMask, lGameRuleSettings, mVideoBuffer) != FALSE);
 		}
 		// Create the main character
 		if(lSuccess)
@@ -2276,9 +2306,11 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	bool lAllowCans;
 	bool lAllowMines;
 	unsigned lAllowedCraftMask;
+	MR_GameRuleSettings lGameRuleSettings;
 
 	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
-		lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask);
+		lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask,
+		lGameRuleSettings);
 
 	if(lSuccess) {
 		// Create the new session
@@ -2298,7 +2330,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
 				lNbLap, lAllowWeapons, lAllowCans, lAllowMines,
-				lAllowedCraftMask, mVideoBuffer) != FALSE);
+				lAllowedCraftMask, lGameRuleSettings, mVideoBuffer) != FALSE);
 		}
 
 		if(lSuccess) {
@@ -2352,11 +2384,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	bool lAllowCans;
 	bool lAllowMines;
 	unsigned lAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
+	MR_GameRuleSettings lGameRuleSettings;
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
 		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap,
-			lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask);
+			lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask,
+			lGameRuleSettings);
 
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
@@ -2378,7 +2412,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			SaveRegistry();
 		}
 		ParseTcpGameSummary(lCurrentTrack, lNbLap, lAllowWeapons, lAllowCans,
-			lAllowMines, lAllowedCraftMask);
+			lAllowMines, lAllowedCraftMask, lGameRuleSettings);
 	}
 
 	MR_RecordFile *lTrackFile;
@@ -2403,30 +2437,23 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	if(lSuccess) {
 		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile,
 			lNbLap, lAllowWeapons, lAllowCans, lAllowMines,
-			lAllowedCraftMask, mVideoBuffer) != FALSE);
+			lAllowedCraftMask, lGameRuleSettings, mVideoBuffer) != FALSE);
 	}
 
 	if(lSuccess) {
 		if(pServer) {
-			CString lNameBuffer;
-			std::string lAllowedCrafts =
-				MR_FormatAllowedCraftMask(lAllowedCraftMask);
-
-			lNameBuffer.Format("%s %d %s %s cans %s mines %s crafts %s",
-				lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap",
-				lAllowWeapons ? "with weapons" : "no weapons",
-				lAllowCans ? "on" : "off",
-				lAllowMines ? "on" : "off",
-				lAllowedCrafts.c_str());
+			std::string lNameBuffer = BuildGameSummary(lCurrentTrack, lNbLap,
+				lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask,
+				lGameRuleSettings);
 
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer, TRUE,
+			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer.c_str(), TRUE,
 				MR_Config::GetInstance()->net.tcpServPort, NULL, 0,
 				lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
 				TRUE, lAllowCans, TRUE, lAllowMines, TRUE,
-				lAllowedCraftMask) != FALSE);
+				lAllowedCraftMask, lGameRuleSettings) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();

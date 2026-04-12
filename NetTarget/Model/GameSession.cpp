@@ -317,6 +317,14 @@ void MR_GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement
 		MR_FreeElement *lObstacleElem = MR_Level::GetFreeElement(lObstacleHandle);
 
 		if(lObstacleElem != pActor) {
+			if(pActor->IsCraft() && lObstacleElem->IsCraft() &&
+				(!pActor->IsCraftCollisionEnabled() ||
+				!lObstacleElem->IsCraftCollisionEnabled()))
+			{
+				lObstacleHandle = MR_Level::GetNextFreeElement(lObstacleHandle);
+				continue;
+			}
+
 			lObstacleElem->SetContactHoverId(pActor->GetActorHoverId());
 
 			if(MR_DetectActorContact(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lSpec)) {

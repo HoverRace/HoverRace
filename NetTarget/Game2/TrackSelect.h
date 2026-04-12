@@ -26,6 +26,7 @@
 #include <string>
 
 #include "../Util/RecordFile.h"
+#include "GameRules.h"
 
 enum MR_TrackAvail
 {
@@ -48,7 +49,8 @@ unsigned MR_ParseAllowedCraftMask(const char *pAllowedCrafts);
 
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap,
 	bool &pAllowWeapons, bool &pAllowCans, bool &pAllowMines,
-	unsigned &pAllowedCraftMask);
+	unsigned &pAllowedCraftMask, MR_GameRuleSettings &pGameRuleSettings,
+	bool pPracticeMode = false);
 
 // pFile name must contains no path and no extension
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);

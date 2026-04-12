@@ -131,6 +131,7 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap,
 			BOOL pAllowWeapons, BOOL pAllowCans, BOOL pAllowMines,
 			unsigned pAllowedCraftMask,
+			const MR_GameRuleSettings &pGameRuleSettings,
 			MR_VideoBuffer * pVideo);
 
 		BOOL CreateMainCharacter();
@@ -144,9 +145,11 @@ class MR_NetworkSession : public MR_ClientSession
 		void SetRoomList(HoverRace::Client::RoomListPtr roomList);
 		BOOL WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 		BOOL WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND * pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask);
+		BOOL WaitConnections(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask, const MR_GameRuleSettings &pGameRuleSettings);
 		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, uint64 pSteamID = 0, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0, const char *pTrackName = NULL, int pNbLap = -1, BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE, BOOL pHasCans = FALSE, BOOL pAllowCans = FALSE, BOOL pHasMines = FALSE, BOOL pAllowMines = FALSE);
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask);
+		BOOL ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, uint64 pSteamID, const char *pGameName, HWND *pModalessDlg, int pReturnMessage, const char *pTrackName, int pNbLap, BOOL pHasWeapons, BOOL pAllowWeapons, BOOL pHasCans, BOOL pAllowCans, BOOL pHasMines, BOOL pAllowMines, BOOL pHasCrafts, unsigned pAllowedCraftMask, const MR_GameRuleSettings &pGameRuleSettings);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
 		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap, int &pNbSplit, MR_SimulationTime & pFinishFirstSplit, MR_SimulationTime & pFirstSplitDifference, MR_SimulationTime & pFinishSecondSplit, MR_SimulationTime & pSecondSplitDifference) const;
@@ -159,5 +162,11 @@ class MR_NetworkSession : public MR_ClientSession
 		void GetCurrentMessage(char *pDest) const;
 
 		const MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
+		void SetPlayerCraftCollision(int pHoverId, BOOL pEnabled);
+		void SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled);
+		void SetPlayerRenderOpacity(int pHoverId, float pOpacity);
+		BOOL IsLocalHoverId(int pHoverId) const;
+		const MR_MainCharacter *FindPlayerByHoverId(int pHoverId) const;
+		BOOL ShouldProcessLocalHitQueues() const;
 };
 #endif

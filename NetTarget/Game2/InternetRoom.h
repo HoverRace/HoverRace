@@ -114,6 +114,7 @@ class MR_InternetRoom
 				BOOL mAllowMines;
 				unsigned mAllowedCraftMask;
 				CString mAllowedCrafts;
+				MR_GameRuleSettings mGameRuleSettings;
 				int mNbClient;
 				int mClientList[eMaxPlayerGame];
 				CString mIPAddr;
