@@ -567,9 +567,10 @@ BEGIN
     EDITTEXT        IDC_ALIAS,45,7,117,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,30,91,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,89,91,50,14
-    LTEXT           "Your alias:",IDC_STATIC,7,10,37,8
-    LTEXT           "Room:",IDC_STATIC,7,26,36,8
+    LTEXT           "Alias:",IDC_ALIAS_LABEL,7,10,37,8
+    LTEXT           "Room:",IDC_ROOM_LABEL,7,26,36,8
     LISTBOX         IDC_ROOMLIST,45,26,117,55,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Connecting...",IDC_MSG_LBL,45,28,62,9
 END
 #endif
 
@@ -1276,6 +1277,8 @@ BEGIN
     IDS_HAS_LEFT            " has left"
     IDS_ALONE_F2            "You are now alone, press F2 when ready to return to the Meeting Room"
     IDS_ALONE               "You are now alone"
+    IDS_REMOTE_LEFT_F2      "All remote players have left, press F2 when ready to return to the Meeting Room"
+    IDS_REMOTE_LEFT         "All remote players have left"
     IDS_TRK_NOTFOUND        "Track not found"
     IDS_BAD_TRK_FORMAT      "Bad track file format"
     IDS_SHOULD_REG          "You should register to play that track"

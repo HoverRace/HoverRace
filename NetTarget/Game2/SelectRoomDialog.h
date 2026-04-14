@@ -23,6 +23,7 @@
 #pragma once
 
 #include "RoomListDialog.h"
+#include "../../include/LocalPlayer.h"
 
 namespace HoverRace {
 namespace Client {
@@ -35,11 +36,14 @@ class SelectRoomDialog : public RoomListDialog
 {
 	typedef RoomListDialog SUPER;
 	public:
-		SelectRoomDialog(const std::string &playerName);
+		SelectRoomDialog(const std::string &playerName, int onlinePartySize,
+			const std::string *onlinePartyNames);
 		virtual ~SelectRoomDialog();
 
 	public:
 		const std::string &GetPlayerName() const;
+		int GetOnlinePartySize() const;
+		const std::string &GetOnlinePartyName(int idx) const;
 
 	public:
 		RoomListPtr ShowModal(HINSTANCE hinst, HWND parent);
@@ -48,12 +52,25 @@ class SelectRoomDialog : public RoomListDialog
 		virtual void HandleLoadFinished(HWND hwnd, result_t result);
 	private:
 		void PopulateList(HWND hwnd);
+		void CreateDynamicControls(HWND hwnd);
+		void SyncPlayerNamesFromControls(HWND hwnd);
+		void UpdatePlayerRows(HWND hwnd);
+		void ApplyDialogLayout(HWND hwnd);
+		BOOL ConfigurePlayerControls(HWND hwnd, int playerIdx);
 
 	protected:
 		virtual BOOL DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
 		std::string playerName;
+		int onlinePartySize;
+		std::string onlinePartyNames[MR_MAX_LOCAL_PLAYER];
+		MR_Config::cfg_controls_t tempControls[MR_MAX_LOCAL_PLAYER];
+		HWND addPlayerButton;
+		HWND removePlayerButton;
+		HWND playerLabels[MR_MAX_LOCAL_PLAYER];
+		HWND nameEdits[MR_MAX_LOCAL_PLAYER];
+		HWND controlButtons[MR_MAX_LOCAL_PLAYER];
 		volatile bool finished;
 };
 

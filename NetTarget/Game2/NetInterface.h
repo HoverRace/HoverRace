@@ -26,6 +26,8 @@
 
 #include <WINSOCK.h>
 
+#include <string>
+
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
 #include "GameRules.h"
@@ -189,6 +191,10 @@ class MR_NetworkInterface
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
 		CString mClientName[eMaxClient];
+		int mLocalPartySize;
+		CString mLocalPartyNames[MR_MAX_LOCAL_PLAYER];
+		int mClientPartySize[eMaxClient];
+		CString mClientPartyNames[eMaxClient][MR_MAX_LOCAL_PLAYER];
 		BOOL mAllPreLoguedRecv;					  /// Used by client to know if all prelogued have been received
 		BOOL mCanBePreLogued[eMaxClient];
 		BOOL mPreLoguedClient[eMaxClient];
@@ -203,6 +209,7 @@ class MR_NetworkInterface
 		// Game Modal
 		HWND mGameModal;
 		HWND mConnectModal;
+		BOOL mWaitGameNameConnected;
 
 		// Dialog functions
 		static MR_NetworkInterface *mActiveInterface;
@@ -215,6 +222,7 @@ class MR_NetworkInterface
 		void CleanupClientState(int pClient, HWND pWindow = NULL);
 		void NotifyClientRemoved(int pClient);
 		void SendConnectionDoneIfNeeded();
+		void SendPartyInfo(int pClient);
 
 		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionRequest, P2PSessionRequest_t ); // REQUIRED
 		STEAM_CALLBACK( MR_NetworkInterface, OnP2PSessionFailed, P2PSessionConnectFail_t ); // REQUIRED
@@ -226,6 +234,9 @@ class MR_NetworkInterface
 
 		void SetId(const int id);
 		void SetPlayerName(const char *pPlayerName);
+		void SetLocalParty(int pPartySize, const std::string *pPartyNames);
+		int GetLocalPartySize() const;
+		const char *GetLocalPartyName(int pIndex) const;
 		const char *GetPlayerName() const;
 		void SetGameDetails(const char *pTrackName, int pNbLap = -1,
 			BOOL pHasWeapons = FALSE, BOOL pAllowWeapons = FALSE,
@@ -252,6 +263,10 @@ class MR_NetworkInterface
 		int GetId() const;
 		CSteamID GetSteamId() const;
 		BOOL GetSteamOnly() const;
+		int GetRemotePartySize(int pClient) const;
+		const char *GetRemotePartyName(int pClient, int pPartyIndex) const;
+		int GetMachineIdForClient(int pClient) const;
+		int GetClientForMachineId(int pMachineId) const;
 
 		int GetLagFromServer() const;
 		int GetAvgLag(int pClient) const;

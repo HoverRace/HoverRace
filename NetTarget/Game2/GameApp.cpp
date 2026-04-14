@@ -2442,14 +2442,10 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	if(lSuccess) {
 		if(pServer) {
-			std::string lNameBuffer = BuildGameSummary(lCurrentTrack, lNbLap,
-				lAllowWeapons, lAllowCans, lAllowMines, lAllowedCraftMask,
-				lGameRuleSettings);
-
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer.c_str(), TRUE,
+			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lCurrentTrack.c_str(), TRUE,
 				MR_Config::GetInstance()->net.tcpServPort, NULL, 0,
 				lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
 				TRUE, lAllowCans, TRUE, lAllowMines, TRUE,
@@ -2529,6 +2525,8 @@ void MR_GameApp::NewInternetSession()
 
 	if(lSuccess) {
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
+		lCurrentSession->SetLocalParty(cfg->player.onlinePartySize,
+			cfg->player.onlinePartyNames);
 
 		lSuccess = lInternetRoom.DisplayChatRoom(mMainWindow, lCurrentSession, mVideoBuffer, mServerHasChanged);
 
@@ -2537,19 +2535,28 @@ void MR_GameApp::NewInternetSession()
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
+			cfg->player.onlinePartyNames[0] = cfg->player.nickName;
 			SaveRegistry();
 		}
+		cfg->player.onlinePartySize = lCurrentSession->GetLocalPartySize();
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			cfg->player.onlinePartyNames[i] =
+				lCurrentSession->GetLocalPartyName(i);
+		}
+		SaveRegistry();
 	}
 
 	if(lSuccess) {
 												  // start in 20 seconds (this time may be readjusted by the server)
-		lCurrentSession->SetSimulationTime(lCurrentSession->GetNbPlayers() == 1 ? -6000 : -20000);
+		lCurrentSession->SetSimulationTime(-20000);
 	}
 
 	if(lSuccess) {
-		MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
-		mObservers[0] = MR_Observer::New();
-		mObservers[0]->SetViewport(lViewport);
+		for(int i = 0; i < lCurrentSession->GetLocalPartySize(); ++i) {
+			MR_SplitScreenViewport lViewport = { 0, 0, 0, 0 };
+			mObservers[i] = MR_Observer::New();
+			mObservers[i]->SetViewport(lViewport);
+		}
 		lSuccess = lCurrentSession->CreateMainCharacter();
 	}
 

@@ -23,6 +23,7 @@
 
 #include <Mmsystem.h>
 #include <algorithm>
+#include <stdarg.h>
 #include <vector>
 
 #include "NetInterface.h"
@@ -52,6 +53,7 @@
 #define MRNM_READY				51
 #define MRNM_CANCEL_GAME		52
 #define MRNM_SET_PLAYER_ID		53
+#define MRNM_PARTY_INFO			58
 
 #define STM_SERVER_CONNECT		54
 #define STM_NEW_CLIENT			55
@@ -79,6 +81,11 @@ static bool LoadTcpTrackPreview(const CString &trackName);
 static CString GetTcpTrackPreviewTrackName(HWND dialog);
 static CString FormatTcpServerAddrForDialog(const CString &serverAddr);
 static void AdjustTcpServerAddrLayout(HWND dialog, const CString &serverAddrText);
+static int GetTcpListRowForClient(const MR_NetworkInterface *iface, int clientIdx);
+static int GetTcpListRowForClientPartyMember(const MR_NetworkInterface *iface,
+	int clientIdx, int partyIdx);
+static void UpdateTcpListRowsForClient(HWND listHandle,
+	const MR_NetworkInterface *iface, int clientIdx);
 static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapText,
 	CString &powerupsText, CString &craftsText);
 static bool ParseTcpGameSummary(const CString &gameSummary, CString &trackName,
@@ -118,6 +125,51 @@ MR_NetMessageBuffer *MR_NetworkInterface::sBuffer = NULL;
 CSteamID MR_NetworkInterface::sSteamID = CSteamID();
 static TcpTrackPreviewData gsTcpTrackPreview;
 static COLORREF gsTcpTrackPreviewPalette[MR_NB_COLORS];
+
+static int GetTcpListRowForClient(const MR_NetworkInterface *iface, int clientIdx)
+{
+	return GetTcpListRowForClientPartyMember(iface, clientIdx, 0);
+}
+
+static int GetTcpListRowForClientPartyMember(const MR_NetworkInterface *iface,
+	int clientIdx, int partyIdx)
+{
+	const int lLocalPartySize = (iface != NULL) ? iface->GetLocalPartySize() : 1;
+	return lLocalPartySize + (clientIdx * MR_MAX_LOCAL_PLAYER) + partyIdx;
+}
+
+static void UpdateTcpListRowsForClient(HWND listHandle,
+	const MR_NetworkInterface *iface, int clientIdx)
+{
+	if((listHandle == NULL) || (iface == NULL) ||
+		(clientIdx < 0) || (clientIdx >= MR_NetworkInterface::eMaxClient)) {
+		return;
+	}
+
+	const int lPartySize = max(1,
+		min(iface->GetRemotePartySize(clientIdx), MR_MAX_LOCAL_PLAYER));
+	char lLagText[64] = { 0 };
+	char lStatusText[64] = { 0 };
+	ListView_GetItemText(listHandle, GetTcpListRowForClient(iface, clientIdx), 1,
+		lLagText, sizeof(lLagText));
+	ListView_GetItemText(listHandle, GetTcpListRowForClient(iface, clientIdx), 2,
+		lStatusText, sizeof(lStatusText));
+
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		const int lRow = GetTcpListRowForClientPartyMember(iface, clientIdx, i);
+		if(i < lPartySize) {
+			ListView_SetItemText(listHandle, lRow, 0,
+				(char *) iface->GetRemotePartyName(clientIdx, i));
+			ListView_SetItemText(listHandle, lRow, 1, lLagText);
+			ListView_SetItemText(listHandle, lRow, 2, lStatusText);
+		}
+		else {
+			ListView_SetItemText(listHandle, lRow, 0, "");
+			ListView_SetItemText(listHandle, lRow, 1, "");
+			ListView_SetItemText(listHandle, lRow, 2, "");
+		}
+	}
+}
 static bool gsTcpTrackPreviewPaletteInit = false;
 static HWND gsTcpTrackPreviewWindow = NULL;
 static CString gsTcpOriginalGameName;
@@ -125,6 +177,29 @@ static CString gsTcpTrackName;
 static CString gsTcpLapText;
 static CString gsTcpPowerupsText;
 static CString gsTcpCraftsText;
+
+static void AppendHandshakeLog(const char *pFormat, ...)
+{
+	char lMessage[1024];
+	va_list lArgs;
+	va_start(lArgs, pFormat);
+	_vsnprintf(lMessage, sizeof(lMessage) - 1, pFormat, lArgs);
+	lMessage[sizeof(lMessage) - 1] = 0;
+	va_end(lArgs);
+
+	char lPath[MAX_PATH] = { 0 };
+	DWORD lPathLen = GetTempPath(sizeof(lPath), lPath);
+	if((lPathLen == 0) || (lPathLen >= sizeof(lPath))) {
+		strcpy(lPath, ".\\");
+	}
+	strcat(lPath, "HoverRaceHandshake.log");
+
+	FILE *lFile = fopen(lPath, "a");
+	if(lFile != NULL) {
+		fprintf(lFile, "%lu %s\n", (unsigned long) timeGetTime(), lMessage);
+		fclose(lFile);
+	}
+}
 
 static void PositionDialogToRightOfOwner(HWND dialog, int gap)
 {
@@ -906,6 +981,11 @@ MR_NetworkInterface::MR_NetworkInterface()
 	MR_Config *cfg = MR_Config::GetInstance();
 	mPlayer = (cfg != NULL && !cfg->player.nickName.empty()) ?
 		cfg->player.nickName.c_str() : "Player";
+	mLocalPartySize = 1;
+	mLocalPartyNames[0] = mPlayer;
+	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] = "";
+	}
 
 	mId = MR_ID_NOT_SET; // this denotes that it has not been set yet
 	mServerMode = FALSE;
@@ -927,11 +1007,17 @@ MR_NetworkInterface::MR_NetworkInterface()
 	mGameRuleSettings = MR_GameRuleSettings();
 
 	mAllPreLoguedRecv = FALSE;
+	mWaitGameNameConnected = FALSE;
 
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		mPreLoguedClient[lCounter] = FALSE;
 		mConnected[lCounter] = FALSE;
 		mCanBePreLogued[lCounter] = FALSE;
+		mClientPartySize[lCounter] = 1;
+		mClientPartyNames[lCounter][0] = "";
+		for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			mClientPartyNames[lCounter][i] = "";
+		}
 	}
 
 	// Init the UDP Output ports
@@ -1033,15 +1119,68 @@ void MR_NetworkInterface::CleanupClientState(int pClient, HWND pWindow)
 	mCanBePreLogued[pClient] = FALSE;
 	mPreLoguedClient[pClient] = FALSE;
 	mConnected[pClient] = FALSE;
+	mClientPartySize[pClient] = 1;
+	mClientPartyNames[pClient][0] = "";
+	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mClientPartyNames[pClient][i] = "";
+	}
 
 	if((pWindow != NULL) && IsWindow(pWindow)) {
 		HWND lListHandle = GetDlgItem(pWindow, IDC_LIST);
 
 		if(lListHandle != NULL) {
-			ListView_SetItemText(lListHandle, pClient + 1, 1, "");
-			ListView_SetItemText(lListHandle, pClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_DISCONNECTED));
+			for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+				const int lRow = GetTcpListRowForClientPartyMember(this, pClient, i);
+				ListView_SetItemText(lListHandle, lRow, 0, "");
+				ListView_SetItemText(lListHandle, lRow, 1, "");
+				ListView_SetItemText(lListHandle, lRow, 2,
+					(i == 0) ? (char *) MR_LoadStringBuffered(IDS_DISCONNECTED) : "");
+			}
 		}
 	}
+}
+
+int MR_NetworkInterface::GetRemotePartySize(int pClient) const
+{
+	if((pClient < 0) || (pClient >= eMaxClient)) {
+		return 0;
+	}
+
+	return max(1, mClientPartySize[pClient]);
+}
+
+const char *MR_NetworkInterface::GetRemotePartyName(int pClient, int pPartyIndex) const
+{
+	if((pClient < 0) || (pClient >= eMaxClient)) {
+		return "";
+	}
+	if((pPartyIndex < 0) || (pPartyIndex >= GetRemotePartySize(pClient))) {
+		return "";
+	}
+
+	if((pPartyIndex == 0) && mClientPartyNames[pClient][0].IsEmpty()) {
+		return mClientName[pClient];
+	}
+
+	return mClientPartyNames[pClient][pPartyIndex];
+}
+
+int MR_NetworkInterface::GetMachineIdForClient(int pClient) const
+{
+	if((pClient < 0) || (pClient >= eMaxClient)) {
+		return MR_ID_NOT_SET;
+	}
+
+	return (pClient >= mId) ? (pClient + 1) : pClient;
+}
+
+int MR_NetworkInterface::GetClientForMachineId(int pMachineId) const
+{
+	if((pMachineId < 0) || (pMachineId > eMaxClient) || (pMachineId == mId)) {
+		return -1;
+	}
+
+	return (pMachineId > mId) ? (pMachineId - 1) : pMachineId;
 }
 
 void MR_NetworkInterface::NotifyClientRemoved(int pClient)
@@ -1094,6 +1233,7 @@ void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 	sBuffer = NULL;
 
 	mAllPreLoguedRecv = FALSE;
+	mWaitGameNameConnected = FALSE;
 
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		mClient[lCounter].DisconnectSteam(pDisconnectSteam);
@@ -1101,6 +1241,11 @@ void MR_NetworkInterface::Disconnect(BOOL pDisconnectSteam)
 		mPreLoguedClient[lCounter] = FALSE;
 		mConnected[lCounter] = FALSE;
 		mCanBePreLogued[lCounter] = FALSE;
+		mClientPartySize[lCounter] = 1;
+		mClientPartyNames[lCounter][0] = "";
+		for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			mClientPartyNames[lCounter][i] = "";
+		}
 	}
 
 	// disconnect UDP recv socket
@@ -1343,6 +1488,33 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 void MR_NetworkInterface::SetPlayerName(const char *pPlayerName)
 {
 	mPlayer = pPlayerName;
+	mLocalPartyNames[0] = mPlayer;
+}
+
+void MR_NetworkInterface::SetLocalParty(int pPartySize,
+	const std::string *pPartyNames)
+{
+	mLocalPartySize = max(1, min(pPartySize, MR_MAX_LOCAL_PLAYER));
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] = (pPartyNames != NULL) ? pPartyNames[i].c_str() : "";
+	}
+	if(mLocalPartyNames[0].IsEmpty()) {
+		mLocalPartyNames[0] = mPlayer;
+	}
+	mPlayer = mLocalPartyNames[0];
+}
+
+int MR_NetworkInterface::GetLocalPartySize() const
+{
+	return mLocalPartySize;
+}
+
+const char *MR_NetworkInterface::GetLocalPartyName(int pIndex) const
+{
+	if((pIndex < 0) || (pIndex >= mLocalPartySize)) {
+		return "";
+	}
+	return mLocalPartyNames[pIndex];
 }
 
 /**
@@ -1438,6 +1610,10 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName,
 		MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
+		unsigned int lOpt = 1;
+		setsockopt(mRegistrySocket, SOL_SOCKET, SO_REUSEADDR,
+			(const char *) &lOpt, sizeof(lOpt));
+
 		// Ask server port number
 		HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
 
@@ -1824,28 +2000,30 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 	BOOL lReturnValue = FALSE;
 
 	// static socket is to be setup by various callbacks
-	static SOCKET sNewSocket;
+	static SOCKET sNewSocket = INVALID_SOCKET;
 
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			{	
 				mActiveInterface->mConnectModal = pWindow;
+				mActiveInterface->mWaitGameNameConnected = FALSE;
 				PositionDialogToRightOfOwner(pWindow);
 
 				TRACE("\n%s: [WaitGameNameCallBack] WM_INITDIALOG ", mActiveInterface->GetPlayerName());
 
 				// set up the static socket used to connect to the server
 				sNewSocket = socket(PF_INET, SOCK_STREAM, 0);
-	
-				if(!mActiveInterface->mSteamOnly && sNewSocket == INVALID_SOCKET) { // socket creation failed
+
+				if(sNewSocket == INVALID_SOCKET) { // socket creation failed
 					TRACE("INVALID_SOCKET ");
 
-					if (!mActiveInterface->mSteamID.IsValid()) {
+					if(!mActiveInterface->mSteamID.IsValid()) {
 						SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CREATE_SOCK));
 					}
-				} else {
-					TRACE("SOCKET_CONNECT ");
+				}
+				else {
+					TRACE(mActiveInterface->mSteamOnly ? "STEAM_SOCKET_CONNECT " : "SOCKET_CONNECT ");
 
 					int lCode;
 					int lTrue = 1;
@@ -1857,7 +2035,8 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CONNECTING_SERV));
 
 					SOCKADDR_IN lAddr;
-	
+					memset(&lAddr, 0, sizeof(lAddr));
+
 					lAddr.sin_family = AF_INET;
 					lAddr.sin_addr.s_addr = GetAddrFromStr(mActiveInterface->mServerAddr);
 					lAddr.sin_port = htons(mActiveInterface->mServerPort);
@@ -1866,25 +2045,27 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					mActiveInterface->mClientBkAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr);
 					mActiveInterface->mClientPort[0] = htons(mActiveInterface->mServerPort);
 
-					// call this callback again when the socket successfully connects
-					WSAAsyncSelect(sNewSocket, pWindow, MRM_SERVER_CONNECT, FD_CONNECT);
-	
+					if(!mActiveInterface->mSteamOnly) {
+						// call this callback again when the socket successfully connects
+						WSAAsyncSelect(sNewSocket, pWindow, MRM_SERVER_CONNECT, FD_CONNECT);
+					}
+
 					// Disable Nagle's algorithm: we don't want to accumulate packets and send as larger ones,
 					// but instead send packets as quickly as they are ready -- screw TCP/IP efficiency
 
 					ASSERT(lCode != SOCKET_ERROR);
-	
+
 					lCode = setsockopt(sNewSocket, IPPROTO_TCP, TCP_NODELAY, (char *) &lTrue, sizeof(int));
-	
+
 					ASSERT(lCode != SOCKET_ERROR);
-	
+
 					// Reduce output queue to 512 bytes
 					int lQueueSize = 512;
-	
+
 					lCode = setsockopt(sNewSocket, SOL_SOCKET, SO_SNDBUF, (char *) &lQueueSize, sizeof(int));
-	
+
 					ASSERT(lCode != SOCKET_ERROR);
-	
+
 					// next instance of this function will be with the MRM_SERVER_CONNECT message
 					mActiveInterface->Connect(sNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr), mActiveInterface->mSteamID, STM_NEW_CLIENT, 0);
 				}
@@ -1895,46 +2076,79 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		case MRM_SERVER_CONNECT:
 			{
 				TRACE("\n%s: [WaitGameNameCallBack] MRM_SERVER_CONNECT ", mActiveInterface->GetPlayerName());
+				AppendHandshakeLog("WaitGameName MRM_SERVER_CONNECT steamOnly=%d waitConnected=%d steamId=%u",
+					mActiveInterface->mSteamOnly, mActiveInterface->mWaitGameNameConnected,
+					mActiveInterface->mSteamID.GetAccountID());
+				if(mActiveInterface->mWaitGameNameConnected) {
+					lReturnValue = TRUE;
+					break;
+				}
 
 				MR_NetMessageBuffer lOutputBuffer;
+				SOCKADDR_IN lAddr;
+				memset(&lAddr, 0, sizeof(lAddr));
+				lAddr.sin_family = AF_INET;
+				lAddr.sin_addr.s_addr = INADDR_ANY;
+				lAddr.sin_port = htons(mActiveInterface->mTCPRecvPort);
 	
 				if(WSAGETSELECTERROR(pLParam) == 0) {
+					mActiveInterface->mWaitGameNameConnected = TRUE;
 					TRACE("CONNECTING ");
+					AppendHandshakeLog("WaitGameName connected ok -> send MRNM_GET_GAME_NAME to steamId=%u",
+						mActiveInterface->mSteamID.GetAccountID());
 
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_GET_GAMEINFO));
 	
 					// mClient[0] is the server (if we're not the server)
 					mActiveInterface->mClient[0].Connect(sNewSocket, mActiveInterface->mUDPRecvSocket, mActiveInterface->mSteamID, mActiveInterface->mSteamOnly);
-	
-					// callback with MRM_CLIENT message once the socket reads data
-					WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, FD_READ);
-	
-					// bind the registry socket to the server
-					SOCKADDR_IN lAddr;
 
-					int lSize = sizeof(lAddr);
-	
-					lAddr.sin_family = AF_INET;
-	
-					getsockname(mActiveInterface->mClient[0].GetSocket(), (struct sockaddr *) &lAddr, &lSize);
-	
-					lAddr.sin_family = AF_INET;
-					// lAddr.sin_addr.s_addr = INADDR_ANY;
-					lAddr.sin_port = htons(mActiveInterface->mTCPRecvPort);
-	
-					if(bind(mActiveInterface->mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0 && !mActiveInterface->mSteamID.IsValid()) {
-						TRACE("IDS_CANT_CREATE_SOCK ");
+					if(!mActiveInterface->mSteamOnly) {
+						// callback with MRM_CLIENT message once the socket reads data
+						WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, FD_READ);
 
-						MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+						// bind the registry socket to the server
+						int lSize = sizeof(lAddr);
+
+						if(mActiveInterface->mClient[0].GetSocket() != INVALID_SOCKET) {
+							SOCKADDR_IN lBoundAddr;
+							memset(&lBoundAddr, 0, sizeof(lBoundAddr));
+							lBoundAddr.sin_family = AF_INET;
+
+							if(getsockname(mActiveInterface->mClient[0].GetSocket(),
+								(struct sockaddr *) &lBoundAddr, &lSize) == 0)
+							{
+								lAddr.sin_addr.s_addr = lBoundAddr.sin_addr.s_addr;
+							}
+						}
+
+						unsigned int lOpt = 1;
+						setsockopt(mActiveInterface->mRegistrySocket, SOL_SOCKET,
+							SO_REUSEADDR, (const char *) &lOpt, sizeof(lOpt));
+
+						if(bind(mActiveInterface->mRegistrySocket,
+							(LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0)
+						{
+							SOCKADDR_IN lFallbackAddr;
+							memset(&lFallbackAddr, 0, sizeof(lFallbackAddr));
+							lFallbackAddr.sin_family = AF_INET;
+							lFallbackAddr.sin_addr.s_addr = INADDR_ANY;
+							lFallbackAddr.sin_port = htons(mActiveInterface->mTCPRecvPort);
+
+							if(bind(mActiveInterface->mRegistrySocket,
+								(LPSOCKADDR) &lFallbackAddr,
+								sizeof(lFallbackAddr)) != 0 && !mActiveInterface->mSteamID.IsValid())
+							{
+								TRACE("IDS_CANT_CREATE_SOCK ");
+
+								MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+							}
+						}
+
+						lSize = sizeof(lAddr);
+						lAddr.sin_family = AF_INET;
+
+						getsockname(mActiveInterface->mRegistrySocket, (struct sockaddr *) &lAddr, &lSize);
 					}
-
-					unsigned int lOpt = 1;
-					setsockopt(mActiveInterface->mRegistrySocket, SOL_SOCKET, SO_REUSEADDR, (const char *) &lOpt, sizeof(lOpt));
-	
-					lSize = sizeof(lAddr);
-					lAddr.sin_family = AF_INET;
-	
-					getsockname(mActiveInterface->mRegistrySocket, (struct sockaddr *) &lAddr, &lSize);
 	
 					// send a message asking for the game name
 					lOutputBuffer.mMessageType = MRNM_GET_GAME_NAME;
@@ -1944,6 +2158,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					*(int *) &(lOutputBuffer.mData[4]) = lAddr.sin_port;
 	
 					mActiveInterface->mClient[0].Send(&lOutputBuffer, MR_NET_REQUIRED);
+					AppendHandshakeLog("Sent MRNM_GET_GAME_NAME addr=%u port=%u", lAddr.sin_addr.s_addr, (unsigned) ntohs((u_short) lAddr.sin_port));
 				}
 				else if(!mActiveInterface->mSteamID.IsValid()) {
 					TRACE("IDS_CANT_CONNECT ");
@@ -1957,6 +2172,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		case MRM_CLIENT:
 			{
 				TRACE("\n%s: [WaitGameNameCallBack] MRM_CLIENT ", mActiveInterface->GetPlayerName());
+				AppendHandshakeLog("WaitGameName MRM_CLIENT event");
 
 				const MR_NetMessageBuffer *lBuffer = NULL;
 
@@ -1976,6 +2192,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 	
 						if((lBuffer != NULL) && (lBuffer->mMessageType == MRNM_GAME_NAME)) {
 							TRACE("MRNM_GAME_NAME ");
+							AppendHandshakeLog("Received MRNM_GAME_NAME len=%d", lBuffer->mDataLen);
 
 							mActiveInterface->mGameName = CString((const char *) lBuffer->mData, lBuffer->mDataLen);
 							if(mActiveInterface->mTrackName.IsEmpty()) {
@@ -2014,6 +2231,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 									}
 								}
 							}
+							mActiveInterface->mConnectModal = NULL;
 							EndDialog(pWindow, IDOK);
 						}
 						else {
@@ -2035,6 +2253,8 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					TRACE("\n%s: [WaitGameNameCallBack] IDCANCEL ", mActiveInterface->GetPlayerName());
 
 					lReturnValue = TRUE;
+					mActiveInterface->mConnectModal = NULL;
+					mActiveInterface->mWaitGameNameConnected = FALSE;
 					closesocket(sNewSocket);
 
 					if(mActiveInterface->mSteamOnly && mActiveInterface->mSteamID.IsValid()) {
@@ -2231,7 +2451,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				}
 				UpdateTcpDialogTrackSummary(pWindow);
 	
-				// Add the current player to the list
+				// Add the current local party to the list
 				LV_ITEM lItem;
 	
 				lItem.mask = LVIF_TEXT;
@@ -2239,16 +2459,24 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				lItem.iSubItem = 0;
 				lItem.pszText = "";
 	
-				ListView_InsertItem(lListHandle, &lItem);
-				ListView_SetItemText(lListHandle, 0, 0, (char *) ((const char *) mActiveInterface->mPlayer));
-				ListView_SetItemText(lListHandle, 0, 1, (char *) MR_LoadStringBuffered(IDS_LOCAL));
-				ListView_SetItemText(lListHandle, 0, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
-	
-				for(int lCounter = 1; lCounter <= eMaxClient; lCounter++) {
-					// Add empty entries
+				for(int lCounter = 0; lCounter < mActiveInterface->GetLocalPartySize(); lCounter++) {
 					lItem.iItem = lCounter;
-					lItem.pszText = "--";
 					ListView_InsertItem(lListHandle, &lItem);
+					ListView_SetItemText(lListHandle, lCounter, 0,
+						(char *) mActiveInterface->GetLocalPartyName(lCounter));
+					ListView_SetItemText(lListHandle, lCounter, 1,
+						(char *) MR_LoadStringBuffered(IDS_LOCAL));
+					ListView_SetItemText(lListHandle, lCounter, 2,
+						(char *) MR_LoadStringBuffered(IDS_CONNECTED));
+				}
+	
+				for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
+					for(int lPartyIndex = 0; lPartyIndex < MR_MAX_LOCAL_PLAYER; ++lPartyIndex) {
+						lItem.iItem = GetTcpListRowForClientPartyMember(
+							mActiveInterface, lCounter, lPartyIndex);
+						lItem.pszText = "";
+						ListView_InsertItem(lListHandle, &lItem);
+					}
 				}
 
 				ExpandTcpConnectionsDialogIfNeeded(pWindow, lListHandle);
@@ -2277,8 +2505,9 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
 					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
 					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
-	
+
 					mActiveInterface->mClient[0].Send(&lAnswer, MR_NET_REQUIRED);
+					mActiveInterface->SendPartyInfo(0);
 				}
 			}
 	
@@ -2607,37 +2836,57 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case MRNM_CONN_NAME_GET_SET: // client has given us their name and their UDP recv port
 							{
 								TRACE("MRNM_CONN_NAME_GET_SET ");
+								const int lPartySize = (lBuffer->mDataLen >= 5) ?
+									max(1, min((int) lBuffer->mData[4], MR_MAX_LOCAL_PLAYER)) : 1;
+								const int lNameOffset = (lBuffer->mDataLen >= 5) ? 5 : 4;
+								AppendHandshakeLog("slot=%d recv MRNM_CONN_NAME_GET_SET size=%d name=%.*s", lClient,
+									lPartySize, max(0, lBuffer->mDataLen - lNameOffset),
+									(const char *) (lBuffer->mData + lNameOffset));
 
 								// Add the item int the list
 								LV_ITEM lItem;
-								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
+								CString lConnectionName((const char *) (lBuffer->mData + lNameOffset),
+									lBuffer->mDataLen - lNameOffset);
 	
 								mActiveInterface->mClient[lClient].SetRemoteUDPPort(*(unsigned int *) (lBuffer->mData));
 								mActiveInterface->mClientName[lClient] = lConnectionName;
+								mActiveInterface->mClientPartySize[lClient] = lPartySize;
+								mActiveInterface->mClientPartyNames[lClient][0] = lConnectionName;
+								for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+									mActiveInterface->mClientPartyNames[lClient][i] = "";
+								}
 	
 								lItem.mask = LVIF_TEXT;
-								lItem.iItem = lClient + 1;
+								lItem.iItem = GetTcpListRowForClient(mActiveInterface, lClient);
 								lItem.iSubItem = 0;
 								lItem.pszText = (char *) ((const char *) lConnectionName);
-	
+
 								if(ListView_GetItemCount(lListHandle) > lItem.iItem) {
 									ListView_SetItem(lListHandle, &lItem);
 								}
 								else {
 									ListView_InsertItem(lListHandle, &lItem);
 								}
-								ListView_SetItemText(lListHandle, lClient + 1, 1, (char *) MR_LoadStringBuffered(IDS_COMPUTING));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 1,
+									(char *) MR_LoadStringBuffered(IDS_COMPUTING));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 2,
+									(char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
 	
 								// return local name as an answer
 								// also include UDP port number in the request
 								lAnswer.mMessageType = MRNM_CONN_NAME_SET;
-								lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
+								lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 5;
 								*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
-								memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
+								lAnswer.mData[4] = (MR_UInt8) max(1,
+									min(mActiveInterface->mLocalPartySize, MR_MAX_LOCAL_PLAYER));
+								memcpy(lAnswer.mData + 5, mActiveInterface->mPlayer, lAnswer.mDataLen - 5);
 	
 								mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
-	
+								mActiveInterface->SendPartyInfo(lClient);
+
 								// Tell client their ID and send client list if server
 								if(mActiveInterface->mServerMode) {
 									// send player ID
@@ -2679,18 +2928,30 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case MRNM_CONN_NAME_SET: // client returned information on their name and UDP recv port
 							{
 								TRACE("MRNM_CONN_NAME_SET ");
+								const int lPartySize = (lBuffer->mDataLen >= 5) ?
+									max(1, min((int) lBuffer->mData[4], MR_MAX_LOCAL_PLAYER)) : 1;
+								const int lNameOffset = (lBuffer->mDataLen >= 5) ? 5 : 4;
+								AppendHandshakeLog("slot=%d recv MRNM_CONN_NAME_SET size=%d name=%.*s", lClient,
+									lPartySize, max(0, lBuffer->mDataLen - lNameOffset),
+									(const char *) (lBuffer->mData + lNameOffset));
 
 								LV_ITEM lItem;
-								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
+								CString lConnectionName((const char *) (lBuffer->mData + lNameOffset),
+									lBuffer->mDataLen - lNameOffset);
 	
 								mActiveInterface->mClient[lClient].SetRemoteUDPPort(*(unsigned int *) (lBuffer->mData));
 								mActiveInterface->mClientName[lClient] = lConnectionName;
+								mActiveInterface->mClientPartySize[lClient] = lPartySize;
+								mActiveInterface->mClientPartyNames[lClient][0] = lConnectionName;
+								for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+									mActiveInterface->mClientPartyNames[lClient][i] = "";
+								}
 	
 								lItem.mask = LVIF_TEXT;
-								lItem.iItem = lClient + 1;
+								lItem.iItem = GetTcpListRowForClient(mActiveInterface, lClient);
 								lItem.iSubItem = 0;
 								lItem.pszText = (char *) ((const char *) lConnectionName);
-	
+
 								// Add the client into the list
 								if(ListView_GetItemCount(lListHandle) > lItem.iItem) {
 									ListView_SetItem(lListHandle, &lItem);
@@ -2698,17 +2959,25 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								else {
 									ListView_InsertItem(lListHandle, &lItem);
 								}
-	
+
 								// Begin lag test
-								ListView_SetItemText(lListHandle, lClient + 1, 1, (char *) MR_LoadStringBuffered(IDS_COMPUTING));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 1,
+									(char *) MR_LoadStringBuffered(IDS_COMPUTING));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 2,
+									(char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
+								mActiveInterface->SendPartyInfo(lClient);
 	
 								// Start lag test with that connection
 								lAnswer.mMessageType = MRNM_LAG_TEST;
 								lAnswer.mDataLen = 4;
 								*(DWORD *) lAnswer.mData = timeGetTime();
-	
+
 								mActiveInterface->UDPSend(lClient, &lAnswer, TRUE);
+								AppendHandshakeLog("slot=%d send MRNM_LAG_TEST stamp=%u", lClient,
+									*(DWORD *) lAnswer.mData);
 								// mActiveInterface->mClient[ lClient ].Send( &lAnswer, MR_NET_REQUIRED );
 	
 								// Start a time-out timer because the request may fail
@@ -2805,6 +3074,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_LAG_TEST: // a client we are connecting to is conducting a lag test
 							TRACE("MRNM_LAG_TEST ");
+							AppendHandshakeLog("slot=%d recv MRNM_LAG_TEST stamp=%d", lClient,
+								*(int *) &(lBuffer->mData[0]));
 
 							// return the message and add the current time
 							lAnswer.mMessageType = MRNM_LAG_ANSWER;
@@ -2819,6 +3090,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_LAG_ANSWER: // lag test returned
 							TRACE("MRNM_LAG_ANSWER ");
+							AppendHandshakeLog("slot=%d recv MRNM_LAG_ANSWER stamp=%d", lClient,
+								*(int *) &(lBuffer->mData[0]));
 
 							// Desactivate time-out
 							KillTimer(pWindow, lClient + 10);
@@ -2835,11 +3108,13 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									SetTimer(pWindow, lClient + 10, MR_PING_RETRY_TIME, NULL);
 
 									// send a new request
-									lAnswer.mMessageType = MRNM_LAG_TEST;
-									lAnswer.mDataLen = 4;
-									*(int *) &(lAnswer.mData[0]) = timeGetTime();
-
-									mActiveInterface->UDPSend(lClient, &lAnswer, TRUE);
+							lAnswer.mMessageType = MRNM_LAG_TEST;
+							lAnswer.mDataLen = 4;
+							*(int *) &(lAnswer.mData[0]) = timeGetTime();
+	
+							mActiveInterface->UDPSend(lClient, &lAnswer, TRUE);
+							AppendHandshakeLog("slot=%d retry MRNM_LAG_TEST stamp=%d", lClient,
+								*(int *) &(lAnswer.mData[0]));
 									// mActiveInterface->mClient[ lClient ].Send( &lAnswer, MR_NET_REQUIRED );
 
 								}
@@ -2853,12 +3128,21 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									*(int *) &(lAnswer.mData[0]) = mActiveInterface->mClient[lClient].GetAvgLag();
 									*(int *) &(lAnswer.mData[4]) = mActiveInterface->mClient[lClient].GetMinLag();
 									mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
+									AppendHandshakeLog("slot=%d send MRNM_LAG_INFO avg=%d min=%d", lClient,
+										mActiveInterface->mClient[lClient].GetAvgLag(),
+										mActiveInterface->mClient[lClient].GetMinLag());
 
 									// Update display
 									char lStrBuffer[20];
 
-									ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+									ListView_SetItemText(lListHandle,
+										GetTcpListRowForClient(mActiveInterface, lClient), 1,
+										_itoa(mActiveInterface->mClient[lClient].GetAvgLag(),
+											lStrBuffer, 10));
+									ListView_SetItemText(lListHandle,
+										GetTcpListRowForClient(mActiveInterface, lClient), 2,
+										(char *) MR_LoadStringBuffered(IDS_CONNECTED));
+									UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
 
 									// Verify if weconnected with all the client that we were suppose to
 									mActiveInterface->SendConnectionDoneIfNeeded();
@@ -2869,30 +3153,44 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case MRNM_LAG_INFO: // we are being sent lag info
 							{
 								TRACE("MRNM_LAG_INFO ");
+								AppendHandshakeLog("slot=%d recv MRNM_LAG_INFO avg=%d min=%d", lClient,
+									*(int *) &(lBuffer->mData[0]), *(int *) &(lBuffer->mData[4]));
 
 								mActiveInterface->mClient[lClient].SetLag(*(int *) &(lBuffer->mData[0]), *(int *) &(lBuffer->mData[4]));
 	
 								// Update display
 								char lStrBuffer[20];
 	
-								ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 1,
+									_itoa(mActiveInterface->mClient[lClient].GetAvgLag(),
+										lStrBuffer, 10));
 								if(mActiveInterface->mServerMode) {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_WAITING_ACK));
+									ListView_SetItemText(lListHandle,
+										GetTcpListRowForClient(mActiveInterface, lClient), 2,
+										(char *) MR_LoadStringBuffered(IDS_WAITING_ACK));
 								}
 								else {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+									ListView_SetItemText(lListHandle,
+										GetTcpListRowForClient(mActiveInterface, lClient), 2,
+										(char *) MR_LoadStringBuffered(IDS_CONNECTED));
 								}
+								UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
 							}
 							break;
 
 						case MRNM_CONNECTION_DONE: // the client has told us they are connected to everyone
 							{
 								TRACE("MRNM_CONNECTION_DONE ");
+								AppendHandshakeLog("slot=%d recv MRNM_CONNECTION_DONE", lClient);
 
 								ASSERT(mActiveInterface->mServerMode);
 	
 								// Mark the connection as completed
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+								ListView_SetItemText(lListHandle,
+									GetTcpListRowForClient(mActiveInterface, lClient), 2,
+									(char *) MR_LoadStringBuffered(IDS_CONNECTED));
+								UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
 								mActiveInterface->mConnected[lClient] = TRUE;
 							}
 							break;
@@ -2948,6 +3246,27 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 							// set mId
 							mActiveInterface->mId = lBuffer->mData[0];
+							break;
+
+						case MRNM_PARTY_INFO:
+							TRACE("MRNM_PARTY_INFO ");
+
+							if(lBuffer->mDataLen >= 2) {
+								const int lPartySize = max(1,
+									min((int) lBuffer->mData[0], MR_MAX_LOCAL_PLAYER));
+								const int lPartyIndex = lBuffer->mData[1];
+								CString lPartyName((const char *) (lBuffer->mData + 2),
+									lBuffer->mDataLen - 2);
+
+								mActiveInterface->mClientPartySize[lClient] = lPartySize;
+								if((lPartyIndex >= 0) && (lPartyIndex < MR_MAX_LOCAL_PLAYER)) {
+									mActiveInterface->mClientPartyNames[lClient][lPartyIndex] = lPartyName;
+									if((lPartyIndex == 0) && !lPartyName.IsEmpty()) {
+										mActiveInterface->mClientName[lClient] = lPartyName;
+									}
+									UpdateTcpListRowsForClient(lListHandle, mActiveInterface, lClient);
+								}
+							}
 							break;
 					}
 				}
@@ -3072,12 +3391,15 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					// request client name to start the connection sequence
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
-					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
+					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 5;
 					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
+					lAnswer.mData[4] = (MR_UInt8) max(1,
+						min(mActiveInterface->mLocalPartySize, MR_MAX_LOCAL_PLAYER));
 
-					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
+					memcpy(lAnswer.mData + 5, mActiveInterface->mPlayer, lAnswer.mDataLen - 5);
 
 					mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
+					mActiveInterface->SendPartyInfo(lClient);
 				}
 
 				break;
@@ -3111,8 +3433,38 @@ void MR_NetworkInterface::SendConnectionDoneIfNeeded()
 			lAnswer.mMessageType = MRNM_CONNECTION_DONE;
 			lAnswer.mClient = mId;
 			lAnswer.mDataLen = 0;
+			AppendHandshakeLog("send MRNM_CONNECTION_DONE to server");
 			mClient[0].Send(&lAnswer, MR_NET_REQUIRED);
 		}
+		else {
+			AppendHandshakeLog("hold MRNM_CONNECTION_DONE allPre=%d", mAllPreLoguedRecv);
+		}
+	}
+	else {
+		AppendHandshakeLog("hold MRNM_CONNECTION_DONE waiting for prelogued list");
+	}
+}
+
+void MR_NetworkInterface::SendPartyInfo(int pClient)
+{
+	if((pClient < 0) || (pClient >= eMaxClient) || !mClient[pClient].IsConnected()) {
+		return;
+	}
+
+	for(int i = 0; i < mLocalPartySize; ++i) {
+		MR_NetMessageBuffer lAnswer;
+		const CString &lName = mLocalPartyNames[i];
+
+		lAnswer.mMessageType = MRNM_PARTY_INFO;
+		lAnswer.mClient = mId;
+		lAnswer.mDataLen = 2 + lName.GetLength();
+		lAnswer.mData[0] = (MR_UInt8) mLocalPartySize;
+		lAnswer.mData[1] = (MR_UInt8) i;
+		if(lName.GetLength() > 0) {
+			memcpy(lAnswer.mData + 2, (const char *) lName, lName.GetLength());
+		}
+
+		mClient[pClient].Send(&lAnswer, MR_NET_REQUIRED);
 	}
 }
 
@@ -3808,18 +4160,32 @@ void MR_NetworkInterface::CheckP2PAvailability() const
 			}
 
 			if (sBuffer->mMessageType == STM_SERVER_CONNECT) {
-				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_SERVER_CONNECT, 0, 0);
+				AppendHandshakeLog("Steam packet STM_SERVER_CONNECT from=%u", steamIDRemote.GetAccountID());
+				if((mActiveInterface->mConnectModal != NULL) &&
+					IsWindow(mActiveInterface->mConnectModal) &&
+					!mActiveInterface->mServerMode) {
+					MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_SERVER_CONNECT, 0, 0);
+				}
+				else {
+					AppendHandshakeLog("Steam packet STM_SERVER_CONNECT ignored outside WaitGameName");
+				}
 			} else if (sBuffer->mMessageType == STM_NEW_CLIENT) {		
+				AppendHandshakeLog("Steam packet STM_NEW_CLIENT from=%u", steamIDRemote.GetAccountID());
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_NEW_CLIENT, 0, 0);
 			} else if ((sBuffer->mMessageType == STM_CLIENT_CONNECT) && (lClient != MR_ID_NOT_SET)) {		
+				AppendHandshakeLog("Steam packet STM_CLIENT_CONNECT from=%u slot=%d", steamIDRemote.GetAccountID(), lClient);
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CONNECT);
 			} else if ((sBuffer->mMessageType == STM_CLIENT_CLOSE) && (lClient != MR_ID_NOT_SET)) {		
+				AppendHandshakeLog("Steam packet STM_CLIENT_CLOSE from=%u slot=%d", steamIDRemote.GetAccountID(), lClient);
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_CLOSE);
 			} else if ((sBuffer->mMessageType == MRNM_GAME_NAME) && (lClient != MR_ID_NOT_SET)) {
+				AppendHandshakeLog("Steam packet MRNM_GAME_NAME from=%u slot=%d", steamIDRemote.GetAccountID(), lClient);
 				MR_NetworkInterface::WaitGameNameCallBack(mActiveInterface->mConnectModal, MRM_CLIENT + lClient, 0, FD_READ);
 			} else if (lClient == MR_ID_NOT_SET) {
+				AppendHandshakeLog("Steam packet ignored type=%d from=%u", sBuffer->mMessageType, steamIDRemote.GetAccountID());
 				TRACE(" Ignoring Steam message type %d from unknown client\n", sBuffer->mMessageType);
 			} else {
+				AppendHandshakeLog("Steam packet type=%d from=%u slot=%d", sBuffer->mMessageType, steamIDRemote.GetAccountID(), lClient);
 				TRACE(" Message type received %d from client %d\n", sBuffer->mMessageType, lClient);
 				MR_NetworkInterface::ListCallBack(mActiveInterface->mGameModal, MRM_CLIENT + lClient, 0, FD_READ);
 			}

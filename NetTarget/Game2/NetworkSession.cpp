@@ -39,11 +39,13 @@
 #define MRNM_SET_PERM_ELEMENT_STATE   8
 #define MRNM_SEND_KEYID               9
 #define MRNM_HIT_MESSAGE             10
+#define MRNM_SET_MAIN_ELEM_STATE_BATCH 11
 
 // Local structures
 class MR_PlayerStats
 {
 	public:
+		MR_Int16 mHoverId;
 
 		MR_SimulationTime mFinishTime;
 		MR_SimulationTime mBestLap;
@@ -61,7 +63,8 @@ class MR_PlayerStats
 class MR_HitMessage
 {
 	public:
-		MR_Int8 mHoverIdSrc;
+		MR_Int16 mVictimHoverId;
+		MR_Int16 mHoverIdSrc;
 		MR_Int32 mElementId;
 };
 
@@ -79,19 +82,36 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 	mWindow = pWindow;
 
 	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		mClientCharacter[lCounter] = NULL;
 		mLastSendElemStateTime[lCounter] = timeGetTime();
+		mRemoteHoverBase[lCounter] = -1;
+		mRemotePartySize[lCounter] = 0;
 	}
-	mLastSendElemStateFuncTime = timeGetTime();
+	for(int lCounter = 0; lCounter < eMaxRemoteHover; lCounter++) {
+		mRemoteCharacter[lCounter] = NULL;
+		mRemoteClient[lCounter] = NULL;
+		mRemoteOwnerClient[lCounter] = -1;
+	}
+	for(int lCounter = 0; lCounter < MR_MAX_LOCAL_PLAYER; lCounter++) {
+		mLastSendElemStateFuncTime[lCounter] = timeGetTime();
+	}
 
 	mResultList = NULL;
 	mHitList = NULL;
-	mSendedPlayerStats = 0;
-	mSendedCheckpointStats = 1;
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mSendedPlayerStats[i] = 0;
+		mSendedCheckpointStats[i] = 1;
+		mLastBroadcastCraftModel[i] = -1;
+	}
 
 	mChatEditBuffer[0] = 0;
 	mRaceHash = "";
-	mLastBroadcastCraftModel = -1;
+	mLocalPartySize = 1;
+	mLocalPartyNames[0] = "Player";
+	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] = "";
+	}
+	mLocalHoverBase = 0;
+	mConfiguredPlayerCount = 1;
 
 	mTimeToSendCharacterCreation = -5000;		  // send at least 5 sec before game start
 
@@ -135,7 +155,9 @@ MR_NetworkSession::~MR_NetworkSession()
 
 			// Verify if we have the best lap
 			while(lCurrent != NULL) {
-				if(lCurrent->mPlayerIndex == -1) {
+				if((mMainCharacter1 != NULL) &&
+					(lCurrent->mPlayerHoverId == mMainCharacter1->GetHoverId()))
+				{
 					lPlayer = lCurrent;
 				}
 				lCurrent = lCurrent->mNext;
@@ -156,11 +178,14 @@ MR_NetworkSession::~MR_NetworkSession()
 
 				// Report ladder matchs
 				if(lNbPlayer == 2) {
-					int lWinnerIndex = mResultList->mPlayerIndex;
+					const int lWinnerHoverId = mResultList->mPlayerHoverId;
 					// If you lost and the other player have finished
-					if((lWinnerIndex != -1) && (mResultList->mNbCompletedLap == -1)) {
+					if((mMainCharacter1 != NULL) &&
+						(lWinnerHoverId != mMainCharacter1->GetHoverId()) &&
+						(mResultList->mNbCompletedLap == -1))
+					{
 						// Report the Lost
-						MR_SendLadderResult(mWindow, mNetInterface.GetPlayerName(lWinnerIndex), mOpponendMajorID, mOpponendMinorID, mNetInterface.GetPlayerName(-1), mMajorID, mMinorID, mSession.GetTitle(), lTotalLap);
+						MR_SendLadderResult(mWindow, ResolvePlayerName(lWinnerHoverId), mOpponendMajorID, mOpponendMinorID, mNetInterface.GetPlayerName(-1), mMajorID, mMinorID, mSession.GetTitle(), lTotalLap);
 
 					}
 				}
@@ -197,6 +222,157 @@ int MR_NetworkSession::ResultAvaillable() const
 	return lReturnValue;
 }
 
+void MR_NetworkSession::RefreshHoverAssignments()
+{
+	int lNextHoverId = 0;
+	const int lLocalMachineId = mNetInterface.GetId();
+
+	mLocalHoverBase = 0;
+	for(int i = 0; i < MR_NetworkInterface::eMaxClient; ++i) {
+		mRemoteHoverBase[i] = -1;
+		mRemotePartySize[i] = 0;
+	}
+
+	for(int lMachineId = 0; lMachineId <= MR_NetworkInterface::eMaxClient; ++lMachineId) {
+		if(lMachineId == lLocalMachineId) {
+			mLocalHoverBase = lNextHoverId;
+			lNextHoverId += mLocalPartySize;
+		}
+		else {
+			const int lClient = mNetInterface.GetClientForMachineId(lMachineId);
+			if((lClient >= 0) && mNetInterface.IsConnected(lClient)) {
+				mRemoteHoverBase[lClient] = lNextHoverId;
+				mRemotePartySize[lClient] = mNetInterface.GetRemotePartySize(lClient);
+				lNextHoverId += mRemotePartySize[lClient];
+			}
+		}
+	}
+
+	mConfiguredPlayerCount = max(1, lNextHoverId);
+}
+
+int MR_NetworkSession::GetHoverBaseForMachineId(int pMachineId) const
+{
+	if(pMachineId == mNetInterface.GetId()) {
+		return mLocalHoverBase;
+	}
+
+	const int lClient = mNetInterface.GetClientForMachineId(pMachineId);
+	if((lClient < 0) || (lClient >= MR_NetworkInterface::eMaxClient)) {
+		return -1;
+	}
+
+	return mRemoteHoverBase[lClient];
+}
+
+int MR_NetworkSession::GetLocalHoverId(int pLocalIndex) const
+{
+	if((pLocalIndex < 0) || (pLocalIndex >= mLocalPartySize)) {
+		return -1;
+	}
+
+	return mLocalHoverBase + pLocalIndex;
+}
+
+const char *MR_NetworkSession::ResolvePlayerName(int pHoverId) const
+{
+	if((pHoverId >= mLocalHoverBase) &&
+		(pHoverId < (mLocalHoverBase + mLocalPartySize)))
+	{
+		return mLocalPartyNames[pHoverId - mLocalHoverBase];
+	}
+
+	for(int lClient = 0; lClient < MR_NetworkInterface::eMaxClient; ++lClient) {
+		const int lBase = mRemoteHoverBase[lClient];
+		if((lBase >= 0) && (pHoverId >= lBase) &&
+			(pHoverId < (lBase + mRemotePartySize[lClient])))
+		{
+			return mNetInterface.GetRemotePartyName(lClient, pHoverId - lBase);
+		}
+	}
+
+	return "?";
+}
+
+MR_MainCharacter *MR_NetworkSession::GetRemoteCharacterByHoverId(int pHoverId) const
+{
+	if((pHoverId < 0) || (pHoverId >= eMaxRemoteHover)) {
+		return NULL;
+	}
+
+	return mRemoteCharacter[pHoverId];
+}
+
+MR_MainCharacter *MR_NetworkSession::GetRepresentativeRemoteCharacter(int pClient) const
+{
+	if((pClient < 0) || (pClient >= MR_NetworkInterface::eMaxClient)) {
+		return NULL;
+	}
+
+	const int lBase = mRemoteHoverBase[pClient];
+	if(lBase < 0) {
+		return NULL;
+	}
+
+	for(int i = 0; i < mRemotePartySize[pClient]; ++i) {
+		MR_MainCharacter *lCharacter = GetRemoteCharacterByHoverId(lBase + i);
+		if(lCharacter != NULL) {
+			return lCharacter;
+		}
+	}
+
+	return NULL;
+}
+
+void MR_NetworkSession::RemoveRemoteClientCharacters(int pClient)
+{
+	if((pClient < 0) || (pClient >= MR_NetworkInterface::eMaxClient)) {
+		return;
+	}
+
+	MR_Level *lLevel = mSession.GetCurrentLevel();
+	for(int lHoverId = 0; lHoverId < eMaxRemoteHover; ++lHoverId) {
+		if((mRemoteOwnerClient[lHoverId] == pClient) &&
+			(mRemoteCharacter[lHoverId] != NULL))
+		{
+			if((lLevel != NULL) && (mRemoteClient[lHoverId] != NULL)) {
+				lLevel->DeleteElement(mRemoteClient[lHoverId]);
+			}
+			mRemoteClient[lHoverId] = NULL;
+			mRemoteCharacter[lHoverId] = NULL;
+			mRemoteOwnerClient[lHoverId] = -1;
+		}
+	}
+}
+
+void MR_NetworkSession::ApplyRemoteMainElementState(int pClientId, int pHoverId,
+	const MR_UInt8 *pStateData, int pStateLen)
+{
+	MR_MainCharacter *lRemoteCharacter = GetRemoteCharacterByHoverId(pHoverId);
+	if(lRemoteCharacter == NULL) {
+		return;
+	}
+
+	int lCurrentSimTime = mSession.GetSimulationTime();
+	int lLastCollisionAge = lCurrentSimTime - lRemoteCharacter->mLastCollisionTime;
+
+	if((lCurrentSimTime >= 0) &&
+		(lLastCollisionAge < (mNetInterface.GetAvgLag(pClientId) + 40)))
+	{
+		return;
+	}
+
+	int lOldRoom = lRemoteCharacter->mRoom;
+	lRemoteCharacter->SetNetState(pStateLen, pStateData);
+
+	if(lRemoteCharacter->mRoom != lOldRoom) {
+		MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+		if((lCurrentLevel != NULL) && (pHoverId >= 0) && (pHoverId < eMaxRemoteHover)) {
+			lCurrentLevel->MoveElement(mRemoteClient[pHoverId], lRemoteCharacter->mRoom);
+		}
+	}
+}
+
 /**
  * Get the results for the player in pPosition.  Writes out all the information
  * to the other passed parameters.
@@ -225,9 +401,9 @@ void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &
 		else {
 			if(lCounter == pPosition) {
 				// We got it
-				pPlayerName = mNetInterface.GetPlayerName(lCurrent->mPlayerIndex);
+				pPlayerName = lCurrent->mPlayerName;
 				pId = lCurrent->mPlayerId;
-				pConnected = mNetInterface.IsConnected(lCurrent->mPlayerIndex);
+				pConnected = (FindPlayerByHoverId(lCurrent->mPlayerHoverId) != NULL);
 				pNbLap = lCurrent->mNbCompletedLap;
 				pFinishTime = lCurrent->mFinishTime;
 				pBestLap = lCurrent->mBestLap;
@@ -268,9 +444,9 @@ void MR_NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, in
 		else {
 			if(lCounter == pPosition) {
 				// We got it
-				pPlayerName = mNetInterface.GetPlayerName(lCurrent->mPlayerIndex);
+				pPlayerName = lCurrent->mPlayerName;
 				pId = lCurrent->mPlayerId;
-				pConnected = mNetInterface.IsConnected(lCurrent->mPlayerIndex);
+				pConnected = (FindPlayerByHoverId(lCurrent->mPlayerHoverId) != NULL);
 				pNbHitOther = lCurrent->mNbGoodShot;
 				pNbHitHimself = lCurrent->mNbTimeHit;
 
@@ -325,9 +501,7 @@ BOOL MR_NetworkSession::ResultAvaillable()const
  */
 int MR_NetworkSession::GetNbPlayers() const
 {
-	// Return the number of players still playing???
-	return mNetInterface.GetClientCount()+1;
-	// return ResultAvaillable(); // what an ugly hack, Richard
+	return max(1, mConfiguredPlayerCount);
 }
 
 /**
@@ -337,75 +511,59 @@ int MR_NetworkSession::GetNbPlayers() const
  */
 const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
 {
-	const MR_MainCharacter *lReturnValue = NULL;
+	if((pPlayerIndex < 0) || (pPlayerIndex >= GetNbPlayers())) {
+		return NULL;
+	}
 
-	if(pPlayerIndex == 0) 
-		lReturnValue = mMainCharacter1;
-	else if(pPlayerIndex <= MR_NetworkInterface::eMaxClient)
-		lReturnValue = mClientCharacter[pPlayerIndex - 1];
-	
-	return lReturnValue;
+	if((pPlayerIndex >= mLocalHoverBase) &&
+		(pPlayerIndex < (mLocalHoverBase + mLocalPartySize)))
+	{
+		return mMainCharacters[pPlayerIndex - mLocalHoverBase];
+	}
+
+	return GetRemoteCharacterByHoverId(pPlayerIndex);
 }
 
 void MR_NetworkSession::SetPlayerCraftCollision(int pHoverId, BOOL pEnabled)
 {
 	MR_ClientSession::SetPlayerCraftCollision(pHoverId, pEnabled);
-
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if((mClientCharacter[lCounter] != NULL) &&
-			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
-		{
-			mClientCharacter[lCounter]->SetCraftCollisionEnabled(pEnabled);
-		}
+	MR_MainCharacter *lRemote = GetRemoteCharacterByHoverId(pHoverId);
+	if(lRemote != NULL) {
+		lRemote->SetCraftCollisionEnabled(pEnabled);
 	}
 }
 
 void MR_NetworkSession::SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled)
 {
 	MR_ClientSession::SetPlayerColumnInteraction(pHoverId, pEnabled);
-
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if((mClientCharacter[lCounter] != NULL) &&
-			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
-		{
-			mClientCharacter[lCounter]->SetColumnInteractionEnabled(pEnabled);
-		}
+	MR_MainCharacter *lRemote = GetRemoteCharacterByHoverId(pHoverId);
+	if(lRemote != NULL) {
+		lRemote->SetColumnInteractionEnabled(pEnabled);
 	}
 }
 
 void MR_NetworkSession::SetPlayerRenderOpacity(int pHoverId, float pOpacity)
 {
 	MR_ClientSession::SetPlayerRenderOpacity(pHoverId, pOpacity);
-
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if((mClientCharacter[lCounter] != NULL) &&
-			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
-		{
-			mClientCharacter[lCounter]->SetRenderOpacity(pOpacity);
-		}
+	MR_MainCharacter *lRemote = GetRemoteCharacterByHoverId(pHoverId);
+	if(lRemote != NULL) {
+		lRemote->SetRenderOpacity(pOpacity);
 	}
 }
 
 BOOL MR_NetworkSession::IsLocalHoverId(int pHoverId) const
 {
-	return (mMainCharacter1 != NULL) && (mMainCharacter1->GetHoverId() == pHoverId);
+	return MR_ClientSession::IsLocalHoverId(pHoverId);
 }
 
 const MR_MainCharacter *MR_NetworkSession::FindPlayerByHoverId(int pHoverId) const
 {
-	if((mMainCharacter1 != NULL) && (mMainCharacter1->GetHoverId() == pHoverId)) {
-		return mMainCharacter1;
+	const MR_MainCharacter *lLocal = MR_ClientSession::FindPlayerByHoverId(pHoverId);
+	if(lLocal != NULL) {
+		return lLocal;
 	}
 
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if((mClientCharacter[lCounter] != NULL) &&
-			(mClientCharacter[lCounter]->GetHoverId() == pHoverId))
-		{
-			return mClientCharacter[lCounter];
-		}
-	}
-
-	return NULL;
+	return GetRemoteCharacterByHoverId(pHoverId);
 }
 
 BOOL MR_NetworkSession::ShouldProcessLocalHitQueues() const
@@ -418,15 +576,16 @@ BOOL MR_NetworkSession::ShouldProcessLocalHitQueues() const
  *
  * @param pPlayer Ignored.
  */
-int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
-// We assume that we are looking for the main character
+int MR_NetworkSession::GetRank(const MR_MainCharacter *pPlayer) const {
 	int lReturnValue = 0;
+	const int lHoverId = (pPlayer != NULL) ? pPlayer->GetHoverId() :
+		((mMainCharacter1 != NULL) ? mMainCharacter1->GetHoverId() : -1);
 
 	PlayerResult *lCurrent = mResultList;
 
 	while(lCurrent != NULL) {
 		lReturnValue++;
-		if(lCurrent->mPlayerIndex < 0) {
+		if(lCurrent->mPlayerHoverId == lHoverId) {
 			break;
 		}
 		lCurrent = lCurrent->mNext;
@@ -529,23 +688,26 @@ void MR_NetworkSession::ReadNet()
 					int lRoom;
 					int lHoverId;
 	
-					ASSERT(mClientCharacter[lClientId] == NULL);
-	
 					lTypeId.mDllId = *(MR_Int16 *) & (lMessage[0]);
 					lTypeId.mClassId = *(MR_Int16 *) & (lMessage[2]);
 					lRoom = *(MR_Int16 *) & (lMessage[4]);
 					lHoverId = *(MR_Int16 *) & (lMessage[6]);
-	
-					mClientCharacter[lClientId] = (MR_MainCharacter *) MR_DllObjectFactory::CreateObject(lTypeId);
-					mClientCharacter[lClientId]->mRoom = lRoom;
-					mClientCharacter[lClientId]->SetAsSlave();
-					mClientCharacter[lClientId]->SetHoverId(lHoverId);
-					mClientCharacter[lClientId]->SetNetState(lMessageLen - 8, lMessage + 8);
-					mClientCharacter[lClientId]->SetNbLapForRace(mNbLap);
-	
-					MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-	
-					mClient[lClientId] = lCurrentLevel->InsertElement(mClientCharacter[lClientId], lRoom);
+
+					if((lHoverId >= 0) && (lHoverId < eMaxRemoteHover) &&
+						(mRemoteCharacter[lHoverId] == NULL))
+					{
+						mRemoteCharacter[lHoverId] = (MR_MainCharacter *) MR_DllObjectFactory::CreateObject(lTypeId);
+						mRemoteCharacter[lHoverId]->mRoom = lRoom;
+						mRemoteCharacter[lHoverId]->SetAsSlave();
+						mRemoteCharacter[lHoverId]->SetHoverId(lHoverId);
+						mRemoteCharacter[lHoverId]->SetNetState(lMessageLen - 8, lMessage + 8);
+						mRemoteCharacter[lHoverId]->SetNbLapForRace(mNbLap);
+
+						MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+
+						mRemoteClient[lHoverId] = lCurrentLevel->InsertElement(mRemoteCharacter[lHoverId], lRoom);
+						mRemoteOwnerClient[lHoverId] = lClientId;
+					}
 				}
 	
 				break;
@@ -570,25 +732,39 @@ void MR_NetworkSession::ReadNet()
 					break;
 
 			case MRNM_SET_MAIN_ELEM_STATE: // move a hovercraft (another player)
-				if(mClientCharacter[lClientId] != NULL) {
-					// Drop the message if there was a recent collision on that item
-					int lCurrentSimTime = mSession.GetSimulationTime();
-					int lLastCollisionAge = lCurrentSimTime - mClientCharacter[lClientId]->mLastCollisionTime;
+				{
+					int lHoverId = -1;
+					const MR_UInt8 *lStateData = lMessage;
+					int lStateLen = lMessageLen;
 
-					if((lCurrentSimTime >= 0) &&
-						(lLastCollisionAge < (mNetInterface.GetAvgLag(lClientId) + 40))) {
-						// Drop this message
+					if(lMessageLen >= 2) {
+						lHoverId = *(MR_Int16 *) & (lMessage[0]);
+						lStateData = lMessage + 2;
+						lStateLen = lMessageLen - 2;
 					}
-					else {
-						int lOldRoom = mClientCharacter[lClientId]->mRoom;
+					else if((lClientId >= 0) && (lClientId < MR_NetworkInterface::eMaxClient)) {
+						lHoverId = mRemoteHoverBase[lClientId];
+					}
+					ApplyRemoteMainElementState(lClientId, lHoverId, lStateData, lStateLen);
+				}
+				break;
 
-						mClientCharacter[lClientId]->SetNetState(lMessageLen, lMessage);
+			case MRNM_SET_MAIN_ELEM_STATE_BATCH:
+				{
+					if(lMessageLen >= 1) {
+						int lOffset = 1;
+						int lCount = lMessage[0];
+						for(int lIndex = 0; (lIndex < lCount) && (lOffset + 3 <= lMessageLen); ++lIndex) {
+							int lHoverId = *(MR_Int16 *) &(lMessage[lOffset]);
+							int lStateLen = lMessage[lOffset + 2];
+							lOffset += 3;
+							if((lStateLen < 0) || ((lOffset + lStateLen) > lMessageLen)) {
+								break;
+							}
 
-						// Move element if needed
-						if(mClientCharacter[lClientId]->mRoom != lOldRoom) {
-							MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-							lCurrentLevel->MoveElement(mClient[lClientId], mClientCharacter[lClientId]->mRoom);
+							ApplyRemoteMainElementState(lClientId, lHoverId,
+								lMessage + lOffset, lStateLen);
+							lOffset += lStateLen;
 						}
 					}
 				}
@@ -670,8 +846,8 @@ void MR_NetworkSession::ReadNet()
 			case MRNM_PLAYER_STATS:
 				{
 					MR_PlayerStats *lStats = (MR_PlayerStats *) lMessage;
-					TRACE("Received BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d, %d\n", lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
-					AddResultEntry(lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
+					TRACE("Received BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d, %d\n", lStats->mHoverId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
+					AddResultEntry(lStats->mHoverId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps, lStats->mCompletedSplits, lStats->mFinishFirstSplit, lStats->mFirstSplitDifference, lStats->mFinishSecondSplit, lStats->mSecondSplitDifference);
 				}
 				break;
 
@@ -689,6 +865,7 @@ void MR_NetworkSession::ReadNet()
 
 					if(lMessageLen >= (int) sizeof(MR_HitMessage)) {
 						const MR_HitMessage *lHitMessage = (const MR_HitMessage *) lMessage;
+						lVictimHoverId = lHitMessage->mVictimHoverId;
 						lHoverIdSrc = lHitMessage->mHoverIdSrc;
 						lElementId = lHitMessage->mElementId;
 					}
@@ -696,13 +873,7 @@ void MR_NetworkSession::ReadNet()
 						lHoverIdSrc = (char) lMessage[0];
 					}
 
-					if((lClientId >= 0) &&
-						(lClientId < MR_NetworkInterface::eMaxClient) &&
-						(mClientCharacter[lClientId] != NULL))
-					{
-						lVictimHoverId = mClientCharacter[lClientId]->GetHoverId();
-					}
-					AddHitEntry(lClientId, lHoverIdSrc);
+					AddHitEntry(lVictimHoverId, lHoverIdSrc);
 					NotifyRuleHit(lVictimHoverId, lHoverIdSrc, lElementId);
 					DestroyElementByNetworkId(lElementId);
 				}
@@ -749,67 +920,103 @@ void MR_NetworkSession::WriteNet()
 
 	if(mTimeToSendCharacterCreation != 0) {
 		if(mSession.GetSimulationTime() >= mTimeToSendCharacterCreation) { // it is time to broadcast the created hovercraft
-			BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
-			mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
+			for(int i = 0; i < mLocalPartySize; ++i) {
+				if(mMainCharacters[i] != NULL) {
+					BroadcastMainElementCreation(mMainCharacters[i]->GetTypeId(),
+						mMainCharacters[i]->GetNetState(), mMainCharacters[i]->mRoom,
+						mMainCharacters[i]->GetHoverId());
+					mLastBroadcastCraftModel[i] = mMainCharacters[i]->GetHoverModel();
+				}
+			}
 			mTimeToSendCharacterCreation = 0; // set to 0 so we don't broadcast it again
 		}
 	}
 	else if(mMainCharacter1 != NULL) { // it has already been broadcast
-		MR_ElementNetState lState = mMainCharacter1->GetNetState();
 		const BOOL lPregame = (mSession.GetSimulationTime() < 0);
+		BOOL lSendReliableBatch = lPregame;
 
-		if(!lPregame && (mMainCharacter1->GetHoverModel() != mLastBroadcastCraftModel)) {
-			BroadcastMainElementState(lState, MR_NET_REQUIRED);
-			mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
-		}
+		for(int i = 0; i < mLocalPartySize; ++i) {
+			MR_MainCharacter *lPlayer = mMainCharacters[i];
+			if(lPlayer == NULL) {
+				continue;
+			}
 
-		BroadcastMainElementState(lState,
-			lPregame ? MR_NET_REQUIRED : MR_NET_DATAGRAM); // send state
-		mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
+			if(!lPregame && (lPlayer->GetHoverModel() != mLastBroadcastCraftModel[i])) {
+				lSendReliableBatch = TRUE;
+			}
 
-		if(mSendedPlayerStats != -1) { // send statistics if necessary
-			if(mMainCharacter1->GetLap() >= mSendedPlayerStats || mMainCharacter1->GetCurrentCheckpoint() >= mSendedCheckpointStats) {
-				TRACE("- Send Lap Data\n");
-				
-				if(mMainCharacter1->GetCurrentCheckpoint() >= mSendedCheckpointStats)
+			if(mSendedPlayerStats[i] != -1) {
+				if((lPlayer->GetLap() >= mSendedPlayerStats[i]) ||
+					(lPlayer->GetCurrentCheckpoint() >= mSendedCheckpointStats[i]))
 				{
-					mSendedCheckpointStats = mMainCharacter1->GetCurrentCheckpoint();
-					TRACE("--- CHECKPOINT COMPLETE %d\n", mSendedCheckpointStats);
-					mSendedCheckpointStats++;
-				}
+					TRACE("- Send Lap Data\n");
 
-				if(mMainCharacter1->HasFinish()) { // race is finished
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), -1, mMainCharacter1->GetCurrentCheckpoint(), mMainCharacter1->GetFirstSplitCompletion(), mMainCharacter1->GetFirstSplitDifference(), mMainCharacter1->GetSecondSplitCompletion(), mMainCharacter1->GetSecondSplitDifference());
-					mSendedPlayerStats = -1;
-
-					if(mInternetGame) {
-						AddMessage(MR_LoadString(IDS_F2_TORETURN));
+					if(lPlayer->GetCurrentCheckpoint() >= mSendedCheckpointStats[i]) {
+						mSendedCheckpointStats[i] = lPlayer->GetCurrentCheckpoint();
+						TRACE("--- CHECKPOINT COMPLETE %d\n", mSendedCheckpointStats[i]);
+						mSendedCheckpointStats[i]++;
 					}
 
-					TRACE("--- FINISHED\n");
-				}
-				else if(mMainCharacter1->GetLap() == 0 && mSendedCheckpointStats == 1) { // race has not yet started
-					BroadcastMainElementStats(mMainCharacter1->GetHoverId(), -1, 0, 0, 0, 0, 0, 0);
-					mSendedPlayerStats = 1;
-					TRACE("--- FIRST LAP REPORT\n");
-				}
-				else { // send statistics (lap number, total time, best lap)
-					if(mMainCharacter1->GetLap() >= mSendedPlayerStats) {
-						mSendedPlayerStats = mMainCharacter1->GetLap();
-						mSendedPlayerStats++;
-						mSendedCheckpointStats = 1;
-						TRACE("--- LAP COMPLETE\n");
-					}
+					if(lPlayer->HasFinish()) {
+						BroadcastMainElementStats(lPlayer->GetHoverId(),
+							lPlayer->GetTotalTime(), lPlayer->GetBestLapDuration(), -1,
+							lPlayer->GetCurrentCheckpoint(),
+							lPlayer->GetFirstSplitCompletion(),
+							lPlayer->GetFirstSplitDifference(),
+							lPlayer->GetSecondSplitCompletion(),
+							lPlayer->GetSecondSplitDifference());
+						mSendedPlayerStats[i] = -1;
 
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), mMainCharacter1->GetLap(), mMainCharacter1->GetCurrentCheckpoint(), mMainCharacter1->GetFirstSplitCompletion(), mMainCharacter1->GetFirstSplitDifference(), mMainCharacter1->GetSecondSplitCompletion(), mMainCharacter1->GetSecondSplitDifference());
+						if(mInternetGame && (i == 0)) {
+							AddMessage(MR_LoadString(IDS_F2_TORETURN));
+						}
+
+						TRACE("--- FINISHED\n");
+					}
+					else if((lPlayer->GetLap() == 0) &&
+						(mSendedCheckpointStats[i] == 1))
+					{
+						BroadcastMainElementStats(lPlayer->GetHoverId(), -1, 0, 0,
+							0, 0, 0, 0, 0);
+						mSendedPlayerStats[i] = 1;
+						TRACE("--- FIRST LAP REPORT\n");
+					}
+					else {
+						if(lPlayer->GetLap() >= mSendedPlayerStats[i]) {
+							mSendedPlayerStats[i] = lPlayer->GetLap();
+							mSendedPlayerStats[i]++;
+							mSendedCheckpointStats[i] = 1;
+							TRACE("--- LAP COMPLETE\n");
+						}
+
+						BroadcastMainElementStats(lPlayer->GetHoverId(),
+							lPlayer->GetTotalTime(), lPlayer->GetBestLapDuration(),
+							lPlayer->GetLap(), lPlayer->GetCurrentCheckpoint(),
+							lPlayer->GetFirstSplitCompletion(),
+							lPlayer->GetFirstSplitDifference(),
+							lPlayer->GetSecondSplitCompletion(),
+							lPlayer->GetSecondSplitDifference());
+					}
 				}
+			}
+
+			while(lPlayer->HitQueueCount() > 0) {
+				MR_MainCharacter::HitEntry lHit = lPlayer->GetHitQueue();
+				BroadcastHit(lPlayer->GetHoverId(), lHit.mHoverId, lHit.mElementId);
 			}
 		}
 
-		// Broadcast hits
-		while(mMainCharacter1->HitQueueCount() > 0) {
-			MR_MainCharacter::HitEntry lHit = mMainCharacter1->GetHitQueue();
-			BroadcastHit(lHit.mHoverId, lHit.mElementId);
+		if(lSendReliableBatch) {
+			BroadcastLocalPartyStates(MR_NET_REQUIRED);
+		}
+		if(!lPregame) {
+			BroadcastLocalPartyStates(MR_NET_DATAGRAM);
+		}
+		for(int i = 0; i < mLocalPartySize; ++i) {
+			MR_MainCharacter *lPlayer = mMainCharacters[i];
+			if(lPlayer != NULL) {
+				mLastBroadcastCraftModel[i] = lPlayer->GetHoverModel();
+			}
 		}
 	}
 
@@ -819,7 +1026,9 @@ void MR_NetworkSession::WriteNet()
 		sClientToCheck = 0;
 	}
 
-	if((mClientCharacter[sClientToCheck] != NULL) && !mNetInterface.IsConnected(sClientToCheck)) {
+	if((GetRepresentativeRemoteCharacter(sClientToCheck) != NULL) &&
+		!mNetInterface.IsConnected(sClientToCheck))
+	{
 		CString lMessage;
 		// Add a message indicating the the guy disconnected
 		lMessage = mNetInterface.GetPlayerName(sClientToCheck);
@@ -827,18 +1036,25 @@ void MR_NetworkSession::WriteNet()
 
 		AddMessage(lMessage);
 
-		// If only one player left, add an other message to indicate it
+		// Delete the client characters for that machine before checking who is left.
+		RemoveRemoteClientCharacters(sClientToCheck);
+
 		if(mNetInterface.GetClientCount() == 0) {
-			if(mInternetGame) {
-				AddMessage(MR_LoadString(IDS_ALONE_F2));
+			if(GetNbPlayers() <= 1) {
+				if(mInternetGame) {
+					AddMessage(MR_LoadString(IDS_ALONE_F2));
+				}
+				else {
+					AddMessage(MR_LoadString(IDS_ALONE));
+				}
+			}
+			else if(mInternetGame) {
+				AddMessage(MR_LoadString(IDS_REMOTE_LEFT_F2));
 			}
 			else {
-				AddMessage(MR_LoadString(IDS_ALONE));
+				AddMessage(MR_LoadString(IDS_REMOTE_LEFT));
 			}
 		}
-		// Delete the client character
-		mSession.GetCurrentLevel()->DeleteElement(mClient[sClientToCheck]);
-		mClientCharacter[sClientToCheck] = NULL;
 	}
 }
 
@@ -850,6 +1066,9 @@ void MR_NetworkSession::WriteNet()
 void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 {
 	mNetInterface.SetPlayerName(pPlayerName);
+	if((pPlayerName != NULL) && (*pPlayerName != 0)) {
+		mLocalPartyNames[0] = pPlayerName;
+	}
 }
 
 /**
@@ -858,6 +1077,35 @@ void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 const char *MR_NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
+}
+
+void MR_NetworkSession::SetLocalParty(int pPartySize,
+	const std::string *pPartyNames)
+{
+	mLocalPartySize = max(1, min(pPartySize, MR_MAX_LOCAL_PLAYER));
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] =
+			(pPartyNames != NULL) ? pPartyNames[i].c_str() : "";
+	}
+	if(mLocalPartyNames[0].IsEmpty()) {
+		mLocalPartyNames[0] = mNetInterface.GetPlayerName();
+	}
+	mNetInterface.SetPlayerName(mLocalPartyNames[0]);
+	mNetInterface.SetLocalParty(mLocalPartySize, pPartyNames);
+	mConfiguredPlayerCount = mLocalPartySize;
+}
+
+int MR_NetworkSession::GetLocalPartySize() const
+{
+	return mLocalPartySize;
+}
+
+const char *MR_NetworkSession::GetLocalPartyName(int pIndex) const
+{
+	if((pIndex < 0) || (pIndex >= mLocalPartySize)) {
+		return "";
+	}
+	return mLocalPartyNames[pIndex];
 }
 
 void MR_NetworkSession::SetRaceHash(const char *pRaceHash)
@@ -923,11 +1171,15 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pGameName,
 	mSended12SecClockUpdate = FALSE;
 	mSended8SecClockUpdate = FALSE;
 
-	return mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort,
+	BOOL lSuccess = mNetInterface.MasterConnect(pWindow, pGameName, pPromptForPort,
 		pDefaultPort, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
 		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask,
 		pGameRuleSettings);
+	if(lSuccess) {
+		RefreshHoverAssignments();
+	}
+	return lSuccess;
 }
 
 /**
@@ -990,11 +1242,15 @@ BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP,
 {
 	mMasterMode = FALSE;
 
-	return mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID,
+	BOOL lSuccess = mNetInterface.SlaveConnect(pWindow, pServerIP, pPort, pSteamID,
 		pGameName, pModalessDlg, pReturnMessage, pTrackName, pNbLap,
 		pHasWeapons, pAllowWeapons, pHasCans, pAllowCans,
 		pHasMines, pAllowMines, pHasCrafts, pAllowedCraftMask,
 		pGameRuleSettings);
+	if(lSuccess) {
+		RefreshHoverAssignments();
+	}
+	return lSuccess;
 }
 
 /**
@@ -1021,38 +1277,42 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	// Add a main character on the track
 	ASSERT(mMainCharacter1 == NULL);			  // make sure we are not creating it twice
 	ASSERT(mSession.GetCurrentLevel() != NULL);
+	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	RefreshHoverAssignments();
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons,
-		mAllowCans, mAllowMines, mAllowedCraftMask);
-
-	MR_GameRuleSpawnContext lSpawnContext;
-	lSpawnContext.mHoverId = mNetInterface.GetId();
-	lSpawnContext.mSpawnSlot = mNetInterface.GetId();
-	if(mGameRuleRuntime != NULL) {
-		mGameRuleRuntime->OnPreSpawn(*this, lSpawnContext);
+	if((mLocalHoverBase + mLocalPartySize) > lCurrentLevel->GetPlayerCount()) {
+		return FALSE;
 	}
 
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	for(int i = 0; i < mLocalPartySize; ++i) {
+		MR_MainCharacter *lPlayer = MR_MainCharacter::New(mNbLap, mAllowWeapons,
+			mAllowCans, mAllowMines, mAllowedCraftMask);
+		MR_GameRuleSpawnContext lSpawnContext;
+		lSpawnContext.mHoverId = GetLocalHoverId(i);
+		lSpawnContext.mSpawnSlot = mLocalHoverBase + i;
+		if(mGameRuleRuntime != NULL) {
+			mGameRuleRuntime->OnPreSpawn(*this, lSpawnContext);
+		}
 
-	mMainCharacter1->mPosition =
-		lCurrentLevel->GetStartingPos(lSpawnContext.mSpawnSlot);
-	mMainCharacter1->SetOrientation(
-		lCurrentLevel->GetStartingOrientation(lSpawnContext.mSpawnSlot));
-	mMainCharacter1->mRoom =
-		lCurrentLevel->GetStartingRoom(lSpawnContext.mSpawnSlot);
-	mMainCharacter1->SetHoverId(mNetInterface.GetId());
+		lPlayer->mPosition = lCurrentLevel->GetStartingPos(lSpawnContext.mSpawnSlot);
+		lPlayer->SetOrientation(
+			lCurrentLevel->GetStartingOrientation(lSpawnContext.mSpawnSlot));
+		lPlayer->mRoom = lCurrentLevel->GetStartingRoom(lSpawnContext.mSpawnSlot);
+		lPlayer->SetHoverId(lSpawnContext.mHoverId);
 
-	lCurrentLevel->InsertElement(mMainCharacter1, mMainCharacter1->mRoom);
-	mMainCharacters[0] = mMainCharacter1;
+		lCurrentLevel->InsertElement(lPlayer, lPlayer->mRoom);
+		mMainCharacters[i] = lPlayer;
+	}
 	SyncLegacyMainCharacterPointers();
 
 	// Make the hovercraft visible for the full countdown so the other clients
 	// can see pre-race craft changes as they happen.
-	MR_ElementNetState lState = mMainCharacter1->GetNetState();
-	BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), lState,
-		mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
-	mLastBroadcastCraftModel = mMainCharacter1->GetHoverModel();
+	for(int i = 0; i < mLocalPartySize; ++i) {
+		MR_ElementNetState lState = mMainCharacters[i]->GetNetState();
+		BroadcastMainElementCreation(mMainCharacters[i]->GetTypeId(), lState,
+			mMainCharacters[i]->mRoom, mMainCharacters[i]->GetHoverId());
+		mLastBroadcastCraftModel[i] = mMainCharacters[i]->GetHoverModel();
+	}
 	mTimeToSendCharacterCreation = 0;
 
 	return TRUE;
@@ -1124,11 +1384,12 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 
 	// Init priority level
 	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if(mClientCharacter[lCounter] != NULL) {
+		MR_MainCharacter *lRemoteCharacter = GetRepresentativeRemoteCharacter(lCounter);
+		if(lRemoteCharacter != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
-			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
-			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
+			int lDistanceX = (lRemoteCharacter->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
+			int lDistanceY = (lRemoteCharacter->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
 
 			MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -1206,11 +1467,12 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 
 	// Init priority level
 	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-		if(mClientCharacter[lCounter] != NULL) {
+		MR_MainCharacter *lRemoteCharacter = GetRepresentativeRemoteCharacter(lCounter);
+		if(lRemoteCharacter != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
-			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
-			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
+			int lDistanceX = (lRemoteCharacter->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
+			int lDistanceY = (lRemoteCharacter->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
 
 			MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -1292,15 +1554,15 @@ void MR_NetworkSession::BroadcastTime()
  * @param pState Current state of the hovercraft
  */
 void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState,
-	int pReqLevel)
+	int pHoverId, int pReqLevel)
 {
 	MR_NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_SET_MAIN_ELEM_STATE;
-	lMessage.mDataLen = pState.mDataLen;
-
-	memcpy(lMessage.mData, pState.mData, pState.mDataLen);
+	lMessage.mDataLen = pState.mDataLen + 2;
+	*(MR_Int16 *) & (lMessage.mData[0]) = pHoverId;
+	memcpy(lMessage.mData + 2, pState.mData, pState.mDataLen);
 
 	if(pReqLevel != MR_NET_DATAGRAM) {
 		mNetInterface.BroadcastMessage(&lMessage, pReqLevel);
@@ -1328,10 +1590,15 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 	//       MaxSend is reach
 
 	int lCurrentTime = timeGetTime();
+	int lLocalSendIndex = pHoverId - mLocalHoverBase;
+	if((lLocalSendIndex < 0) || (lLocalSendIndex >= MR_MAX_LOCAL_PLAYER)) {
+		lLocalSendIndex = 0;
+	}
 
 	// DEPRECATED because nobody uses 14K anymore
 												  // 14K calibration
-	int lMaxSend = (lCurrentTime - mLastSendElemStateFuncTime) * 27 / 1000;
+	int lMaxSend =
+		(lCurrentTime - mLastSendElemStateFuncTime[lLocalSendIndex]) * 27 / 1000;
 
 	// Instead let's try refreshing more often
 	//int lMaxSend = (lCurrentTime - mLastSendElemStateFuncTime) * (27 / 125);
@@ -1343,30 +1610,36 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 		lMaxSend /= 4;							  // relax on refresh before game start
 	}
 	else {
-		if(mMainCharacter1->mNetPriority) {
+		const MR_MainCharacter *lPriorityPlayer = FindPlayerByHoverId(pHoverId);
+		if((lPriorityPlayer != NULL) && lPriorityPlayer->mNetPriority) {
 			lMaxSend += 2;						  // increse that base number.. there is a priority
 		}
 	}
 
 	if(lMaxSend > 0) {
-		mLastSendElemStateFuncTime = lCurrentTime;
+		mLastSendElemStateFuncTime[lLocalSendIndex] = lCurrentTime;
 
 		int lPriorityLevel[MR_NetworkInterface::eMaxClient];
 
 		const MR_Level *lLevel = GetCurrentLevel();
 		int lVisibleRoomCount;
-		const int *lVisibleRoom = lLevel->GetVisibleZones(mMainCharacter1->mRoom, lVisibleRoomCount);
+		const MR_MainCharacter *lSourcePlayer = FindPlayerByHoverId(pHoverId);
+		if(lSourcePlayer == NULL) {
+			return;
+		}
+		const int *lVisibleRoom = lLevel->GetVisibleZones(lSourcePlayer->mRoom, lVisibleRoomCount);
 
 		int lNbEligible = 0;
 
 		// Init priority level
 		for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
-			if(mClientCharacter[lCounter] != NULL) {
+			MR_MainCharacter *lRemoteCharacter = GetRepresentativeRemoteCharacter(lCounter);
+			if(lRemoteCharacter != NULL) {
 				lPriorityLevel[lCounter] = lCurrentTime - mLastSendElemStateTime[lCounter];
 
 				// Do the visibilitytest
-				if(mClientCharacter[lCounter]->mRoom == mMainCharacter1->mRoom) {
-					if(mMainCharacter1->mNetPriority) {
+				if(lRemoteCharacter->mRoom == lSourcePlayer->mRoom) {
+					if(lSourcePlayer->mNetPriority) {
 												  // to keep priority state even when this broadcast will be finish
 						mLastSendElemStateTime[lCounter] -= 100;
 												  // major priority boost
@@ -1378,8 +1651,8 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 				}
 				else {
 					for(int lRoom = 0; lRoom < lVisibleRoomCount; lRoom++) {
-						if(lVisibleRoom[lRoom] == mClientCharacter[lCounter]->mRoom) {
-							if(mMainCharacter1->mNetPriority) {
+						if(lVisibleRoom[lRoom] == lRemoteCharacter->mRoom) {
+							if(lSourcePlayer->mNetPriority) {
 												  // to keep priority state even when this broadcast will be finish
 								mLastSendElemStateTime[lCounter] -= 100;
 												  // major priority boost
@@ -1393,8 +1666,8 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 					}
 				}
 
-				int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 1024;
-				int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 1024;
+				int lDistanceX = (lRemoteCharacter->mPosition.mX - lSourcePlayer->mPosition.mX) / 1024;
+				int lDistanceY = (lRemoteCharacter->mPosition.mY - lSourcePlayer->mPosition.mY) / 1024;
 
 				MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -1445,7 +1718,51 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 		}
 
 		// Disable burst alarm
-		mMainCharacter1->mNetPriority = FALSE;
+		MR_MainCharacter *lPlayer = const_cast<MR_MainCharacter *>(lSourcePlayer);
+		if(lPlayer != NULL) {
+			lPlayer->mNetPriority = FALSE;
+		}
+	}
+}
+
+void MR_NetworkSession::BroadcastLocalPartyStates(int pReqLevel)
+{
+	MR_NetMessageBuffer lMessage;
+	lMessage.mMessageType = MRNM_SET_MAIN_ELEM_STATE_BATCH;
+	lMessage.mDataLen = 1;
+	lMessage.mData[0] = 0;
+
+	for(int i = 0; i < mLocalPartySize; ++i) {
+		MR_MainCharacter *lPlayer = mMainCharacters[i];
+		if(lPlayer == NULL) {
+			continue;
+		}
+
+		MR_ElementNetState lState = lPlayer->GetNetState();
+		const int lEntryLen = 3 + lState.mDataLen;
+		if(lEntryLen > MR_MAX_NET_MESSAGE_LEN) {
+			ASSERT(FALSE);
+			continue;
+		}
+
+		if((lMessage.mDataLen + lEntryLen) > MR_MAX_NET_MESSAGE_LEN) {
+			if(lMessage.mData[0] > 0) {
+				mNetInterface.BroadcastMessage(&lMessage, pReqLevel);
+			}
+			lMessage.mMessageType = MRNM_SET_MAIN_ELEM_STATE_BATCH;
+			lMessage.mDataLen = 1;
+			lMessage.mData[0] = 0;
+		}
+
+		*(MR_Int16 *) &(lMessage.mData[lMessage.mDataLen]) = lPlayer->GetHoverId();
+		lMessage.mData[lMessage.mDataLen + 2] = (MR_UInt8) lState.mDataLen;
+		memcpy(lMessage.mData + lMessage.mDataLen + 3, lState.mData, lState.mDataLen);
+		lMessage.mDataLen += lEntryLen;
+		lMessage.mData[0]++;
+	}
+
+	if(lMessage.mData[0] > 0) {
+		mNetInterface.BroadcastMessage(&lMessage, pReqLevel);
 	}
 }
 
@@ -1457,7 +1774,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
  * @param pBestLap Time of best lap
  * @param pNbLaps Lap we are currently on; -1 denotes that we have finished
  */
-void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
+void MR_NetworkSession::BroadcastMainElementStats(int pHoverId, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
 {
 	MR_NetMessageBuffer lMessage;
 
@@ -1467,6 +1784,7 @@ void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime,
 
 	MR_PlayerStats *lStats = (MR_PlayerStats *) lMessage.mData;
 
+	lStats->mHoverId = pHoverId;
 	lStats->mFinishTime = pFinishTime;
 	lStats->mBestLap = pBestLap;
 	lStats->mCompletedLaps = pNbLaps;
@@ -1478,10 +1796,10 @@ void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime,
 
 	mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
 
-	TRACE("Sending BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d\n", pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
+	TRACE("Sending BroadcastMainElementStats %d, %d, %d, %d, %d, %d, %d, %d, %d\n", pHoverId, pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
 
 	// Add local time
-	AddResultEntry(-1, pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
+	AddResultEntry(pHoverId, pFinishTime, pBestLap, pNbLaps, pNbSplits, pFinishFirstSplit, pFirstSplitDifference, pFinishSecondSplit, pSecondSplitDifference);
 }
 
 /**
@@ -1512,7 +1830,7 @@ void MR_NetworkSession::BroadcastChatMessage(const char *pMessage)
  *
  * @param pHoverIdSrc Who we have been hit by
  */
-void MR_NetworkSession::BroadcastHit(int pHoverIdSrc, int pElementId)
+void MR_NetworkSession::BroadcastHit(int pVictimHoverId, int pHoverIdSrc, int pElementId)
 {
 	MR_NetMessageBuffer lMessage;
 	MR_HitMessage lHitMessage;
@@ -1520,18 +1838,16 @@ void MR_NetworkSession::BroadcastHit(int pHoverIdSrc, int pElementId)
 	// lMessage.mSendingTime    = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_HIT_MESSAGE;
 	lMessage.mDataLen = sizeof(lHitMessage);
-	lHitMessage.mHoverIdSrc = (char) pHoverIdSrc;
+	lHitMessage.mVictimHoverId = (MR_Int16) pVictimHoverId;
+	lHitMessage.mHoverIdSrc = (MR_Int16) pHoverIdSrc;
 	lHitMessage.mElementId = pElementId;
 	memcpy(lMessage.mData, &lHitMessage, sizeof(lHitMessage));
 
 	mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
 
 	// Add locally
-	const int lVictimHoverId =
-		(mMainCharacter1 != NULL) ? mMainCharacter1->GetHoverId() : -1;
-	AddHitEntry(-1, (pHoverIdSrc == lVictimHoverId) ? -1 : pHoverIdSrc);
-	NotifyRuleHit(lVictimHoverId,
-		pHoverIdSrc, pElementId);
+	AddHitEntry(pVictimHoverId, pHoverIdSrc);
+	NotifyRuleHit(pVictimHoverId, pHoverIdSrc, pElementId);
 	DestroyElementByNetworkId(pElementId);
 }
 
@@ -1562,7 +1878,7 @@ void MR_NetworkSession::DestroyElementByNetworkId(int pElementId)
 	}
 }
 
-void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
+void MR_NetworkSession::AddHitEntry(int pPlayerHoverId, int pPlayerFromId)
 {
 	// We assume that a result entry exist for both players
 	PlayerResult *lEntry;
@@ -1574,7 +1890,7 @@ void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 
 		while(*lPtr != NULL) {
 			if((*lPtr)->mPlayerId == pPlayerFromId) {
-				if((*lPtr)->mPlayerIndex != pPlayerIndex) {
+				if((*lPtr)->mPlayerHoverId != pPlayerHoverId) {
 					lEntry = *lPtr;
 					*lPtr = lEntry->mNextHitResult;
 					lEntry->mNextHitResult = NULL;
@@ -1590,7 +1906,7 @@ void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 	lPtr = &mHitList;
 
 	while(*lPtr != NULL) {
-		if((*lPtr)->mPlayerIndex == pPlayerIndex) {
+		if((*lPtr)->mPlayerHoverId == pPlayerHoverId) {
 			lEntry = *lPtr;
 			*lPtr = lEntry->mNextHitResult;
 			lEntry->mNextHitResult = NULL;
@@ -1633,7 +1949,7 @@ void MR_NetworkSession::InsertHitEntry(PlayerResult *pEntry)
  * @param pBestLap Best lap time of the player
  * @param pNbLap Lap number that the player is on (-1 means they have finished the race)
  */
-void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
+void MR_NetworkSession::AddResultEntry(int pPlayerHoverId, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference)
 {
 	// If nbLap == -1 that mean that the race is completed
 	PlayerResult *lEntry;
@@ -1643,7 +1959,7 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 	// an existing older record of this player
 	lPtr = &mResultList;
 
-	while((*lPtr != NULL) && ((*lPtr)->mPlayerIndex != pPlayerIndex)) {
+	while((*lPtr != NULL) && ((*lPtr)->mPlayerHoverId != pPlayerHoverId)) {
 		lPtr = &((*lPtr)->mNext);
 	}
 
@@ -1652,16 +1968,9 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 
 		// Remove the entry from the list (we will re-add it later)
 		*lPtr = (*lPtr)->mNext;
-
-		if(pPlayerIndex >= 0) {
-			if(mClientCharacter[pPlayerIndex] != NULL) {
-				lEntry->mCraftModel = mClientCharacter[pPlayerIndex]->GetHoverModel();
-			}
-		}
-		else {
-			if(mMainCharacter1 != NULL) {
-				lEntry->mCraftModel = mMainCharacter1->GetHoverModel();
-			}
+		const MR_MainCharacter *lPlayer = FindPlayerByHoverId(pPlayerHoverId);
+		if(lPlayer != NULL) {
+			lEntry->mCraftModel = lPlayer->GetHoverModel();
 		}
 
 	}
@@ -1669,7 +1978,8 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 		lEntry = new PlayerResult;
 
 		// Fill the fields that are only filled once
-		lEntry->mPlayerIndex = pPlayerIndex;
+		lEntry->mPlayerHoverId = pPlayerHoverId;
+		lEntry->mPlayerName = ResolvePlayerName(pPlayerHoverId);
 
 		lEntry->mNbTimeHit = 0;
 		lEntry->mNbGoodShot = 0;
@@ -1677,20 +1987,14 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 
 		// add this entry at the end of the hit list
 		InsertHitEntry(lEntry);
-
-		if(pPlayerIndex >= 0) {
-			if(mClientCharacter[pPlayerIndex] != NULL) {
-				lEntry->mPlayerId = mClientCharacter[pPlayerIndex]->GetHoverId();
-				lEntry->mCraftModel = mClientCharacter[pPlayerIndex]->GetHoverModel();
-			}
-		}
-		else {
-			if(mMainCharacter1 != NULL) {
-				lEntry->mPlayerId = mMainCharacter1->GetHoverId();
-				lEntry->mCraftModel = mMainCharacter1->GetHoverModel();
-			}
+		lEntry->mPlayerId = pPlayerHoverId;
+		const MR_MainCharacter *lPlayer = FindPlayerByHoverId(pPlayerHoverId);
+		if(lPlayer != NULL) {
+			lEntry->mCraftModel = lPlayer->GetHoverModel();
 		}
 	}
+
+	lEntry->mPlayerName = ResolvePlayerName(pPlayerHoverId);
 
 	// Update the entry
 	lEntry->mNbCompletedLap = pNbLap;
@@ -1730,10 +2034,9 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 
 	*lPtr = lEntry;
 
-	const int lHoverId = lEntry->mPlayerId;
-	NotifyRuleCheckpoint(lHoverId, pNbSplits);
+	NotifyRuleCheckpoint(lEntry->mPlayerId, pNbSplits);
 	if(pNbLap > 0) {
-		NotifyRuleLapComplete(lHoverId, pNbLap);
+		NotifyRuleLapComplete(lEntry->mPlayerId, pNbLap);
 	}
 }
 

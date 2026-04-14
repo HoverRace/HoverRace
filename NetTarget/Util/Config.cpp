@@ -235,6 +235,10 @@ void MR_Config::ResetToDefaults()
 
 	player.nickName = DEFAULT_NICKNAME;
 	player.nickNameSet = false;
+	player.onlinePartySize = 1;
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		player.onlinePartyNames[i] = "";
+	}
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.udpRecvPort = DEFAULT_UDP_RECV_PORT;
@@ -507,6 +511,36 @@ void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
 		nickName = scalar->AsString();
 		nickNameSet = !nickName.empty();
 	}
+
+	READ_INT(root, onlinePartySize, 1, MR_MAX_LOCAL_PLAYER);
+
+	bool hasPartyNames = false;
+	yaml::SeqNode *partySeq = dynamic_cast<yaml::SeqNode*>(root->Get("onlinePartyNames"));
+	if (partySeq != NULL) {
+		hasPartyNames = true;
+		int i = 0;
+		yaml::SeqNode::children_t *children = partySeq->GetChildren();
+		for(yaml::SeqNode::children_t::iterator iter = children->begin();
+			iter != children->end() && i < MR_MAX_LOCAL_PLAYER; ++iter, ++i)
+		{
+			yaml::ScalarNode *child = dynamic_cast<yaml::ScalarNode*>(*iter);
+			onlinePartyNames[i] = (child != NULL) ? child->AsString() : "";
+		}
+		for(; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			onlinePartyNames[i] = "";
+		}
+	}
+
+	if(!hasPartyNames) {
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			onlinePartyNames[i] = "";
+		}
+		onlinePartySize = 1;
+	}
+
+	if(onlinePartyNames[0].empty()) {
+		onlinePartyNames[0] = nickName.empty() ? DEFAULT_NICKNAME : nickName;
+	}
 }
 
 void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
@@ -515,6 +549,13 @@ void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
 	emitter->StartMap();
 
 	EMIT_VAR(emitter, nickName);
+	EMIT_VAR(emitter, onlinePartySize);
+	emitter->MapKey("onlinePartyNames");
+	emitter->StartSeq();
+	for(int i = 0; i < onlinePartySize; ++i) {
+		emitter->Value(onlinePartyNames[i]);
+	}
+	emitter->EndSeq();
 
 	emitter->EndMap();
 }

@@ -141,6 +141,8 @@ class MR_InternetRoom
 		int mMinorID;
 		CSteamID mSteamID;
 		CString mUser;
+		int mLocalPartySize;
+		CString mLocalPartyNames[MR_MAX_LOCAL_PLAYER];
 		unsigned mKey2;
 		unsigned mKey3;
 		// CString       mServerURL;

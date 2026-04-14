@@ -257,6 +257,14 @@
 #define IDC_RULE_NEAR_OPACITY           1182
 #define IDC_RULE_FADE_DISTANCE          1183
 #define IDC_RULE_NEAR_DISTANCE          1184
+#define IDC_ONLINE_PARTY_SIZE           1185
+#define IDC_ONLINE_PARTY_NAMES          1186
+#define IDC_SPLIT_COUNT_LABEL           1187
+#define IDC_SPLIT_NAMES_LABEL           1188
+#define IDC_SPLIT_HELP_TEXT             1189
+#define IDC_SPLIT_TOGGLE                1190
+#define IDC_ALIAS_LABEL                 1191
+#define IDC_ROOM_LABEL                  1192
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -450,6 +458,8 @@
 #define IDS_HAS_LEFT                    40168
 #define IDS_ALONE_F2                    40169
 #define IDS_ALONE                       40170
+#define IDS_REMOTE_LEFT_F2              40239
+#define IDS_REMOTE_LEFT                 40240
 #define IDS_TRK_NOTFOUND                40171
 #define IDS_BAD_TRK_FORMAT              40172
 #define IDS_SHOULD_REG                  40173

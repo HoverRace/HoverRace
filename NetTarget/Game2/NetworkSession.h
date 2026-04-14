@@ -41,7 +41,8 @@ class MR_NetworkSession : public MR_ClientSession
 		class PlayerResult
 		{
 			public:
-				int mPlayerIndex;				  // -1 = CurrentPlayer
+				int mPlayerHoverId;
+				CString mPlayerName;
 				int mPlayerId;
 				int mCraftModel;
 				int mNbCompletedLap;
@@ -72,12 +73,14 @@ class MR_NetworkSession : public MR_ClientSession
 
 		HoverRace::Client::RoomListPtr roomList;
 
-		int mSendedPlayerStats;
-		int mSendedCheckpointStats;
-		MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
-		MR_MainCharacter *mClientCharacter[MR_NetworkInterface::eMaxClient];
+		int mSendedPlayerStats[MR_MAX_LOCAL_PLAYER];
+		int mSendedCheckpointStats[MR_MAX_LOCAL_PLAYER];
+		enum { eMaxRemoteHover = MR_MAX_LOCAL_PLAYER * (MR_NetworkInterface::eMaxClient + 1) };
+		MR_FreeElementHandle mRemoteClient[eMaxRemoteHover];
+		MR_MainCharacter *mRemoteCharacter[eMaxRemoteHover];
+		int mRemoteOwnerClient[eMaxRemoteHover];
 
-		int mLastSendElemStateFuncTime;
+		int mLastSendElemStateFuncTime[MR_MAX_LOCAL_PLAYER];
 		int mLastSendElemStateTime[MR_NetworkInterface::eMaxClient];
 
 		PlayerResult *mResultList;
@@ -88,7 +91,13 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL mInternetGame;
 		HWND mWindow;
 		CString mRaceHash;
-		int mLastBroadcastCraftModel;
+		int mLastBroadcastCraftModel[MR_MAX_LOCAL_PLAYER];
+		int mLocalPartySize;
+		CString mLocalPartyNames[MR_MAX_LOCAL_PLAYER];
+		int mLocalHoverBase;
+		int mConfiguredPlayerCount;
+		int mRemoteHoverBase[MR_NetworkInterface::eMaxClient];
+		int mRemotePartySize[MR_NetworkInterface::eMaxClient];
 
 		// Awfull Ladder patch
 		int mOpponendMajorID;
@@ -101,18 +110,28 @@ class MR_NetworkSession : public MR_ClientSession
 		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom);
 		void BroadcastPermElementState(int pPermId, const MR_ElementNetState & pState, int pRoom);
 		void BroadcastMainElementState(const MR_ElementNetState & pState,
-			int pReqLevel = MR_NET_DATAGRAM);
-		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
+			int pHoverId, int pReqLevel = MR_NET_DATAGRAM);
+		void BroadcastLocalPartyStates(int pReqLevel);
+		void BroadcastMainElementStats(int pHoverId, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
 		void BroadcastChatMessage(const char *pMessage);
 		void BroadcastTime();
-		void BroadcastHit(int pHoverIdSrc, int pElementId);
+		void BroadcastHit(int pVictimHoverId, int pHoverIdSrc, int pElementId);
 		void DestroyElementByNetworkId(int pElementId);
 
 		void AddChatMessage(int pPlayerIndex, const char *Message, int pMessageLen);
-		void AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
-		void AddHitEntry(int pPlayerIndex, int pPlayerFromID);
+		void AddResultEntry(int pHoverId, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap, int pNbSplits, MR_SimulationTime pFinishFirstSplit, MR_SimulationTime pFirstSplitDifference, MR_SimulationTime pFinishSecondSplit, MR_SimulationTime pSecondSplitDifference);
+		void AddHitEntry(int pVictimHoverId, int pPlayerFromID);
 												  // helper
 		void InsertHitEntry(PlayerResult * pEntry);
+		void RefreshHoverAssignments();
+		int GetHoverBaseForMachineId(int pMachineId) const;
+		int GetLocalHoverId(int pLocalIndex) const;
+		const char *ResolvePlayerName(int pHoverId) const;
+		MR_MainCharacter *GetRemoteCharacterByHoverId(int pHoverId) const;
+		MR_MainCharacter *GetRepresentativeRemoteCharacter(int pClient) const;
+		void RemoveRemoteClientCharacters(int pClient);
+		void ApplyRemoteMainElementState(int pClientId, int pHoverId,
+			const MR_UInt8 *pStateData, int pStateLen);
 
 		void ReadNet();
 		void WriteNet();
@@ -140,6 +159,9 @@ class MR_NetworkSession : public MR_ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
+		void SetLocalParty(int pPartySize, const std::string *pPartyNames);
+		int GetLocalPartySize() const;
+		const char *GetLocalPartyName(int pIndex) const;
 		void SetRaceHash(const char *pRaceHash);
 		const char *GetRaceHash() const;
 		void SetRoomList(HoverRace::Client::RoomListPtr roomList);

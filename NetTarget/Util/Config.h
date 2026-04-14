@@ -101,6 +101,8 @@ class MR_Config
 		struct cfg_player_t {
 			std::string nickName;
 			bool nickNameSet;
+			int onlinePartySize;
+			std::string onlinePartyNames[MR_MAX_LOCAL_PLAYER];
 
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);

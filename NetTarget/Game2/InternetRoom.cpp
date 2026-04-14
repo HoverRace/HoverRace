@@ -30,6 +30,8 @@
 #include "../Util/Net/Agent.h"
 #include "../Util/Net/NetExn.h"
 
+#include <vector>
+
 #define MRM_DNS_ANSWER        (WM_USER + 1)
 #define MRM_NET_EVENT         (WM_USER + 7)
 #define MRM_DLG_END_ADD       (WM_USER + 10)
@@ -190,6 +192,12 @@ static CString MR_Pad(const char *pSrc);
 static CString GetLine(const char *pSrc);
 static int GetLineLen(const char *pSrc);
 static const char *GetNextLine(const char *pSrc);
+
+static CString FormatPartyPayload(const CString *names, int count);
+static int ParsePartyPayload(const CString &payload, CString *names,
+	int maxNames);
+static void AppendDisplayRosterLines(CString &dest, const CString &displayName);
+static CString FormatCompactUserListName(const CString &displayName);
 
 static int FindFocusItem(HWND pWindow);
 
@@ -411,6 +419,11 @@ MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorI
 	mSteamID = pSteamID;
 	mKey2 = pKey2;
 	mKey3 = pKey3;
+	mLocalPartySize = 1;
+	mLocalPartyNames[0] = "Player";
+	for(lCounter = 1; lCounter < MR_MAX_LOCAL_PLAYER; ++lCounter) {
+		mLocalPartyNames[lCounter] = "";
+	}
 
 	for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		mClientList[lCounter].mValid = FALSE;
@@ -670,7 +683,12 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 
 	mNetOpString.LoadString(IDS_IMR_CONNECT);
 
-	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s%%%%%I64d", (const char *) roomList->GetSelectedRoom()->path.c_str(), mMajorID, (mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3, (const char *) MR_Pad(mUser), mSteamID.ConvertToUint64());
+	CString lPartyPayload = FormatPartyPayload(mLocalPartyNames, mLocalPartySize);
+	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1.23.7%%%%%u%%%%%u%%%%%s%%%%%I64d%%%%%d%%%%%s",
+		(const char *) roomList->GetSelectedRoom()->path.c_str(), mMajorID,
+		(mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3,
+		(const char *) MR_Pad(mUser), mSteamID.ConvertToUint64(),
+		mLocalPartySize, (const char *) lPartyPayload);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -729,11 +747,12 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName,
 
 	mNetOpString.LoadString(IDS_IMR_ADD_GAME);
 
-	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d%%%%%d%%%%%d%%%%%s",
+	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d%%%%%d%%%%%d%%%%%s%%%%%d",
 		(const char *) roomList->GetSelectedRoom()->path.c_str(),
 		mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName),
 		(const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort,
-		pCans ? 1 : 0, pMines ? 1 : 0, lAllowedCrafts.c_str());
+		pCans ? 1 : 0, pMines ? 1 : 0, lAllowedCrafts.c_str(),
+		(mLocalPartySize > 1) ? 1 : 0);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -791,7 +810,10 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 	mCurrentGameIndex = pGameIndex;
 	mCurrentGameId = mGameList[pGameIndex].mId;
 
-	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u", (const char *) roomList->GetSelectedRoom()->path.c_str(), mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId);
+	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%d",
+		(const char *) roomList->GetSelectedRoom()->path.c_str(),
+		mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId,
+		mLocalPartySize);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -842,10 +864,19 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	//lReturnValue = mThis->LocateServers(pParentWindow, pShouldRecheckServer);
 
 	if (roomList == NULL || pShouldRecheckServer) {
-		SelectRoomDialog dlg(std::string((LPCTSTR) mUser));
+		std::string lPartyNames[MR_MAX_LOCAL_PLAYER];
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			lPartyNames[i] = (const char *) mLocalPartyNames[i];
+		}
+		SelectRoomDialog dlg(std::string((LPCTSTR) mUser), mLocalPartySize,
+			lPartyNames);
 		roomList = dlg.ShowModal(NULL, pParentWindow);
 		if (roomList != NULL) {
 			mUser = dlg.GetPlayerName().c_str();
+			mLocalPartySize = dlg.GetOnlinePartySize();
+			for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+				mLocalPartyNames[i] = dlg.GetOnlinePartyName(i).c_str();
+			}
 		}
 	}
 	return roomList != NULL;
@@ -858,6 +889,10 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
 {
 	mUser = pSession->GetPlayerName();
+	mLocalPartySize = pSession->GetLocalPartySize();
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] = pSession->GetLocalPartyName(i);
+	}
 
 	BOOL lReturnValue = AskRoomParams(pParentWindow, pShouldRecheckServer);
 
@@ -868,6 +903,11 @@ BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSe
 		mVideoBuffer = pVideoBuffer;
 
 		mSession->SetPlayerName(mUser);
+		std::string lPartyNames[MR_MAX_LOCAL_PLAYER];
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			lPartyNames[i] = (const char *) mLocalPartyNames[i];
+		}
+		mSession->SetLocalParty(mLocalPartySize, lPartyNames);
 
 		lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
 	}
@@ -963,10 +1003,19 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 			int lClientIndex = mGameList[lGameIndex].mClientList[lCounter];
 
 			if(mClientList[lClientIndex].mValid) {
-				if(!lPlayerList.IsEmpty()) {
-					lPlayerList += "\r\n";
+				if(lClientIndex == mCurrentUserIndex) {
+					for(int i = 0; i < mLocalPartySize; ++i) {
+						if(!mLocalPartyNames[i].IsEmpty()) {
+							if(!lPlayerList.IsEmpty()) {
+								lPlayerList += "\r\n";
+							}
+							lPlayerList += mLocalPartyNames[i];
+						}
+					}
 				}
-				lPlayerList += mClientList[lClientIndex].mName;
+				else {
+					AppendDisplayRosterLines(lPlayerList, mClientList[lClientIndex].mName);
+				}
 			}
 
 		}
@@ -1042,7 +1091,7 @@ void MR_InternetRoom::RefreshUserList(HWND pWindow)
 		int lIndex = 0;
 		for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 			if(mClientList[lCounter].mValid) {
-				CString lName = mClientList[lCounter].mName;
+				CString lName = FormatCompactUserListName(mClientList[lCounter].mName);
 
 				if(mClientList[lCounter].mMajorID != -1) {
 					CString lExtension;
@@ -1991,18 +2040,16 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						}
 
 						if(lSuccess) {
-							std::string lGameSummary = BuildGameSummary(lCurrentTrack,
-								lNbLap, lAllowWeapons, lAllowCans, lAllowMines,
-								lAllowedCraftMask, lGameRuleSettings);
-							// Register to the InternetServer
-							lSuccess = (mThis->AddGameOp(pWindow, lGameSummary.c_str(),
+							// Keep the IMR game list focused on the track name; the
+							// detailed race settings are shown in the details panel.
+							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(),
 								lCurrentTrack.c_str(), lNbLap, lAllowWeapons,
 								lAllowCans, lAllowMines, lAllowedCraftMask,
 								MR_Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
-								lSuccess = (mThis->mSession->WaitConnections(pWindow, lGameSummary.c_str(),
+								lSuccess = (mThis->mSession->WaitConnections(pWindow, lCurrentTrack.c_str(),
 									FALSE, MR_Config::GetInstance()->net.tcpServPort,
 									&mThis->mModelessDlg, MRM_DLG_END_ADD,
 									lCurrentTrack.c_str(), lNbLap, TRUE, lAllowWeapons,
@@ -2701,6 +2748,118 @@ CString MR_Pad(const char *pStr)
 
 	return lReturnValue;
 
+}
+
+CString FormatPartyPayload(const CString *names, int count)
+{
+	CString payload;
+	for(int i = 0; i < count; ++i) {
+		if(i > 0) {
+			payload += "|";
+		}
+		payload += names[i];
+	}
+	return MR_Pad(payload);
+}
+
+int ParsePartyPayload(const CString &payload, CString *names, int maxNames)
+{
+	if((names == NULL) || (maxNames <= 0)) {
+		return 0;
+	}
+
+	int count = 0;
+	int start = 0;
+	while((start <= payload.GetLength()) && (count < maxNames)) {
+		int sep = payload.Find('|', start);
+		CString item = (sep == -1) ? payload.Mid(start) :
+			payload.Mid(start, sep - start);
+		item.TrimLeft();
+		item.TrimRight();
+		if(!item.IsEmpty()) {
+			names[count++] = item;
+		}
+		if(sep == -1) {
+			break;
+		}
+		start = sep + 1;
+	}
+
+	return count;
+}
+
+void AppendDisplayRosterLines(CString &dest, const CString &displayName)
+{
+	CString trimmed(displayName);
+	trimmed.TrimLeft();
+	trimmed.TrimRight();
+	if(trimmed.IsEmpty()) {
+		return;
+	}
+
+	int suffixPos = trimmed.Find(" +");
+	CString primary = (suffixPos == -1) ? trimmed : trimmed.Left(suffixPos);
+	primary.TrimLeft();
+	primary.TrimRight();
+	if(!primary.IsEmpty()) {
+		if(!dest.IsEmpty()) {
+			dest += "\r\n";
+		}
+		dest += primary;
+	}
+
+	int bracketStart = trimmed.Find('[', suffixPos == -1 ? 0 : suffixPos);
+	int bracketEnd = trimmed.ReverseFind(']');
+	if((bracketStart != -1) && (bracketEnd > bracketStart)) {
+		CString extras = trimmed.Mid(bracketStart + 1, bracketEnd - bracketStart - 1);
+		int start = 0;
+		while(start < extras.GetLength()) {
+			int comma = extras.Find(',', start);
+			CString name = (comma == -1) ? extras.Mid(start) :
+				extras.Mid(start, comma - start);
+			name.TrimLeft();
+			name.TrimRight();
+			if(!name.IsEmpty()) {
+				dest += "\r\n";
+				dest += name;
+			}
+			if(comma == -1) {
+				break;
+			}
+			start = comma + 1;
+		}
+	}
+}
+
+CString FormatCompactUserListName(const CString &displayName)
+{
+	CString trimmed(displayName);
+	trimmed.TrimLeft();
+	trimmed.TrimRight();
+
+	int suffixPos = trimmed.Find(" +");
+	if(suffixPos == -1) {
+		return trimmed;
+	}
+
+	CString primary = trimmed.Left(suffixPos);
+	primary.TrimLeft();
+	primary.TrimRight();
+
+	int countStart = suffixPos + 2;
+	int countEnd = countStart;
+	while((countEnd < trimmed.GetLength()) && isdigit(trimmed[countEnd])) {
+		++countEnd;
+	}
+
+	if((countEnd <= countStart) || primary.IsEmpty()) {
+		return trimmed;
+	}
+
+	CString compact;
+	compact.Format("%s (+%s)", (const char *) primary,
+		(const char *) trimmed.Mid(countStart, countEnd - countStart));
+	return compact;
 }
 
 CString GetLine(const char *pSrc)
