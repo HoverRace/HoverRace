@@ -188,6 +188,7 @@ class MR_NetworkSession : public MR_ClientSession
 		void SetPlayerColumnInteraction(int pHoverId, BOOL pEnabled);
 		void SetPlayerRenderOpacity(int pHoverId, float pOpacity);
 		BOOL IsLocalHoverId(int pHoverId) const;
+		const char *GetPlayerDisplayName(int pHoverId) const;
 		const MR_MainCharacter *FindPlayerByHoverId(int pHoverId) const;
 		BOOL ShouldProcessLocalHitQueues() const;
 };

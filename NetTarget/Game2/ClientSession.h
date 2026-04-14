@@ -119,6 +119,7 @@ class MR_ClientSession
 		virtual void SetPlayerRenderOpacity(int pHoverId, float pOpacity);
 		virtual void SetLapCount(int pNbLap);
 		virtual BOOL IsLocalHoverId(int pHoverId) const;
+		virtual const char *GetPlayerDisplayName(int pHoverId) const;
 		void EndRuleBasedMatch();
 		BOOL IsRuleBasedMatchFinished() const;
 		BOOL GetGameRulePlayerState(int pHoverId,

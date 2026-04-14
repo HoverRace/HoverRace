@@ -49,6 +49,7 @@ namespace {
 			int GetPlayerCount() const;
 			int GetPlayerId(int pPlayerIndex) const;
 			BOOL GetPlayerState(int pHoverId, MR_GameRulePlayerState &pState) const;
+			const char *GetPlayerName(int pHoverId) const;
 			void SetLapCount(int pLapCount);
 			void SetSpawnSlot(int pHoverId, int pSpawnSlot);
 			void SetPlayerCollisions(int pHoverId, BOOL pEnabled);
@@ -212,27 +213,7 @@ namespace {
 
 			void BroadcastScoreMessage(MR_GameRuleSessionApi &pApi)
 			{
-				char lBuffer[128];
-				bool lFirst = true;
-				std::ostringstream lScores;
-				const int lNbPlayers = pApi.GetPlayerCount();
-
-				for(int lPlayer = 0; lPlayer < lNbPlayers; lPlayer++) {
-					const int lHoverId = pApi.GetPlayerId(lPlayer);
-
-					if((lHoverId < 0) || (lHoverId >= MR_NB_MAX_PLAYER)) {
-						continue;
-					}
-
-					if(!lFirst) {
-						lScores << "  ";
-					}
-					lScores << "P" << (lHoverId + 1) << ":" << mScores[lHoverId];
-					lFirst = false;
-				}
-
-				sprintf(lBuffer, "War score %s", lScores.str().c_str());
-				pApi.AddMessage(lBuffer);
+				// War now reports the scoring event directly from the rule.
 			}
 
 			BOOL CheckForWinner(MR_GameRuleSessionApi &pApi, int pHoverId)
@@ -326,12 +307,21 @@ namespace {
 				}
 
 				mScores[pSourceHoverId]++;
-				BroadcastScoreMessage(pApi);
+				{
+					char lBuffer[160];
+
+					sprintf(lBuffer, "%s has hit %s (Total: %d)",
+						pApi.GetPlayerName(pSourceHoverId),
+						pApi.GetPlayerName(pVictimHoverId),
+						mScores[pSourceHoverId]);
+					pApi.AddMessage(lBuffer);
+				}
 
 				if(CheckForWinner(pApi, pSourceHoverId)) {
 					char lBuffer[96];
 
-					sprintf(lBuffer, "War winner: Player %d", pSourceHoverId + 1);
+					sprintf(lBuffer, "War winner: %s",
+						pApi.GetPlayerName(pSourceHoverId));
 					pApi.AddMessage(lBuffer);
 					pApi.EndMatch();
 					mMatchFinished = TRUE;
@@ -770,6 +760,11 @@ namespace {
 		return mHost.TryGetPlayerState(mSession, pHoverId, pState);
 	}
 
+	const char *MR_GameRuleSessionApi::GetPlayerName(int pHoverId) const
+	{
+		return mSession.GetPlayerDisplayName(pHoverId);
+	}
+
 	void MR_GameRuleSessionApi::SetLapCount(int pLapCount)
 	{
 		mSession.SetLapCount(pLapCount);
@@ -1163,6 +1158,44 @@ const char *MR_GetGameRuleDisplayName(MR_GameRuleId pModeId)
 	}
 }
 
+std::string MR_FormatGameRuleConfigSummary(const MR_GameRuleSettings &pSettings,
+	int pLapCount)
+{
+	MR_GameRuleSettings lSettings = pSettings;
+	CString lSummary;
+
+	MR_NormalizeGameRuleSettings(lSettings);
+
+	if(pLapCount < 1) {
+		pLapCount = 1;
+	}
+
+	switch(lSettings.mModeId) {
+		case MR_GR_NO_COLLISION_RACE:
+			lSummary.Format("Ghost Race, %d %s", pLapCount,
+				pLapCount == 1 ? "lap" : "laps");
+			break;
+
+		case MR_GR_FIRST_LAP_GHOST_RACE:
+			lSummary.Format("First-Lap Ghost Race, %d %s", pLapCount,
+				pLapCount == 1 ? "lap" : "laps");
+			break;
+
+		case MR_GR_WAR:
+			lSummary.Format("War, first to %d, win by %d",
+				lSettings.mWarTargetScore, lSettings.mWarWinBy);
+			break;
+
+		case MR_GR_NORMAL_RACE:
+		default:
+			lSummary.Format("Race, %d %s", pLapCount,
+				pLapCount == 1 ? "lap" : "laps");
+			break;
+	}
+
+	return (const char *) lSummary;
+}
+
 std::string MR_FormatGameRuleSummary(const MR_GameRuleSettings &pSettings)
 {
 	MR_GameRuleSettings lSettings = pSettings;
@@ -1187,6 +1220,11 @@ std::string MR_FormatGameRuleSummary(const MR_GameRuleSettings &pSettings)
 		<< (int) (lSettings.mRemoteCraftOpacity * 100.0f + 0.5f);
 
 	return lOutput.str();
+}
+
+std::string MR_FormatGameRulePayload(const MR_GameRuleSettings &pSettings)
+{
+	return MR_FormatGameRuleSummary(pSettings);
 }
 
 bool MR_ParseGameRuleSummary(std::string &pSummary,
@@ -1300,6 +1338,12 @@ bool MR_ParseGameRuleSummary(std::string &pSummary,
 
 	MR_NormalizeGameRuleSettings(pSettings);
 	return lParsed;
+}
+
+bool MR_ParseGameRulePayload(std::string &pPayload,
+	MR_GameRuleSettings &pSettings)
+{
+	return MR_ParseGameRuleSummary(pPayload, pSettings);
 }
 
 

@@ -920,6 +920,10 @@ static bool GetTcpImrTrackDetails(HWND dialog, CString &trackName, CString &lapT
 static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText,
 	CString &powerupsText, CString &craftsText)
 {
+	if(GetTcpImrTrackDetails(dialog, trackName, lapText, powerupsText, craftsText)) {
+		return true;
+	}
+
 	trackName = gsTcpTrackName;
 	lapText = gsTcpLapText;
 	powerupsText = gsTcpPowerupsText;
@@ -932,10 +936,6 @@ static bool GetTcpTrackDetails(HWND dialog, CString &trackName, CString &lapText
 	if(ParseTcpGameSummary(gsTcpOriginalGameName, trackName, lapText, powerupsText,
 		craftsText))
 	{
-		return true;
-	}
-
-	if(GetTcpImrTrackDetails(dialog, trackName, lapText, powerupsText, craftsText)) {
 		return true;
 	}
 
@@ -2432,15 +2432,14 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				gsTcpOriginalGameName = mActiveInterface->mGameName;
 				gsTcpTrackName = mActiveInterface->mTrackName;
 				if(mActiveInterface->mHasGameLaps) {
-					gsTcpLapText.Format("%d", mActiveInterface->mNbLap);
+					gsTcpLapText = MR_FormatGameRuleConfigSummary(
+						mActiveInterface->mGameRuleSettings,
+						mActiveInterface->mNbLap).c_str();
 				}
 				if(mActiveInterface->mHasGameWeapons || mActiveInterface->mHasGameCans ||
 					mActiveInterface->mHasGameMines)
 				{
-					gsTcpPowerupsText = MR_GetGameRuleDisplayName(
-						mActiveInterface->mGameRuleSettings.mModeId);
-					gsTcpPowerupsText += " / ";
-					gsTcpPowerupsText += MR_FormatPowerupDisplay(
+					gsTcpPowerupsText = MR_FormatPowerupDisplay(
 						mActiveInterface->mHasGameWeapons && (mActiveInterface->mAllowWeapons != FALSE),
 						mActiveInterface->mHasGameCans && (mActiveInterface->mAllowCans != FALSE),
 						mActiveInterface->mHasGameMines && (mActiveInterface->mAllowMines != FALSE)).c_str();

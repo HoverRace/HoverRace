@@ -361,6 +361,14 @@ BOOL MR_ClientSession::IsLocalHoverId(int pHoverId) const
 	return FALSE;
 }
 
+const char *MR_ClientSession::GetPlayerDisplayName(int pHoverId) const
+{
+	static char lNameBuffer[16];
+
+	sprintf(lNameBuffer, "Player %d", pHoverId + 1);
+	return lNameBuffer;
+}
+
 BOOL MR_ClientSession::GetGameRulePlayerState(int pHoverId,
 	MR_GameRulePlayerState &pState) const
 {

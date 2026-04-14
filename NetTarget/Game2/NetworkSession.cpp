@@ -556,6 +556,11 @@ BOOL MR_NetworkSession::IsLocalHoverId(int pHoverId) const
 	return MR_ClientSession::IsLocalHoverId(pHoverId);
 }
 
+const char *MR_NetworkSession::GetPlayerDisplayName(int pHoverId) const
+{
+	return ResolvePlayerName(pHoverId);
+}
+
 const MR_MainCharacter *MR_NetworkSession::FindPlayerByHoverId(int pHoverId) const
 {
 	const MR_MainCharacter *lLocal = MR_ClientSession::FindPlayerByHoverId(pHoverId);

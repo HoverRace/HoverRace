@@ -122,8 +122,13 @@ BOOL MR_ValidateGameRuleSettings(const MR_GameRuleSettings &pSettings,
 	char *pErrorBuffer, int pErrorBufferLen);
 const char *MR_GetGameRuleToken(MR_GameRuleId pModeId);
 const char *MR_GetGameRuleDisplayName(MR_GameRuleId pModeId);
+std::string MR_FormatGameRuleConfigSummary(const MR_GameRuleSettings &pSettings,
+	int pLapCount);
 std::string MR_FormatGameRuleSummary(const MR_GameRuleSettings &pSettings);
+std::string MR_FormatGameRulePayload(const MR_GameRuleSettings &pSettings);
 bool MR_ParseGameRuleSummary(std::string &pSummary,
+	MR_GameRuleSettings &pSettings);
+bool MR_ParseGameRulePayload(std::string &pPayload,
 	MR_GameRuleSettings &pSettings);
 
 #endif

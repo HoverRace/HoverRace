@@ -30,6 +30,7 @@
 #include "../Util/Net/Agent.h"
 #include "../Util/Net/NetExn.h"
 
+#include <sstream>
 #include <vector>
 
 #define MRM_DNS_ANSWER        (WM_USER + 1)
@@ -84,6 +85,56 @@ static std::string BuildGameSummary(const std::string &trackName, int nbLap,
 		lRuleSummary.c_str(), lAllowedCrafts.c_str());
 
 	return (const char *) lSummary;
+}
+
+static bool ParseHexDigit(char pValue, unsigned &pDigit)
+{
+	if((pValue >= '0') && (pValue <= '9')) {
+		pDigit = pValue - '0';
+		return true;
+	}
+	if((pValue >= 'a') && (pValue <= 'f')) {
+		pDigit = 10 + (pValue - 'a');
+		return true;
+	}
+	if((pValue >= 'A') && (pValue <= 'F')) {
+		pDigit = 10 + (pValue - 'A');
+		return true;
+	}
+
+	return false;
+}
+
+static std::string UrlDecodeToken(const std::string &pToken)
+{
+	std::string lDecoded;
+
+	for(std::string::size_type i = 0; i < pToken.length(); ++i) {
+		const char lChar = pToken[i];
+
+		if(lChar == '+') {
+			lDecoded += ' ';
+		}
+		else if((lChar == '%') && (i + 2 < pToken.length())) {
+			unsigned lHigh = 0;
+			unsigned lLow = 0;
+
+			if(ParseHexDigit(pToken[i + 1], lHigh) &&
+				ParseHexDigit(pToken[i + 2], lLow))
+			{
+				lDecoded += (char) ((lHigh << 4) | lLow);
+				i += 2;
+			}
+			else {
+				lDecoded += lChar;
+			}
+		}
+		else {
+			lDecoded += lChar;
+		}
+	}
+
+	return lDecoded;
 }
 
 static void PositionDialogToRightOfOwner(HWND dialog, int gap = 3)
@@ -526,6 +577,8 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							mGameList[lEntry].mAllowMines = TRUE;
 							mGameList[lEntry].mAllowedCraftMask =
 								MR_GetDefaultAllowedCraftMask();
+							mGameList[lEntry].mConfigSummary = "";
+							mGameList[lEntry].mRulePayload = "";
 							mGameList[lEntry].mGameRuleSettings =
 								MR_GameRuleSettings();
 							mGameList[lEntry].mAllowedCrafts =
@@ -534,12 +587,6 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							mGameList[lEntry].mPort = (unsigned) -1;
 							mGameList[lEntry].mRaceHash = "";
 							mGameList[lEntry].mName = GetLine(lLinePtr);
-							{
-								std::string lSummary((const char *)
-									mGameList[lEntry].mName);
-								MR_ParseGameRuleSummary(lSummary,
-									mGameList[lEntry].mGameRuleSettings);
-							}
 
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mTrack = GetLine(lLinePtr);
@@ -557,40 +604,78 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 							int lDummyBool = 0;
 							int lDummyCans = 1;
 							int lDummyMines = 1;
-							char lRaceHash[80];
-							char lAllowedCrafts[80];
-							lRaceHash[0] = 0;
-							lAllowedCrafts[0] = 0;
+							std::vector<std::string> lTokens;
+							std::istringstream lDetails((const char *) GetLine(lLinePtr));
+							std::string lToken;
 
-							int lParsed = sscanf(lLinePtr, "%u %d %d %d %d %d %79s %79s",
-								&mGameList[lEntry].mPort,
-								&mGameList[lEntry].mNbLap,
-								&lDummyBool,
-								&lDummyCans,
-								&lDummyMines,
-								&lNbClient,
-								lRaceHash,
-								lAllowedCrafts);
+							while(lDetails >> lToken) {
+								lTokens.push_back(lToken);
+							}
+
+							const int lParsed = (int) lTokens.size();
+							if(lParsed >= 4) {
+								mGameList[lEntry].mPort =
+									(unsigned) atoi(lTokens[0].c_str());
+								mGameList[lEntry].mNbLap =
+									atoi(lTokens[1].c_str());
+								lDummyBool = atoi(lTokens[2].c_str());
+								lDummyCans = atoi(lTokens[3].c_str());
+							}
+
 							if(lParsed == 4) {
 								lNbClient = lDummyCans;
 								lDummyCans = 1;
 								lDummyMines = 1;
+							}
+							else if(lParsed >= 6) {
+								lDummyMines = atoi(lTokens[4].c_str());
+								lNbClient = atoi(lTokens[5].c_str());
 							}
 
 							if((lParsed == 4) || (lParsed >= 6)) {
 								mGameList[lEntry].mAllowWeapons = lDummyBool;
 								mGameList[lEntry].mAllowCans = lDummyCans;
 								mGameList[lEntry].mAllowMines = lDummyMines;
-								if(lParsed == 7) {
-									mGameList[lEntry].mRaceHash = lRaceHash;
+								if(lParsed >= 7) {
+									mGameList[lEntry].mRaceHash = lTokens[6].c_str();
 								}
-								else if(lParsed >= 8) {
-									mGameList[lEntry].mRaceHash = lRaceHash;
+								if(lParsed >= 8) {
 									mGameList[lEntry].mAllowedCraftMask =
-										MR_ParseAllowedCraftMask(lAllowedCrafts);
+										MR_ParseAllowedCraftMask(lTokens[7].c_str());
 									mGameList[lEntry].mAllowedCrafts =
 										MR_FormatAllowedCraftDisplayMask(
 											mGameList[lEntry].mAllowedCraftMask).c_str();
+								}
+								if(lParsed >= 11) {
+									mGameList[lEntry].mConfigSummary =
+										UrlDecodeToken(lTokens[10].c_str()).c_str();
+								}
+								if(lParsed >= 12) {
+									mGameList[lEntry].mRulePayload =
+										UrlDecodeToken(lTokens[11].c_str()).c_str();
+								}
+								if(!mGameList[lEntry].mRulePayload.IsEmpty()) {
+									std::string lRulePayload((const char *)
+										mGameList[lEntry].mRulePayload);
+									MR_ParseGameRulePayload(lRulePayload,
+										mGameList[lEntry].mGameRuleSettings);
+								}
+								else {
+									std::string lSummary((const char *)
+										mGameList[lEntry].mName);
+									MR_ParseGameRuleSummary(lSummary,
+										mGameList[lEntry].mGameRuleSettings);
+								}
+								if(mGameList[lEntry].mConfigSummary.IsEmpty()) {
+									mGameList[lEntry].mConfigSummary =
+										MR_FormatGameRuleConfigSummary(
+											mGameList[lEntry].mGameRuleSettings,
+											mGameList[lEntry].mNbLap).c_str();
+								}
+								if(mGameList[lEntry].mRulePayload.IsEmpty()) {
+									mGameList[lEntry].mRulePayload =
+										MR_FormatGameRulePayload(
+											mGameList[lEntry].mGameRuleSettings).c_str();
 								}
 
 								if(lNbClient > eMaxPlayerGame) {
@@ -738,21 +823,27 @@ BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 
 BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName,
 	const char *pTrackName, int pNbLap, BOOL pWeapons, BOOL pCans,
-	BOOL pMines, unsigned pAllowedCraftMask, unsigned pPort)
+	BOOL pMines, unsigned pAllowedCraftMask,
+	const MR_GameRuleSettings &pGameRuleSettings, unsigned pPort)
 {
 	BOOL lReturnValue = FALSE;
 	std::string lAllowedCrafts = MR_FormatAllowedCraftMask(pAllowedCraftMask);
+	std::string lConfigSummary = MR_FormatGameRuleConfigSummary(
+		pGameRuleSettings, pNbLap);
+	std::string lRulePayload = MR_FormatGameRulePayload(pGameRuleSettings);
 
 	mThis = this;
 
 	mNetOpString.LoadString(IDS_IMR_ADD_GAME);
 
-	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d%%%%%d%%%%%d%%%%%s%%%%%d",
+	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d%%%%%d%%%%%d%%%%%s%%%%%d%%%%%s%%%%%s",
 		(const char *) roomList->GetSelectedRoom()->path.c_str(),
 		mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName),
 		(const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort,
 		pCans ? 1 : 0, pMines ? 1 : 0, lAllowedCrafts.c_str(),
-		(mLocalPartySize > 1) ? 1 : 0);
+		(mLocalPartySize > 1) ? 1 : 0,
+		(const char *) MR_Pad(lConfigSummary.c_str()),
+		(const char *) MR_Pad(lRulePayload.c_str()));
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -989,6 +1080,7 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 		SetDlgItemText(pWindow, IDC_TRACK_NAME, MR_LoadString(IDS_IMR_NOSELECT));
 		SetDlgItemText(pWindow, IDC_NB_LAP, "");
 		SetDlgItemText(pWindow, IDC_WEAPONS, "");
+		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, "");
 		SetDlgItemText(pWindow, IDC_CANS, "");
 		SetDlgItemText(pWindow, IDC_MINES, "");
 		SetDlgItemText(pWindow, IDC_CRAFTS, "");
@@ -1021,17 +1113,20 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 		}
 
 		SetDlgItemText(pWindow, IDC_TRACK_NAME, mGameList[lGameIndex].mTrack);
-		SetDlgItemInt(pWindow, IDC_NB_LAP, mGameList[lGameIndex].mNbLap, FALSE);
-		std::string lPowerups = MR_GetGameRuleDisplayName(
-			mGameList[lGameIndex].mGameRuleSettings.mModeId);
-		lPowerups += " / ";
-		lPowerups += MR_FormatPowerupDisplay(
+		std::string lConfigSummary = (const char *)
+			mGameList[lGameIndex].mConfigSummary;
+		if(lConfigSummary.empty()) {
+			lConfigSummary = MR_FormatGameRuleConfigSummary(
+				mGameList[lGameIndex].mGameRuleSettings,
+				mGameList[lGameIndex].mNbLap);
+		}
+		SetDlgItemText(pWindow, IDC_NB_LAP, lConfigSummary.c_str());
+		std::string lPowerups = MR_FormatPowerupDisplay(
 			mGameList[lGameIndex].mAllowWeapons != FALSE,
 			mGameList[lGameIndex].mAllowCans != FALSE,
 			mGameList[lGameIndex].mAllowMines != FALSE);
 		SetDlgItemText(pWindow, IDC_WEAPONS, lPowerups.c_str());
-		SetDlgItemText(pWindow, IDC_CANS, "");
-		SetDlgItemText(pWindow, IDC_MINES, "");
+		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, lPowerups.c_str());
 		SetDlgItemText(pWindow, IDC_CRAFTS, mGameList[lGameIndex].mAllowedCrafts);
 		SetDlgItemText(pWindow, IDC_PLAYER_LIST, lPlayerList);
 
@@ -2045,6 +2140,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(),
 								lCurrentTrack.c_str(), lNbLap, lAllowWeapons,
 								lAllowCans, lAllowMines, lAllowedCraftMask,
+								lGameRuleSettings,
 								MR_Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {

@@ -114,6 +114,8 @@ class MR_InternetRoom
 				BOOL mAllowMines;
 				unsigned mAllowedCraftMask;
 				CString mAllowedCrafts;
+				CString mConfigSummary;
+				CString mRulePayload;
 				MR_GameRuleSettings mGameRuleSettings;
 				int mNbClient;
 				int mClientList[eMaxPlayerGame];
@@ -191,7 +193,8 @@ class MR_InternetRoom
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
 		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName,
 			int pNbLap, BOOL pAlllowWeapons, BOOL pAllowCans,
-			BOOL pAllowMines, unsigned pAllowedCraftMask, unsigned pPort);
+			BOOL pAllowMines, unsigned pAllowedCraftMask,
+			const MR_GameRuleSettings &pGameRuleSettings, unsigned pPort);
 		BOOL DelGameOp(HWND pParentWindow);
 		BOOL JoinGameOp(HWND pParentWindow, int pGameIndex);
 		BOOL LeaveGameOp(HWND pParentWindow);
