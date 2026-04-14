@@ -1511,7 +1511,7 @@ int MR_NetworkInterface::GetLocalPartySize() const
 
 const char *MR_NetworkInterface::GetLocalPartyName(int pIndex) const
 {
-	if((pIndex < 0) || (pIndex >= mLocalPartySize)) {
+	if((pIndex < 0) || (pIndex >= MR_MAX_LOCAL_PLAYER)) {
 		return "";
 	}
 	return mLocalPartyNames[pIndex];
