@@ -134,10 +134,12 @@ BOOL CALLBACK RoomListDialog::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LP
 		dlg->loadThread.join();
 	}
 	else {
-		BOOL retv = dlg->DlgProc(hwnd, message, wparam, lparam);
+		retv = dlg->DlgProc(hwnd, message, wparam, lparam);
 		if (message == WM_INITDIALOG) {
-			// Kick off the load thread.
-			dlg->loadThread = boost::thread(boost::bind(&RoomListDialog::ThreadProc, dlg, hwnd));
+			if(dlg->ShouldLoadRooms()) {
+				// Kick off the load thread.
+				dlg->loadThread = boost::thread(boost::bind(&RoomListDialog::ThreadProc, dlg, hwnd));
+			}
 		}
 	}
 	return retv;

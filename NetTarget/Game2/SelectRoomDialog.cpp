@@ -34,6 +34,10 @@
 using namespace HoverRace::Client;
 //using namespace HoverRace::Util;
 
+#ifndef EM_SETCUEBANNER
+#define EM_SETCUEBANNER 0x1501
+#endif
+
 namespace {
 	struct DialogRect
 	{
@@ -64,11 +68,23 @@ namespace {
 	static const int INTERNET_PARAMS_BOTTOM_MARGIN = 7;
 	static const int INTERNET_PARAMS_BASE_BUTTON_Y = 111;
 
+	static const int LOCAL_PLAYERS_ADD_BUTTON_Y = 7;
+	static const int LOCAL_PLAYERS_ROW_Y = 25;
+	static const int LOCAL_PLAYERS_BASE_BUTTON_Y = 31;
+
 	static const int IDC_LOCAL_ADD_BUTTON = 2000;
 	static const int IDC_LOCAL_REMOVE_BUTTON = 2001;
 	static const int IDC_LOCAL_PLAYER_LABEL_BASE = 2010;
 	static const int IDC_LOCAL_PLAYER_NAME_BASE = 2020;
 	static const int IDC_LOCAL_PLAYER_CONTROLS_BASE = 2030;
+
+	static void SetPlayerNameCue(HWND hwnd, int playerIdx)
+	{
+		wchar_t cue[32];
+		wsprintfW(cue, L"Player %ds name", playerIdx + 1);
+		SendMessageW(hwnd, EM_SETCUEBANNER, FALSE,
+			reinterpret_cast<LPARAM>(cue));
+	}
 
 	enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
@@ -466,12 +482,17 @@ namespace {
 }
 
 SelectRoomDialog::SelectRoomDialog(const std::string &playerName,
-	int onlinePartySize, const std::string *onlinePartyNames) :
+	int onlinePartySize, const std::string *onlinePartyNames,
+	int minPartySize, BOOL localOnly) :
 	SUPER(MR_Config::GetInstance()->net.mainServer),
-	playerName(playerName), onlinePartySize(max(1, min(onlinePartySize,
+	playerName(playerName),
+	minPartySize(max(1, min(minPartySize, MR_MAX_LOCAL_PLAYER))),
+	localOnly(localOnly),
+	onlinePartySize(max(this->minPartySize, min(onlinePartySize,
 		MR_MAX_LOCAL_PLAYER))),
 	addPlayerButton(NULL),
 	removePlayerButton(NULL),
+	accepted(FALSE),
 	finished(false)
 {
 	MR_Config *cfg = MR_Config::GetInstance();
@@ -488,9 +509,8 @@ SelectRoomDialog::SelectRoomDialog(const std::string &playerName,
 	}
 	for(int i = 1; i < this->onlinePartySize; ++i) {
 		if(this->onlinePartyNames[i].empty()) {
-			char generated[32];
-			sprintf(generated, "%s %d", playerName.c_str(), i + 1);
-			this->onlinePartyNames[i] = generated;
+			// Leave empty names empty; the edit control cue tells users which
+			// local player each row represents without saving placeholder text.
 		}
 	}
 }
@@ -515,6 +535,11 @@ const std::string &SelectRoomDialog::GetOnlinePartyName(int idx) const
 	return (idx >= 0 && idx < MR_MAX_LOCAL_PLAYER) ? onlinePartyNames[idx] : EMPTY;
 }
 
+BOOL SelectRoomDialog::WasAccepted() const
+{
+	return accepted;
+}
+
 void SelectRoomDialog::CreateDynamicControls(HWND hwnd)
 {
 	HFONT font = reinterpret_cast<HFONT>(SendMessage(hwnd, WM_GETFONT, 0, 0));
@@ -530,7 +555,7 @@ void SelectRoomDialog::CreateDynamicControls(HWND hwnd)
 		reinterpret_cast<HINSTANCE>(GetWindowLongPtr(hwnd, GWLP_HINSTANCE)), NULL);
 	SendMessage(removePlayerButton, WM_SETFONT, reinterpret_cast<WPARAM>(font), TRUE);
 
-	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
 		playerLabels[i] = CreateWindowEx(0, "STATIC", "",
 			WS_CHILD | SS_LEFT,
 			0, 0, 0, 0, hwnd,
@@ -551,13 +576,14 @@ void SelectRoomDialog::CreateDynamicControls(HWND hwnd)
 		SendMessage(nameEdits[i], WM_SETFONT, reinterpret_cast<WPARAM>(font), TRUE);
 		SendMessage(controlButtons[i], WM_SETFONT, reinterpret_cast<WPARAM>(font), TRUE);
 		SendMessage(nameEdits[i], EM_SETLIMITTEXT, 31, 0);
+		SetPlayerNameCue(nameEdits[i], i);
 	}
 }
 
 void SelectRoomDialog::SyncPlayerNamesFromControls(HWND hwnd)
 {
 	char buffer[64];
-	for(int i = 1; i < onlinePartySize; ++i) {
+	for(int i = localOnly ? 0 : 1; i < onlinePartySize; ++i) {
 		if(nameEdits[i] == NULL) continue;
 		GetWindowText(nameEdits[i], buffer, sizeof(buffer));
 		buffer[sizeof(buffer) - 1] = 0;
@@ -569,7 +595,7 @@ void SelectRoomDialog::UpdatePlayerRows(HWND hwnd)
 {
 	char buffer[64];
 	const BOOL canAdd = (onlinePartySize < MR_MAX_LOCAL_PLAYER) ? TRUE : FALSE;
-	const BOOL canRemove = (onlinePartySize > 1) ? TRUE : FALSE;
+	const BOOL canRemove = (onlinePartySize > minPartySize) ? TRUE : FALSE;
 
 	if(addPlayerButton != NULL) {
 		ShowWindow(addPlayerButton, SW_SHOW);
@@ -581,8 +607,9 @@ void SelectRoomDialog::UpdatePlayerRows(HWND hwnd)
 		EnableWindow(removePlayerButton, canRemove);
 	}
 
-	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
-		const BOOL show = (i < onlinePartySize) ? TRUE : FALSE;
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		const BOOL show = ((i < onlinePartySize) &&
+			(localOnly || (i > 0))) ? TRUE : FALSE;
 		if(show) {
 			sprintf(buffer, "Player %d:", i + 1);
 			SetWindowText(playerLabels[i], buffer);
@@ -596,11 +623,13 @@ void SelectRoomDialog::UpdatePlayerRows(HWND hwnd)
 
 void SelectRoomDialog::ApplyDialogLayout(HWND hwnd)
 {
-	const int rowCount = max(0, onlinePartySize - 1);
-	const int addButtonY = INTERNET_PARAMS_ADD_BUTTON_Y;
-	const int rowBaseY = INTERNET_PARAMS_ROW_Y;
+	const int rowCount = localOnly ? onlinePartySize : max(0, onlinePartySize - 1);
+	const int addButtonY = localOnly ?
+		LOCAL_PLAYERS_ADD_BUTTON_Y : INTERNET_PARAMS_ADD_BUTTON_Y;
+	const int rowBaseY = localOnly ?
+		LOCAL_PLAYERS_ROW_Y : INTERNET_PARAMS_ROW_Y;
 	const int buttonY = (rowCount == 0) ?
-		INTERNET_PARAMS_BASE_BUTTON_Y :
+		(localOnly ? LOCAL_PLAYERS_BASE_BUTTON_Y : INTERNET_PARAMS_BASE_BUTTON_Y) :
 		(rowBaseY + (rowCount * INTERNET_PARAMS_ROW_HEIGHT) +
 			INTERNET_PARAMS_ROW_TO_BUTTON_GAP);
 	const int dialogHeight = buttonY + INTERNET_PARAMS_BUTTONS_HEIGHT +
@@ -621,8 +650,10 @@ void SelectRoomDialog::ApplyDialogLayout(HWND hwnd)
 		MoveWindowDialogUnits(hwnd, removePlayerButton, rect);
 	}
 
-	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
-		const int rowY = rowBaseY + ((i - 1) * INTERNET_PARAMS_ROW_HEIGHT);
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		const int visibleRow = localOnly ? i : (i - 1);
+		if(visibleRow < 0) continue;
+		const int rowY = rowBaseY + (visibleRow * INTERNET_PARAMS_ROW_HEIGHT);
 
 		rect.x = 7;
 		rect.y = rowY + 3;
@@ -736,6 +767,11 @@ void SelectRoomDialog::HandleLoadFinished(HWND hwnd, result_t result)
 	finished = true;
 }
 
+BOOL SelectRoomDialog::ShouldLoadRooms() const
+{
+	return !localOnly;
+}
+
 /**
  * Populate and show the room list widget.
  * @param hwnd The window handle of the room list widget.
@@ -765,7 +801,8 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 	switch (message) {
 
 		case WM_INITDIALOG:
-			SetWindowText(hwnd, "Internet Meeting Room");
+			SetWindowText(hwnd, localOnly ? "Split Screen Players" :
+				"Internet Meeting Room");
 			SetDlgItemText(hwnd, IDC_ALIAS, playerName.c_str());
 			CreateDynamicControls(hwnd);
 			UpdatePlayerRows(hwnd);
@@ -773,10 +810,19 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 			SetDlgItemText(hwnd, IDOK, "OK");
 			SetDlgItemText(hwnd, IDCANCEL, "Cancel");
 			ShowWindow(GetDlgItem(hwnd, IDC_ROOMLIST), SW_HIDE);
-			ShowWindow(GetDlgItem(hwnd, IDC_MSG_LBL), SW_SHOW);
+			if(localOnly) {
+				ShowWindow(GetDlgItem(hwnd, IDC_ALIAS_LABEL), SW_HIDE);
+				ShowWindow(GetDlgItem(hwnd, IDC_ALIAS), SW_HIDE);
+				ShowWindow(GetDlgItem(hwnd, IDC_ROOM_LABEL), SW_HIDE);
+				ShowWindow(GetDlgItem(hwnd, IDC_MSG_LBL), SW_HIDE);
+				finished = true;
+			}
+			else {
+				ShowWindow(GetDlgItem(hwnd, IDC_MSG_LBL), SW_SHOW);
+			}
 
 			okButton = GetDlgItem(hwnd, IDOK);
-			SetFocus(okButton);
+			SetFocus(localOnly ? nameEdits[0] : okButton);
 
 			retv = TRUE;
 
@@ -797,7 +843,7 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 				break;
 			}
 			else if(commandId == IDC_LOCAL_REMOVE_BUTTON) {
-				if(onlinePartySize > 1) {
+				if(onlinePartySize > minPartySize) {
 					SyncPlayerNamesFromControls(hwnd);
 					onlinePartySize--;
 					UpdatePlayerRows(hwnd);
@@ -832,31 +878,43 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 
 				case IDOK:
 				{
-					GetRoomList()->SetSelectedRoom(
-						SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_GETCURSEL, 0, 0));
+					if(!localOnly) {
+						GetRoomList()->SetSelectedRoom(
+							SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_GETCURSEL, 0, 0));
+					}
 
 					char alias[64];
-					GetDlgItemText(hwnd, IDC_ALIAS, alias, 64);
-					alias[63] = 0;
-					playerName = (const char *) alias;
+					if(localOnly) {
+						SyncPlayerNamesFromControls(hwnd);
+						playerName = onlinePartyNames[0];
+					}
+					else {
+						GetDlgItemText(hwnd, IDC_ALIAS, alias, 64);
+						alias[63] = 0;
+						playerName = (const char *) alias;
+						SyncPlayerNamesFromControls(hwnd);
+						onlinePartyNames[0] = playerName;
+					}
 					if(playerName.empty()) {
-						MessageBox(hwnd, "Enter an alias for player 1 before joining the IMR.",
-							"Internet Meeting Room", MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
-						SetFocus(GetDlgItem(hwnd, IDC_ALIAS));
+						MessageBox(hwnd,
+							localOnly ?
+								"Enter a name for player 1 before continuing." :
+								"Enter an alias for player 1 before joining the IMR.",
+							localOnly ? "Split Screen" : "Internet Meeting Room",
+							MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+						SetFocus(localOnly ? nameEdits[0] : GetDlgItem(hwnd, IDC_ALIAS));
 						retv = TRUE;
 						break;
 					}
 
-					SyncPlayerNamesFromControls(hwnd);
-					onlinePartyNames[0] = playerName;
-
 					for(int i = 1; i < onlinePartySize; ++i) {
-						if(onlinePartyNames[i].empty()) {
+						if(!localOnly && onlinePartyNames[i].empty()) {
 							char message[128];
 							sprintf(message,
 								"Enter a name for local player %d before joining the IMR.",
 								i + 1);
-							MessageBox(hwnd, message, "Internet Meeting Room",
+							MessageBox(hwnd, message,
+								"Internet Meeting Room",
 								MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 							SetFocus(nameEdits[i]);
 							retv = TRUE;
@@ -873,6 +931,7 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 						cfg->Save();
 					}
 
+					accepted = TRUE;
 					EndDialog(hwnd, IDOK);
 					break;
 				}

@@ -42,6 +42,11 @@ MR_ClientSession::MR_ClientSession()
 	mAllowedCraftMask = MR_GetDefaultAllowedCraftMask();
 	mGameRuleRuntime = NULL;
 	mRuleBasedMatchFinished = FALSE;
+	mLocalPartySize = 1;
+	mLocalPartyNames[0] = "Player";
+	for(int i = 1; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] = "";
+	}
 	ResetLocalHitStats();
 
 	InitializeCriticalSection(&mChatMutex);
@@ -361,9 +366,41 @@ BOOL MR_ClientSession::IsLocalHoverId(int pHoverId) const
 	return FALSE;
 }
 
+void MR_ClientSession::SetLocalParty(int pPartySize,
+	const std::string *pPartyNames)
+{
+	mLocalPartySize = max(1, min(pPartySize, MR_MAX_LOCAL_PLAYER));
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+		mLocalPartyNames[i] =
+			(pPartyNames != NULL) ? pPartyNames[i].c_str() : "";
+	}
+	if(mLocalPartyNames[0].IsEmpty()) {
+		mLocalPartyNames[0] = "Player";
+	}
+}
+
+int MR_ClientSession::GetLocalPartySize() const
+{
+	return mLocalPartySize;
+}
+
+const char *MR_ClientSession::GetLocalPartyName(int pIndex) const
+{
+	if((pIndex < 0) || (pIndex >= MR_MAX_LOCAL_PLAYER)) {
+		return "";
+	}
+	return mLocalPartyNames[pIndex];
+}
+
 const char *MR_ClientSession::GetPlayerDisplayName(int pHoverId) const
 {
 	static char lNameBuffer[16];
+
+	if((pHoverId >= 0) && (pHoverId < mLocalPartySize) &&
+		!mLocalPartyNames[pHoverId].IsEmpty())
+	{
+		return mLocalPartyNames[pHoverId];
+	}
 
 	sprintf(lNameBuffer, "Player %d", pHoverId + 1);
 	return lNameBuffer;
@@ -578,10 +615,7 @@ void MR_ClientSession::GetResult(int pPosition, const char *&pPlayerName, int &p
 	}
 
 	MR_MainCharacter *lPlayer = mMainCharacters[lSorted[pPosition]];
-	static char lNameBuffer[16];
-
-	sprintf(lNameBuffer, "Player %d", lPlayer->GetHoverId() + 1);
-	pPlayerName = lNameBuffer;
+	pPlayerName = GetPlayerDisplayName(lPlayer->GetHoverId());
 	pId = lPlayer->GetHoverId();
 	pConnected = TRUE;
 	pNbLap = lPlayer->HasFinish() ? -1 : lPlayer->GetLap();
@@ -629,10 +663,7 @@ void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int
 	}
 
 	MR_MainCharacter *lPlayer = mMainCharacters[lSorted[pPosition]];
-	static char lNameBuffer[16];
-
-	sprintf(lNameBuffer, "Player %d", lPlayer->GetHoverId() + 1);
-	pPlayerName = lNameBuffer;
+	pPlayerName = GetPlayerDisplayName(lPlayer->GetHoverId());
 	pId = lPlayer->GetHoverId();
 	pConnected = TRUE;
 	pNbHitOther = mLocalGoodShots[lSorted[pPosition]];

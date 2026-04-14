@@ -47,18 +47,7 @@ BEGIN
     BEGIN
         MENUITEM "&Internet...\tF2",            ID_GAME_NETWORK_INTERNET
         MENUITEM "&Practice...\tCtrl+N",        ID_GAME_NEW
-        POPUP "&Split Screen..."
-        BEGIN
-            MENUITEM "2 Player",                    ID_GAME_SPLITSCREEN
-            MENUITEM "3 Player",                    ID_GAME_SPLITSCREEN3
-            MENUITEM "4 Player",                    ID_GAME_SPLITSCREEN4
-            MENUITEM "5 Player",                    ID_GAME_SPLITSCREEN5
-            MENUITEM "6 Player",                    ID_GAME_SPLITSCREEN6
-            MENUITEM "7 Player",                    ID_GAME_SPLITSCREEN7
-            MENUITEM "8 Player",                    ID_GAME_SPLITSCREEN8
-            MENUITEM "9 Player",                    ID_GAME_SPLITSCREEN9
-            MENUITEM "10 Player",                   ID_GAME_SPLITSCREEN10
-        END
+        MENUITEM "&Split Screen",              ID_GAME_SPLITSCREEN
         POPUP "&Network"
         BEGIN
             MENUITEM "&Connect to TCP server...",   ID_GAME_NETWORK_CONNECT

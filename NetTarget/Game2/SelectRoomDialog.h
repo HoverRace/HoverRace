@@ -37,19 +37,22 @@ class SelectRoomDialog : public RoomListDialog
 	typedef RoomListDialog SUPER;
 	public:
 		SelectRoomDialog(const std::string &playerName, int onlinePartySize,
-			const std::string *onlinePartyNames);
+			const std::string *onlinePartyNames, int minPartySize = 1,
+			BOOL localOnly = FALSE);
 		virtual ~SelectRoomDialog();
 
 	public:
 		const std::string &GetPlayerName() const;
 		int GetOnlinePartySize() const;
 		const std::string &GetOnlinePartyName(int idx) const;
+		BOOL WasAccepted() const;
 
 	public:
 		RoomListPtr ShowModal(HINSTANCE hinst, HWND parent);
 
 	protected:
 		virtual void HandleLoadFinished(HWND hwnd, result_t result);
+		virtual BOOL ShouldLoadRooms() const;
 	private:
 		void PopulateList(HWND hwnd);
 		void CreateDynamicControls(HWND hwnd);
@@ -63,6 +66,8 @@ class SelectRoomDialog : public RoomListDialog
 
 	private:
 		std::string playerName;
+		int minPartySize;
+		BOOL localOnly;
 		int onlinePartySize;
 		std::string onlinePartyNames[MR_MAX_LOCAL_PLAYER];
 		MR_Config::cfg_controls_t tempControls[MR_MAX_LOCAL_PLAYER];
@@ -71,6 +76,7 @@ class SelectRoomDialog : public RoomListDialog
 		HWND playerLabels[MR_MAX_LOCAL_PLAYER];
 		HWND nameEdits[MR_MAX_LOCAL_PLAYER];
 		HWND controlButtons[MR_MAX_LOCAL_PLAYER];
+		BOOL accepted;
 		volatile bool finished;
 };
 

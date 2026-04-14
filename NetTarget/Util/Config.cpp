@@ -236,6 +236,7 @@ void MR_Config::ResetToDefaults()
 	player.nickName = DEFAULT_NICKNAME;
 	player.nickNameSet = false;
 	player.onlinePartySize = 1;
+	player.splitScreenPartySize = 2;
 	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
 		player.onlinePartyNames[i] = "";
 	}
@@ -513,6 +514,7 @@ void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
 	}
 
 	READ_INT(root, onlinePartySize, 1, MR_MAX_LOCAL_PLAYER);
+	READ_INT(root, splitScreenPartySize, 2, MR_MAX_LOCAL_PLAYER);
 
 	bool hasPartyNames = false;
 	yaml::SeqNode *partySeq = dynamic_cast<yaml::SeqNode*>(root->Get("onlinePartyNames"));
@@ -538,6 +540,9 @@ void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
 		onlinePartySize = 1;
 	}
 
+	splitScreenPartySize = max(2, min(splitScreenPartySize,
+		MR_MAX_LOCAL_PLAYER));
+
 	if(onlinePartyNames[0].empty()) {
 		onlinePartyNames[0] = nickName.empty() ? DEFAULT_NICKNAME : nickName;
 	}
@@ -550,9 +555,10 @@ void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, nickName);
 	EMIT_VAR(emitter, onlinePartySize);
+	EMIT_VAR(emitter, splitScreenPartySize);
 	emitter->MapKey("onlinePartyNames");
 	emitter->StartSeq();
-	for(int i = 0; i < onlinePartySize; ++i) {
+	for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
 		emitter->Value(onlinePartyNames[i]);
 	}
 	emitter->EndSeq();

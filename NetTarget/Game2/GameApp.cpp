@@ -37,6 +37,7 @@
 #include "../Util/StrRes.h"
 #include "../Util/Config.h"
 #include "InternetRoom.h"
+#include "SelectRoomDialog.h"
 #include "Security.h"
 
 #include <vfw.h>
@@ -2291,13 +2292,39 @@ void MR_GameApp::NewLocalSession()
 void MR_GameApp::NewSplitSession(int pSplitPlayers)
 {
 	bool lSuccess = true;
+	MR_Config *cfg = MR_Config::GetInstance();
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
 		return;
 
-	// Delete the current session
+	// Match the other new-game paths: choosing Split Screen ends the
+	// current race before setup, even if setup is later canceled.
 	Clean();
+
+	if(cfg->player.onlinePartyNames[0].empty()) {
+		cfg->player.onlinePartyNames[0] = cfg->player.nickName;
+	}
+	{
+		const int splitScreenPartySize = max(2,
+			min(cfg->player.splitScreenPartySize, MR_MAX_LOCAL_PLAYER));
+		HoverRace::Client::SelectRoomDialog lPlayerDialog(
+			cfg->player.nickName, splitScreenPartySize,
+			cfg->player.onlinePartyNames, 2, TRUE);
+		lPlayerDialog.ShowModal(mInstance, mMainWindow);
+		if(!lPlayerDialog.WasAccepted()) {
+			return;
+		}
+
+		cfg->player.nickName = lPlayerDialog.GetPlayerName();
+		cfg->player.splitScreenPartySize = lPlayerDialog.GetOnlinePartySize();
+		for(int i = 0; i < MR_MAX_LOCAL_PLAYER; ++i) {
+			cfg->player.onlinePartyNames[i] =
+				lPlayerDialog.GetOnlinePartyName(i);
+		}
+		cfg->Save();
+		pSplitPlayers = cfg->player.splitScreenPartySize;
+	}
 
 	// Prompt the user for a maze name
 	std::string lCurrentTrack;
@@ -2324,6 +2351,8 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		}
 
 		MR_ClientSession *lCurrentSession = new MR_ClientSession;
+		lCurrentSession->SetLocalParty(pSplitPlayers,
+			cfg->player.onlinePartyNames);
 
 		// Load the selected maze
 		if(lSuccess) {

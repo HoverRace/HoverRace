@@ -58,6 +58,7 @@ class RoomListDialog {
 		};
 		void CancelLoad();
 		void DisplayError(HWND parent) const;
+		virtual BOOL ShouldLoadRooms() const { return TRUE; }
 		virtual void HandleLoadFinished(HWND hwnd, result_t result) = 0;
 
 	private:

@@ -56,6 +56,8 @@ class MR_ClientSession
 		BOOL mRuleBasedMatchFinished;
 		int mLocalHitByOthers[MR_MAX_LOCAL_PLAYER];
 		int mLocalGoodShots[MR_MAX_LOCAL_PLAYER];
+		int mLocalPartySize;
+		CString mLocalPartyNames[MR_MAX_LOCAL_PLAYER];
 
 		MR_UInt8 *mBackImage;
 
@@ -119,6 +121,10 @@ class MR_ClientSession
 		virtual void SetPlayerRenderOpacity(int pHoverId, float pOpacity);
 		virtual void SetLapCount(int pNbLap);
 		virtual BOOL IsLocalHoverId(int pHoverId) const;
+		virtual void SetLocalParty(int pPartySize,
+			const std::string *pPartyNames);
+		virtual int GetLocalPartySize() const;
+		virtual const char *GetLocalPartyName(int pIndex) const;
 		virtual const char *GetPlayerDisplayName(int pHoverId) const;
 		void EndRuleBasedMatch();
 		BOOL IsRuleBasedMatchFinished() const;

@@ -102,6 +102,7 @@ class MR_Config
 			std::string nickName;
 			bool nickNameSet;
 			int onlinePartySize;
+			int splitScreenPartySize;
 			std::string onlinePartyNames[MR_MAX_LOCAL_PLAYER];
 
 			MR_DllDeclare void Load(yaml::MapNode*);
