@@ -760,6 +760,16 @@ static int DDrawCall(int pFuncResult, int pLine)
 #define DD_CALL( pFunc )   DDrawCall( pFunc, __LINE__ )
 #endif
 
+static BOOL IsRunningUnderWine()
+{
+	static int sIsWine = -1;
+	if(sIsWine < 0) {
+		HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+		sIsWine = (ntdll != NULL && GetProcAddress(ntdll, "wine_get_version") != NULL) ? 1 : 0;
+	}
+	return sIsWine != 0;
+}
+
 struct MR_OpenGLState
 {
 	struct CachedBitmapTexture
@@ -820,6 +830,7 @@ struct MR_OpenGLState
 	IDXGIFactory *dxgiFactory;
 	IDXGIOutput *cachedDxgiOutput;
 	HMONITOR cachedDxgiOutputMonitor;
+	BOOL dxgiPacingUnavailable;
 
 	MR_OpenGLState() :
 		windowDc(NULL), context(NULL),
@@ -835,10 +846,34 @@ struct MR_OpenGLState
 		wglSwapIntervalEXT(NULL), currentSwapInterval(-1),
 		isIntelGpu(FALSE),
 		dxgiLibrary(NULL), dxgiFactory(NULL),
-		cachedDxgiOutput(NULL), cachedDxgiOutputMonitor(NULL)
+		cachedDxgiOutput(NULL), cachedDxgiOutputMonitor(NULL),
+		dxgiPacingUnavailable(FALSE)
 	{
 	}
 };
+
+static void ReleaseDxgiPacingState(MR_OpenGLState *pState)
+{
+	if(pState == NULL) {
+		return;
+	}
+
+	if(pState->cachedDxgiOutput != NULL) {
+		pState->cachedDxgiOutput->Release();
+		pState->cachedDxgiOutput = NULL;
+	}
+	pState->cachedDxgiOutputMonitor = NULL;
+
+	if(pState->dxgiFactory != NULL) {
+		pState->dxgiFactory->Release();
+		pState->dxgiFactory = NULL;
+	}
+
+	if(pState->dxgiLibrary != NULL) {
+		FreeLibrary(pState->dxgiLibrary);
+		pState->dxgiLibrary = NULL;
+	}
+}
 
 static MR_UInt8 ApplyLegacyPresentationCurve(MR_UInt8 value)
 {
@@ -1933,27 +1968,46 @@ BOOL MR_VideoBuffer::InitOpenGL()
 		(int)mOpenGLState->isIntelGpu);
 
 	// Load DXGI for per-output vblank pacing. We only need the factory;
-	// IDXGIOutput::WaitForVBlank does not require a D3D device.
-	if(mOpenGLState->dxgiFactory == NULL) {
-		mOpenGLState->dxgiLibrary = LoadLibraryA("dxgi.dll");
-		if(mOpenGLState->dxgiLibrary != NULL) {
-			typedef HRESULT (WINAPI *PFN_CreateDXGIFactory)(REFIID, void**);
-			PFN_CreateDXGIFactory createFn = (PFN_CreateDXGIFactory)
-				GetProcAddress(mOpenGLState->dxgiLibrary, "CreateDXGIFactory");
-			if(createFn != NULL) {
-				IDXGIFactory *factory = NULL;
-				HRESULT hr = createFn(__uuidof(IDXGIFactory), (void**)&factory);
-				if(SUCCEEDED(hr) && factory != NULL) {
-					mOpenGLState->dxgiFactory = factory;
-					PRINT_LOG("InitOpenGL DXGI factory created, per-output vblank pacing available");
-				} else {
-					PRINT_LOG("InitOpenGL CreateDXGIFactory failed hr=0x%08lx", (unsigned long)hr);
+	// IDXGIOutput::WaitForVBlank does not require a D3D device. Proton's
+	// DXVK dxgi path can fault here, so Wine/Proton skips DXGI entirely.
+	if(!mOpenGLState->dxgiPacingUnavailable && mOpenGLState->dxgiFactory == NULL) {
+		if(IsRunningUnderWine()) {
+			mOpenGLState->dxgiPacingUnavailable = TRUE;
+			PRINT_LOG("InitOpenGL DXGI pacing disabled under Wine/Proton");
+		}
+		else {
+			mOpenGLState->dxgiLibrary = LoadLibraryA("dxgi.dll");
+			if(mOpenGLState->dxgiLibrary != NULL) {
+				typedef HRESULT (WINAPI *PFN_CreateDXGIFactory)(REFIID, void**);
+				PFN_CreateDXGIFactory createFn = (PFN_CreateDXGIFactory)
+					GetProcAddress(mOpenGLState->dxgiLibrary, "CreateDXGIFactory");
+				if(createFn != NULL) {
+					IDXGIFactory *factory = NULL;
+					HRESULT hr = createFn(__uuidof(IDXGIFactory), (void**)&factory);
+					if(SUCCEEDED(hr) && factory != NULL) {
+						mOpenGLState->dxgiFactory = factory;
+						PRINT_LOG("InitOpenGL DXGI factory created, per-output vblank pacing available");
+					}
+					else {
+						if(factory != NULL) {
+							factory->Release();
+						}
+						PRINT_LOG("InitOpenGL CreateDXGIFactory failed hr=0x%08lx, disabling DXGI pacing",
+							(unsigned long)hr);
+						ReleaseDxgiPacingState(mOpenGLState);
+						mOpenGLState->dxgiPacingUnavailable = TRUE;
+					}
 				}
-			} else {
-				PRINT_LOG("InitOpenGL CreateDXGIFactory entry not found");
+				else {
+					PRINT_LOG("InitOpenGL CreateDXGIFactory entry not found, disabling DXGI pacing");
+					ReleaseDxgiPacingState(mOpenGLState);
+					mOpenGLState->dxgiPacingUnavailable = TRUE;
+				}
 			}
-		} else {
-			PRINT_LOG("InitOpenGL dxgi.dll not loadable, falling back to DwmFlush pacing");
+			else {
+				PRINT_LOG("InitOpenGL dxgi.dll not loadable, falling back to DwmFlush pacing");
+				mOpenGLState->dxgiPacingUnavailable = TRUE;
+			}
 		}
 	}
 
@@ -2036,19 +2090,7 @@ void MR_VideoBuffer::ReleaseOpenGL()
 		mOpenGLState->windowDc = NULL;
 	}
 
-	if(mOpenGLState->cachedDxgiOutput != NULL) {
-		mOpenGLState->cachedDxgiOutput->Release();
-		mOpenGLState->cachedDxgiOutput = NULL;
-	}
-	mOpenGLState->cachedDxgiOutputMonitor = NULL;
-	if(mOpenGLState->dxgiFactory != NULL) {
-		mOpenGLState->dxgiFactory->Release();
-		mOpenGLState->dxgiFactory = NULL;
-	}
-	if(mOpenGLState->dxgiLibrary != NULL) {
-		FreeLibrary(mOpenGLState->dxgiLibrary);
-		mOpenGLState->dxgiLibrary = NULL;
-	}
+	ReleaseDxgiPacingState(mOpenGLState);
 
 	delete mOpenGLState;
 	mOpenGLState = NULL;
